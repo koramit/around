@@ -28,6 +28,10 @@ Route::any('logout', function () {
     return redirect('/login');
 });
 
+Route::get('/home', function () {
+    return 'home page';
+})->name('home');
+
 Route::post('login', function () {
     // return request()->only(['email', 'password']);
     if (\Auth::attempt(request()->only(['email', 'password']))) {
