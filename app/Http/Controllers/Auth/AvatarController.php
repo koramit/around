@@ -15,6 +15,7 @@ class AvatarController extends Controller
             return $user->toArray() + [
                 'found' => true,
                 'avatar_token' => $user->avatar_token,
+                'login' => $user->name,
             ];
         } else {
             return [
@@ -25,8 +26,10 @@ class AvatarController extends Controller
 
     public function show()
     {
-        return request()->user()->toArray() + [
-            'found' => true
+        $user = request()->user();
+        return $user->toArray() + [
+            'found' => true,
+            'login' => $user->name,
         ];
     }
 }
