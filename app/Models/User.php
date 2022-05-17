@@ -41,4 +41,11 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function getAvatarTokenAttribute()
+    {
+        $this->tokens()->where('name', 'avatar')->delete();
+
+        return $this->createToken('avatar')->plainTextToken;
+    }
 }

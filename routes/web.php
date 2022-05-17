@@ -19,5 +19,22 @@ Route::get('/', function () {
 });
 
 Route::get('login', function () {
-    return 'hello login';
+    return view('login');
+});
+
+Route::any('logout', function () {
+    \Auth::logout();
+
+    return redirect('/login');
+});
+
+Route::post('login', function () {
+    // return request()->only(['email', 'password']);
+    if (\Auth::attempt(request()->only(['email', 'password']))) {
+        return 'logged in';
+    } else {
+        return '403';
+    }
+    return request()->only(['email', 'password']);
+    return view('login');
 });

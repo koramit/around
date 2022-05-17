@@ -25,7 +25,7 @@ class AvatarUserProvider implements UserProvider
         /*
          * Work the same as User::find($id);
          */
-        $response = Http::withToken($identifier)->get($this->providerUrl.'/api/user');
+        $response = Http::withToken($identifier)->get($this->providerUrl.'/api/avatar');
         $user = $response->json() ?? ['found' => false];
         if (! ($response->ok() && $user['found'])) {
             throw new Exception('provider service not available');
@@ -57,7 +57,7 @@ class AvatarUserProvider implements UserProvider
          * validation or authentication.
          */
         $response = Http::withHeaders(['token' => $this->providerToken])
-                        ->post($this->providerUrl.'/api/avatar-user', $credentials);
+                        ->post($this->providerUrl.'/api/avatar', $credentials);
         $user = $response->json() ?? ['found' => false];
         if (! ($response->ok() && $user['found'])) {
             return null;
