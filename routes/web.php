@@ -29,15 +29,15 @@ Route::any('logout', function () {
 });
 
 Route::get('/home', function () {
-    return 'home page';
+    return \Auth::user()->toArray();
 })->name('home');
 
 Route::post('login', function () {
     // return request()->only(['email', 'password']);
     if (\Auth::attempt(request()->only(['email', 'password']))) {
-        return 'logged in';
+        return redirect('home');
     } else {
-        return '403';
+        abort(403);
     }
     return request()->only(['email', 'password']);
     return view('login');

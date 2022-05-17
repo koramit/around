@@ -49,4 +49,14 @@ class AvatarUser implements Authenticatable
     public function getRememberTokenName()
     {
     }
+
+    public function toArray()
+    {
+        return [
+            'profile' => $this->profile,
+            'login' => $this->login,
+            'name' => $this->name,
+            'home_page' => $this->home_page,
+        ];
+    }
 }
