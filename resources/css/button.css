@@ -1,0 +1,11 @@
+.btn {
+    @apply p-2 font-semibold text-base text-white shadow transition-all duration-200 ease-in-out disabled:opacity-25 disabled:cursor-not-allowed;
+}
+
+.btn-bitter {
+    @apply bg-bitter-theme-light active:bg-alt-theme-light hover:bg-alt-theme-light hover:text-bitter-theme-light disabled:text-white disabled:bg-bitter-theme-light;
+}
+
+.btn-dark {
+    @apply bg-dark-theme-light active:bg-thick-theme-light hover:bg-alt-theme-light hover:text-dark-theme-light disabled:text-white disabled:bg-dark-theme-light;
+}

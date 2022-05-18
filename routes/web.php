@@ -42,3 +42,7 @@ Route::post('login', function () {
     return request()->only(['email', 'password']);
     return view('login');
 });
+
+Route::get('/colors', function () {
+    return view('colors');
+});
