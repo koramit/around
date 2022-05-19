@@ -212,4 +212,7 @@ return [
         // 'ExampleClass' => App\Example\ExampleClass::class,
     ])->toArray(),
 
+    'authentication_provider' => env('AUTHENTICATION_PROVIDER', 'App\APIs\SubHannahAPI'),
+    'patient_provider' => env('PATIENT_PROVIDER', 'App\APIs\SubHannahAPI'),
+
 ];
