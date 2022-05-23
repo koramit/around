@@ -1,6 +1,6 @@
 <template>
     <h1 class="text-3xl font-bold underline text-blue-700">
-        {{ __('Welcome') }} {{ __('bar') }}
+        {{ __('user') }}
     </h1>
     <PageNav />
 </template>
@@ -12,5 +12,6 @@ import { useManageLocale } from '../functions/useManageLocale';
 const props = defineProps({
     trans: { type: Object, default: null }
 });
+
 useManageLocale(props.trans);
 </script>

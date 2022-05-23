@@ -9,20 +9,41 @@
     <title>Document</title>
 </head>
 <body>
-    <div class=" w-1/3 h-32 bg-soft-theme-light">
-        bg-soft-theme-light
-    </div>
-    <div class="w-1/3 h-32 bg-alt-theme-light">
-        bg-alt-theme-light
-    </div>
-    <div class="w-1/3 h-32 bg-bitter-theme-light">
-        bg-bitter-theme-light
-    </div>
-    <div class="w-1/3 h-32 bg-thick-theme-light">
-        bg-thick-theme-light
-    </div>
-    <div class="w-1/3 h-32 bg-dark-theme-light">
-        bg-dark-theme-light
+    <div class="flex">
+        <div class="w-1/2">
+            <div class="h-32 bg-soft-theme-light">
+                bg-soft-theme-light
+            </div>
+            <div class="h-32 bg-alt-theme-light">
+                bg-alt-theme-light
+            </div>
+            <div class="h-32 bg-bitter-theme-light">
+                bg-bitter-theme-light
+            </div>
+            <div class="h-32 bg-thick-theme-light">
+                bg-thick-theme-light
+            </div>
+            <div class="h-32 bg-dark-theme-light">
+                bg-dark-theme-light
+            </div>
+        </div>
+        <div class="w-1/2">
+            <div class="h-32 bg-soft-theme-light">
+                bg-soft-theme-light
+            </div>
+            <div class="h-32 bg-alt-theme-light">
+                bg-alt-theme-light
+            </div>
+            <div class="h-32 bg-bitter-theme-light">
+                bg-bitter-theme-light
+            </div>
+            <div class="h-32 bg-thick-theme-light">
+                bg-thick-theme-light
+            </div>
+            <div class="h-32 bg-dark-theme-light">
+                bg-dark-theme-light
+            </div>
+        </div>
     </div>
 </body>
 </html>

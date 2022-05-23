@@ -1,5 +1,6 @@
 <?php
 
+use App\Services\TranslationGenerator;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -15,7 +16,19 @@ use Inertia\Inertia;
 */
 
 Route::get('/', function () {
-    return Inertia::render('Welcome');
+    // session()->put('locale', 'en');
+
+    return Inertia::render('Welcome', [
+        'trans' => TranslationGenerator::getTranslationsIfNeeded(session('locale', config('app.locale'))),
+    ]);
+});
+
+Route::get('/user/{locale}', function ($locale) {
+    session()->put('locale', $locale);
+
+    return Inertia::render('User', [
+        'trans' => TranslationGenerator::getTranslationsIfNeeded(session('locale', config('app.locale'))),
+    ]);
 });
 
 Route::get('login', function () {
@@ -39,10 +52,19 @@ Route::post('login', function () {
     } else {
         abort(403);
     }
+
     return request()->only(['email', 'password']);
+
     return view('login');
 });
 
 Route::get('/colors', function () {
     return view('colors');
+});
+
+Route::get('/lang/{locale}', function ($locale) {
+    \App::setLocale($locale); // only one request
+    session()->put('locale', $locale);
+
+    return back();
 });
