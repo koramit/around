@@ -13,20 +13,17 @@ return new class extends Migration {
     public function up()
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
+            $table->increments('id');
+            $table->string('name')->unique();
+            $table->string('login')->unique();
             $table->string('password');
+            $table->json('profile');
+            $table->unsignedSmallInteger('division_id')->default(1);
+            $table->foreign('division_id')->references('id')->on('divisions')->constrained();
             $table->rememberToken();
+            $table->softDeletes();
             $table->timestamps();
         });
-
-        $u = new \App\Models\User();
-        $u->name = 'user';
-        $u->email = 'user@around.app';
-        $u->password = \Hash::make('secret');
-        $u->save();
     }
 
     /**
@@ -36,6 +33,6 @@ return new class extends Migration {
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        // Schema::dropIfExists('users');
     }
 };

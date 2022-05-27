@@ -1,5 +1,5 @@
 .form-label {
-    @apply block uppercase tracking-wide text-dark-theme-light text-xs lg:text-base font-semibold mb-2 truncate;
+    @apply block uppercase tracking-wide text-complement-darker text-xs lg:text-base font-semibold mb-2 truncate;
 }
 
 .form-input {

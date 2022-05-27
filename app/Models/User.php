@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Casts\AsArrayObject;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -39,7 +39,7 @@ class User extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
+        'profile' => AsArrayObject::class,
     ];
 
     public function getAvatarTokenAttribute()
@@ -47,5 +47,10 @@ class User extends Authenticatable
         $this->tokens()->where('name', 'avatar')->delete();
 
         return $this->createToken('avatar')->plainTextToken;
+    }
+
+    public function getHomePageAttribute()
+    {
+        return $this->profile['home_page'] ?? 'home';
     }
 }

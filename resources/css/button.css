@@ -2,10 +2,10 @@
     @apply p-2 font-semibold text-base text-white shadow transition-all duration-200 ease-in-out disabled:opacity-25 disabled:cursor-not-allowed;
 }
 
-.btn-bitter {
-    @apply bg-bitter-theme-light active:bg-alt-theme-light hover:bg-alt-theme-light hover:text-bitter-theme-light disabled:text-white disabled:bg-bitter-theme-light;
+.btn-accent {
+    @apply bg-accent active:bg-primary-darker hover:bg-primary-darker hover:text-accent disabled:text-white disabled:bg-accent;
 }
 
-.btn-dark {
-    @apply bg-dark-theme-light active:bg-thick-theme-light hover:bg-alt-theme-light hover:text-dark-theme-light disabled:text-white disabled:bg-dark-theme-light;
+.btn-complement {
+    @apply bg-complement active:bg-complement-darker hover:bg-primary-darker hover:text-complement disabled:text-white disabled:bg-complement;
 }

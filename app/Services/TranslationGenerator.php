@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\File;
@@ -9,16 +10,17 @@ use Illuminate\Support\Facades\Session;
 
 class TranslationGenerator
 {
-    public static function getTranslationsIfNeeded(string $locale)
+    public static function getTranslationsIfNeeded(): mixed
     {
-        if (Session::get('locale-loaded') === Session::get('locale')) {
-            return null;
+        $locale = Session::get('locale', config('app.locale'));
+        if (Session::get('locale-loaded') === $locale) {
+            return false;
         }
 
         return static::get($locale);
     }
 
-    public static function get(string $locale)
+    public static function get(string $locale): Collection
     {
         if (! App::environment('production')) {
             return static::generate($locale);
@@ -30,7 +32,7 @@ class TranslationGenerator
         );
     }
 
-    protected static function generate(string $locale)
+    protected static function generate(string $locale): Collection
     {
         Session::put('locale-loaded', $locale);
 

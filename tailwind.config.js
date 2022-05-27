@@ -15,7 +15,10 @@ module.exports = {
 
                 'primary': '#FDF6E3', // soft-theme-light
                 'primary-darker': '#EEE9D5', // alt-theme-light
-                'accent': '#AD9C68', // bitter-theme-light
+                // https://colourcontrast.cc/ffffff/907326
+                // https://coolors.co/contrast-checker/907326-ffffff
+                // https://app.contrast-finder.org/result.html?foreground=%23FFFFFF&background=%23907326&algo=Rgb&ratio=7&isBackgroundTested=true
+                'accent': '#907326', // '#AD9C68', // bitter-theme-light; for hi contrast #907326 < #735406
                 'complement': '#586E75', // thick-theme-light
                 'complement-darker': '#465C62', // dark-theme-light
             }

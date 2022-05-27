@@ -1,5 +1,8 @@
 {
     "include": [
         "./resources/js/**/*"
-    ]
+    ],
+    "vueCompilerOptions": {
+        "experimentalDisableTemplateSupport": true
+    }
 }

@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+/* !!!!!!!!!!!!!!!!!!!!!!!!! NO SESSION AVAILABLE HERE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */
+
 Route::post('/avatar', [AvatarController::class, 'store']);
 Route::middleware('auth:sanctum')->get('/avatar', [AvatarController::class, 'show']);
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
