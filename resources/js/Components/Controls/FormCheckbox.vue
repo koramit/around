@@ -16,7 +16,7 @@
                 <div
                     class="w-8 h-5 rounded-full shadow-inner transition-all duration-200 ease-in-out"
                     :class="{
-                        'bg-accent' : modelValue,
+                        'bg-accent-darker' : modelValue,
                         'bg-gray-200' : !modelValue,
                     }"
                 />

@@ -7,7 +7,7 @@
             >
         </div>
         <div class="mt-4 px-4 py-8 w-80 bg-white rounded shadow -translate-y-20">
-            <span class="block text-xl text-accent mt-12 text-center">around 🤲🏻 about 🙌🏻 arrange</span>
+            <span class="block text-xl text-accent-darker mt-12 text-center">around 🤲🏻 about 🙌🏻 arrange</span>
             <FormInput
                 class="mt-8"
                 :label="__('login')"

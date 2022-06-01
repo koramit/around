@@ -3,7 +3,7 @@
 }
 
 .btn-accent {
-    @apply bg-accent active:bg-primary-darker hover:bg-primary-darker hover:text-accent disabled:text-white disabled:bg-accent;
+    @apply bg-accent-darker active:bg-primary-darker hover:bg-primary-darker hover:text-accent disabled:text-white disabled:bg-accent;
 }
 
 .btn-complement {

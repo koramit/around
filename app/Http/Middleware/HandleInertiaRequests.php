@@ -38,9 +38,29 @@ class HandleInertiaRequests extends Middleware
     {
         return array_merge(parent::share($request), [
             'baseUrl' => url('/'),
+            'routeHome' => fn () => route('home'),
+            'routePreferences' => fn () => route('preferences'),
+            'routeLogout' => fn () => route('logout'),
             'flash' => [
                 'title' => fn () => $request->session()->pull('page-title', 'MISSING'),
+                'mainMenuLinks' => fn () => $request->session()->pull('main-menu-links', []),
+                'actionMenu' => fn () => $request->session()->pull('action-menu', []),
             ],
+            'user' => fn () => $request->user()
+                ? [
+                    // 'id' => $request->user()->id,
+                    'name' => $request->user()->name,
+                    // 'roles' => $request->user()->role_names->toArray(),
+                    // 'abilities' => $request->user()->abilities->toArray(),
+                    'configs' => $request->session()->get('configs', [
+                        'appearance' => ['zenMode' => false, 'fontScaleIndex' => 3],
+                    ]),
+                ] : null,
+                'event' => [
+                    'fire' => null,
+                    'name' => '',
+                    'payload' => null,
+                ],
         ]);
     }
 }

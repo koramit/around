@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LocalizationController;
+use App\Http\Controllers\PreferenceController;
 use App\Http\Controllers\TermsAndPoliciesController;
 use Illuminate\Support\Facades\Route;
 
@@ -15,6 +17,18 @@ Route::get('/locale/{locale}', [LocalizationController::class, 'store']);
 Route::post('/translations', [LocalizationController::class, 'show']);
 
 // home
-Route::get('/', function () {
-    return 'home';
-})->middleware(['auth'])->name('home');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/', HomeController::class)->name('home');
+    Route::get('/preferences', [PreferenceController::class, 'show'])->name('preferences');
+
+    //
+    Route::get('/clinics', function () {
+        return 'clinics';
+    })->name('clinics');
+    Route::get('/patients', function () {
+        return 'patients';
+    })->name('patients');
+    Route::get('/procedures', function () {
+        return 'procedures';
+    })->name('procedures');
+});

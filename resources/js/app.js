@@ -11,7 +11,7 @@ import PageLayout from './Components/Layouts/PageLayout';
 
 InertiaProgress.init({
     delay: 200,
-    color: '#AD9C68',
+    color: '#907326',
     showSpinner: true
 });
 

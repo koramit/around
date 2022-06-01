@@ -34,8 +34,8 @@
             <div class="h-32 bg-primary-darker">
                 bg-primary-darker
             </div>
-            <div class="h-32 bg-accent">
-                bg-accent
+            <div class="h-32 bg-accent-darker">
+                bg-accent-darker
             </div>
             <div class="h-32 bg-complement">
                 bg-complement

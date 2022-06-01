@@ -7,7 +7,7 @@
             >
         </div>
         <div class="mt-4 px-4 py-8 w-80 lg:w-96 bg-white rounded shadow -translate-y-20">
-            <span class="block font-semibold text-xl text-accent mt-12 text-center">{{ __('Register') }}</span>
+            <span class="block font-semibold text-xl text-accent-darker mt-12 text-center">{{ __('Register') }}</span>
             <div
                 class="mt-4"
             />
@@ -56,7 +56,7 @@
             />
             <a
                 :href="routes.terms"
-                class="mt-2 block text-accent underline"
+                class="mt-2 block text-accent-darker underline"
                 target="_blank"
             >{{ __('Terms and Policies') }}</a>
             <SpinnerButton
