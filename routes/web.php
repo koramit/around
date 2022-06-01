@@ -16,7 +16,7 @@ Route::get('terms-and-policies', TermsAndPoliciesController::class)
 Route::get('/locale/{locale}', [LocalizationController::class, 'store']);
 Route::post('/translations', [LocalizationController::class, 'show']);
 
-// home
+// common
 Route::middleware(['auth'])->group(function () {
     Route::get('/', HomeController::class)->name('home');
     Route::get('/preferences', [PreferenceController::class, 'show'])->name('preferences');
@@ -28,7 +28,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/patients', function () {
         return 'patients';
     })->name('patients');
-    Route::get('/procedures', function () {
-        return 'procedures';
-    })->name('procedures');
+    // Route::get('/procedures', function () {
+    //     return 'procedures';
+    // })->name('procedures');
 });
+
+require __DIR__.'/procedures.php';
