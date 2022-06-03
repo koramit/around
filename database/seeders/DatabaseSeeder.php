@@ -22,10 +22,10 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             DivisionsTableSeeder::class,
-            // WardsTableSeeder::class,
-            // AttendingStaffsTableSeeder::class,
+            WardsTableSeeder::class,
+            AttendingStaffsTableSeeder::class,
+            NoteTypesTableSeeder::class,
             // RegistriesTableSeeder::class,
-            // NoteTypesTableSeeder::class,
         ]);
     }
 }
