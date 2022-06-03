@@ -4,7 +4,13 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LocalizationController;
 use App\Http\Controllers\PreferenceController;
 use App\Http\Controllers\TermsAndPoliciesController;
+use App\Models\Resources\Patient;
 use Illuminate\Support\Facades\Route;
+
+// test hash id model route
+Route::get('/patients/{patient:hn}', function (Patient $patient) {
+    return $patient;
+});
 
 require __DIR__.'/auth.php';
 
