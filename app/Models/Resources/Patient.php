@@ -17,6 +17,11 @@ class Patient extends Model
 
     protected $casts = ['profile' => AsEncryptedArrayObject::class];
 
+    public function admissions()
+    {
+        return $this->hasMany(Admission::class);
+    }
+
     protected function hn(): Attribute
     {
         return Attribute::make(
