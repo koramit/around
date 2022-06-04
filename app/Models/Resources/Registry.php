@@ -5,9 +5,7 @@ namespace App\Models\Resources;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class AttendingStaff extends Model
+class Registry extends Model
 {
     use HasFactory;
-
-    protected $table = 'attending_staffs';
 }

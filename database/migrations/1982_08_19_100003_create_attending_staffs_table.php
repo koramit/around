@@ -12,7 +12,7 @@ return new class extends Migration {
      */
     public function up()
     {
-        Schema::create('attending_staff', function (Blueprint $table) {
+        Schema::create('attending_staffs', function (Blueprint $table) {
             $table->smallIncrements('id');
             $table->string('name')->unique();
             $table->unsignedSmallInteger('division_id')->default(1);

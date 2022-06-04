@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
             WardsTableSeeder::class,
             AttendingStaffsTableSeeder::class,
             NoteTypesTableSeeder::class,
-            // RegistriesTableSeeder::class,
+            RegistriesTableSeeder::class,
         ]);
     }
 }
