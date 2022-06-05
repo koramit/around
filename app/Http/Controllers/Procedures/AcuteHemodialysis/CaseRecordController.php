@@ -9,6 +9,15 @@ class CaseRecordController extends Controller
 {
     public function index()
     {
-        return Inertia::render('Procedures/AcuteHemodialysisIndex');
+        return Inertia::render('Procedures/AcuteHemodialysisIndex', [
+            'cases' => [
+                'data' => [],
+                'links' => [],
+            ],
+            'filters' => [
+                'search' => '',
+                'scope' => 'all',
+            ],
+        ]);
     }
 }
