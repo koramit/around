@@ -12,7 +12,9 @@ Route::middleware(['auth'])->prefix('procedures')->group(function () {
         ->name('procedures.acute-hemodialysis.')
         ->group(function () {
             Route::get('/', [AcuteHemodialysisCasesController::class, 'index'])
-            ->middleware('remember')
-            ->name('index');
+                ->middleware('remember')
+                ->name('index');
+            Route::post('/', [AcuteHemodialysisCasesController::class, 'store'])
+               ->name('store');
         });
 });

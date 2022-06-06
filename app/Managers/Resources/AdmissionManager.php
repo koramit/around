@@ -23,7 +23,7 @@ class AdmissionManager
             $an = $key;
         }
 
-        $admission = Admission::findByHashId($an)->first();
+        $admission = Admission::findByHashId($an)->withPlaceName()->first();
 
         if ($admission) {
             // update
@@ -64,6 +64,7 @@ class AdmissionManager
                 'encountered_at' => $admissionData['encountered_at'],
                 'dismissed_at' => $admissionData['dismissed_at'],
                 'ward_id' => $ward->id,
+                'place_name' => $ward->name,
             ]),
         ];
     }

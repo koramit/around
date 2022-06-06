@@ -141,6 +141,7 @@
         ref="searchAdmission"
         @confirmed="confirmed"
         mode="hn"
+        :service-endpoint="routes.serviceEndpoint"
     />
 </template>
 
@@ -157,6 +158,7 @@ import debounce from 'lodash/debounce';
 const props = defineProps({
     cases: { type: Object, required: true },
     filters: { type: Object, required: true },
+    routes: { type: Object, required: true },
 });
 const searchAdmission = ref(null);
 const newCase = useForm({
@@ -176,7 +178,7 @@ watch(
             .map(key => `${key}=${filters[key]}`)
             .join('&');
         query = '?' + (query ? query : 'remember=forget');
-        Inertia.visit(window.route('procedures.acute-hemodialysis.index') + query, { preserveState: true });
+        Inertia.visit(props.routes.index + query, { preserveState: true });
     }, 400),
     {deep: true}
 );
@@ -184,6 +186,6 @@ watch(
 const confirmed = (admission) => {
     newCase.hn = admission.hn;
     newCase.an = admission.an;
-    newCase.post(window.route('procedures.acute-hemodialysis.store'));
+    newCase.post(props.routes.store);
 };
 </script>

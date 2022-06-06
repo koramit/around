@@ -9,4 +9,6 @@ interface PatientAPI
     public function getAdmission(string $an): array;
 
     public function recentlyAdmission(string $hn): array;
+
+    public function stayRecently(string $hn): array;
 }

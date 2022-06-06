@@ -85,7 +85,8 @@ import { computed, nextTick, reactive, ref } from 'vue';
 const props = defineProps({
     heading: { type: String, default: 'Search Admission'},
     confirmLabel: { type: String, default: 'CONFIRM'},
-    mode: { type: String, default: 'an' }
+    mode: { type: String, default: 'an' },
+    serviceEndpoint: { type: String, required: true },
 });
 
 const emits = defineEmits(['confirmed']);
@@ -124,11 +125,9 @@ const searchAdmission = () => {
     busy.value = true;
     anError.value = '';
     admission.hn = '';
-    let endpoint = props.mode === 'an'
-        ? 'resources.api.admissions.show'
-        : 'resources.api.patient-recently-admission.show';
+
     window.axios
-        .get(endpoint)
+        .post(props.serviceEndpoint, {key: an.value})
         .then(response => {
             if (! response.data.hn) {
                 anError.value = 'Patient not found';

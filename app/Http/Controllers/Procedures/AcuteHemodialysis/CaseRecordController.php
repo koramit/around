@@ -18,6 +18,11 @@ class CaseRecordController extends Controller
                 'search' => '',
                 'scope' => 'all',
             ],
+            'routes' => [
+                'index' => route('procedures.acute-hemodialysis.index'),
+                'store' => route('procedures.acute-hemodialysis.store'),
+                'serviceEndpoint' => route('resources.api.patient-recently-admission.show'),
+            ],
         ]);
     }
 }

@@ -15,7 +15,10 @@ class Patient extends Model
 
     protected $hashIdName = 'hn';
 
-    protected $casts = ['profile' => AsEncryptedArrayObject::class];
+    protected $casts = [
+        'profile' => AsEncryptedArrayObject::class,
+        'dob' => 'date',
+    ];
 
     public function admissions()
     {
@@ -27,6 +30,24 @@ class Patient extends Model
         return Attribute::make(
             get: fn ($value) => app(Hashids::class)->decode($value)[0],
             set: fn ($value) => app(Hashids::class)->encode($value),
+        );
+    }
+
+    protected function fullName(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => implode(' ', [
+                $this->profile['title'],
+                $this->profile['first_name'],
+                $this->profile['last_name'],
+            ]),
+        );
+    }
+
+    protected function gender(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => $value ? 'male' : 'female',
         );
     }
 }

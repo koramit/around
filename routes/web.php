@@ -3,6 +3,10 @@
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LocalizationController;
 use App\Http\Controllers\PreferenceController;
+use App\Http\Controllers\Resources\AdmissionController;
+use App\Http\Controllers\Resources\AttendingStaffController;
+use App\Http\Controllers\Resources\PatientRecentlyAdmissionController;
+use App\Http\Controllers\Resources\WardController;
 use App\Http\Controllers\TermsAndPoliciesController;
 use App\Models\Resources\Patient;
 use Illuminate\Support\Facades\Route;
@@ -37,6 +41,20 @@ Route::middleware(['auth'])->group(function () {
     // Route::get('/procedures', function () {
     //     return 'procedures';
     // })->name('procedures');
+});
+
+// resurces
+Route::middleware('auth')->name('resources.api.')->group(function () {
+    Route::post('admissions', AdmissionController::class)
+         ->name('admissions.show');
+    Route::post('patient-recently-admission', PatientRecentlyAdmissionController::class)
+         ->name('patient-recently-admission.show');
+    Route::get('wards', WardController::class)
+         ->name('wards');
+    Route::get('staffs', AttendingStaffController::class)
+         ->name('staffs');
+    // Route::get('acute-hemodialysis-slot-available', AcuteHemodialysisSlotAvailableController::class)
+    //      ->name('acute-hemodialysis-slot-available');
 });
 
 require __DIR__.'/procedures.php';
