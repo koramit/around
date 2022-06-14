@@ -2,7 +2,7 @@
 
 namespace App\Models\Resources;
 
-use App\Traits\IdHashable;
+use App\Traits\CKHashable;
 use Hashids\Hashids;
 use Illuminate\Database\Eloquent\Casts\AsArrayObject;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Admission extends Model
 {
-    use HasFactory, IdHashable;
+    use HasFactory, CKHashable;
 
     protected $guarded = [];
 

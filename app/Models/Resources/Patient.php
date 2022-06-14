@@ -2,7 +2,7 @@
 
 namespace App\Models\Resources;
 
-use App\Traits\IdHashable;
+use App\Traits\CKHashable;
 use Hashids\Hashids;
 use Illuminate\Database\Eloquent\Casts\AsEncryptedArrayObject;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Patient extends Model
 {
-    use HasFactory, IdHashable;
+    use HasFactory, CKHashable;
 
     protected $hashIdName = 'hn';
 
@@ -41,6 +41,13 @@ class Patient extends Model
                 $this->profile['first_name'],
                 $this->profile['last_name'],
             ]),
+        );
+    }
+
+    protected function firstName(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->profile['first_name'] ?? null,
         );
     }
 

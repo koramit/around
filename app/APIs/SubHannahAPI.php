@@ -167,6 +167,20 @@ class SubHannahAPI implements PatientAPI, AuthenticationAPI
         return $data;
     }
 
+    public function checkUserById($orgId)
+    {
+        $data = $this->makePost('user-status-by-id', ['org_id' => $orgId]);
+
+        if (! $data) { // error: $data = null
+            return [
+                'found' => false,
+                'message' => __('service.failed'),
+            ];
+        }
+
+        return $data;
+    }
+
     protected function makePost(string $route, array $form, int $timeout = 4): array
     {
         $headers = ['app' => config('services.SUBHANNAH_API_NAME'), 'token' => config('services.SUBHANNAH_API_TOKEN')];

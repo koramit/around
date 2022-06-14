@@ -2,19 +2,20 @@
 
 namespace App\Http\Controllers\Resources;
 
+use App\Contracts\PatientAPI;
 use App\Http\Controllers\Controller;
 use App\Managers\Resources\AdmissionManager;
+use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
 class PatientRecentlyAdmissionController extends Controller
 {
-    public function __invoke()
+    public function __invoke(Request $request, PatientAPI $api)
     {
-        $hn = request()->key;
-
-        $api = app('App\Contracts\PatientAPI');
+        $hn = $request->key;
 
         $admission = (new AdmissionManager)->manage(key: $hn, recently: true);
+        $stay = $api->stayRecently($hn); // should move to manager
 
         if (! $admission['found']) {
             if (! $admission['patient']['found']) {
@@ -23,8 +24,6 @@ class PatientRecentlyAdmissionController extends Controller
                     'hn' => null,
                 ];
             }
-
-            $stay = $api->stayRecently($hn);
 
             return [
                 'found' => false,
@@ -39,7 +38,6 @@ class PatientRecentlyAdmissionController extends Controller
             ];
         }
 
-        $stay = $api->stayRecently($hn);
         if ($admission['admission']->dismissed_at && ($stay['found'] ?? false)) {
             return [
                 'found' => false,

@@ -10,6 +10,7 @@ use App\Http\Controllers\Resources\WardController;
 use App\Http\Controllers\TermsAndPoliciesController;
 use App\Models\Resources\Patient;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Validator;
 
 // test hash id model route
 Route::get('/patients/{patient:hn}', function (Patient $patient) {
@@ -58,3 +59,21 @@ Route::middleware('auth')->name('resources.api.')->group(function () {
 });
 
 require __DIR__.'/procedures.php';
+
+Route::get('validator', function () {
+    $data = ['a' => 1, 'b' => 2, 'c' => '1234', 'd' => 'foo'];
+    $rules = [
+        'a' => 'required|numeric|integer',
+        'b' => 'numeric|integer',
+        'c' => 'string|max:5',
+    ];
+    $validated = Validator::make($data, $rules);
+
+    if ($validated->errors()->count()) {
+        return $validated->errors();
+    }
+
+    return $validated->validated();
+
+    return $validated->errors();
+});

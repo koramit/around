@@ -19,7 +19,7 @@ return new class extends Migration {
             $table->unsignedSmallInteger('registry_id');
             $table->foreign('registry_id')->references('id')->on('registries')->constrained();
             $table->json('form');
-            $table->json('meta');
+            $table->jsonb('meta');
             $table->unsignedTinyInteger('status')->default(1)->index();
             $table->dateTime('dismissed_at')->nullable();
             $table->dateTime('archived_at')->nullable();

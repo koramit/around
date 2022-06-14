@@ -23,7 +23,7 @@ class AdmissionManager
             $an = $key;
         }
 
-        $admission = Admission::findByHashId($an)->withPlaceName()->first();
+        $admission = Admission::findByHashedId($an)->withPlaceName()->first();
 
         if ($admission) {
             // update
@@ -52,20 +52,22 @@ class AdmissionManager
 
         $ward = $this->maintainWard($admissionData);
 
+        $admission = $patient['patient']->admissions()->create([
+            'an' => $an,
+            'meta' => [
+                'attending' => $admissionData['attending_name'] ?? null,
+                'discharge_status' => $admissionData['discharge_status_name'] ?? null,
+                'discharge_type' => $admissionData['discharge_type_name'] ?? null,
+            ],
+            'encountered_at' => $admissionData['encountered_at'],
+            'dismissed_at' => $admissionData['dismissed_at'],
+            'ward_id' => $ward->id,
+        ]);
+        $admission->place_name = $ward->name;
+
         return [
             'found' => true,
-            'admission' => $patient['patient']->admissions()->create([
-                'an' => $an,
-                'meta' => [
-                    'attending' => $admissionData['attending_name'] ?? null,
-                    'discharge_status' => $admissionData['discharge_status_name'] ?? null,
-                    'discharge_type' => $admissionData['discharge_type_name'] ?? null,
-                ],
-                'encountered_at' => $admissionData['encountered_at'],
-                'dismissed_at' => $admissionData['dismissed_at'],
-                'ward_id' => $ward->id,
-                'place_name' => $ward->name,
-            ]),
+            'admission' => $admission,
         ];
     }
 
