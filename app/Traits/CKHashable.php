@@ -12,7 +12,7 @@ trait CKHashable
         return $query->where($this->hashIdName, app(Hashids::class)->encode($plain));
     }
 
-    protected function hashedId(): Attribute
+    protected function hashedKey(): Attribute
     {
         return Attribute::make(
             get: fn () => $this->attributes[$this->hashIdName],

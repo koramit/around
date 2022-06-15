@@ -19,7 +19,7 @@ trait PKHashable
         return $this->where('id', app(Hashids::class)->decode($value)[0])->firstOrFail();
     }
 
-    protected function hashedId(): Attribute
+    protected function hashedKey(): Attribute
     {
         return Attribute::make(
             get: fn () => app(Hashids::class)->encode($this->attributes['id']),
