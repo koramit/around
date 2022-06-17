@@ -42,7 +42,7 @@
                     <td class="border-t">
                         <Link
                             class="px-4 py-2 flex items-center focus:text-primary-darker"
-                            :href="route('procedures.acute-hemodialysis.edit', caseRecord.slug)"
+                            :href="caseRecord.routes.edit"
                         >
                             <div class="p-2 rounded-full bg-white hover:bg-primary-darker transition-colors ease-in-out duration-200">
                                 <IconDoubleRight class="w-4 h-4 text-complement" />
@@ -62,7 +62,7 @@
             >
                 <Link
                     class="flex items-center justify-between focus:text-primary-darker space-x-4"
-                    :href="route('procedures.acute-hemodialysis.edit', caseRecord.slug)"
+                    :href="caseRecord.routes.edit"
                 >
                     <div class="w-full">
                         <div class="my-2 pl-2">

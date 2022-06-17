@@ -14,7 +14,7 @@ return new class extends Migration {
     {
         Schema::create('attending_staffs', function (Blueprint $table) {
             $table->smallIncrements('id');
-            $table->string('name')->unique();
+            $table->string('name')->unique()->collation('th-x-icu');
             $table->unsignedSmallInteger('division_id')->default(1);
             $table->foreign('division_id')->references('id')->on('divisions')->constrained();
             $table->boolean('active')->default(true)->index();

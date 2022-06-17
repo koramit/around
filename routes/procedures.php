@@ -16,7 +16,7 @@ Route::middleware(['auth'])->prefix('procedures')->group(function () {
                 ->name('index');
             Route::post('/', [AcuteHemodialysisCasesController::class, 'store'])
                ->name('store');
-            Route::get('/{caseRecord}/edit', [AcuteHemodialysisCasesController::class, 'edit'])
+            Route::get('/{hashedKey}/edit', [AcuteHemodialysisCasesController::class, 'edit'])
                ->name('edit');
         });
 });

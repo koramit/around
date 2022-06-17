@@ -13,10 +13,15 @@ trait PKHashable
      * @param  mixed  $value
      * @param  string|null  $field
      * @return \Illuminate\Database\Eloquent\Model|null
+     * 🥲 cannot use route model binding when avatar mode is needed
      */
-    public function resolveRouteBinding($value, $field = null)
+    // public function resolveRouteBinding($value, $field = null)
+    // {
+    //     return $this->where('id', app(Hashids::class)->decode($value)[0])->firstOrFail();
+    // }
+    public function scopeFindByUnhashKey($query, string $hashed)
     {
-        return $this->where('id', app(Hashids::class)->decode($value)[0])->firstOrFail();
+        return $query->where('id', app(Hashids::class)->decode($hashed)[0]);
     }
 
     protected function hashedKey(): Attribute

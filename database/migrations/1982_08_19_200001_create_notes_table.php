@@ -27,6 +27,7 @@ return new class extends Migration {
             $table->date('submitted_at')->nullable();
             $table->date('performed_at')->nullable();
             $table->date('canceled_at')->nullable();
+            $table->unsignedInteger('user_id');
             $table->timestamps();
         });
     }

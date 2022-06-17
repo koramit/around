@@ -23,7 +23,7 @@ class AdmissionManager
             $an = $key;
         }
 
-        $admission = Admission::findByHashedId($an)->withPlaceName()->first();
+        $admission = Admission::findByHashedKey($an)->withPlaceName()->first();
 
         if ($admission) {
             // update

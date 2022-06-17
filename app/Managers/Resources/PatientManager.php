@@ -11,7 +11,7 @@ class PatientManager
     {
         $api = app('App\Contracts\PatientAPI');
 
-        $patient = Patient::findByHashedId($hn)->first();
+        $patient = Patient::findByHashedKey($hn)->first();
         if (! $patient) {
             $data = $api->getPatient($hn);
             if (! $data['found']) {
