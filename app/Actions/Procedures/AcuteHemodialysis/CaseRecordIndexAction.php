@@ -43,9 +43,9 @@ class CaseRecordIndexAction extends CaseRecordAction
         $this->setFlash([
             'page-title' => 'Acute Hemodialysis',
             'main-menu-links' => [
-                ['icon' => 'patient', 'label' => 'Patients', 'route' => 'patients', 'can' => true],
-                ['icon' => 'clinic', 'label' => 'Clinics', 'route' => 'clinics', 'can' => true],
-                ['icon' => 'procedure', 'label' => 'Procedures', 'route' => 'procedures', 'can' => true],
+                ['icon' => 'patient', 'label' => 'Patients', 'route' => route('patients'), 'can' => true],
+                ['icon' => 'clinic', 'label' => 'Clinics', 'route' => route('clinics'), 'can' => true],
+                ['icon' => 'procedure', 'label' => 'Procedures', 'route' => route('procedures'), 'can' => true],
             ],
             'action-menu' => [],
         ]);

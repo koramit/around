@@ -67,8 +67,7 @@
 <script setup>
 import { Link } from '@inertiajs/inertia-vue3';
 import IconVector from './IconVector.vue';
-const props = defineProps({
-    scrollMode: {type:String, default: 'desktop'},
+defineProps({
     zenMode: { type: Boolean }
 });
 const isUrl = (url) => {
@@ -79,17 +78,8 @@ const smoothScroll = (href) => {
     if (target === undefined) {
         return;
     }
-    if (props.scrollMode === 'mobile') {
-        window.scroll({
-            top: target.getBoundingClientRect().top -
-                 document.querySelector('header').offsetHeight * 2,
-            left: 0,
-            behavior: 'smooth'
-        });
-    } else {
-        document.querySelector(href).scrollIntoView({
-            behavior: 'smooth'
-        });
-    }
+    document.querySelector(href).scrollIntoView({
+        behavior: 'smooth'
+    });
 };
 </script>

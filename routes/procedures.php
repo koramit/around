@@ -1,6 +1,7 @@
 <?php
 
-use App\Http\Controllers\Procedures\AcuteHemodialysis\CaseRecordController as AcuteHemodialysisCasesController;
+use App\Http\Controllers\Procedures\AcuteHemodialysis\CaseRecordController as AcuteHemodialysisCaseController;
+use App\Http\Controllers\Procedures\AcuteHemodialysis\OrderController as AcuteHemodialysisOrderController;
 use App\Http\Controllers\Procedures\ProcedureController;
 use Illuminate\Support\Facades\Route;
 
@@ -11,12 +12,16 @@ Route::middleware(['auth'])->prefix('procedures')->group(function () {
     Route::prefix('acute-hemodialysis')
         ->name('procedures.acute-hemodialysis.')
         ->group(function () {
-            Route::get('/', [AcuteHemodialysisCasesController::class, 'index'])
+            Route::get('/', [AcuteHemodialysisCaseController::class, 'index'])
                 ->middleware('remember')
                 ->name('index');
-            Route::post('/', [AcuteHemodialysisCasesController::class, 'store'])
+            Route::post('/', [AcuteHemodialysisCaseController::class, 'store'])
                ->name('store');
-            Route::get('/{hashedKey}/edit', [AcuteHemodialysisCasesController::class, 'edit'])
+            Route::get('/{hashedKey}/edit', [AcuteHemodialysisCaseController::class, 'edit'])
                ->name('edit');
+            Route::patch('/{hashedKey}', [AcuteHemodialysisCaseController::class, 'update'])
+               ->name('update');
+            Route::post('/orders', [AcuteHemodialysisOrderController::class, 'store'])
+               ->name('orders.store');
         });
 });

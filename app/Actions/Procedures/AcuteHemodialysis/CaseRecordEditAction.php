@@ -11,6 +11,8 @@ class CaseRecordEditAction extends CaseRecordAction
 {
     protected $LIMIT_ADVANCE_DAYS = 3;
 
+    protected $STAFF_DIVISION_ID = 4;
+
     protected $FORM_CONFIGS = [
         'in_unit_dialysis_types' => [
             'HD 2 hrs.',
@@ -52,6 +54,8 @@ class CaseRecordEditAction extends CaseRecordAction
             ['name' => 'delayed_graft_function', 'label' => 'Delayed graft function'],
         ],
         'insurances' => ['เบิกจ่ายตรง', 'ประกันสังคม', '30 บาท'],
+        'opd_consent_form_pathname' => 'procedures/acute-hemodialysis/opd-consent-form',
+        'ipd_consent_form_pathname' => 'procedures/acute-hemodialysis/ipd-consent-form',
     ];
 
     public function __invoke(string $hashed)
@@ -85,6 +89,16 @@ class CaseRecordEditAction extends CaseRecordAction
         $configs = $this->FORM_CONFIGS + [
             'reserve_available_dates' => $availableDates,
             'reserve_disable_dates' => [], // 'August 13, 2021',
+            'image_upload_endpoints' => [
+                'store' => route('uploads.store'),
+                'show' => url('uploads'),
+            ],
+            'resources_api_wards_endpoint' => route('resources.api.wards'),
+            'resources_api_staffs_endpoint' => route('resources.api.staffs'),
+            'resources_api_acutehemodialysis_slot_available' => route('resources.api.acute-hemodialysis-slot-available'),
+            'procedures_acutehemodialysis_orders_stores' => route('procedures.acute-hemodialysis.orders.store'),
+            'update_enpoint' => route('procedures.acute-hemodialysis.update', $caseRecord->hashed_key),
+            'staffs_scope_params' => '&division_id='.$this->STAFF_DIVISION_ID,
         ];
 
         // HD orders
@@ -104,26 +118,24 @@ class CaseRecordEditAction extends CaseRecordAction
                         ];
                     });
 
-        // menu available
-        $menu = [
-            ['icon' => 'arrow-circle-left', 'label' => 'Back', 'route' => 'procedures.acute-hemodialysis.index', 'can' => true],
-            ['icon' => 'slack-hash', 'label' => 'Case Record', 'route' => '#case-record', 'can' => true],
-            ['icon' => 'slack-hash', 'label' => 'Orders', 'route' => '#orders', 'can' => true],
-            ['icon' => 'slack-hash', 'label' => 'Reservation', 'route' => '#reservation', 'can' => true],
-            ['icon' => 'patient', 'label' => 'Patients', 'route' => 'patients', 'can' => true],
-            ['icon' => 'clinic', 'label' => 'Clinics', 'route' => 'clinics', 'can' => true],
-            ['icon' => 'procedure', 'label' => 'Procedures', 'route' => 'procedures', 'can' => true],
-        ];
+        $this->setFlash([
+            'page-title' => 'Acute HD '.$caseRecord->patient->full_name,
+            'main-menu-links' => [
+                ['icon' => 'arrow-circle-left', 'label' => 'Back', 'route' => route('procedures.acute-hemodialysis.index'), 'can' => true],
+                ['icon' => 'slack-hash', 'label' => 'Case Record', 'type' => '#', 'route' => '#case-record', 'can' => true],
+                ['icon' => 'slack-hash', 'label' => 'Orders', 'type' => '#', 'route' => '#orders', 'can' => true],
+                ['icon' => 'slack-hash', 'label' => 'Reservation', 'type' => '#', 'route' => '#reservation', 'can' => true],
+                ['icon' => 'patient', 'label' => 'Patients', 'route' => route('patients'), 'can' => true],
+                ['icon' => 'clinic', 'label' => 'Clinics', 'route' => route('clinics'), 'can' => true],
+                ['icon' => 'procedure', 'label' => 'Procedures', 'route' => route('procedures'), 'can' => true],
+            ],
+            'action-menu' => [],
+        ]);
 
         return [
             'caseRecordForm' => $form,
             'formConfigs' => $configs,
             'orders' => $orders,
-            'flash' => [
-                'page-title' => 'Acute HD '.$caseRecord->patient->full_name,
-                'main-menu-links' => $menu,
-                'action-menu' => [],
-            ],
         ];
     }
 }

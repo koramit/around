@@ -3,11 +3,13 @@
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LocalizationController;
 use App\Http\Controllers\PreferenceController;
+use App\Http\Controllers\Procedures\AcuteHemodialysis\SlotAvailableController as AcuteHemodialysisSlotAvailableController;
 use App\Http\Controllers\Resources\AdmissionController;
 use App\Http\Controllers\Resources\AttendingStaffController;
 use App\Http\Controllers\Resources\PatientRecentlyAdmissionController;
 use App\Http\Controllers\Resources\WardController;
 use App\Http\Controllers\TermsAndPoliciesController;
+use App\Http\Controllers\UploadController;
 use App\Models\Resources\Patient;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
@@ -54,9 +56,18 @@ Route::middleware('auth')->name('resources.api.')->group(function () {
          ->name('wards');
     Route::get('staffs', AttendingStaffController::class)
          ->name('staffs');
-    // Route::get('acute-hemodialysis-slot-available', AcuteHemodialysisSlotAvailableController::class)
-    //      ->name('acute-hemodialysis-slot-available');
+
+    Route::post('acute-hemodialysis-slot-available', AcuteHemodialysisSlotAvailableController::class)
+         ->name('acute-hemodialysis-slot-available');
 });
+
+// uploads
+Route::post('uploads', [UploadController::class, 'store'])
+     ->middleware('auth')
+     ->name('uploads.store');
+Route::get('uploads/{path}/{filename}', [UploadController::class, 'show'])
+     ->middleware('auth')
+     ->name('uploads.show');
 
 require __DIR__.'/procedures.php';
 

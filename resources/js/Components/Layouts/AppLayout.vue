@@ -122,10 +122,7 @@
                         </Link>
                     </div>
                     <hr class="my-4">
-                    <MainMenu
-                        @click="mobileMenuVisible = false"
-                        scroll-mode="mobile"
-                    />
+                    <MainMenu @click="mobileMenuVisible = false" />
                 </div>
             </div>
         </header>
