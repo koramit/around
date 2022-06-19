@@ -21,7 +21,7 @@ trait PKHashable
     // }
     public function scopeFindByUnhashKey($query, string $hashed)
     {
-        return $query->where('id', app(Hashids::class)->decode($hashed)[0]);
+        return $query->where('id', app(Hashids::class)->decode($hashed)[0] ?? 0);
     }
 
     protected function hashedKey(): Attribute
