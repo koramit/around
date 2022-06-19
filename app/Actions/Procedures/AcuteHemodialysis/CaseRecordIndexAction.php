@@ -40,7 +40,7 @@ class CaseRecordIndexAction extends AcuteHemodialysisAction
                 ],
             ]);
 
-        $this->setFlash([
+        $flash = [
             'page-title' => 'Acute Hemodialysis',
             'main-menu-links' => [
                 ['icon' => 'patient', 'label' => 'Patients', 'route' => route('patients'), 'can' => true],
@@ -48,7 +48,7 @@ class CaseRecordIndexAction extends AcuteHemodialysisAction
                 ['icon' => 'procedure', 'label' => 'Procedures', 'route' => route('procedures'), 'can' => true],
             ],
             'action-menu' => [],
-        ]);
+        ];
 
         return [
             'cases' => $cases,
@@ -61,6 +61,7 @@ class CaseRecordIndexAction extends AcuteHemodialysisAction
                 'store' => route('procedures.acute-hemodialysis.store'),
                 'serviceEndpoint' => route('resources.api.patient-recently-admission.show'),
             ],
+            'flash' => $flash,
         ];
     }
 }

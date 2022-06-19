@@ -110,7 +110,7 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
                         ];
                     });
 
-        $this->setFlash([
+        $flash = [
             'page-title' => 'Acute HD '.$caseRecord->patient->full_name,
             'main-menu-links' => [
                 ['icon' => 'arrow-circle-left', 'label' => 'Back', 'route' => route('procedures.acute-hemodialysis.index'), 'can' => true],
@@ -122,12 +122,13 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
                 ['icon' => 'procedure', 'label' => 'Procedures', 'route' => route('procedures'), 'can' => true],
             ],
             'action-menu' => [],
-        ]);
+        ];
 
         return [
             'caseRecordForm' => $form,
             'formConfigs' => $configs,
             'orders' => $orders,
+            'flash' => $flash,
         ];
     }
 }

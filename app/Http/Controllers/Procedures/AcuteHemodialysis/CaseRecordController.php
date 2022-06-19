@@ -7,16 +7,21 @@ use App\Actions\Procedures\AcuteHemodialysis\CaseRecordIndexAction;
 use App\Actions\Procedures\AcuteHemodialysis\CaseRecordStoreAction;
 use App\Actions\Procedures\AcuteHemodialysis\CaseRecordUpdateAction;
 use App\Http\Controllers\Controller;
+use App\Traits\AppLayoutSessionFlashable;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class CaseRecordController extends Controller
 {
+    use AppLayoutSessionFlashable;
+
     public function index(Request $request)
     {
         $data = (new CaseRecordIndexAction)($request->all());
 
         // if want json return $data
+
+        $this->setFlash($data['flash']);
 
         return Inertia::render('Procedures/AcuteHemodialysis/CaseIndex', [
             'cases' => $data['cases'],
@@ -39,6 +44,8 @@ class CaseRecordController extends Controller
         $data = (new CaseRecordEditAction)($hashedKey);
 
         // if want json return $data
+
+        $this->setFlash($data['flash']);
 
         return Inertia::render('Procedures/AcuteHemodialysis/CaseEdit', [
             'caseRecordForm' => $data['caseRecordForm'],
