@@ -20,6 +20,7 @@ return new class extends Migration {
             $table->unsignedSmallInteger('attending_staff_id')->nullable();
             $table->foreign('attending_staff_id')->references('id')->on('attending_staffs')->constrained();
             $table->nullableMorphs('place');
+            $table->jsonb('meta');
             $table->json('form');
             $table->json('report')->nullable();
             $table->unsignedTinyInteger('status')->default(1)->index();

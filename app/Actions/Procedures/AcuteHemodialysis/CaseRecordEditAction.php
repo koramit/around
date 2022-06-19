@@ -6,31 +6,17 @@ use App\Managers\Resources\AdmissionManager;
 use App\Models\CaseRecord;
 use App\Models\Note;
 use App\Models\Resources\Ward;
+use App\Traits\AcuteHemodialysisTypeReusable;
 
-class CaseRecordEditAction extends CaseRecordAction
+class CaseRecordEditAction extends AcuteHemodialysisAction
 {
+    use AcuteHemodialysisTypeReusable;
+
     protected $LIMIT_ADVANCE_DAYS = 3;
 
     protected $STAFF_DIVISION_ID = 4;
 
     protected $FORM_CONFIGS = [
-        'in_unit_dialysis_types' => [
-            'HD 2 hrs.',
-            'HD 3 hrs.',
-            'HD 4 hrs.',
-            'HD+HF 4 hrs.',
-            'HD+TPE 6 hrs.',
-            'HF 2 hrs.',
-            'TPE 2 hrs.',
-        ],
-        'out_unit_dialysis_types' => [
-            'HD 2 hrs.',
-            'HD 3 hrs.',
-            'HD 4 hrs.',
-            'HD+HF 4 hrs.',
-            'HF 2 hrs.',
-            'SLEDD',
-        ],
         'renal_diagnosis' => ['AKI', 'AKI ontop CKD', 'ESRD', 'Post KT'],
         'comorbidities' => [
             ['name' => 'DM', 'label' => 'DM'],
@@ -87,17 +73,22 @@ class CaseRecordEditAction extends CaseRecordAction
             $count++;
         } while ($count <= $this->LIMIT_ADVANCE_DAYS);
         $configs = $this->FORM_CONFIGS + [
+            'in_unit_dialysis_types' => $this->IN_UNIT,
+            'out_unit_dialysis_types' => $this->OUT_UNIT,
+            'patient_types' => $this->PATIENT_TYPES,
             'reserve_available_dates' => $availableDates,
             'reserve_disable_dates' => [], // 'August 13, 2021',
             'image_upload_endpoints' => [
                 'store' => route('uploads.store'),
                 'show' => url('uploads'),
             ],
-            'resources_api_wards_endpoint' => route('resources.api.wards'),
-            'resources_api_staffs_endpoint' => route('resources.api.staffs'),
-            'resources_api_acutehemodialysis_slot_available' => route('resources.api.acute-hemodialysis-slot-available'),
-            'procedures_acutehemodialysis_orders_stores' => route('procedures.acute-hemodialysis.orders.store'),
-            'update_enpoint' => route('procedures.acute-hemodialysis.update', $caseRecord->hashed_key),
+            'endpoints' => [
+                'resources_api_wards' => route('resources.api.wards'),
+                'resources_api_staffs' => route('resources.api.staffs'),
+                'resources_api_acutehemodialysis_slot_available' => route('resources.api.acute-hemodialysis-slot-available'),
+                'procedures_acutehemodialysis_orders_store' => route('procedures.acute-hemodialysis.orders.store'),
+                'update' => route('procedures.acute-hemodialysis.update', $caseRecord->hashed_key),
+            ],
             'staffs_scope_params' => '&division_id='.$this->STAFF_DIVISION_ID,
         ];
 
@@ -111,6 +102,7 @@ class CaseRecordEditAction extends CaseRecordAction
                     ->get()
                     ->transform(function ($note) {
                         return [
+                            'edit_route' => route('procedures.acute-hemodialysis.orders.edit', $note->hashed_key),
                             'ward_name' => $note->place_name,
                             'dialysis_type' => $note->form['dialysis_type'],
                             'date_dialyze' => $note->date_note->format('d M'),

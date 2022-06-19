@@ -29,7 +29,7 @@
                     <td class="border-t">
                         <Link
                             class="px-4 py-2 flex items-center focus:text-alt-theme-light"
-                            :href="route('procedures.acute-hemodialysis.orders.edit', order.slug)"
+                            :href="order.edit_route"
                         >
                             <div class="p-2 rounded-full bg-white hover:bg-alt-theme-light transition-colors ease-in-out duration-200">
                                 <IconDoubleRight
@@ -69,7 +69,7 @@
                     <div class="w-1/3 flex justify-end">
                         <Link
                             class="px-4 py-2 flex items-center focus:text-alt-theme-light"
-                            :href="route('procedures.acute-hemodialysis.orders.edit', order.slug)"
+                            :href="order.edit_route"
                         >
                             <div class="p-2 rounded-full bg-white">
                                 <IconDoubleRight

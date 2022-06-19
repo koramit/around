@@ -1,6 +1,6 @@
 <template>
     <div>
-        <p class="mt-1 italic text-xs text-bitter-theme-light">
+        <p class="mt-1 italic text-xs text-accent">
             ๏ Not in any particular order
         </p>
         <transition-group
@@ -22,18 +22,18 @@
                 :key="key"
             >
                 <template v-if="!slot.available">
-                    <span class="p-1 md:p-2 bg-soft-theme-light rounded-full text-xs text-bitter-theme-light font-semibold">{{ slot.type }}</span>
+                    <span class="p-1 md:p-2 bg-primary rounded-full text-xs text-accent font-semibold">{{ slot.type }}</span>
                     <div class="mt-1 md:mt-0 space-y-1 md:space-y-2">
                         <Link
-                            class="font-semibold text-soft-theme-light text-xs flex items-center"
-                            :href="route('procedures.acute-hemodialysis.edit', slot.case_record_slug)"
+                            class="font-semibold text-primary text-xs flex items-center"
+                            :href="slot.edit_route"
                         >
                             <IconPatient
                                 class="h-3 w-3 mr-1 text-white"
                             />
                             <span class="block italic truncate underline">{{ slot.patient_name }}</span>
                         </Link>
-                        <p class="font-semibold text-soft-theme-light text-xs flex items-center">
+                        <p class="font-semibold text-primary text-xs flex items-center">
                             <IconUserMd
                                 class="h-3 w-3 mr-1 text-white"
                             />

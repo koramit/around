@@ -5,7 +5,7 @@ namespace App\Actions\Procedures\AcuteHemodialysis;
 use App\Models\CaseRecord;
 use App\Models\Note;
 
-class CaseRecordIndexAction extends CaseRecordAction
+class CaseRecordIndexAction extends AcuteHemodialysisAction
 {
     public function __invoke(array $filters)
     {

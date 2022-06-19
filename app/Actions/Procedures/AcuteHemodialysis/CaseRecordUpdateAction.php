@@ -4,7 +4,7 @@ namespace App\Actions\Procedures\AcuteHemodialysis;
 
 use App\Models\CaseRecord;
 
-class CaseRecordUpdateAction extends CaseRecordAction
+class CaseRecordUpdateAction extends AcuteHemodialysisAction
 {
     public function __invoke(array $data, string $hashedKey, int $userId)
     {

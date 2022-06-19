@@ -23,5 +23,7 @@ Route::middleware(['auth'])->prefix('procedures')->group(function () {
                ->name('update');
             Route::post('/orders', [AcuteHemodialysisOrderController::class, 'store'])
                ->name('orders.store');
+            Route::get('/orders/{hashedKey}/edit', [AcuteHemodialysisOrderController::class, 'edit'])
+               ->name('orders.edit');
         });
 });

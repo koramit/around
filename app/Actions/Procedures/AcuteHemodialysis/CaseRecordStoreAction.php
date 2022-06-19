@@ -9,11 +9,11 @@ use App\Rules\AnExists;
 use App\Rules\HnExists;
 use Illuminate\Support\Facades\Validator;
 
-class CaseRecordStoreAction extends CaseRecordAction
+class CaseRecordStoreAction extends AcuteHemodialysisAction
 {
     protected $CRF_VERSION = 1.0;
 
-    protected $INITIAL_FORM = [
+    protected $FORM_TEMPLATE = [
         'an' => null,
         'ward_admit' => null,
         'ward_discharge' => null,
@@ -76,7 +76,7 @@ class CaseRecordStoreAction extends CaseRecordAction
         $patient = Patient::query()->findByHashedKey($validated['hn'])->first();
         $caseRecord->patient_id = $patient->id;
         $caseRecord->registry_id = $this->REGISTRY_ID;
-        $form = $this->INITIAL_FORM;
+        $form = $this->FORM_TEMPLATE;
         if ($validated['an'] ?? false) {
             $admission = Admission::query()->findByHashedKey($validated['an'])->first();
             if (! $admission->dismissed_at) { // active admission

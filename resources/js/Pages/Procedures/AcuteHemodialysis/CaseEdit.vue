@@ -54,7 +54,7 @@
             />
             <FormAutocomplete
                 label="ward discharge"
-                :endpoint="configs.resources_api_wards_endpoint"
+                :endpoint="configs.endpoints.resources_api_wards"
                 v-model="form.ward_discharge"
                 name="ward_discharge"
             />
@@ -351,14 +351,14 @@
             label="dialysis at"
             name="dialysis_at"
             v-model="order.dialysis_at"
-            :endpoint="configs.resources_api_wards_endpoint"
+            :endpoint="configs.endpoints.resources_api_wards"
             :error="order.errors.dialysis_at"
         />
         <FormAutocomplete
             label="attending"
             name="attending_staff"
             v-model="order.attending_staff"
-            :endpoint="configs.resources_api_staffs_endpoint"
+            :endpoint="configs.endpoints.resources_api_staffs"
             :params="configs.staffs_scope_params"
             :error="order.errors.attending_staff"
         />
@@ -375,7 +375,7 @@
                 class="grid grid-cols-2 gap-x-2"
                 name="patient_type"
                 v-model="order.patient_type"
-                :options="['Acute', 'Chronic']"
+                :options="configs.patient_types"
                 ref="patientTypeInput"
             />
         </div>
@@ -402,7 +402,7 @@
             </div>
             <div class="mt-2 lg:mt-0 md:pt-4">
                 <SpinnerButton
-                    class="block w-full text-center btn btn-bitter"
+                    class="block w-full text-center btn btn-accent"
                     @click="reserve"
                     :spin="order.processing"
                     :disabled="reserveButtonDisable"
@@ -462,7 +462,7 @@ watch (
         let data = val.data();
         delete data.admission;
         delete data.record;
-        autosave(configs.update_enpoint, data);
+        autosave(configs.endpoints.update, data);
     },
     { deep: true }
 );
@@ -560,7 +560,7 @@ watch (
             return;
         }
         window.axios
-            .post(configs.resources_api_acutehemodialysis_slot_available, {
+            .post(configs.endpoints.resources_api_acutehemodialysis_slot_available, {
                 dialysis_type: order.dialysis_type,
                 dialysis_at: order.dialysis_at,
                 date_note: order.date_note,
@@ -590,8 +590,10 @@ const reserveButtonDisable = computed(() => {
 });
 
 const reserve = () => {
-    order.post(configs.procedures_acutehemodialysis_orders_store_endpoint, {
+    console.log(configs.endpoints.procedures_acutehemodialysis_orders_store);
+    order.post(configs.endpoints.procedures_acutehemodialysis_orders_store, {
         onFinish: () => order.processing = false,
+        onError: (error) => console.log(error),
     });
 };
 </script>

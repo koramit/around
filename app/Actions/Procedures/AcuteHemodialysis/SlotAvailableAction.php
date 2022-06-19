@@ -4,12 +4,15 @@ namespace App\Actions\Procedures\AcuteHemodialysis;
 
 use App\Models\Note;
 
-class SlotAvailableAction extends CaseRecordAction
+class SlotAvailableAction extends AcuteHemodialysisAction
 {
     protected $LIMIT_IN_UNIT_SLOTS = 32;
 
     protected $LIMIT_TPE_SLOTS = 3;
 
+    /**
+     * @todo complete out unit slot
+     */
     public function __invoke(array $data)
     {
         /*
@@ -39,7 +42,7 @@ class SlotAvailableAction extends CaseRecordAction
                     ->get()
                     ->transform(function ($note) {
                         return [
-                            'case_record_slug' => $note->caseRecord->slug,
+                            'edit_route' => route('procedures.acute-hemodialysis.edit', $note->caseRecord->hashed_key),
                             'patient_name' => $note->patient->profile['first_name'],
                             'author' => $note->author->name,
                             'type' => $note->form['dialysis_type'],
