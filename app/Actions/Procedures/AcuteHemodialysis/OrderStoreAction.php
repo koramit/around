@@ -3,7 +3,7 @@
 namespace App\Actions\Procedures\AcuteHemodialysis;
 
 use App\Models\Note;
-use App\Rules\IdExistsInPatients;
+use App\Rules\IdExistsInCaseRecords;
 use App\Rules\NameExistsInAttendingStaffs;
 use App\Rules\NameExistsInWards;
 use App\Traits\AcuteHemodialysisTypeReusable;
@@ -182,12 +182,11 @@ class OrderStoreAction extends AcuteHemodialysisAction
         }
 
         $validated = Validator::make($data, [
-            'dialysis_type' => ['required', 'string', Rule::in($this->getAllType())],
+            'dialysis_type' => ['required', 'string', Rule::in($this->getAllDialysisType())],
             'patient_type' => ['required', 'string', Rule::in($this->PATIENT_TYPES)],
             'dialysis_at' => ['required', 'string', 'max:255', new NameExistsInWards],
             'attending_staff' => ['required', 'string', 'max:255', new NameExistsInAttendingStaffs],
-            'case_record_id' => ['required', 'exists:case_records,id'],
-            'patient_id' => ['required', new IdExistsInPatients],
+            'case_record_id' => ['required', new IdExistsInCaseRecords],
             'date_note' => ['required', 'date'],
         ])->validate();
 
@@ -196,16 +195,18 @@ class OrderStoreAction extends AcuteHemodialysisAction
         $note->note_type_id = $this->ACUTE_HD_ORDER_NOTE_TYPE_ID;
         $note->attending_staff_id = session()->pull('validatedAttending')->id;
         $note->place_type = Ward::class;
-        $note->place_id = session()->pull('validatedWard')->id;
+        $ward = session()->pull('validatedWard');
+        $note->place_id = $ward->id;
         $note->date_note = $validated['date_note'];
         $form = $this->initForm($validated['dialysis_type']);
         $form['patient_type'] = $validated['patient_type'];
         $note->form = $form;
-        $patient = session()->pull('validatedPatient');
+        $patient = session()->pull('validatedCaseRecord')->patient;
         $note->meta = [
             'hn' => $patient->hn,
             'name' => $patient->first_name,
             'version' => $this->FORM_VERSION,
+            'in_unit' => $ward->id === $this->IN_UNIT_WARD_ID,
         ];
         $note->user_id = $userId;
         $note->save();

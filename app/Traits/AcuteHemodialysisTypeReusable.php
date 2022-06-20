@@ -23,8 +23,8 @@ trait AcuteHemodialysisTypeReusable
         'SLEDD',
     ];
 
-    protected function getAllType()
+    protected function getAllDialysisType()
     {
-        return collect($this->IN_UNIT + $this->OUT_UNIT)->unique()->all();
+        return collect($this->IN_UNIT)->merge($this->OUT_UNIT)->unique()->values()->all();
     }
 }

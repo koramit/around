@@ -397,7 +397,10 @@
                         :reserved-slots="reservedSlots.slots"
                         v-if="order.dialysis_at.indexOf('Hemo') !== -1"
                     />
-                    <WardSlot v-else />
+                    <WardSlot
+                        v-else
+                        :reserved-slots="reservedSlots.slots"
+                    />
                 </transition>
             </div>
             <div class="mt-2 lg:mt-0 md:pt-4">
@@ -542,7 +545,6 @@ const order = useForm({
     date_note: null,
     patient_type: null,
     case_record_id: form.record.id,
-    patient_id: form.record.patient_id,
 });
 const patientTypeInput = ref(null);
 const onDayCreate = (dObj, dStr, fp, dayElem) => {

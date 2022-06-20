@@ -12,6 +12,8 @@ class AcuteHemodialysisAction
 
     protected $PATIENT_TYPES = ['Acute', 'Chronic'];
 
+    protected $IN_UNIT_WARD_ID = 72;
+
     public function __construct()
     {
         $this->ACUTE_HD_ORDER_NOTE_TYPE_ID = config('notes.acute_hd_order');

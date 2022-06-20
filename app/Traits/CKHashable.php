@@ -16,6 +16,6 @@ trait CKHashable
     {
         return Attribute::make(
             get: fn () => $this->attributes[$this->hashIdName],
-        );
+        )->shouldCache();
     }
 }

@@ -26,7 +26,7 @@
                     <div class="mt-1 md:mt-0 space-y-1 md:space-y-2">
                         <Link
                             class="font-semibold text-primary text-xs flex items-center"
-                            :href="slot.edit_route"
+                            :href="slot.case_record_route"
                         >
                             <IconPatient
                                 class="h-3 w-3 mr-1 text-white"

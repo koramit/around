@@ -28,6 +28,6 @@ trait PKHashable
     {
         return Attribute::make(
             get: fn () => app(Hashids::class)->encode($this->attributes['id']),
-        );
+        )->shouldCache();
     }
 }

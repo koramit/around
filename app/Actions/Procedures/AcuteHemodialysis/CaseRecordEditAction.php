@@ -58,7 +58,6 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
                         ? (new AdmissionManager)->manage($caseRecord->form['an'])['admission']
                         : [];
         $form['record']['id'] = $caseRecord->id;
-        $form['record']['patient_id'] = $caseRecord->patient_id;
         $form['record']['hn'] = $caseRecord->patient->hn;
 
         // form configs
