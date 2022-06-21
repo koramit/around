@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\NoteStatus;
 use App\Models\Resources\Patient;
 use App\Traits\PKHashable;
 use Illuminate\Database\Eloquent\Casts\AsArrayObject;
@@ -18,6 +19,7 @@ class Note extends Model
         'form' => AsArrayObject::class,
         'meta' => AsArrayObject::class,
         'date_note' => 'date',
+        'status' => NoteStatus::class,
     ];
 
     public function patient()
