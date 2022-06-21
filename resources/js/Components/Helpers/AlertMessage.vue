@@ -1,7 +1,7 @@
 <template>
     <div
         role="alert"
-        class="border-t-4 rounded-b px-4 py-3 shadow-sm bg-gray-100"
+        class="border-t-4 rounded-b px-4 py-3 shadow-sm bg-white"
         :class="{
             'border-red-400': type == 'danger', 'text-red-400': type == 'danger',
             'border-yellow-400': type == 'warning', 'text-yellow-400': type == 'warning',

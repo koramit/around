@@ -3,17 +3,18 @@
 namespace App\Actions\Procedures\AcuteHemodialysis;
 
 use App\Models\Note;
-use App\Rules\IdExistsInCaseRecords;
+use App\Rules\HashedKeyExistsInCaseRecords;
 use App\Rules\NameExistsInAttendingStaffs;
 use App\Rules\NameExistsInWards;
-use App\Traits\AcuteHemodialysisTypeReusable;
+use App\Traits\AcuteHemodialysis\OrderShareValidatable;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 
 class OrderStoreAction extends AcuteHemodialysisAction
 {
-    use AcuteHemodialysisTypeReusable;
+    use OrderShareValidatable;
 
     protected $FORM_VERSION = 1.0;
 
@@ -186,12 +187,17 @@ class OrderStoreAction extends AcuteHemodialysisAction
             'patient_type' => ['required', 'string', Rule::in($this->PATIENT_TYPES)],
             'dialysis_at' => ['required', 'string', 'max:255', new NameExistsInWards],
             'attending_staff' => ['required', 'string', 'max:255', new NameExistsInAttendingStaffs],
-            'case_record_id' => ['required', new IdExistsInCaseRecords],
+            'case_record_hashed_key' => ['required', new HashedKeyExistsInCaseRecords],
             'date_note' => ['required', 'date'],
         ])->validate();
 
+        $caseRecord = session()->pull('validatedCaseRecord');
+        if (! $this->isDialysisReservable($caseRecord)) {
+            throw ValidationException::withMessages(['status' => 'one active order at a time']);
+        }
+
         $note = new Note();
-        $note->case_record_id = $validated['case_record_id'];
+        $note->case_record_id = $caseRecord->id;
         $note->note_type_id = $this->ACUTE_HD_ORDER_NOTE_TYPE_ID;
         $note->attending_staff_id = session()->pull('validatedAttending')->id;
         $note->place_type = Ward::class;
@@ -201,7 +207,7 @@ class OrderStoreAction extends AcuteHemodialysisAction
         $form = $this->initForm($validated['dialysis_type']);
         $form['patient_type'] = $validated['patient_type'];
         $note->form = $form;
-        $patient = session()->pull('validatedCaseRecord')->patient;
+        $patient = $caseRecord->patient;
         $note->meta = [
             'hn' => $patient->hn,
             'name' => $patient->first_name,

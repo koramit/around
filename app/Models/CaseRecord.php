@@ -24,6 +24,16 @@ class CaseRecord extends Model
         return $this->belongsTo(Patient::class);
     }
 
+    public function notes()
+    {
+        return $this->hasMany(Note::class);
+    }
+
+    /**
+     * THIS CAN BE REPLACE WITH QUERY ON STATUS.
+     *
+     * @todo use note status instead of this
+     */
     public function latestAcuteOrder()
     {
         return $this->hasOne(Note::class)->ofMany([

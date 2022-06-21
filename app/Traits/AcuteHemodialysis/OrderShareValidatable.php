@@ -1,8 +1,11 @@
 <?php
 
-namespace App\Traits;
+namespace App\Traits\AcuteHemodialysis;
 
-trait AcuteHemodialysisTypeReusable
+use App\Casts\AcuteHemodialysisOrderStatus as NoteStatus;
+use App\Models\CaseRecord;
+
+trait OrderShareValidatable
 {
     protected $IN_UNIT = [
         'HD 2 hrs.',
@@ -26,5 +29,15 @@ trait AcuteHemodialysisTypeReusable
     protected function getAllDialysisType()
     {
         return collect($this->IN_UNIT)->merge($this->OUT_UNIT)->unique()->values()->all();
+    }
+
+    public function isDialysisReservable(CaseRecord $caseRecord): bool
+    {
+        $activeNoteCount = $caseRecord->notes()
+            ->where('note_type_id', $this->ACUTE_HD_ORDER_NOTE_TYPE_ID)
+            ->whereIn('status', (new NoteStatus)->getActiveStatusCodes())
+            ->count();
+
+        return $activeNoteCount === 0;
     }
 }

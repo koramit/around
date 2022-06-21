@@ -6,11 +6,11 @@ use App\Managers\Resources\AdmissionManager;
 use App\Models\CaseRecord;
 use App\Models\Note;
 use App\Models\Resources\Ward;
-use App\Traits\AcuteHemodialysisTypeReusable;
+use App\Traits\AcuteHemodialysis\OrderShareValidatable;
 
 class CaseRecordEditAction extends AcuteHemodialysisAction
 {
-    use AcuteHemodialysisTypeReusable;
+    use OrderShareValidatable;
 
     protected $LIMIT_ADVANCE_DAYS = 3;
 
@@ -52,12 +52,31 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
 
         $caseRecord = CaseRecord::query()->findByUnhashKey($hashed)->firstOrFail();
 
+        // HD orders
+        $orders = Note::with(['patient'])
+        ->WithAuthorUsername()
+        ->withPlaceName(Ward::class)
+        ->where('case_record_id', $caseRecord->id)
+        ->where('note_type_id', $this->ACUTE_HD_ORDER_NOTE_TYPE_ID)
+        ->orderByDesc('date_note')
+        ->get()
+        ->transform(function ($note) {
+            return [
+                'edit_route' => route('procedures.acute-hemodialysis.orders.edit', $note->hashed_key),
+                'ward_name' => $note->place_name,
+                'dialysis_type' => $note->form['dialysis_type'],
+                'date_dialyze' => $note->date_note->format('d M'),
+                'md' => $note->author_username,
+                'status' => $note->status,
+            ];
+        });
+
         // form
         $form = $caseRecord->form;
         $form['admission'] = ($form['an'] ?? false)
                         ? (new AdmissionManager)->manage($caseRecord->form['an'])['admission']
                         : [];
-        $form['record']['id'] = $caseRecord->id;
+        $form['record']['hashed_key'] = $caseRecord->hashed_key;
         $form['record']['hn'] = $caseRecord->patient->hn;
 
         // form configs
@@ -89,25 +108,8 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
                 'update' => route('procedures.acute-hemodialysis.update', $caseRecord->hashed_key),
             ],
             'staffs_scope_params' => '&division_id='.$this->STAFF_DIVISION_ID,
+            'dialysis_reservable' => $this->isDialysisReservable($caseRecord),
         ];
-
-        // HD orders
-        $orders = Note::with(['patient'])
-                    ->WithAuthorUsername()
-                    ->withPlaceName(Ward::class)
-                    ->where('case_record_id', $caseRecord->id)
-                    ->where('note_type_id', $this->ACUTE_HD_ORDER_NOTE_TYPE_ID)
-                    ->orderByDesc('date_note')
-                    ->get()
-                    ->transform(function ($note) {
-                        return [
-                            'edit_route' => route('procedures.acute-hemodialysis.orders.edit', $note->hashed_key),
-                            'ward_name' => $note->place_name,
-                            'dialysis_type' => $note->form['dialysis_type'],
-                            'date_dialyze' => $note->date_note->format('d M'),
-                            'md' => $note->author_username,
-                        ];
-                    });
 
         $flash = [
             'page-title' => 'Acute HD '.$caseRecord->patient->full_name,

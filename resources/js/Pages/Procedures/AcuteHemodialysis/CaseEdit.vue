@@ -1,7 +1,7 @@
 <template>
     <!-- summary  -->
     <h2
-        class="form-label text-lg italic text-complement-darke scroll-mt-16 md:scroll-mt-8"
+        class="form-label text-lg italic text-complement scroll-mt-16 md:scroll-mt-8"
         id="case-record"
     >
         Case record
@@ -330,7 +330,7 @@
 
     <!-- HD orders -->
     <h2
-        class="mt-6 md:mt-12 xl:mt-24 form-label italic text-xl text-complement-darker"
+        class="mt-6 md:mt-12 xl:mt-24 form-label italic text-xl text-complement"
         id="orders"
     >
         Orders
@@ -340,81 +340,89 @@
 
     <!-- reservation -->
     <h2
-        class="mt-6 md:mt-12 xl:mt-24 form-label italic text-xl text-complement-darker"
+        class="mt-6 md:mt-12 xl:mt-24 form-label italic text-xl text-complement"
         id="reservation"
     >
         Reservation
     </h2>
     <hr class="my-4 border-b border-accent">
-    <div class="grid md:grid-cols-2 gap-2 lg:gap-6">
-        <FormAutocomplete
-            label="dialysis at"
-            name="dialysis_at"
-            v-model="order.dialysis_at"
-            :endpoint="configs.endpoints.resources_api_wards"
-            :error="order.errors.dialysis_at"
-        />
-        <FormAutocomplete
-            label="attending"
-            name="attending_staff"
-            v-model="order.attending_staff"
-            :endpoint="configs.endpoints.resources_api_staffs"
-            :params="configs.staffs_scope_params"
-            :error="order.errors.attending_staff"
-        />
-        <FormSelect
-            label="dialysis type"
-            name="order_dialysis_type"
-            v-model="order.dialysis_type"
-            :options="order.dialysis_at && order.dialysis_at.startsWith('ไตเทียม') ? configs.in_unit_dialysis_types : configs.out_unit_dialysis_types"
-            :disabled="!order.dialysis_at"
-        />
-        <div>
-            <label class="form-label">patient type</label>
-            <FormRadio
-                class="grid grid-cols-2 gap-x-2"
-                name="patient_type"
-                v-model="order.patient_type"
-                :options="configs.patient_types"
-                ref="patientTypeInput"
+    <template v-if="configs.dialysis_reservable">
+        <div class="grid md:grid-cols-2 gap-2 lg:gap-6">
+            <FormAutocomplete
+                label="dialysis at"
+                name="dialysis_at"
+                v-model="order.dialysis_at"
+                :endpoint="configs.endpoints.resources_api_wards"
+                :error="order.errors.dialysis_at"
             />
-        </div>
-    </div>
-    <transition name="slide-fade">
-        <div v-if="order.dialysis_at && order.dialysis_type">
-            <div class="grid xl:grid-cols-2 gap-2 md:gap-4 lg:gap-6">
-                <FormDatetime
-                    label="required date"
-                    name="date_note"
-                    v-model="order.date_note"
-                    :options="{ enable: configs.reserve_available_dates, onDayCreate: onDayCreate, inline: true }"
+            <FormAutocomplete
+                label="attending"
+                name="attending_staff"
+                v-model="order.attending_staff"
+                :endpoint="configs.endpoints.resources_api_staffs"
+                :params="configs.staffs_scope_params"
+                :error="order.errors.attending_staff"
+            />
+            <FormSelect
+                label="dialysis type"
+                name="order_dialysis_type"
+                v-model="order.dialysis_type"
+                :options="order.dialysis_at && order.dialysis_at.startsWith('ไตเทียม') ? configs.in_unit_dialysis_types : configs.out_unit_dialysis_types"
+                :disabled="!order.dialysis_at"
+            />
+            <div>
+                <label class="form-label">patient type</label>
+                <FormRadio
+                    class="grid grid-cols-2 gap-x-2"
+                    name="patient_type"
+                    v-model="order.patient_type"
+                    :options="configs.patient_types"
+                    ref="patientTypeInput"
                 />
-                <transition
-                    name="slide-fade"
-                    v-if="order.date_note && order.dialysis_at"
-                >
-                    <DialysisSlot
-                        :reserved-slots="reservedSlots.slots"
-                        v-if="order.dialysis_at.indexOf('Hemo') !== -1"
-                    />
-                    <WardSlot
-                        v-else
-                        :reserved-slots="reservedSlots.slots"
-                    />
-                </transition>
-            </div>
-            <div class="mt-2 lg:mt-0 md:pt-4">
-                <SpinnerButton
-                    class="block w-full text-center btn btn-accent"
-                    @click="reserve"
-                    :spin="order.processing"
-                    :disabled="reserveButtonDisable"
-                >
-                    RESERVE
-                </SpinnerButton>
             </div>
         </div>
-    </transition>
+        <transition name="slide-fade">
+            <div v-if="order.dialysis_at && order.dialysis_type">
+                <div class="grid xl:grid-cols-2 gap-2 md:gap-4 lg:gap-6">
+                    <FormDatetime
+                        label="required date"
+                        name="date_note"
+                        v-model="order.date_note"
+                        :options="{ enable: configs.reserve_available_dates, onDayCreate: onDayCreate, inline: true }"
+                    />
+                    <transition
+                        name="slide-fade"
+                        v-if="order.date_note && order.dialysis_at"
+                    >
+                        <DialysisSlot
+                            :reserved-slots="reservedSlots.slots"
+                            v-if="order.dialysis_at.indexOf('Hemo') !== -1"
+                        />
+                        <WardSlot
+                            v-else
+                            :reserved-slots="reservedSlots.slots"
+                        />
+                    </transition>
+                </div>
+                <div class="mt-2 lg:mt-0 md:pt-4">
+                    <SpinnerButton
+                        class="block w-full text-center btn btn-accent"
+                        @click="reserve"
+                        :spin="order.processing"
+                        :disabled="reserveButtonDisable"
+                    >
+                        RESERVE
+                    </SpinnerButton>
+                </div>
+            </div>
+        </transition>
+    </template>
+    <AlertMessage
+        v-else
+        title="Cannot make a reservation"
+        type="warning"
+        message="One active order at a time"
+    />
 
     <FormSelectOther
         :placeholder="selectOther.placeholder"
@@ -439,6 +447,7 @@ import WardSlot from '@/Partials/Procedures/AcuteHemodialysis/WardSlot';
 import { useForm } from '@inertiajs/inertia-vue3';
 import { computed, reactive, ref, watch } from 'vue';
 import debounce from 'lodash/debounce';
+import AlertMessage from '../../../Components/Helpers/AlertMessage.vue';
 
 const props = defineProps({
     caseRecordForm: { type: Object, required: true },
@@ -544,7 +553,7 @@ const order = useForm({
     attending_staff: null,
     date_note: null,
     patient_type: null,
-    case_record_id: form.record.id,
+    case_record_hashed_key: form.record.hashed_key,
 });
 const patientTypeInput = ref(null);
 const onDayCreate = (dObj, dStr, fp, dayElem) => {

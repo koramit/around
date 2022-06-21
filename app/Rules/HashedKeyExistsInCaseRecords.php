@@ -5,7 +5,7 @@ namespace App\Rules;
 use App\Models\CaseRecord;
 use Illuminate\Contracts\Validation\Rule;
 
-class IdExistsInCaseRecords implements Rule
+class HashedKeyExistsInCaseRecords implements Rule
 {
     /**
      * Determine if the validation rule passes.
@@ -16,7 +16,7 @@ class IdExistsInCaseRecords implements Rule
      */
     public function passes($attribute, $value)
     {
-        if ($caseRecord = CaseRecord::find($value)) {
+        if ($caseRecord = CaseRecord::query()->findByUnhashKey($value)->first()) {
             session()->put('validatedCaseRecord', $caseRecord);
 
             return true;
