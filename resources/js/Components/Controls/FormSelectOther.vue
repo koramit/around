@@ -23,7 +23,7 @@
             <template #footer>
                 <div class="flex justify-end items-center">
                     <button
-                        class="btn btn-dark px-5"
+                        class="btn btn-accent px-5"
                         @click="$refs.modalDialog.close()"
                         :disabled="!otherItemModel"
                     >

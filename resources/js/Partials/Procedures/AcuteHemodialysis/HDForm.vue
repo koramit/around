@@ -60,11 +60,12 @@
             :options="configs.access_types"
         />
         <FormSelect
+            ref="access_site_coagulant_input"
             label="access site coagulant"
             v-model="form.access_site_coagulant"
             name="access_site_coagulant"
             :options="(form.access_type && form.access_type.startsWith('AV')) ? configs.av_access_sites : configs.non_av_access_sites"
-            :disabled="!form.access_type || form.access_type === 'รอใส่สาย'"
+            :disabled="!form.access_type || form.access_type === 'pending'"
         />
         <FormSelect
             v-model="form.dialyzer"
@@ -157,6 +158,7 @@
             name="anticoagulant"
             label="anticoagulant"
             :options="configs.anticoagulants"
+            ref="anticoagulantInput"
         />
     </div>
     <transition name="slide-fade">
@@ -241,16 +243,6 @@
                 @autosave="validate('tinzaparin_dose')"
                 :error="errors.tinzaparin_dose"
                 placeholder="[1500, 3500] IU"
-            />
-        </div>
-        <div
-            class="grid gap-2 md:gap-4 xl:gap-8 my-2 md:my-4 xl:my-8"
-            v-else-if="form.anticoagulant == 'Other'"
-        >
-            <FormInput
-                name="anticoagulant_other"
-                v-model="form.anticoagulant_other"
-                placeholder="please specify"
             />
         </div>
     </transition>
@@ -365,15 +357,23 @@
             v-model="form.transfusion_other"
         />
     </div>
+
+    <FormSelectOther
+        :placeholder="selectOther.placeholder"
+        ref="selectOtherInput"
+        @closed="(val) => selectOtherClosed(val, true)"
+    />
 </template>
 <script setup>
 import FormCheckbox from '@/Components/Controls/FormCheckbox';
 import FormInput from '@/Components/Controls/FormInput';
 import FormSelect from '@/Components/Controls/FormSelect';
+import FormSelectOther from '@/Components/Controls/FormSelectOther';
 import FormRadio from '@/Components/Controls/FormRadio';
 import AlertMessage from '@/Components/Helpers/AlertMessage';
-import { reactive } from 'vue';
+import { reactive, ref } from 'vue';
 import { watch } from 'vue';
+import { useSelectOther } from '@/functions/useSelectOther.js';
 
 const props = defineProps({
     modelValue: { type: Object, required: true },
@@ -407,6 +407,39 @@ watch (
     { deep: true }
 );
 
+const access_site_coagulant_input = ref(null);
+watch(
+    () => form.access_type,
+    (val, old) => {
+        if (
+            (val === 'pending')
+            || (['DLC', 'Perm cath'].includes(val) && !['DLC', 'Perm cath'].includes(old))
+            || (['AVF', 'AVG'].includes(val) && !['AVF', 'AVG'].includes(old))
+        ) {
+            access_site_coagulant_input.value.setOther('');
+        }
+    }
+);
+const configs = reactive({...props.formConfigs});
+if (form.anticoagulant && !Object.keys(configs.anticoagulants).includes(form.anticoagulant)) {
+    configs.anticoagulants.push({ value: form.anticoagulant, label: form.anticoagulant });
+}
+const anticoagulantInput = ref(null);
+watch (
+    () => form.anticoagulant,
+    (val) => {
+        if (val.toLowerCase() !== 'other') {
+            return;
+        }
+
+        selectOther.placeholder = 'Other anticoagulant';
+        selectOther.configs = configs.anticoagulants;
+        selectOther.input = anticoagulantInput.value;
+        selectOtherInput.value.open();
+    }
+);
+const { selectOtherInput, selectOther, selectOtherClosed } = useSelectOther();
+
 const errors = reactive({
     heparin_loading_dose: null,
     heparin_maintenance_dose: null,
@@ -425,6 +458,4 @@ const validate = (fieldname) => {
         errors[fieldname] = '';
     }
 };
-
-const configs = reactive({...props.formConfigs});
 </script>

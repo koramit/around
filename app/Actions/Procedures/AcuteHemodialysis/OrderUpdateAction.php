@@ -6,11 +6,12 @@ use App\Models\Note;
 
 class OrderUpdateAction extends AcuteHemodialysisAction
 {
+    /**
+     * Should validate by dialysis type.
+     * @todo  validate form before update
+     */
     public function __invoke(array $data, string $hashedKey, int $userId)
     {
-        /*
-         * @todo validate form before update
-         */
         if (config('auth.gurads.web.provider') === 'avatar') {
             return []; // call api
         }

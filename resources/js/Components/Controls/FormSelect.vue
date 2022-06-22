@@ -180,8 +180,8 @@ const check = (event) => {
 };
 const setOther = (val) => {
     nextTick(() => {
-        this.$refs.input.value = val;
-        this.change();
+        input.value.value = val;
+        change();
     });
 };
 defineExpose({ setOther });

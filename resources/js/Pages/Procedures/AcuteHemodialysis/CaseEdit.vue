@@ -448,6 +448,7 @@ import { useForm } from '@inertiajs/inertia-vue3';
 import { computed, reactive, ref, watch } from 'vue';
 import debounce from 'lodash/debounce';
 import AlertMessage from '../../../Components/Helpers/AlertMessage.vue';
+import { useSelectOther } from '../../../functions/useSelectOther';
 
 const props = defineProps({
     caseRecordForm: { type: Object, required: true },
@@ -525,26 +526,12 @@ watch (
         }
 
         selectOther.placeholder = 'Other Insurance';
-        selectOther.configs = 'insurances';
+        selectOther.configs = configs.insurances;
         selectOther.input = insurance.value;
         selectOtherInput.value.open();
     }
 );
-const selectOtherInput = ref(null);
-const selectOther = reactive({
-    placeholder: '',
-    configs: '',
-    input: '',
-});
-const selectOtherClosed = (val) => {
-    if (! val) {
-        selectOther.input.setOther('');
-        return;
-    }
-
-    configs[selectOther.configs].push(val);
-    selectOther.input.setOther(val);
-};
+const { selectOtherInput, selectOther, selectOtherClosed } = useSelectOther();
 
 // HD orders
 const order = useForm({
