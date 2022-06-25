@@ -278,7 +278,40 @@ const props = defineProps({
 const form = useForm({...props.orderForm});
 watch (
     () => form,
-    () => {
+    (val) => {
+        // reset predialysis_evaluations
+        if (val.predialysis_evaluations.hemodynamic_stable) {
+            val.predialysis_evaluations.hypotention = false;
+            val.predialysis_evaluations.inotropic_dependent = false;
+            val.predialysis_evaluations.severe_hypertension = false;
+            val.predialysis_evaluations.bradycardia = false;
+            val.predialysis_evaluations.arrhythmia = false;
+        }
+        if (val.predialysis_evaluations.respiration_stable) {
+            val.predialysis_evaluations.hypoxia = false;
+            val.predialysis_evaluations.high_risk_airway_obstruction = false;
+        }
+        if (val.predialysis_evaluations.neurological_stable) {
+            val.predialysis_evaluations.gcs_drop = false;
+            val.predialysis_evaluations.drowsiness = false;
+        }
+        if (val.predialysis_evaluations.life_threatening_condition) {
+            val.predialysis_evaluations.acute_coronary_syndrome = false;
+            val.predialysis_evaluations.cardiac_arrhymia_with_hypotension = false;
+            val.predialysis_evaluations.acute_ischemic_stroke = false;
+            val.predialysis_evaluations.acute_ich = false;
+            val.predialysis_evaluations.seizure = false;
+            val.predialysis_evaluations.cardiac_arrest = false;
+        }
+
+        // reset monitoring
+        if (form.monitor.standard) {
+            form.monitor.ekg = false;
+            form.monitor.observe_chest_pain = false;
+            form.monitor.observe_neuro_sign = false;
+            form.monitor.other = null;
+        }
+
         autosave();
     },
     { deep: true }
