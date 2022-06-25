@@ -83,20 +83,20 @@
     <label class="form-label">hemodynamic :</label>
     <FormCheckbox
         name="hemodynamic_stable"
-        v-model="form.predialysis_evaluations.hemodynamic_stable"
+        v-model="form.hemodynamic.stable"
         label="Stable"
         :toggler="true"
     />
     <transition name="slide-fade">
         <div
-            v-if="!form.predialysis_evaluations.hemodynamic_stable"
+            v-if="!form.hemodynamic.stable"
             class="mt-2 md:mt-4 xl:mt-8 space-y-2 md:space-y-4 lg:space-y-0 lg:grid grid-flow-col grid-cols-2 grid-rows-3 gap-4"
         >
             <FormCheckbox
                 v-for="symptom in configs.hemodynamic_symptoms"
                 :key="symptom.name"
                 name="hypotension"
-                v-model="form.predialysis_evaluations[symptom.name]"
+                v-model="form.hemodynamic[symptom.name]"
                 :label="symptom.label"
             />
         </div>
@@ -107,20 +107,20 @@
     <label class="form-label">Respiration :</label>
     <FormCheckbox
         name="respiration_stable"
-        v-model="form.predialysis_evaluations.respiration_stable"
+        v-model="form.respiration.stable"
         label="Stable"
         :toggler="true"
     />
     <transition name="slide-fade">
         <div
-            v-if="!form.predialysis_evaluations.respiration_stable"
+            v-if="!form.respiration.stable"
             class="mt-2 md:mt-4 xl:mt-8 space-y-2 md:space-y-4 xl:space-y-4"
         >
             <FormCheckbox
                 v-for="symptom in configs.raspiration_options"
                 :key="symptom.name"
                 name="hypotension"
-                v-model="form.predialysis_evaluations[symptom.name]"
+                v-model="form.respiration[symptom.name]"
                 :label="symptom.label"
             />
         </div>
@@ -130,7 +130,7 @@
     <hr class="border border-dashed my-2 md:my-4 xl:my-8">
     <label class="form-label">Oxygen support :</label>
     <FormSelect
-        v-model="form.predialysis_evaluations.oxygen_support"
+        v-model="form.oxygen_support"
         name="oxygen_support"
         :options="configs.oxygen_options"
     />
@@ -140,20 +140,20 @@
     <label class="form-label">Neurological evaluation :</label>
     <FormCheckbox
         name="neurological_stable"
-        v-model="form.predialysis_evaluations.neurological_stable"
+        v-model="form.neurological.stable"
         label="Stable"
         :toggler="true"
     />
     <transition name="slide-fade">
         <div
-            v-if="!form.predialysis_evaluations.neurological_stable"
+            v-if="!form.neurological.stable"
             class="mt-2 md:mt-4 xl:mt-8 space-y-2 md:space-y-4 lg:space-y-0 lg:grid grid-flow-col grid-cols-2 grid-rows-1 gap-4"
         >
             <FormCheckbox
                 v-for="symptom in configs.neurological_options"
                 :key="symptom.name"
                 name="hypotension"
-                v-model="form.predialysis_evaluations[symptom.name]"
+                v-model="form.neurological[symptom.name]"
                 :label="symptom.label"
             />
         </div>
@@ -164,20 +164,20 @@
     <label class="form-label">Life threatening condition in the past 24 hours :</label>
     <FormCheckbox
         name="life_threatening_condition"
-        v-model="form.predialysis_evaluations.life_threatening_condition"
+        v-model="form.life_threatening_condition.stable"
         label="Stable"
         :toggler="true"
     />
     <transition name="slide-fade">
         <div
-            v-if="!form.predialysis_evaluations.life_threatening_condition"
+            v-if="!form.life_threatening_condition.stable"
             class="mt-2 md:mt-4 xl:mt-8 space-y-2 md:space-y-4 lg:space-y-0 lg:grid grid-flow-col grid-cols-2 grid-rows-3 gap-4"
         >
             <FormCheckbox
                 v-for="symptom in configs.life_threatening_condition_options"
                 :key="symptom.name"
                 name="hypotension"
-                v-model="form.predialysis_evaluations[symptom.name]"
+                v-model="form.life_threatening_condition[symptom.name]"
                 :label="symptom.label"
             />
         </div>
@@ -280,36 +280,36 @@ watch (
     () => form,
     (val) => {
         // reset predialysis_evaluations
-        if (val.predialysis_evaluations.hemodynamic_stable) {
-            val.predialysis_evaluations.hypotention = false;
-            val.predialysis_evaluations.inotropic_dependent = false;
-            val.predialysis_evaluations.severe_hypertension = false;
-            val.predialysis_evaluations.bradycardia = false;
-            val.predialysis_evaluations.arrhythmia = false;
+        if (val.hemodynamic.stable) {
+            val.hemodynamic.hypotention = false;
+            val.hemodynamic.inotropic_dependent = false;
+            val.hemodynamic.severe_hypertension = false;
+            val.hemodynamic.bradycardia = false;
+            val.hemodynamic.arrhythmia = false;
         }
-        if (val.predialysis_evaluations.respiration_stable) {
-            val.predialysis_evaluations.hypoxia = false;
-            val.predialysis_evaluations.high_risk_airway_obstruction = false;
+        if (val.respiration.stable) {
+            val.respiration.hypoxia = false;
+            val.respiration.high_risk_airway_obstruction = false;
         }
-        if (val.predialysis_evaluations.neurological_stable) {
-            val.predialysis_evaluations.gcs_drop = false;
-            val.predialysis_evaluations.drowsiness = false;
+        if (val.neurological.stable) {
+            val.neurological.gcs_drop = false;
+            val.neurological.drowsiness = false;
         }
-        if (val.predialysis_evaluations.life_threatening_condition) {
-            val.predialysis_evaluations.acute_coronary_syndrome = false;
-            val.predialysis_evaluations.cardiac_arrhymia_with_hypotension = false;
-            val.predialysis_evaluations.acute_ischemic_stroke = false;
-            val.predialysis_evaluations.acute_ich = false;
-            val.predialysis_evaluations.seizure = false;
-            val.predialysis_evaluations.cardiac_arrest = false;
+        if (val.life_threatening_condition.stable) {
+            val.life_threatening_condition.acute_coronary_syndrome = false;
+            val.life_threatening_condition.cardiac_arrhymia_with_hypotension = false;
+            val.life_threatening_condition.acute_ischemic_stroke = false;
+            val.life_threatening_condition.acute_ich = false;
+            val.life_threatening_condition.seizure = false;
+            val.life_threatening_condition.cardiac_arrest = false;
         }
 
         // reset monitoring
-        if (form.monitor.standard) {
-            form.monitor.ekg = false;
-            form.monitor.observe_chest_pain = false;
-            form.monitor.observe_neuro_sign = false;
-            form.monitor.other = null;
+        if (val.monitor.standard) {
+            val.monitor.ekg = false;
+            val.monitor.observe_chest_pain = false;
+            val.monitor.observe_neuro_sign = false;
+            val.monitor.other = null;
         }
 
         autosave();

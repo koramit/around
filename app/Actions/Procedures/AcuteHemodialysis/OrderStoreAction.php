@@ -19,22 +19,27 @@ class OrderStoreAction extends AcuteHemodialysisAction
     protected $FORM_VERSION = 1.0;
 
     protected $BASE_FORM_TEMPLATE = [
-        'patient_type' => null,
-        'predialysis_evaluations' => [
-            'hemodynamic_stable' => false,
+        'hemodynamic' => [
+            'stable' => false,
             'hypotention' => false,
             'inotropic_dependent' => false,
             'severe_hypertension' => false,
             'bradycardia' => false,
             'arrhythmia' => false,
-            'respiration_stable' => false,
+        ],
+        'respiration' => [
+            'stable' => false,
             'hypoxia' => false,
             'high_risk_airway_obstruction' => false,
-            'oxygen_support' => 'None',
-            'neurological_stable' => false,
+        ],
+        'oxygen_support' => 'None',
+        'neurological' => [
+            'stable' => false,
             'gcs_drop' => false,
             'drowsiness' => false,
-            'life_threatening_condition' => false,
+        ],
+        'life_threatening_condition' => [
+            'stable' => false,
             'acute_coronary_syndrome' => false,
             'cardiac_arrhymia_with_hypotension' => false,
             'acute_ischemic_stroke' => false,
@@ -204,7 +209,6 @@ class OrderStoreAction extends AcuteHemodialysisAction
         $note->place_id = $ward->id;
         $note->date_note = $validated['date_note'];
         $form = $this->initForm($validated['dialysis_type']);
-        $form['patient_type'] = $validated['patient_type'];
         $note->form = $form;
         $patient = $caseRecord->patient;
         $note->meta = [
@@ -212,6 +216,7 @@ class OrderStoreAction extends AcuteHemodialysisAction
             'name' => $patient->first_name,
             'version' => $this->FORM_VERSION,
             'in_unit' => $ward->id === $this->IN_UNIT_WARD_ID,
+            'patient_type' => $validated['patient_type'],
         ];
         $note->user_id = $userId;
         $note->save();
