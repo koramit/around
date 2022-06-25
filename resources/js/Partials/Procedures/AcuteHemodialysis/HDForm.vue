@@ -60,7 +60,6 @@
             :options="configs.access_types"
         />
         <FormSelect
-            ref="access_site_coagulant_input"
             label="access site coagulant"
             v-model="form.access_site_coagulant"
             name="access_site_coagulant"
@@ -164,7 +163,7 @@
     <transition name="slide-fade">
         <div
             class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8 2xl:grid-cols-4 my-2 md:my-4 xl:my-8"
-            v-if="form.anticoagulant == 'None'"
+            v-if="form.anticoagulant == 'none'"
         >
             <FormCheckbox
                 label="anticoagulant drip via peripheral IV"
@@ -177,7 +176,7 @@
                 v-model="form.anticoagulant_none_nss_200ml_flush_q_hour"
             />
         </div>
-        <div v-else-if="form.anticoagulant == 'Heparin'">
+        <div v-else-if="form.anticoagulant == 'heparin'">
             <div class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8 2xl:grid-cols-4 my-2 md:my-4 xl:my-8">
                 <FormInput
                     label="loading dose (iu)"
@@ -207,7 +206,7 @@
         </div>
         <div
             class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8 2xl:grid-cols-4 my-2 md:my-4 xl:my-8"
-            v-else-if="form.anticoagulant == 'Enoxaparin'"
+            v-else-if="form.anticoagulant == 'enoxaparin'"
         >
             <FormInput
                 label="dose (ml)"
@@ -221,18 +220,18 @@
         </div>
         <div
             class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8 2xl:grid-cols-4 my-2 md:my-4 xl:my-8"
-            v-else-if="form.anticoagulant == 'Fondaparinux'"
+            v-else-if="form.anticoagulant == 'fondaparinux'"
         >
             <FormSelect
                 label="bolus dose (iu)"
                 name="fondaparinux_bolus_dose"
                 v-model="form.fondaparinux_bolus_dose"
-                :options="['500', '750']"
+                :options="configs.fondaparinux_bolus_doses"
             />
         </div>
         <div
             class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8 2xl:grid-cols-4 my-2 md:my-4 xl:my-8"
-            v-else-if="form.anticoagulant == 'Tinzaparin'"
+            v-else-if="form.anticoagulant == 'tinzaparin'"
         >
             <FormInput
                 label="dose (iu)"
@@ -287,7 +286,7 @@
                 :class="{'grid-cols-3': form.glucose_50_percent_iv_volume}"
                 name="glucose_50_percent_iv_volume"
                 v-model="form.glucose_50_percent_iv_volume"
-                :options="['50', '100']"
+                :options="configs.glucose_50_percent_iv_volumes"
                 :allow-reset="true"
             />
         </div>
@@ -295,7 +294,7 @@
             v-model="form.glucose_50_percent_iv_at"
             name="glucose_50_percent_iv_at"
             label="50% glucose iv (at hour)"
-            :options="[1,2,3,4]"
+            :options="configs.glucose_50_percent_iv_at"
         />
         <div>
             <label class="form-label">20% albumin prime (ml)</label>
@@ -304,7 +303,7 @@
                 :class="{'grid-cols-3': form.albumin_20_percent_prime}"
                 name="albumin_20_percent_prime"
                 v-model="form.albumin_20_percent_prime"
-                :options="['50', '100']"
+                :options="configs.albumin_20_percent_primes"
                 :allow-reset="true"
             />
         </div>
@@ -383,7 +382,8 @@ const emit = defineEmits(['update:modelValue', 'autosave']);
 
 const form = reactive({...props.modelValue});
 const reset = {
-    anticoagulant: null
+    anticoagulant: form.anticoagulant ?? null,
+    access_type: form.access_type ?? null,
 };
 
 watch (
@@ -397,8 +397,23 @@ watch (
             val.enoxaparin_dose = null;
             val.fondaparinux_bolus_dose = null;
             val.tinzaparin_dose = null;
-            val.anticoagulant_other = null;
             reset.anticoagulant = val.anticoagulant;
+        }
+
+        // reset access_site_coagulant
+        if (
+            (val.access_type === 'pending')
+            || (['DLC', 'Perm cath'].includes(val.access_type) && !['DLC', 'Perm cath'].includes(reset.access_type))
+            || (['AVF', 'AVG'].includes(val.access_type) && !['AVF', 'AVG'].includes(reset.access_type))
+        ) {
+            val.access_site_coagulant = '';
+            reset.access_type = val.access_type;
+        }
+
+        // reset sodium profile
+        if (!val.sodium_profile) {
+            val.sodium_profile_start = null;
+            val.sodium_profile_end = null;
         }
 
         emit('update:modelValue', val);
@@ -407,21 +422,9 @@ watch (
     { deep: true }
 );
 
-const access_site_coagulant_input = ref(null);
-watch(
-    () => form.access_type,
-    (val, old) => {
-        if (
-            (val === 'pending')
-            || (['DLC', 'Perm cath'].includes(val) && !['DLC', 'Perm cath'].includes(old))
-            || (['AVF', 'AVG'].includes(val) && !['AVF', 'AVG'].includes(old))
-        ) {
-            access_site_coagulant_input.value.setOther('');
-        }
-    }
-);
 const configs = reactive({...props.formConfigs});
-if (form.anticoagulant && !Object.keys(configs.anticoagulants).includes(form.anticoagulant)) {
+
+if (form.anticoagulant && configs.anticoagulants.findIndex(item => item.value == form.anticoagulant) === -1) {
     configs.anticoagulants.push({ value: form.anticoagulant, label: form.anticoagulant });
 }
 const anticoagulantInput = ref(null);
@@ -449,11 +452,13 @@ const errors = reactive({
     glucose_50_percent_iv_volume: null,
 });
 const validate = (fieldname) => {
-    let validator = configs.validators.filter((rule) => rule.name === fieldname)[0];
+    // let validator = configs.validators.filter((rule) => rule.name === fieldname)[0];
+    let validator = configs.validators[fieldname]; //filter((rule) => rule.name === fieldname)[0];
     const value = validator.type == 'integer' ? parseInt(form[fieldname]) :  parseFloat(form[fieldname]);
     if (value < validator.min || value > validator.max) {
         errors[fieldname] = `${form[fieldname]} could not be saved. Accept range [${validator.min}, ${validator.max}].`;
-        setTimeout(() => form[fieldname] = null, 1500);
+        // setTimeout(() => form[fieldname] = null, 1500);
+        form[fieldname] = null;
     } else {
         errors[fieldname] = '';
     }

@@ -60,7 +60,7 @@ watch (
 );
 
 const computeItems = computed(() => {
-    let options = typeof props.options[0] === 'string'
+    let options = ['string', 'number'].includes(typeof props.options[0])
         ?   props.options.map( function (option) {
             return { value: option, label: option };
         })

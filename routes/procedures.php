@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Procedures\AcuteHemodialysis\CaseRecordController as AcuteHemodialysisCaseController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\OrderController as AcuteHemodialysisOrderController;
+use App\Http\Controllers\Procedures\AcuteHemodialysis\OrderSubmitController as AcuteHemodialysisOrderSubmitController;
 use App\Http\Controllers\Procedures\ProcedureController;
 use Illuminate\Support\Facades\Route;
 
@@ -25,6 +26,8 @@ Route::middleware(['auth'])->prefix('procedures')->group(function () {
                ->name('orders.store');
             Route::get('/orders/{hashedKey}/edit', [AcuteHemodialysisOrderController::class, 'edit'])
                ->name('orders.edit');
+            Route::post('/orders/{hashedKey}/submit', AcuteHemodialysisOrderSubmitController::class)
+               ->name('orders.submit');
             Route::patch('/orders/{hashedKey}', [AcuteHemodialysisOrderController::class, 'update'])
                ->name('orders.update');
         });

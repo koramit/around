@@ -1,4 +1,13 @@
 <template>
+    <!-- temp errors -->
+    <ul v-if="Object.keys(form.errors).length">
+        <li
+            v-for="(name, key) in Object.keys(form.errors)"
+            :key="key"
+        >
+            {{ form.errors[name] }}
+        </li>
+    </ul>
     <!-- reservation -->
     <h2
         class="form-label text-lg italic text-complement"
@@ -244,20 +253,24 @@
         name="treatments_request"
         v-model="form.treatments_request"
     />
+
+    <button @click="form.post(configs.submit_endpoint)">
+        submit
+    </button>
 </template>
 
 <script setup>
-import FormInput from '../../../Components/Controls/FormInput.vue';
 import { useForm } from '@inertiajs/inertia-vue3';
-import HDForm from '../../../Partials/Procedures/AcuteHemodialysis/HDForm.vue';
 import debounce from 'lodash/debounce';
 import { reactive, watch } from 'vue';
-import HFForm from '../../../Partials/Procedures/AcuteHemodialysis/HFForm.vue';
-import SLEDDForm from '../../../Partials/Procedures/AcuteHemodialysis/SLEDDForm.vue';
-import TPEForm from '../../../Partials/Procedures/AcuteHemodialysis/TPEForm.vue';
-import FormCheckbox from '../../../Components/Controls/FormCheckbox.vue';
-import FormSelect from '../../../Components/Controls/FormSelect.vue';
-import FormTextarea from '../../../Components/Controls/FormTextarea.vue';
+import FormInput from '@/Components/Controls/FormInput';
+import HDForm from '@/Partials/Procedures/AcuteHemodialysis/HDForm';
+import HFForm from '@/Partials/Procedures/AcuteHemodialysis/HFForm';
+import SLEDDForm from '@/Partials/Procedures/AcuteHemodialysis/SLEDDForm';
+import TPEForm from '@/Partials/Procedures/AcuteHemodialysis/TPEForm';
+import FormCheckbox from '@/Components/Controls/FormCheckbox';
+import FormSelect from '@/Components/Controls/FormSelect';
+import FormTextarea from '@/Components/Controls/FormTextarea';
 const props = defineProps({
     orderForm: { type: Object, required: true },
     formConfigs: { type: Object, required: true },
@@ -276,6 +289,6 @@ const autosave = debounce(function () {
         .catch(error => {
             console.log(error);
         });
-}, 2000);
+}, 3000);
 const configs = reactive({...props.formConfigs});
 </script>

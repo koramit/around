@@ -3,14 +3,10 @@
 namespace App\Actions\Procedures\AcuteHemodialysis;
 
 use App\Models\Note;
-use App\Validators\Procedures\AcuteHemodialysis\HDOrderUpdateValidator;
+use App\Validators\Procedures\AcuteHemodialysis\HDOrderSubmitValidator;
 
-class OrderUpdateAction extends AcuteHemodialysisAction
+class OrderSubmitAction extends AcuteHemodialysisAction
 {
-    /**
-     * Should validate by dialysis type.
-     * @todo  validate form before update
-     */
     public function __invoke(array $data, string $hashedKey, int $userId)
     {
         if (config('auth.gurads.web.provider') === 'avatar') {
@@ -22,12 +18,12 @@ class OrderUpdateAction extends AcuteHemodialysisAction
         // should validate base first
 
         if (isset($data['hd'])) {
-            $validated = (new HDOrderUpdateValidator)($data['hd']);
+            $validated = (new HDOrderSubmitValidator)($data['hd']);
             $data['hd'] = $validated;
         }
 
         $note->form = $data;
 
-        return $note->save();
+        return $note;
     }
 }
