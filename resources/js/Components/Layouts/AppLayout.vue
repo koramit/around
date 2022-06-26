@@ -151,6 +151,27 @@
                 }"
                 scroll-region
             >
+                <!-- form errors -->
+                <div v-if="Object.keys($page.props.errors).length">
+                    <AlertMessage
+                        type="danger"
+                        title="Error"
+                        message="Please verify to proceed"
+                    />
+                    <div
+                        v-if="Object.keys($page.props.errors).length"
+                        class="border-2 border-red-400 rounded p-2 md:p-4 test-sm text-red-700 my-4 space-y-2"
+                    >
+                        <a
+                            :href="`#${name}`"
+                            class="block"
+                            v-for="(name, key) in Object.keys($page.props.errors)"
+                            :key="key"
+                            @click.prevent="smoothScroll(`#${name}`)"
+                        >{{ $page.props.errors[name] }}</a>
+                    </div>
+                </div>
+
                 <!-- <flash-messages /> -->
                 <slot />
             </div>
@@ -160,13 +181,15 @@
 
 <script setup>
 import { Head, Link, usePage } from '@inertiajs/inertia-vue3';
-import DropdownList from '../Helpers/DropdownList.vue';
-import MainMenu from '../Helpers/MainMenu.vue';
-import ActionMenu from '../Helpers/ActionMenu.vue';
-import { pageRoutines } from '../../functions/pageRoutines';
+import DropdownList from '@/Components/Helpers/DropdownList';
+import MainMenu from '@/Components/Helpers/MainMenu';
+import ActionMenu from '@/Components/Helpers/ActionMenu';
+import { pageRoutines } from '@/functions/pageRoutines';
 import { nextTick, onMounted, ref } from 'vue';
-import IconHamberger from '../Helpers/Icons/IconHamberger.vue';
-import IconChevronCircleDown from '../Helpers/Icons/IconChevronCircleDown.vue';
+import IconHamberger from '@/Components/Helpers/Icons/IconHamberger';
+import IconChevronCircleDown from '@/Components/Helpers/Icons/IconChevronCircleDown';
+import { useInPageLinkHelpers } from '../../functions/useInPageLinkHelpers';
+import AlertMessage from '../Helpers/AlertMessage.vue';
 
 pageRoutines();
 const mobileMenuVisible = ref(false);
@@ -201,4 +224,6 @@ onMounted(() => {
         document.querySelector('html').style.fontSize = fontScales[fontScaleIndex] + '%';
     }
 });
+
+const { smoothScroll } = useInPageLinkHelpers();
 </script>

@@ -17,7 +17,7 @@
                 :disabled="disabled"
                 :value="modelValue"
                 @change="change"
-                class="form-input cursor-pointer disabled:cursor-not-allowed border-r-1"
+                class="form-input cursor-pointer disabled:cursor-not-allowed border-r-1 scroll-mt-12 md:scroll-mt-0"
                 :class="{ 'border-red-400': error, 'bg-gray-400': disabled }"
             >
                 <option
@@ -74,7 +74,7 @@
                     :disabled="disabled"
                     :value="modelValue"
                     @change="change"
-                    class="form-input cursor-pointer disabled:cursor-not-allowed border-r-1 rounded-r-none"
+                    class="form-input cursor-pointer disabled:cursor-not-allowed border-r-1 rounded-r-none scroll-mt-12 md:scroll-mt-0"
                     :class="{ 'border-red-400': error, 'bg-gray-400': disabled }"
                 >
                     <option

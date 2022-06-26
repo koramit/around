@@ -1,13 +1,4 @@
 <template>
-    <!-- temp errors -->
-    <ul v-if="Object.keys(form.errors).length">
-        <li
-            v-for="(name, key) in Object.keys(form.errors)"
-            :key="key"
-        >
-            {{ form.errors[name] }}
-        </li>
-    </ul>
     <!-- reservation -->
     <h2
         class="form-label text-lg italic text-complement"
@@ -82,7 +73,7 @@
     <hr class="my-4 border-b border-accent">
     <label class="form-label">hemodynamic :</label>
     <FormCheckbox
-        name="hemodynamic_stable"
+        name="hemodynamic.stable"
         v-model="form.hemodynamic.stable"
         label="Stable"
         :toggler="true"
@@ -107,7 +98,7 @@
     <hr class="border border-dashed my-2 md:my-4 xl:my-8">
     <label class="form-label">Respiration :</label>
     <FormCheckbox
-        name="respiration_stable"
+        name="respiration.stable"
         v-model="form.respiration.stable"
         label="Stable"
         :toggler="true"
@@ -141,7 +132,7 @@
     <hr class="border border-dashed my-2 md:my-4 xl:my-8">
     <label class="form-label">Neurological evaluation :</label>
     <FormCheckbox
-        name="neurological_stable"
+        name="neurological.stable"
         v-model="form.neurological.stable"
         label="Stable"
         :toggler="true"
@@ -166,7 +157,7 @@
     <hr class="border border-dashed my-2 md:my-4 xl:my-8">
     <label class="form-label">Life threatening condition in the past 24 hours :</label>
     <FormCheckbox
-        name="life_threatening_condition"
+        name="life_threatening_condition.stable"
         v-model="form.life_threatening_condition.stable"
         label="Stable"
         :toggler="true"
@@ -196,7 +187,7 @@
     </h2>
     <hr class="my-4 border-b border-accent">
     <FormCheckbox
-        name="standard"
+        name="monitor.standard"
         v-model="form.monitor.standard"
         label="Standard (MAP ≥ 65 mmHg)"
         :toggler="true"

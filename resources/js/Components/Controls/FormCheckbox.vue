@@ -2,7 +2,8 @@
     <div v-if="toggler">
         <!-- Toggle Button -->
         <label
-            class="inline-flex items-center cursor-pointer"
+            class="inline-flex items-center cursor-pointer scroll-mt-12 md:scroll-mt-0"
+            :id="name ?? null"
         >
             <!-- toggle -->
             <div class="relative">
@@ -39,7 +40,10 @@
         </p>
     </div>
     <div v-else>
-        <label class="inline-flex items-center cursor-pointer">
+        <label
+            class="inline-flex items-center cursor-pointer scroll-mt-12 md:scroll-mt-0"
+            :id="name ?? null"
+        >
             <input
                 type="checkbox"
                 class="shadow-xs h-6 w-6 transition-all duration-200 ease-in-out appearance-none color inline-block align-middle border border-gray-400 select-none shrink-0 rounded cursor-pointer focus:outline-none"
@@ -57,23 +61,21 @@
     </div>
 </template>
 
-<script>
-export default {
-    emits: ['update:modelValue', 'autosave'],
-    props: {
-        modelValue: { type: Boolean },
-        label: { type: String, default: '' },
-        error: { type: String, default: '' },
-        toggler: { type: Boolean }
-    },
-    methods: {
-        change () {
-            this.$emit('update:modelValue', !this.modelValue);
-            this.$emit('autosave');
-        },
-        check () {
-            this.$emit('update:modelValue', !this.modelValue);
-        }
-    }
+<script setup>
+const emits = defineEmits(['update:modelValue', 'autosave']);
+const props = defineProps({
+    modelValue: { type: Boolean },
+    name: { type: String, default: '' },
+    label: { type: String, default: '' },
+    error: { type: String, default: '' },
+    toggler: { type: Boolean }
+});
+const change = () => {
+    emits('update:modelValue', !props.modelValue);
+    emits('autosave');
 };
+const check = () => {
+    emits('update:modelValue', !props.modelValue);
+};
+defineExpose({ check });
 </script>

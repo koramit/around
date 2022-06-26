@@ -11,7 +11,14 @@
     >
         <div class="flex items-center">
             <div class="w-1/6 flex justify-center">
-                <IconInfoCircle class="w-6 h-6 md:w-10 md:h-10 lg:w-16 lg:h-16" />
+                <IconExclamationCircle
+                    v-if="type == 'danger'"
+                    class="w-6 h-6 md:w-10 md:h-10 lg:w-16 lg:h-16"
+                />
+                <IconInfoCircle
+                    v-else
+                    class="w-6 h-6 md:w-10 md:h-10 lg:w-16 lg:h-16"
+                />
             </div>
             <div class="w-5/6 lg:text-lg">
                 <p class="font-bold">
@@ -27,6 +34,7 @@
 
 <script setup>
 import IconInfoCircle from './Icons/IconInfoCircle.vue';
+import IconExclamationCircle from './Icons/IconExclamationCircle.vue';
 defineProps({
     type: { type: String, default: 'info' },
     title: { type: String, default: 'What\'s up!' },

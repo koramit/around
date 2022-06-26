@@ -66,20 +66,10 @@
 
 <script setup>
 import { Link } from '@inertiajs/inertia-vue3';
-import IconVector from './IconVector.vue';
+import IconVector from '@/Components/Helpers/IconVector';
+import { useInPageLinkHelpers } from '@/functions/useInPageLinkHelpers';
 defineProps({
     zenMode: { type: Boolean }
 });
-const isUrl = (url) => {
-    return (location.origin + location.pathname) === url;
-};
-const smoothScroll = (href) => {
-    const target = document.querySelector(href);
-    if (target === undefined) {
-        return;
-    }
-    document.querySelector(href).scrollIntoView({
-        behavior: 'smooth'
-    });
-};
+const { isUrl, smoothScroll } = useInPageLinkHelpers();
 </script>

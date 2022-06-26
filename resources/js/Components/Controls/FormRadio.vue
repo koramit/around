@@ -1,5 +1,8 @@
 <template>
-    <div>
+    <div
+        :id="name ?? null"
+        class="scroll-mt-12 md:scroll-mt-0"
+    >
         <label
             v-if="label"
             class="form-label"

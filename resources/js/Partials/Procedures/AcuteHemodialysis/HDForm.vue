@@ -12,7 +12,7 @@
                 <label class="form-label">perform at :</label>
                 <FormRadio
                     class="grid grid-cols-2 gap-x-2"
-                    name="hf_perform_at"
+                    name="hd.hf_perform_at"
                     v-model="form.hf_perform_at"
                     :options="configs.hf_perform_at"
                     :error="$page.props.errors['hd.hf_perform_at']"
@@ -25,7 +25,7 @@
                 >uf (ml.) :</label>
                 <div class="grid gap-2 md:grid-cols-2">
                     <FormInput
-                        name="hf_ultrafiltration_min"
+                        name="hd.hf_ultrafiltration_min"
                         v-model="form.hf_ultrafiltration_min"
                         pattern="\d*"
                         type="number"
@@ -34,7 +34,7 @@
                         :placeholder="`min [${configs.validators.hf_ultrafiltration_min.min}, ${configs.validators.hf_ultrafiltration_min.max}]`"
                     />
                     <FormInput
-                        name="hf_ultrafiltration_max"
+                        name="hd.hf_ultrafiltration_max"
                         v-model="form.hf_ultrafiltration_max"
                         pattern="\d*"
                         type="number"
@@ -57,35 +57,35 @@
         <FormSelect
             label="access type"
             v-model="form.access_type"
-            name="access_type"
+            name="hd.access_type"
             :options="configs.access_types"
             :error="$page.props.errors['hd.access_type']"
         />
         <FormSelect
             label="access site coagulant"
             v-model="form.access_site_coagulant"
-            name="access_site_coagulant"
+            name="hd.access_site_coagulant"
             :options="(form.access_type && form.access_type.startsWith('AV')) ? configs.av_access_sites : configs.non_av_access_sites"
             :disabled="!form.access_type || form.access_type === 'pending'"
             :error="$page.props.errors['hd.access_site_coagulant']"
         />
         <FormSelect
             v-model="form.dialyzer"
-            name="dialyzer"
+            name="hd.dialyzer"
             label="dialyzer"
             :options="configs.dialyzers"
             :error="$page.props.errors['hd.dialyzer']"
         />
         <FormSelect
             v-model="form.dialysate"
-            name="dialysate"
+            name="hd.dialysate"
             label="dialysate"
             :options="configs.dialysates"
             :error="$page.props.errors['hd.dialysate']"
         />
         <FormSelect
             v-model="form.blood_flow_rate"
-            name="blood_flow_rate"
+            name="hd.blood_flow_rate"
             :options="configs.blood_flow_rates"
             label="blood flow rate (ml/min)"
             :error="$page.props.errors['hd.blood_flow_rate']"
@@ -94,14 +94,14 @@
             v-model:model-value="form.dialysate_flow_rate"
             v-model:model-checkbox="form.reverse_dialysate_flow"
             :options="configs.dialysate_flow_rates"
-            name="dialysate_flow_rate"
+            name="hd.dialysate_flow_rate"
             label="dialysate flow (ml/min)"
             switch-label="Reverse flow"
             :error="$page.props.errors['hd.dialysate_flow_rate']"
         />
         <FormSelect
             v-model="form.dialysate_temperature"
-            name="dialysate_temperature"
+            name="hd.dialysate_temperature"
             :options="configs.dialysate_temperatures"
             label="dialysate temperature (℃)"
             :error="$page.props.errors['hd.dialysate_temperature']"
@@ -112,7 +112,7 @@
         <div>
             <FormInput
                 label="sodium"
-                name="sodium"
+                name="hd.sodium"
                 v-model="form.sodium"
                 type="number"
                 pattern="\d*"
@@ -123,7 +123,7 @@
             <FormCheckbox
                 class="mt-2 md:mt-4 xl:mt-8"
                 label="Sodium profile"
-                name="sodium_profile"
+                name="hd.sodium_profile"
                 v-model="form.sodium_profile"
                 :toggler="true"
             />
@@ -134,7 +134,7 @@
                 >
                     <FormInput
                         label="start"
-                        name="sodium_profile_start"
+                        name="hd.sodium_profile_start"
                         v-model="form.sodium_profile_start"
                         type="number"
                         pattern="\d*"
@@ -142,7 +142,7 @@
                     />
                     <FormInput
                         label="end"
-                        name="sodium_profile_end"
+                        name="hd.sodium_profile_end"
                         v-model="form.sodium_profile_end"
                         type="number"
                         pattern="\d*"
@@ -153,7 +153,7 @@
         </div>
         <FormSelect
             v-model="form.bicarbonate"
-            name="bicarbonate"
+            name="hd.bicarbonate"
             label="bicarbonate"
             :options="configs.bicarbonates"
             :error="$page.props.errors['hd.bicarbonate']"
@@ -163,7 +163,7 @@
     <div class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8 2xl:grid-cols-4 my-2 md:my-4 xl:my-8">
         <FormSelect
             v-model="form.anticoagulant"
-            name="anticoagulant"
+            name="hd.anticoagulant"
             label="anticoagulant"
             :options="configs.anticoagulants"
             ref="anticoagulantInput"
@@ -190,7 +190,7 @@
             <div class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8 2xl:grid-cols-4 my-2 md:my-4 xl:my-8">
                 <FormInput
                     label="loading dose (iu)"
-                    name="heparin_loading_dose"
+                    name="hd.heparin_loading_dose"
                     v-model="form.heparin_loading_dose"
                     type="number"
                     pattern="\d*"
@@ -200,7 +200,7 @@
                 />
                 <FormInput
                     label="maintenance dose (iu/hour)"
-                    name="heparin_maintenance_dose"
+                    name="hd.heparin_maintenance_dose"
                     v-model="form.heparin_maintenance_dose"
                     type="number"
                     pattern="\d*"
@@ -220,7 +220,7 @@
         >
             <FormInput
                 label="dose (ml)"
-                name="enoxaparin_dose"
+                name="hd.enoxaparin_dose"
                 v-model="form.enoxaparin_dose"
                 type="number"
                 @autosave="validate('enoxaparin_dose')"
@@ -234,7 +234,7 @@
         >
             <FormSelect
                 label="bolus dose (iu)"
-                name="fondaparinux_bolus_dose"
+                name="hd.fondaparinux_bolus_dose"
                 v-model="form.fondaparinux_bolus_dose"
                 :options="configs.fondaparinux_bolus_doses"
                 :error="$page.props.errors['hd.fondaparinux_bolus_dose']"
@@ -246,7 +246,7 @@
         >
             <FormInput
                 label="dose (iu)"
-                name="tinzaparin_dose"
+                name="hd.tinzaparin_dose"
                 v-model="form.tinzaparin_dose"
                 type="number"
                 pattern="\d*"
@@ -265,7 +265,7 @@
             >uf (ml.)</label>
             <div class="grid gap-2 md:grid-cols-2">
                 <FormInput
-                    name="ultrafiltration_min"
+                    name="hd.ultrafiltration_min"
                     v-model="form.ultrafiltration_min"
                     pattern="\d*"
                     type="number"
@@ -274,7 +274,7 @@
                     :placeholder="`min [${configs.validators.ultrafiltration_min.min}, ${configs.validators.ultrafiltration_min.max}]`"
                 />
                 <FormInput
-                    name="ultrafiltration_max"
+                    name="hd.ultrafiltration_max"
                     v-model="form.ultrafiltration_max"
                     pattern="\d*"
                     type="number"
@@ -287,7 +287,7 @@
         <FormInput
             label="dry weight (kg.)"
             v-model="form.dry_weight"
-            name="dry_weight"
+            name="hd.dry_weight"
             type="number"
             :error="$page.props.errors['hd.dry_weight']"
         />
@@ -322,13 +322,13 @@
         <FormInput
             label="nutrition iv type"
             v-model="form.nutrition_iv_type"
-            name="nutrition_iv_type"
+            name="hd.nutrition_iv_type"
             :error="$page.props.errors['hd.nutrition_iv_type']"
         />
         <FormInput
             label="nutrition iv volume (ml)"
             v-model="form.nutrition_iv_volume"
-            name="nutrition_iv_volume"
+            name="hd.nutrition_iv_volume"
             type="number"
             pattern="\d*"
             :error="$page.props.errors['hd.nutrition_iv_volume']"
@@ -347,14 +347,14 @@
     <div class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8 2xl:grid-cols-4">
         <FormInput
             label="prc volume (unit)"
-            name="prc_volume"
+            name="hd.prc_volume"
             v-model="form.prc_volume"
             type="number"
             :error="$page.props.errors['hd.prc_volume']"
         />
         <FormInput
             label="ffp volume (ml)"
-            name="ffp_volume"
+            name="hd.ffp_volume"
             v-model="form.ffp_volume"
             type="number"
             pattern="\d*"
@@ -362,14 +362,14 @@
         />
         <FormInput
             label="platelet volume (unit)"
-            name="platelet_volume"
+            name="hd.platelet_volume"
             v-model="form.platelet_volume"
             type="number"
             :error="$page.props.errors['hd.platelet_volume']"
         />
         <FormInput
             label="other"
-            name="transfusion_other"
+            name="hd.transfusion_other"
             v-model="form.transfusion_other"
             :error="$page.props.errors['hd.transfusion_other']"
         />
@@ -390,7 +390,7 @@ import FormRadio from '@/Components/Controls/FormRadio';
 import AlertMessage from '@/Components/Helpers/AlertMessage';
 import { reactive, ref } from 'vue';
 import { watch } from 'vue';
-import { useSelectOther } from '@/functions/useSelectOther.js';
+import { useSelectOther } from '@/functions/useSelectOther';
 
 const props = defineProps({
     modelValue: { type: Object, required: true },
