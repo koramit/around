@@ -64,7 +64,7 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
             return [
                 'edit_route' => route('procedures.acute-hemodialysis.orders.edit', $note->hashed_key),
                 'ward_name' => $note->place_name,
-                'dialysis_type' => $note->form['dialysis_type'],
+                'dialysis_type' => $note->meta['dialysis_type'],
                 'date_dialyze' => $note->date_note->format('d M'),
                 'md' => $note->author_username,
                 'status' => $note->status,

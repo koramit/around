@@ -232,7 +232,9 @@ class OrderStoreAction extends AcuteHemodialysisAction
 
         if ($dialysisType->contains('HD+HF')) {
             $form['hd'] = $this->HD_FORM_TEMPLATE;
-            $form['hd']['hf']['with_hf'] = true;
+            $form['hd']['hf_perform_at'] = null;
+            $form['hd']['hf_ultrafiltration_min'] = null;
+            $form['hd']['hf_ultrafiltration_max'] = null;
         } elseif ($dialysisType->contains('HD+TPE')) {
             $form['hd'] = $this->HD_FORM_TEMPLATE;
             $form['tpe'] = $this->TPE_FORM_TEMPLATE;

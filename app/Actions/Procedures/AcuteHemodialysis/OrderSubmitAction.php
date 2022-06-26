@@ -22,6 +22,13 @@ class OrderSubmitAction extends AcuteHemodialysisAction
 
         $rules = [];
         if (isset($data['hd'])) {
+            if (isset($data['hd']['hf_perform_at'])) {
+                $rules = array_merge($rules, [
+                    'hd.hf_perform_at' => ['required', Rule::in($this->FORM_CONFIGS['hf_perform_at'])],
+                    'hd.hf_ultrafiltration_min' => ['required', 'integer', 'between:'.$this->FORM_CONFIGS['validators']['hf_ultrafiltration_min']['min'].','.$this->FORM_CONFIGS['validators']['hf_ultrafiltration_min']['max']],
+                    'hd.hf_ultrafiltration_max' => ['required', 'integer', 'between:'.$this->FORM_CONFIGS['validators']['hf_ultrafiltration_max']['min'].','.$this->FORM_CONFIGS['validators']['hf_ultrafiltration_max']['max']],
+                ]);
+            }
             $rules = array_merge($rules, [
                 // 'access_type' => *REQUIRED*|string|in[...],
                 'hd.access_type' => ['required', Rule::in($this->FORM_CONFIGS['access_types'])],

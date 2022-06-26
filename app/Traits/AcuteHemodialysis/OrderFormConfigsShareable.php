@@ -78,6 +78,8 @@ trait OrderFormConfigsShareable
             'tinzaparin_dose'  =>  ['min' => 1500, 'max' => 3500, 'type' => 'interger'],
             'ultrafiltration_min'  =>  ['min' => 0, 'max' => 5500, 'type' => 'interger'],
             'ultrafiltration_max'  =>  ['min' => 0, 'max' => 5500, 'type' => 'interger'],
+            'hf_ultrafiltration_min'  =>  ['min' => 0, 'max' => 5500, 'type' => 'interger'],
+            'hf_ultrafiltration_max'  =>  ['min' => 0, 'max' => 5500, 'type' => 'interger'],
             'ultrafiltration_hf'  =>  ['min' => 0, 'max' => 4000, 'type' => 'interger'],
             'glucose_50_percent_iv_volume'  =>  ['min' => 50, 'max' => 100, 'type' => 'interger'],
         ],
@@ -87,5 +89,6 @@ trait OrderFormConfigsShareable
         'glucose_50_percent_iv_volumes' => [50, 100],
         'glucose_50_percent_iv_at' => [1, 2, 3, 4],
         'albumin_20_percent_primes' => [50, 100],
+        'hf_perform_at' => ['Pre HD', 'Post HD'],
     ];
 }

@@ -25,6 +25,13 @@ class OrderUpdateAction extends AcuteHemodialysisAction
 
         $rules = [];
         if (isset($data['hd'])) {
+            if (isset($data['hd']['hf_perform_at'])) {
+                $rules = array_merge($rules, [
+                    'hd.hf_perform_at' => ['nullable', Rule::in($this->FORM_CONFIGS['hf_perform_at'])],
+                    'hd.hf_ultrafiltration_min' => 'nullable|integer',
+                    'hd.hf_ultrafiltration_max' => 'nullable|integer',
+                ]);
+            }
             $rules = array_merge($rules, [
                 'hd.access_type' => ['nullable', Rule::in($this->FORM_CONFIGS['access_types'])],
                 'hd.access_site_coagulant' => ['nullable', 'string', 'max:30'],

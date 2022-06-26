@@ -1,5 +1,5 @@
 <template>
-    <template v-if="form.hf !== undefined">
+    <template v-if="form.hf_perform_at !== undefined">
         <h2
             class="mt-6 md:mt-12 xl:mt-24 form-label italic text-xl text-complement"
             id="prescription"
@@ -12,9 +12,9 @@
                 <label class="form-label">perform at :</label>
                 <FormRadio
                     class="grid grid-cols-2 gap-x-2"
-                    name="with_hf"
-                    v-model="form.hf.perform_at"
-                    :options="['Pre HD', 'Post HD']"
+                    name="hf_perform_at"
+                    v-model="form.hf_perform_at"
+                    :options="configs.hf_perform_at"
                 />
             </div>
             <div>
@@ -24,22 +24,22 @@
                 >uf (ml.) :</label>
                 <div class="grid gap-2 md:grid-cols-2">
                     <FormInput
-                        name="ultrafiltration_min"
-                        v-model="form.hf.ultrafiltration_min"
+                        name="hf_ultrafiltration_min"
+                        v-model="form.hf_ultrafiltration_min"
                         pattern="\d*"
                         type="number"
-                        @autosave="validate('ultrafiltration_min')"
-                        :error="errors.ultrafiltration_min"
-                        placeholder="min [0, 5500]"
+                        @autosave="validate('hf_ultrafiltration_min')"
+                        :error="errors.hf_ultrafiltration_min"
+                        :placeholder="`min [${configs.validators.hf_ultrafiltration_min.min}, ${configs.validators.hf_ultrafiltration_min.max}]`"
                     />
                     <FormInput
-                        name="ultrafiltration_max"
-                        v-model="form.hf.ultrafiltration_max"
+                        name="hf_ultrafiltration_max"
+                        v-model="form.hf_ultrafiltration_max"
                         pattern="\d*"
                         type="number"
-                        @autosave="validate('ultrafiltration_max')"
-                        :error="errors.ultrafiltration_max"
-                        placeholder="max [0, 5500]"
+                        @autosave="validate('hf_ultrafiltration_max')"
+                        :error="errors.hf_ultrafiltration_max"
+                        :placeholder="`max [${configs.validators.hf_ultrafiltration_max.min}, ${configs.validators.hf_ultrafiltration_max.max}]`"
                     />
                 </div>
             </div>
@@ -452,12 +452,10 @@ const errors = reactive({
     glucose_50_percent_iv_volume: null,
 });
 const validate = (fieldname) => {
-    // let validator = configs.validators.filter((rule) => rule.name === fieldname)[0];
-    let validator = configs.validators[fieldname]; //filter((rule) => rule.name === fieldname)[0];
+    let validator = configs.validators[fieldname];
     const value = validator.type == 'integer' ? parseInt(form[fieldname]) :  parseFloat(form[fieldname]);
     if (value < validator.min || value > validator.max) {
         errors[fieldname] = `${form[fieldname]} could not be saved. Accept range [${validator.min}, ${validator.max}].`;
-        // setTimeout(() => form[fieldname] = null, 1500);
         form[fieldname] = null;
     } else {
         errors[fieldname] = '';

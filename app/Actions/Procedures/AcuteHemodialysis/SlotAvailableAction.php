@@ -40,9 +40,6 @@ class SlotAvailableAction extends AcuteHemodialysisAction
         $hemoCount = $notes->count()
                         ? $notes->countBy(fn ($n) => (strpos($n['type'], 'HD') !== false) || (strpos($n['type'], 'HF') !== false))
                         : 0;
-        // $sleddCount = $notes->count()
-        //                 ? $notes->countBy(fn ($n) => strpos($n->type, 'SLEDD') !== false)
-        //                 : 0;
 
         $available = true;
         $reply = 'ok';
@@ -82,11 +79,11 @@ class SlotAvailableAction extends AcuteHemodialysisAction
                     'case_record_route' => route('procedures.acute-hemodialysis.edit', $note->caseRecord->hashed_key),
                     'patient_name' => $note->patient->profile['first_name'],
                     'author' => $note->author->name,
-                    'type' => $note->form['dialysis_type'],
+                    'type' => $note->meta['dialysis_type'],
                 ];
                 if ($inUnit) {
-                    $trans['tpe'] = str_contains(strtolower($note->form['dialysis_type']), 'tpe') ? 1 : 0;
-                    $trans['slot_count'] = $this->getSlotCount($note->form['dialysis_type']);
+                    $trans['tpe'] = str_contains(strtolower($note->meta['dialysis_type']), 'tpe') ? 1 : 0;
+                    $trans['slot_count'] = $this->getSlotCount($note->meta['dialysis_type']);
                 }
 
                 return $trans;
