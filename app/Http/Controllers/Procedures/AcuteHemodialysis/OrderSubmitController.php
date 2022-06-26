@@ -15,6 +15,5 @@ class OrderSubmitController extends Controller
         // if want json return $data
 
         return redirect()->route('procedures.acute-hemodialysis.edit', $note->caseRecord->hashed_key);
-        // return ['ok' => $status];
     }
 }

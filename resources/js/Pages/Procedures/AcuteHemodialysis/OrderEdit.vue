@@ -251,15 +251,19 @@
         :error="form.errors.treatments_request"
     />
 
-    <button @click="form.post(configs.submit_endpoint)">
-        submit
-    </button>
+    <SpinnerButton
+        @click="submit"
+        :spin="form.processing"
+        class="mt-4 md:mt-8 w-full btn-accent"
+    >
+        SUBMIT
+    </SpinnerButton>
 </template>
 
 <script setup>
-import { useForm } from '@inertiajs/inertia-vue3';
+import { useForm, usePage } from '@inertiajs/inertia-vue3';
 import debounce from 'lodash/debounce';
-import { reactive, watch } from 'vue';
+import { nextTick, reactive, watch } from 'vue';
 import FormInput from '@/Components/Controls/FormInput';
 import HDForm from '@/Partials/Procedures/AcuteHemodialysis/HDForm';
 import HFForm from '@/Partials/Procedures/AcuteHemodialysis/HFForm';
@@ -268,6 +272,7 @@ import TPEForm from '@/Partials/Procedures/AcuteHemodialysis/TPEForm';
 import FormCheckbox from '@/Components/Controls/FormCheckbox';
 import FormSelect from '@/Components/Controls/FormSelect';
 import FormTextarea from '@/Components/Controls/FormTextarea';
+import SpinnerButton from '../../../Components/Controls/SpinnerButton.vue';
 const props = defineProps({
     orderForm: { type: Object, required: true },
     formConfigs: { type: Object, required: true },
@@ -321,4 +326,20 @@ const autosave = debounce(function () {
         });
 }, 3000);
 const configs = reactive({...props.formConfigs});
+const submit = () => form.post(configs.submit_endpoint);
+watch (
+    () => usePage().props.value.event.fire,
+    (event) => {
+        if (! event) {
+            return;
+        }
+
+        if (usePage().props.value.event.name === 'action-clicked') {
+            let action = usePage().props.value.event.payload;
+            if (action === 'submit') {
+                nextTick(submit);
+            }
+        }
+    }
+);
 </script>

@@ -81,7 +81,7 @@
                                 <p class="text-xs italic text-complement font-semibold">
                                     Latest
                                 </p>
-                                <p class="font-semibold text-accent-darker text-xs flex items-center">
+                                <p class="font-semibold text-accent text-xs flex items-center">
                                     <IconUserMd class="h-3 w-3 mr-1" />
                                     <span class="block italic truncate">{{ caseRecord.md }}</span>
                                 </p>
@@ -89,13 +89,13 @@
                             <div class="flex items-center justify-between">
                                 <p>
                                     Dialyze : <span
-                                        class="text-complement-darker font-semibold"
+                                        class="text-complement font-semibold"
                                         v-text="caseRecord.date_dialyze"
                                     />
                                 </p>
                                 <p>
                                     Ordered : <span
-                                        class="text-complement-darker font-semibold"
+                                        class="text-complement font-semibold"
                                         v-text="caseRecord.date_reserved"
                                     />
                                 </p>

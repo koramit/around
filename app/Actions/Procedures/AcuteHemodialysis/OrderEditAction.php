@@ -30,7 +30,9 @@ class OrderEditAction extends AcuteHemodialysisAction
                 ['icon' => 'clinic', 'label' => 'Clinics', 'route' => route('clinics'), 'can' => true],
                 ['icon' => 'procedure', 'label' => 'Procedures', 'route' => route('procedures'), 'can' => true],
             ],
-            'action-menu' => [],
+            'action-menu' => [
+                ['icon' => 'paper-plain', 'action' => 'submit', 'label' => 'Submit'],
+            ],
         ];
 
         return [

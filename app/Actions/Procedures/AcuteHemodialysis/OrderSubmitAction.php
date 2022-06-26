@@ -145,6 +145,12 @@ class OrderSubmitAction extends AcuteHemodialysisAction
 
         $validated = Validator::make($data, $rules)->validate();
 
+        $note->update([
+            'form' => $validated,
+            'submitted_at' => now(),
+            'status' => 'submitted',
+        ]);
+
         return $note;
     }
 }
