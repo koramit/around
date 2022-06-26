@@ -52,7 +52,7 @@
         >
         <div
             v-if="error"
-            class="text-red-700 mt-2 text-sm"
+            class="form-error-block"
         >
             {{ error }}
         </div>

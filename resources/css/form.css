@@ -6,6 +6,10 @@
     @apply text-gray-600 appearance-none w-full py-1 px-2 lg:py-2 lg:px-3 bg-white shadow-sm rounded border-2 border-gray-200 transition-colors duration-200 ease-in-out focus:outline-none focus:bg-yellow-50 focus:border-yellow-200 disabled:bg-gray-200 disabled:border-white disabled:cursor-not-allowed;
 }
 
+.form-error-block {
+    @apply text-xs text-red-700 mt-2
+}
+
 input[type="checkbox"] {
     box-sizing: border-box;
     padding: 0;

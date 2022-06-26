@@ -86,6 +86,7 @@
         v-model="form.hemodynamic.stable"
         label="Stable"
         :toggler="true"
+        :error="form.errors['hemodynamic.stable']"
     />
     <transition name="slide-fade">
         <div
@@ -110,6 +111,7 @@
         v-model="form.respiration.stable"
         label="Stable"
         :toggler="true"
+        :error="form.errors['respiration.stable']"
     />
     <transition name="slide-fade">
         <div
@@ -143,6 +145,7 @@
         v-model="form.neurological.stable"
         label="Stable"
         :toggler="true"
+        :error="form.errors['neurological.stable']"
     />
     <transition name="slide-fade">
         <div
@@ -167,6 +170,7 @@
         v-model="form.life_threatening_condition.stable"
         label="Stable"
         :toggler="true"
+        :error="form.errors['life_threatening_condition.stable']"
     />
     <transition name="slide-fade">
         <div
@@ -196,6 +200,7 @@
         v-model="form.monitor.standard"
         label="Standard (MAP ≥ 65 mmHg)"
         :toggler="true"
+        :error="form.errors['monitor.standard']"
     />
     <transition name="slide-fade">
         <div v-if="!form.monitor.standard">
@@ -252,6 +257,7 @@
         label="treatments request"
         name="treatments_request"
         v-model="form.treatments_request"
+        :error="form.errors.treatments_request"
     />
 
     <button @click="form.post(configs.submit_endpoint)">

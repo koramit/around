@@ -17,8 +17,8 @@
                 :disabled="disabled"
                 :value="modelValue"
                 @change="change"
-                class="form-input cursor-pointer disabled:cursor-not-allowed border-r-0"
-                :class="{ 'border-red-400': errors.length, 'bg-gray-400': disabled }"
+                class="form-input cursor-pointer disabled:cursor-not-allowed border-r-1"
+                :class="{ 'border-red-400': error, 'bg-gray-400': disabled }"
             >
                 <option
                     disabled
@@ -74,8 +74,8 @@
                     :disabled="disabled"
                     :value="modelValue"
                     @change="change"
-                    class="form-input cursor-pointer disabled:cursor-not-allowed border-r-0 rounded-r-none"
-                    :class="{ 'border-red-400': errors.length, 'bg-gray-400': disabled }"
+                    class="form-input cursor-pointer disabled:cursor-not-allowed border-r-1 rounded-r-none"
+                    :class="{ 'border-red-400': error, 'bg-gray-400': disabled }"
                 >
                     <option
                         disabled
@@ -131,10 +131,10 @@
             </div>
         </div>
         <div
-            v-if="errors.length"
-            class="text-red-700 mt-2 text-sm"
+            v-if="error"
+            class="form-error-block"
         >
-            {{ errors[0] }}
+            {{ error }}
         </div>
     </div>
 </template>
@@ -151,7 +151,7 @@ const props = defineProps({
     label: { type: String, default: '' },
     placeholder: { type: String, default: '' },
     disabled: { type: Boolean },
-    errors: { type: Array, default: () => [] },
+    error: { type: String, default: '' },
     allowOther: { type:Boolean },
     switchLabel: { type: String, default: '' }
 });

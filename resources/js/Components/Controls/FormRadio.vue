@@ -7,11 +7,12 @@
         <div
             v-for="(item, key) in computeItems"
             :key="key"
-            class="mb-2 flex text-gray-600 appearance-none w-full py-1 px-2 lg:py-2 lg:px-3 bg-white shadow-sm rounded border-2 border-gray-200 transition-colors duration-200 ease-in-out cursor-pointer"
+            class="mb-2 flex text-gray-600 appearance-none w-full py-1 px-2 lg:py-2 lg:px-3 bg-white shadow-sm rounded border-2 transition-colors duration-200 ease-in-out cursor-pointer"
             :class="{
-                'opacity-50': selected && selected !== item.value,
-                'border-accent font-medium': selected === item.value,
                 'border-red-400': error,
+                'border-gray-200': !selected && !error,
+                'opacity-50': selected && selected !== item.value,
+                'border-accent font-medium': selected === item.value && !error,
             }"
         >
             <div class="text-accent flex items-center">
@@ -31,6 +32,12 @@
                 class="ml-4 w-full block cursor-pointer"
             />
         </div>
+        <p
+            v-if="error"
+            class="form-error-block mt-0"
+        >
+            {{ error }}
+        </p>
     </div>
 </template>
 

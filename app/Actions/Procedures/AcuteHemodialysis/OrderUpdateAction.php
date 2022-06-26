@@ -25,7 +25,7 @@ class OrderUpdateAction extends AcuteHemodialysisAction
 
         $rules = [];
         if (isset($data['hd'])) {
-            if (isset($data['hd']['hf_perform_at'])) {
+            if (strpos($note->meta['dialysis_type'], '+HF')) {
                 $rules = array_merge($rules, [
                     'hd.hf_perform_at' => ['nullable', Rule::in($this->FORM_CONFIGS['hf_perform_at'])],
                     'hd.hf_ultrafiltration_min' => 'nullable|integer',
@@ -55,7 +55,7 @@ class OrderUpdateAction extends AcuteHemodialysisAction
                 'hd.fondaparinux_bolus_dose' => 'nullable|integer', // autosave trigger on typing so, move |min:xxx|max:xxx to completeness validation
                 'hd.tinzaparin_dose' => 'nullable|integer', // autosave trigger on typing so, move |min:xxx|max:xxx to completeness validation
                 'hd.ultrafiltration_min' => 'nullable|integer', // autosave trigger on typing so, move |min:xxx|max:xxx to completeness validation
-                'hd.ultrafiltration_mix' => 'nullable|integer', // autosave trigger on typing so, move |min:xxx|max:xxx to completeness validation
+                'hd.ultrafiltration_max' => 'nullable|integer', // autosave trigger on typing so, move |min:xxx|max:xxx to completeness validation
                 'hd.dry_weight' => 'nullable|numeric',
                 'hd.glucose_50_percent_iv_volume' => 'nullable|integer',
                 'hd.glucose_50_percent_iv_at' => 'nullable|integer',
@@ -63,10 +63,10 @@ class OrderUpdateAction extends AcuteHemodialysisAction
                 'hd.nutrition_iv_type' => 'nullable|string|max:255',
                 'hd.nutrition_iv_volume' => 'nullable|integer',
                 'hd.post_dialysis_bw' => 'boolean',
-                'hd.prc_volume' => 'nullable|integer',
+                'hd.prc_volume' => 'nullable|numeric',
                 'hd.ffp_volume' => 'nullable|integer',
-                'hd.platelet_volume' => 'nullable|integer',
-                'hd.transfusion_other' => 'nullable|string|max:255',
+                'hd.platelet_volume' => 'nullable|numeric',
+                'hd.transfusion_other' => 'nullable|string|max:512',
             ]);
         }
 

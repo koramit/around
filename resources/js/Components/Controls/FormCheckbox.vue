@@ -31,6 +31,12 @@
                 {{ label }}
             </div>
         </label>
+        <p
+            v-if="error"
+            class="form-error-block"
+        >
+            {{ error }}
+        </p>
     </div>
     <div v-else>
         <label class="inline-flex items-center cursor-pointer">
@@ -42,6 +48,12 @@
             >
             <span class="ml-4 text-sm md:text-base xl:text-lg">{{ label }}</span>
         </label>
+        <p
+            v-if="error"
+            class="form-error-block"
+        >
+            {{ error }}
+        </p>
     </div>
 </template>
 
@@ -51,6 +63,7 @@ export default {
     props: {
         modelValue: { type: Boolean },
         label: { type: String, default: '' },
+        error: { type: String, default: '' },
         toggler: { type: Boolean }
     },
     methods: {
