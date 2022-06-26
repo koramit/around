@@ -18,26 +18,26 @@
     <hr class="my-4 border-b border-accent">
     <div class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8 2xl:grid-cols-4">
         <FormInput
-            v-model="form.reservation.hn"
+            v-model="configs.hn"
             name="hn"
             label="hn"
             :readonly="true"
         />
         <FormInput
-            v-model="form.reservation.an"
+            v-model="configs.an"
             name="an"
             label="an"
             placeholder="No active admission"
             :readonly="true"
         />
         <FormInput
-            v-model="form.reservation.dialysis_at"
+            v-model="configs.dialysis_at"
             name="dialysis_at"
             label="dialysis at"
             :readonly="true"
         />
         <FormInput
-            v-model="form.dialysis_type"
+            v-model="configs.dialysis_type"
             name="dialysis_type"
             label="dialysis type"
             :readonly="true"

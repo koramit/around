@@ -19,13 +19,6 @@ class OrderEditAction extends AcuteHemodialysisAction
 
         $note = Note::query()->withPlaceName(Ward::class)->findByUnhashKey($hashedKey)->firstOrFail();
 
-        $form = $note->form;
-        $form['reservation'] = [
-            'hn' => $note->meta['hn'],
-            'an' => $note->meta['an'] ?? null,
-            'dialysis_at' => $note->place_name,
-        ];
-
         $flash = [
             'page-title' => 'Acute HD Order '.$note->patient->profile['first_name'].' @ '.$note->date_note->format('d M Y'),
             'main-menu-links' => [
@@ -41,11 +34,15 @@ class OrderEditAction extends AcuteHemodialysisAction
         ];
 
         return [
-            'orderForm' => $form,
+            'orderForm' => $note->form,
             'flash' => $flash,
             'formConfigs' => $this->FORM_CONFIGS + [
                 'update_endpoint' => route('procedures.acute-hemodialysis.orders.update', $note->hashed_key),
                 'submit_endpoint' => route('procedures.acute-hemodialysis.orders.submit', $note->hashed_key),
+                'hn' => $note->meta['hn'],
+                'an' => $note->meta['an'] ?? null,
+                'dialysis_at' => $note->place_name,
+                'dialysis_type' => $note->meta['dialysis_type'],
             ],
         ];
     }

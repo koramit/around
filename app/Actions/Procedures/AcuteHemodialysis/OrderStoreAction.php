@@ -217,6 +217,7 @@ class OrderStoreAction extends AcuteHemodialysisAction
             'version' => $this->FORM_VERSION,
             'in_unit' => $ward->id === $this->IN_UNIT_WARD_ID,
             'patient_type' => $validated['patient_type'],
+            'dialysis_type' => $validated['dialysis_type'],
         ];
         $note->user_id = $userId;
         $note->save();
@@ -227,7 +228,6 @@ class OrderStoreAction extends AcuteHemodialysisAction
     protected function initForm(string $dialysisType): array
     {
         $form = $this->BASE_FORM_TEMPLATE;
-        $form['dialysis_type'] = $dialysisType;
         $dialysisType = Str::of($dialysisType);
 
         if ($dialysisType->contains('HD+HF')) {
