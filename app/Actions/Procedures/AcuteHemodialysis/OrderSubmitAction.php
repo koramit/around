@@ -110,7 +110,7 @@ class OrderSubmitAction extends AcuteHemodialysisAction
                 'hd.prc_volume' => 'nullable|numeric',
                 'hd.ffp_volume' => 'nullable|integer',
                 'hd.platelet_volume' => 'nullable|numeric',
-                'hd.transfusion_other' => 'nullable|string|max:512',
+                'hd.transfusion_other' => 'nullable|string|max:255',
             ]);
         }
 
@@ -226,6 +226,86 @@ class OrderSubmitAction extends AcuteHemodialysisAction
                     'integer',
                     'between:'.$this->FORM_CONFIGS['validators']['tinzaparin_dose']['min'].','.$this->FORM_CONFIGS['validators']['tinzaparin_dose']['max'],
                 ],
+            ]);
+        }
+
+        if (isset($data['sledd'])) {
+            $rules = array_merge($rules, [
+                'sledd.duration' => ['required', Rule::in($this->FORM_CONFIGS['sledd_durations'])],
+                'sledd.access_type' => ['required', Rule::in($this->FORM_CONFIGS['access_types'])],
+                'sledd.access_site_coagulant' => [
+                    'prohibited_if:sledd.access_type,pending',
+                    Rule::requiredIf(fn () => $data['sledd']['access_type'] !== 'pending'),
+                    'nullable',
+                    Rule::in(str_starts_with($data['sledd']['access_type'] ?? '', 'AV') ? $this->FORM_CONFIGS['av_access_sites'] : $this->FORM_CONFIGS['non_av_access_sites']),
+                ],
+                'sledd.dialyzer' => ['required', Rule::in($this->FORM_CONFIGS['dialyzers'])],
+                'sledd.dialysate' => ['required', Rule::in($this->FORM_CONFIGS['dialysates'])],
+                'sledd.dialysate_flow_rate' => ['required', Rule::in($this->FORM_CONFIGS['dialysate_flow_rates'])],
+                'sledd.reverse_dialysate_flow' => 'required|boolean',
+                'sledd.blood_flow_rate' => ['required', Rule::in($this->FORM_CONFIGS['blood_flow_rates'])],
+                'sledd.dialysate_temperature' => ['required', Rule::in($this->FORM_CONFIGS['dialysate_temperatures'])],
+                'sledd.sodium' => [
+                    'required',
+                    'integer',
+                    'between:'.$this->FORM_CONFIGS['validators']['sodium']['min'].','.$this->FORM_CONFIGS['validators']['sodium']['max'],
+                ],
+                'sledd.sodium_profile' => 'required|boolean',
+                'sledd.sodium_profile_start' => 'required_if:sledd.sodium_profile,true|nullable|integer',
+                'sledd.sodium_profile_end' =>  'required_unless:sledd.sodium_profile_start,null|nullable|integer',
+                'sledd.bicarbonate' => ['required', Rule::in($this->FORM_CONFIGS['bicarbonates'])],
+                'sledd.anticoagulant' => 'required|string|max:255',
+                'sledd.anticoagulant_none_drip_via_peripheral_iv' => 'required|boolean',
+                'sledd.anticoagulant_none_nss_200ml_flush_q_hour' => 'required|boolean',
+                'sledd.heparin_loading_dose' => [
+                    'required_if:sledd.anticoagulant,heparin',
+                    'nullable',
+                    'integer',
+                    'between:'.$this->FORM_CONFIGS['validators']['heparin_loading_dose']['min'].','.$this->FORM_CONFIGS['validators']['heparin_loading_dose']['max'],
+                ],
+                'sledd.heparin_maintenance_dose' => [
+                    'required_if:sledd.anticoagulant,heparin',
+                    'nullable',
+                    'integer',
+                    'between:'.$this->FORM_CONFIGS['validators']['heparin_maintenance_dose']['min'].','.$this->FORM_CONFIGS['validators']['heparin_maintenance_dose']['max'],
+                ],
+                'sledd.enoxaparin_dose' => [
+                    'required_if:sledd.anticoagulant,enoxaparin',
+                    'nullable',
+                    'numeric',
+                    'between:'.$this->FORM_CONFIGS['validators']['enoxaparin_dose']['min'].','.$this->FORM_CONFIGS['validators']['enoxaparin_dose']['max'],
+                ],
+                'sledd.fondaparinux_bolus_dose' => ['required_if:sledd.anticoagulant,fondaparinux', 'nullable', Rule::in($this->FORM_CONFIGS['fondaparinux_bolus_doses'])],
+                'sledd.tinzaparin_dose' => [
+                    'required_if:sledd.anticoagulant,tinzaparin',
+                    'nullable',
+                    'integer',
+                    'between:'.$this->FORM_CONFIGS['validators']['tinzaparin_dose']['min'].','.$this->FORM_CONFIGS['validators']['tinzaparin_dose']['max'],
+                ],
+                'sledd.ultrafiltration_min' => [
+                    'required_if:sledd.dry_weight,null',
+                    'nullable',
+                    'integer',
+                    'between:'.$this->FORM_CONFIGS['validators']['ultrafiltration_min']['min'].','.$this->FORM_CONFIGS['validators']['ultrafiltration_min']['max'],
+                ],
+                'sledd.ultrafiltration_max' => [
+                    'required_unless:sledd.ultrafiltration_min,null',
+                    'nullable',
+                    'integer',
+                    'between:'.$data['sledd']['ultrafiltration_min'].','.$this->FORM_CONFIGS['validators']['ultrafiltration_max']['max'],
+                ],
+                'sledd.dry_weight' => 'required_if:sledd.ultrafiltration_min,null|nullable|numeric',
+                'sledd.glucose_50_percent_iv_volume' => ['nullable', Rule::in($this->FORM_CONFIGS['glucose_50_percent_iv_volumes'])],
+                'sledd.glucose_50_percent_iv_at' => ['nullable', Rule::in($this->FORM_CONFIGS['glucose_50_percent_iv_at'])],
+                'sledd.albumin_20_percent_prime' => ['nullable', Rule::in($this->FORM_CONFIGS['albumin_20_percent_primes'])],
+                'sledd.nutrition_iv_type' => 'nullable|string|max:255',
+                'sledd.nutrition_iv_volume' => 'nullable|integer',
+                'sledd.post_dialysis_bw' => 'required|boolean',
+                'sledd.prc_volume' => 'nullable|numeric',
+                'sledd.ffp_volume' => 'nullable|integer',
+                'sledd.platelet_volume' => 'nullable|numeric',
+                'sledd.transfusion_other' => 'nullable|string|max:255',
+                'sledd.remark' => 'nullable|string|max:255',
             ]);
         }
 

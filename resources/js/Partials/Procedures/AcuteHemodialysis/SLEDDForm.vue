@@ -11,9 +11,10 @@
             <label class="form-label">duration (hrs.)</label>
             <FormRadio
                 class="grid grid-cols-2 gap-x-2"
-                name="duration"
+                name="sledd.duration"
+                :error="$page.props.errors['sledd.duration']"
                 v-model="form.duration"
-                :options="['6', '8']"
+                :options="configs.sledd_durations"
             />
         </div>
     </div>
@@ -21,47 +22,54 @@
         <FormSelect
             label="access type"
             v-model="form.access_type"
-            name="access_type"
+            name="sledd.access_type"
             :options="configs.access_types"
+            :error="$page.props.errors['sledd.access_type']"
         />
         <FormSelect
             label="access site coagulant"
             v-model="form.access_site_coagulant"
-            name="access_site_coagulant"
+            name="sledd.access_site_coagulant"
             :options="(form.access_type && form.access_type.startsWith('AV')) ? configs.av_access_sites : configs.non_av_access_sites"
-            :disabled="!form.access_type || form.access_type === 'รอใส่สาย'"
+            :disabled="!form.access_type || form.access_type === 'pending'"
+            :error="$page.props.errors['sledd.access_site_coagulant']"
         />
         <FormSelect
             v-model="form.dialyzer"
-            name="dialyzer"
+            name="sledd.dialyzer"
             label="dialyzer"
-            :options="configs.dialyzers"
+            :options="configs.sledd_dialyzers"
+            :error="$page.props.errors['sledd.dialyzer']"
         />
         <FormSelect
             v-model="form.dialysate"
-            name="dialysate"
+            name="sledd.dialysate"
             label="dialysate"
             :options="configs.dialysates"
+            :error="$page.props.errors['sledd.dialysate']"
         />
         <FormSelect
             v-model="form.blood_flow_rate"
-            name="blood_flow_rate"
-            :options="['200']"
+            name="sledd.blood_flow_rate"
+            :options="configs.sledd_blood_flow_rates"
             label="blood flow rate (ml/min)"
+            :error="$page.props.errors['sledd.blood_flow_rate']"
         />
         <FormSelect
             v-model:model-value="form.dialysate_flow_rate"
             v-model:model-checkbox="form.reverse_dialysate_flow"
-            :options="['300']"
-            name="dialysate_flow_rate"
+            :options="configs.sledd_dialysate_flow_rates"
+            name="sledd.dialysate_flow_rate"
             label="dialysate flow (ml/min)"
             switch-label="Reverse flow"
+            :error="$page.props.errors['sledd.dialysate_flow_rate']"
         />
         <FormSelect
             v-model="form.dialysate_temperature"
-            name="dialysate_temperature"
+            name="sledd.dialysate_temperature"
             :options="configs.dialysate_temperatures"
             label="dialysate temperature (℃)"
+            :error="$page.props.errors['sledd.dialysate_temperature']"
         />
     </div>
     <hr class="border border-dashed my-2 md:my-4 xl:my-8">
@@ -69,18 +77,18 @@
         <div>
             <FormInput
                 label="sodium"
-                name="sodium"
+                name="sledd.sodium"
                 v-model="form.sodium"
                 type="number"
                 pattern="\d*"
                 @autosave="validate('sodium')"
-                :error="errors.sodium"
-                placeholder="[128, 145]"
+                :error="errors.sodium ?? $page.props.errors['sledd.sodium']"
+                :placeholder="`[${configs.validators.sodium.min}, ${configs.validators.sodium.max}]`"
             />
             <FormCheckbox
                 class="mt-2 md:mt-4 xl:mt-8"
                 label="Sodium profile"
-                name="sodium_profile"
+                name="sledd.sodium_profile"
                 v-model="form.sodium_profile"
                 :toggler="true"
             />
@@ -91,43 +99,46 @@
                 >
                     <FormInput
                         label="start"
-                        name="sodium_profile_start"
+                        name="sledd.sodium_profile_start"
                         v-model="form.sodium_profile_start"
                         type="number"
                         pattern="\d*"
-                        :error="errors.sodium_profile_start"
+                        :error="errors.sodium_profile_start ?? $page.props.errors['sledd.sodium_profile_start']"
                     />
                     <FormInput
                         label="end"
-                        name="sodium_profile_end"
+                        name="sledd.sodium_profile_end"
                         v-model="form.sodium_profile_end"
                         type="number"
                         pattern="\d*"
-                        :error="errors.sodium_profile_end"
+                        :error="errors.sodium_profile_end ?? $page.props.errors['sledd.sodium_profile_end']"
                     />
                 </div>
             </transition>
         </div>
         <FormSelect
             v-model="form.bicarbonate"
-            name="bicarbonate"
+            name="sledd.bicarbonate"
             label="bicarbonate"
             :options="configs.bicarbonates"
+            :error="$page.props.errors['sledd.bicarbonate']"
         />
     </div>
     <hr class="border border-dashed my-2 md:my-4 xl:my-8">
     <div class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8 2xl:grid-cols-4 my-2 md:my-4 xl:my-8">
         <FormSelect
             v-model="form.anticoagulant"
-            name="anticoagulant"
+            name="sledd.anticoagulant"
             label="anticoagulant"
             :options="configs.anticoagulants"
+            ref="anticoagulantInput"
+            :error="$page.props.errors['sledd.anticoagulant']"
         />
     </div>
     <transition name="slide-fade">
         <div
             class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8 2xl:grid-cols-4 my-2 md:my-4 xl:my-8"
-            v-if="form.anticoagulant == 'None'"
+            v-if="form.anticoagulant == 'none'"
         >
             <FormCheckbox
                 label="anticoagulant drip via peripheral IV"
@@ -140,27 +151,27 @@
                 v-model="form.anticoagulant_none_nss_200ml_flush_q_hour"
             />
         </div>
-        <div v-else-if="form.anticoagulant == 'Heparin'">
+        <div v-else-if="form.anticoagulant == 'heparin'">
             <div class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8 2xl:grid-cols-4 my-2 md:my-4 xl:my-8">
                 <FormInput
                     label="loading dose (iu)"
-                    name="heparin_loading_dose"
+                    name="sledd.heparin_loading_dose"
                     v-model="form.heparin_loading_dose"
                     type="number"
                     pattern="\d*"
                     @autosave="validate('heparin_loading_dose')"
-                    :error="errors.heparin_loading_dose"
-                    placeholder="[250, 2000] IU"
+                    :error="errors.heparin_loading_dose ?? $page.props.errors['sledd.heparin_loading_dose']"
+                    :placeholder="`[${configs.validators.heparin_loading_dose.min}, ${configs.validators.heparin_loading_dose.max}] IU`"
                 />
                 <FormInput
                     label="maintenance dose (iu/hour)"
-                    name="heparin_maintenance_dose"
+                    name="sledd.heparin_maintenance_dose"
                     v-model="form.heparin_maintenance_dose"
                     type="number"
                     pattern="\d*"
                     @autosave="validate('heparin_maintenance_dose')"
-                    :error="errors.heparin_maintenance_dose"
-                    placeholder="[0, 1500] IU/Hour"
+                    :error="errors.heparin_maintenance_dose ?? $page.props.errors['sledd.heparin_maintenance_dose']"
+                    :placeholder="`[${configs.validators.heparin_maintenance_dose.min}, ${configs.validators.heparin_maintenance_dose.max}] IU/Hour`"
                 />
             </div>
             <AlertMessage
@@ -170,52 +181,43 @@
         </div>
         <div
             class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8 2xl:grid-cols-4 my-2 md:my-4 xl:my-8"
-            v-else-if="form.anticoagulant == 'Enoxaparin'"
+            v-else-if="form.anticoagulant == 'enoxaparin'"
         >
             <FormInput
                 label="dose (ml)"
-                name="enoxaparin_dose"
+                name="sledd.enoxaparin_dose"
                 v-model="form.enoxaparin_dose"
                 type="number"
                 @autosave="validate('enoxaparin_dose')"
-                :error="errors.enoxaparin_dose"
-                placeholder="[0.3, 0.8] ml"
+                :error="errors.enoxaparin_dose ?? $page.props.errors['sledd.enoxaparin_dose']"
+                :placeholder="`[${configs.validators.enoxaparin_dose.min}, ${configs.validators.enoxaparin_dose.max}] ml`"
             />
         </div>
         <div
             class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8 2xl:grid-cols-4 my-2 md:my-4 xl:my-8"
-            v-else-if="form.anticoagulant == 'Fondaparinux'"
+            v-else-if="form.anticoagulant == 'fondaparinux'"
         >
             <FormSelect
                 label="bolus dose (iu)"
-                name="fondaparinux_bolus_dose"
+                name="sledd.fondaparinux_bolus_dose"
                 v-model="form.fondaparinux_bolus_dose"
-                :options="['500', '750']"
+                :options="configs.fondaparinux_bolus_doses"
+                :error="$page.props.errors['sledd.fondaparinux_bolus_dose']"
             />
         </div>
         <div
             class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8 2xl:grid-cols-4 my-2 md:my-4 xl:my-8"
-            v-else-if="form.anticoagulant == 'Tinzaparin'"
+            v-else-if="form.anticoagulant == 'tinzaparin'"
         >
             <FormInput
                 label="dose (iu)"
-                name="tinzaparin_dose"
+                name="sledd.tinzaparin_dose"
                 v-model="form.tinzaparin_dose"
                 type="number"
                 pattern="\d*"
                 @autosave="validate('tinzaparin_dose')"
-                :error="errors.tinzaparin_dose"
-                placeholder="[1500, 3500] IU"
-            />
-        </div>
-        <div
-            class="grid gap-2 md:gap-4 xl:gap-8 my-2 md:my-4 xl:my-8"
-            v-else-if="form.anticoagulant == 'Other'"
-        >
-            <FormInput
-                name="anticoagulant_other"
-                v-model="form.anticoagulant_other"
-                placeholder="please specify"
+                :error="errors.tinzaparin_dose ?? $page.props.errors['sledd.tinzaparin_dose']"
+                :placeholder="`[${configs.validators.tinzaparin_dose.min}, ${configs.validators.tinzaparin_dose.max}] IU`"
             />
         </div>
     </transition>
@@ -228,30 +230,31 @@
             >uf (ml.)</label>
             <div class="grid gap-2 md:grid-cols-2">
                 <FormInput
-                    name="ultrafiltration_min"
+                    name="sledd.ultrafiltration_min"
                     v-model="form.ultrafiltration_min"
                     pattern="\d*"
                     type="number"
                     @autosave="validate('ultrafiltration_min')"
-                    :error="errors.ultrafiltration_min"
-                    placeholder="min [0, 5500]"
+                    :error="errors.ultrafiltration_min ?? $page.props.errors['sledd.ultrafiltration_min']"
+                    :placeholder="`min [${configs.validators.ultrafiltration_min.min}, ${configs.validators.ultrafiltration_min.max}]`"
                 />
                 <FormInput
-                    name="ultrafiltration_max"
+                    name="sledd.ultrafiltration_max"
                     v-model="form.ultrafiltration_max"
                     pattern="\d*"
                     type="number"
                     @autosave="validate('ultrafiltration_max')"
-                    :error="errors.ultrafiltration_max"
-                    placeholder="max [0, 5500]"
+                    :error="errors.ultrafiltration_max ?? $page.props.errors['sledd.ultrafiltration_max']"
+                    :placeholder="`max [${configs.validators.ultrafiltration_max.min}, ${configs.validators.ultrafiltration_max.max}]`"
                 />
             </div>
         </div>
         <FormInput
             label="dry weight (kg.)"
             v-model="form.dry_weight"
-            name="dry_weight"
+            name="sledd.dry_weight"
             type="number"
+            :error="$page.props.errors['sledd.dry_weight']"
         />
         <div>
             <label class="form-label">50% Glucose IV volume (ml)</label>
@@ -260,7 +263,7 @@
                 :class="{'grid-cols-3': form.glucose_50_percent_iv_volume}"
                 name="glucose_50_percent_iv_volume"
                 v-model="form.glucose_50_percent_iv_volume"
-                :options="['50', '100']"
+                :options="configs.glucose_50_percent_iv_volumes"
                 :allow-reset="true"
             />
         </div>
@@ -268,7 +271,7 @@
             v-model="form.glucose_50_percent_iv_at"
             name="glucose_50_percent_iv_at"
             label="50% glucose iv (at hour)"
-            :options="[1,2,3,4]"
+            :options="configs.glucose_50_percent_iv_at"
         />
         <div>
             <label class="form-label">20% albumin prime (ml)</label>
@@ -277,21 +280,23 @@
                 :class="{'grid-cols-3': form.albumin_20_percent_prime}"
                 name="albumin_20_percent_prime"
                 v-model="form.albumin_20_percent_prime"
-                :options="['50', '100']"
+                :options="configs.albumin_20_percent_primes"
                 :allow-reset="true"
             />
         </div>
         <FormInput
             label="nutrition iv type"
             v-model="form.nutrition_iv_type"
-            name="nutrition_iv_type"
+            name="sledd.nutrition_iv_type"
+            :error="$page.props.errors['sledd.nutrition_iv_type']"
         />
         <FormInput
             label="nutrition iv volume (ml)"
             v-model="form.nutrition_iv_volume"
-            name="nutrition_iv_volume"
+            name="sledd.nutrition_iv_volume"
             type="number"
             pattern="\d*"
+            :error="$page.props.errors['sledd.nutrition_iv_volume']"
         />
     </div>
     <hr class="border border-dashed my-2 md:my-4 xl:my-8">
@@ -301,40 +306,50 @@
         v-model="form.post_dialysis_bw"
         :toggler="true"
     />
+
     <hr class="border border-dashed my-2 md:my-4 xl:my-8">
     <label class="form-label">transfustion :</label>
     <div class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8 2xl:grid-cols-4">
         <FormInput
             label="prc volume (unit)"
-            name="prc_volume"
+            name="sledd.prc_volume"
             v-model="form.prc_volume"
             type="number"
+            :error="$page.props.errors['sledd.prc_volume']"
         />
         <FormInput
             label="ffp volume (ml)"
-            name="ffp_volume"
+            name="sledd.ffp_volume"
             v-model="form.ffp_volume"
             type="number"
             pattern="\d*"
+            :error="$page.props.errors['sledd.ffp_volume']"
         />
         <FormInput
             label="platelet volume (unit)"
-            name="platelet_volume"
+            name="sledd.platelet_volume"
             v-model="form.platelet_volume"
             type="number"
+            :error="$page.props.errors['sledd.platelet_volume']"
         />
         <FormInput
             label="other"
-            name="transfusion_other"
+            name="sledd.transfusion_other"
             v-model="form.transfusion_other"
+            :error="$page.props.errors['sledd.transfusion_other']"
         />
     </div>
-    <hr class="border border-dashed my-2 md:my-4 xl:my-8">
     <FormTextarea
         class="mt-2 md:mt-4 xl:mt-8"
         label="note"
-        name="monitoring_other"
+        name="sledd.remark"
+        :error="$page.props.errors['sledd.remark']"
         v-model="form.remark"
+    />
+    <FormSelectOther
+        :placeholder="selectOther.placeholder"
+        ref="selectOtherInput"
+        @closed="(val) => selectOtherClosed(val, true)"
     />
 </template>
 
@@ -345,8 +360,9 @@ import FormTextarea from '@/Components/Controls/FormTextarea';
 import FormSelect from '@/Components/Controls/FormSelect';
 import FormRadio from '@/Components/Controls/FormRadio';
 import AlertMessage from '@/Components/Helpers/AlertMessage';
-import { reactive } from 'vue';
-import { watch } from 'vue';
+import FormSelectOther from '@/Components/Controls/FormSelectOther';
+import { watch, reactive, ref } from 'vue';
+import { useSelectOther } from '@/functions/useSelectOther';
 
 const props = defineProps({
     modelValue: { type: Object, required: true },
@@ -356,7 +372,8 @@ const emit = defineEmits(['update:modelValue', 'autosave']);
 
 const form = reactive({...props.modelValue});
 const reset = {
-    anticoagulant: null
+    anticoagulant: form.anticoagulant ?? null,
+    access_type: form.access_type ?? null,
 };
 
 watch (
@@ -374,11 +391,48 @@ watch (
             reset.anticoagulant = val.anticoagulant;
         }
 
+        // reset access_site_coagulant
+        if (
+            (val.access_type === 'pending')
+            || (['DLC', 'Perm cath'].includes(val.access_type) && !['DLC', 'Perm cath'].includes(reset.access_type))
+            || (['AVF', 'AVG'].includes(val.access_type) && !['AVF', 'AVG'].includes(reset.access_type))
+        ) {
+            val.access_site_coagulant = '';
+            reset.access_type = val.access_type;
+        }
+
+        // reset sodium profile
+        if (!val.sodium_profile) {
+            val.sodium_profile_start = null;
+            val.sodium_profile_end = null;
+        }
+
         emit('update:modelValue', val);
         emit('autosave');
     },
     { deep: true }
 );
+
+const configs = reactive({...props.formConfigs});
+
+if (form.anticoagulant && configs.anticoagulants.findIndex(item => item.value == form.anticoagulant) === -1) {
+    configs.anticoagulants.push({ value: form.anticoagulant, label: form.anticoagulant });
+}
+const anticoagulantInput = ref(null);
+watch (
+    () => form.anticoagulant,
+    (val) => {
+        if (val.toLowerCase() !== 'other') {
+            return;
+        }
+
+        selectOther.placeholder = 'Other anticoagulant';
+        selectOther.configs = configs.anticoagulants;
+        selectOther.input = anticoagulantInput.value;
+        selectOtherInput.value.open();
+    }
+);
+const { selectOtherInput, selectOther, selectOtherClosed } = useSelectOther();
 
 const errors = reactive({
     heparin_loading_dose: null,
@@ -386,18 +440,15 @@ const errors = reactive({
     enoxaparin_dose: null,
     tinzaparin_dose: null,
     ultrafiltration: null,
-    glucose_50_percent_iv_volume: null,
 });
 const validate = (fieldname) => {
-    let validator = configs.validators.filter((rule) => rule.name === fieldname)[0];
+    let validator = configs.validators[fieldname];
     const value = validator.type == 'integer' ? parseInt(form[fieldname]) :  parseFloat(form[fieldname]);
     if (value < validator.min || value > validator.max) {
         errors[fieldname] = `${form[fieldname]} could not be saved. Accept range [${validator.min}, ${validator.max}].`;
-        setTimeout(() => form[fieldname] = null, 1500);
+        form[fieldname] = null;
     } else {
         errors[fieldname] = '';
     }
 };
-
-const configs = reactive({...props.formConfigs});
 </script>

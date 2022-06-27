@@ -125,6 +125,47 @@ class OrderUpdateAction extends AcuteHemodialysisAction
             ]);
         }
 
+        if (isset($data['sledd'])) {
+            $rules = array_merge($rules, [
+                'sledd.duration' => ['nullable', Rule::in($this->FORM_CONFIGS['sledd_durations'])],
+                'sledd.access_type' => ['nullable', Rule::in($this->FORM_CONFIGS['access_types'])],
+                'sledd.access_site_coagulant' => ['nullable', 'string', 'max:30'],
+                'sledd.dialyzer' => ['nullable', Rule::in($this->FORM_CONFIGS['dialyzers'])],
+                'sledd.dialysate' => ['nullable', Rule::in($this->FORM_CONFIGS['dialysates'])],
+                'sledd.dialysate_flow_rate' => ['nullable', Rule::in($this->FORM_CONFIGS['dialysate_flow_rates'])],
+                'sledd.reverse_dialysate_flow' => 'boolean',
+                'sledd.blood_flow_rate' => ['nullable', Rule::in($this->FORM_CONFIGS['blood_flow_rates'])],
+                'sledd.dialysate_temperature' => ['nullable', Rule::in($this->FORM_CONFIGS['dialysate_temperatures'])],
+                'sledd.sodium' => 'nullable|integer',
+                'sledd.sodium_profile' => 'boolean',
+                'sledd.sodium_profile_start' => 'nullable|integer',
+                'sledd.sodium_profile_end' => 'nullable|integer',
+                'sledd.bicarbonate' => ['nullable', Rule::in($this->FORM_CONFIGS['bicarbonates'])],
+                'sledd.anticoagulant' => 'nullable|string|max:255',
+                'sledd.anticoagulant_none_drip_via_peripheral_iv' => 'boolean',
+                'sledd.anticoagulant_none_nss_200ml_flush_q_hour' => 'boolean',
+                'sledd.heparin_loading_dose' => 'nullable|integer',
+                'sledd.heparin_maintenance_dose' => 'nullable|integer',
+                'sledd.enoxaparin_dose' => 'nullable|numeric',
+                'sledd.fondaparinux_bolus_dose' => 'nullable|integer',
+                'sledd.tinzaparin_dose' => 'nullable|integer',
+                'sledd.ultrafiltration_min' => 'nullable|integer',
+                'sledd.ultrafiltration_max' => 'nullable|integer',
+                'sledd.dry_weight' => 'nullable|numeric',
+                'sledd.glucose_50_percent_iv_volume' => 'nullable|integer',
+                'sledd.glucose_50_percent_iv_at' => 'nullable|integer',
+                'sledd.albumin_20_percent_prime' => 'nullable|integer',
+                'sledd.nutrition_iv_type' => 'nullable|string|max:255',
+                'sledd.nutrition_iv_volume' => 'nullable|integer',
+                'sledd.post_dialysis_bw' => 'boolean',
+                'sledd.prc_volume' => 'nullable|numeric',
+                'sledd.ffp_volume' => 'nullable|integer',
+                'sledd.platelet_volume' => 'nullable|numeric',
+                'sledd.transfusion_other' => 'nullable|string|max:255',
+                'sledd.remark' => 'nullable|string|max:255',
+            ]);
+        }
+
         // base
         $rules = array_merge($rules, [
             'hemodynamic.stable' => 'boolean',
