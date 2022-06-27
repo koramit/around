@@ -3,9 +3,15 @@
 namespace App\Actions\Procedures\AcuteHemodialysis;
 
 use App\Models\Note;
+use App\Rules\NameExistsInWards;
+use App\Traits\AcuteHemodialysis\OrderShareValidatable;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class SlotAvailableAction extends AcuteHemodialysisAction
 {
+    use OrderShareValidatable;
+
     protected $LIMIT_IN_UNIT_SLOTS = 32;
 
     protected $LIMIT_TPE_SLOTS = 3;
@@ -17,6 +23,12 @@ class SlotAvailableAction extends AcuteHemodialysisAction
      */
     public function __invoke(array $data)
     {
+        // validate
+        $validated = Validator::make($data, [
+            'date_note' => 'required|date',
+            'dialysis_at' => ['required', 'string', 'max:255', new NameExistsInWards],
+            'dialysis_type' => ['required', 'string', Rule::in($this->getAllDialysisType())],
+        ])->validate();
         /*
          * - ไตเทียม ตาม slot 8*4 ไม่ทำ sledd
          * - tpe ทำที่ไตเทียมเท่านั้น
@@ -29,7 +41,7 @@ class SlotAvailableAction extends AcuteHemodialysisAction
          */
 
         return str_starts_with($data['dialysis_at'], 'ไตเทียม')
-            ? $this->inUnitSlots($data)
+            ? $this->inUnitSlots(dateNote: $data['date_note'], dialysisType: $data['dialysis_type'])
             : $this->outUnitSlots(dateNote: $data['date_note'], dialysisType: $data['dialysis_type']);
     }
 
@@ -79,24 +91,25 @@ class SlotAvailableAction extends AcuteHemodialysisAction
                     'case_record_route' => route('procedures.acute-hemodialysis.edit', $note->caseRecord->hashed_key),
                     'patient_name' => $note->patient->profile['first_name'],
                     'author' => $note->author->name,
-                    'type' => $note->meta['dialysis_type'],
+                    'type' => explode(' ', $note->meta['dialysis_type'])[0],
                 ];
                 if ($inUnit) {
                     $trans['tpe'] = str_contains(strtolower($note->meta['dialysis_type']), 'tpe') ? 1 : 0;
                     $trans['slot_count'] = $this->getSlotCount($note->meta['dialysis_type']);
+                    $trans['available'] = false;
                 }
 
                 return $trans;
             });
     }
 
-    protected function inUnitSlots(array $data): array
+    protected function inUnitSlots(string $dateNote, string $dialysisType): array
     {
-        $notes = $this->getNotes($data['date_note']);
+        $notes = $this->getNotes($dateNote);
 
         $tpeCount = $notes->sum('tpe');
         $sum = $notes->sum('slot_count');
-        $requestSlot = $this->getSlotCount($data['dialysis_type']);
+        $requestSlot = $this->getSlotCount($dialysisType);
         $available = true;
         $reply = 'ok';
 
@@ -105,13 +118,64 @@ class SlotAvailableAction extends AcuteHemodialysisAction
             $reply = 'not enough slots';
         }
 
-        if ($available && str_contains(strtolower($data['dialysis_type']), 'tpe') && $tpeCount === $this->LIMIT_TPE_SLOTS) {
+        if ($available && str_contains(strtolower($dialysisType), 'tpe') && $tpeCount === $this->LIMIT_TPE_SLOTS) {
             $available = false;
             $reply = 'TPE limit has been reached';
         }
 
+        if (! $available) {
+            return [
+                'slots' => $notes,
+                'available' => $available,
+                'reply' => $reply,
+            ];
+        }
+
+        $availableSlots = $this->LIMIT_IN_UNIT_SLOTS - $sum;
+        for ($i = 1; $i <= $availableSlots; $i++) {
+            $notes->push([
+                'slot_count' => 1,
+                'available' => true,
+            ]);
+        }
+
+        $groupBySlotCount = [[]];
+        $sumGroup = [0];
+        for ($i = 1; $i <= 3; $i++) {
+            $groupBySlotCount[] = $notes->filter(fn ($n) => $n['slot_count'] == $i)->values();
+            $sumGroup[] = count($groupBySlotCount[$i]) * $i;
+        }
+
+        /*
+         * prefer order
+         * 2 slots MAY NEED n slots => pack together then may follow with 2 slots
+         * 3 slots NEED 1 slots => must follow with 1 slot
+         */
+        $ordered = collect([]);
+
+        foreach ($groupBySlotCount[2] as $n) {
+            $ordered->push($n);
+        }
+        if ($sumGroup[2] % 4 !== 0 && $sumGroup[1] >= 2) {
+            $ordered->push($groupBySlotCount[1]->pop());
+            $ordered->push($groupBySlotCount[1]->pop());
+            $sumGroup[1] = $sumGroup[1] - 2;
+        }
+
+        foreach ($groupBySlotCount[3] as $n) {
+            $ordered->push($n);
+            if ($sumGroup[1] > 0) {
+                $ordered->push($groupBySlotCount[1]->pop());
+                $sumGroup[1] = $sumGroup[1] - 1;
+            }
+        }
+
+        foreach ($groupBySlotCount[1] as $n) {
+            $ordered->push($n);
+        }
+
         return [
-            'slots' => $notes,
+            'slots' => $ordered->reverse()->values(),
             'available' => $available,
             'reply' => $reply,
         ];

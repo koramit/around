@@ -389,13 +389,14 @@
                         name="date_note"
                         v-model="order.date_note"
                         :options="{ enable: configs.reserve_available_dates, onDayCreate: onDayCreate, inline: true }"
+                        ref="dateNoteInput"
                     />
                     <transition
                         name="slide-fade"
                         v-if="order.date_note && order.dialysis_at"
                     >
                         <DialysisSlot
-                            :reserved-slots="reservedSlots.slots"
+                            :slots="reservedSlots.slots"
                             v-if="order.dialysis_at.indexOf('Hemo') !== -1"
                         />
                         <WardSlot
@@ -576,6 +577,18 @@ watch (
             patientTypeInput.value.setOther('Chronic');
         }
     }
+);
+const dateNoteInput = ref(null);
+watch (
+    () => order.dialysis_at,
+    () => {
+        reservedSlots.slots = [];
+        reservedSlots.available = false;
+        reservedSlots.reply = '';
+        if (dateNoteInput.value) {
+            dateNoteInput.value.clear();
+        }
+    },
 );
 
 const reservedSlots = reactive({
