@@ -41,7 +41,7 @@ class OrderUpdateAction extends AcuteHemodialysisAction
                 'hd.reverse_dialysate_flow' => 'boolean',
                 'hd.blood_flow_rate' => ['nullable', Rule::in($this->FORM_CONFIGS['blood_flow_rates'])],
                 'hd.dialysate_temperature' => ['nullable', Rule::in($this->FORM_CONFIGS['dialysate_temperatures'])],
-                'hd.sodium' => 'nullable|integer', // autosave trigger on typing so, move |min:xxx|max:xxx to completeness validation
+                'hd.sodium' => 'nullable|integer',
                 'hd.sodium_profile' => 'boolean',
                 'hd.sodium_profile_start' => 'nullable|integer',
                 'hd.sodium_profile_end' => 'nullable|integer',
@@ -49,13 +49,13 @@ class OrderUpdateAction extends AcuteHemodialysisAction
                 'hd.anticoagulant' => 'nullable|string|max:255',
                 'hd.anticoagulant_none_drip_via_peripheral_iv' => 'boolean',
                 'hd.anticoagulant_none_nss_200ml_flush_q_hour' => 'boolean',
-                'hd.heparin_loading_dose' => 'nullable|integer', // autosave trigger on typing so, move |min:xxx|max:xxx to completeness validation
-                'hd.heparin_maintenance_dose' => 'nullable|integer', // autosave trigger on typing so, move |min:xxx|max:xxx to completeness validation
-                'hd.enoxaparin_dose' => 'nullable|numeric', // autosave trigger on typing so, move |min:xxx|max:xxx to completeness validation
-                'hd.fondaparinux_bolus_dose' => 'nullable|integer', // autosave trigger on typing so, move |min:xxx|max:xxx to completeness validation
-                'hd.tinzaparin_dose' => 'nullable|integer', // autosave trigger on typing so, move |min:xxx|max:xxx to completeness validation
-                'hd.ultrafiltration_min' => 'nullable|integer', // autosave trigger on typing so, move |min:xxx|max:xxx to completeness validation
-                'hd.ultrafiltration_max' => 'nullable|integer', // autosave trigger on typing so, move |min:xxx|max:xxx to completeness validation
+                'hd.heparin_loading_dose' => 'nullable|integer',
+                'hd.heparin_maintenance_dose' => 'nullable|integer',
+                'hd.enoxaparin_dose' => 'nullable|numeric',
+                'hd.fondaparinux_bolus_dose' => 'nullable|integer',
+                'hd.tinzaparin_dose' => 'nullable|integer',
+                'hd.ultrafiltration_min' => 'nullable|integer',
+                'hd.ultrafiltration_max' => 'nullable|integer',
                 'hd.dry_weight' => 'nullable|numeric',
                 'hd.glucose_50_percent_iv_volume' => 'nullable|integer',
                 'hd.glucose_50_percent_iv_at' => 'nullable|integer',
@@ -74,7 +74,7 @@ class OrderUpdateAction extends AcuteHemodialysisAction
             $rules = array_merge($rules, [
                 'hf.access_type' => ['nullable', Rule::in($this->FORM_CONFIGS['access_types'])],
                 'hf.access_site_coagulant' => ['nullable', 'string', 'max:30'],
-                'hf.dialyzer' => ['nullable', Rule::in($this->FORM_CONFIGS['dialyzers'])],
+                'hf.dialyzer' => ['nullable', Rule::in($this->FORM_CONFIGS['hf_dialyzers'])],
                 'hf.blood_flow_rate' => ['nullable', Rule::in($this->FORM_CONFIGS['blood_flow_rates'])],
                 'hf.anticoagulant' => 'nullable|string|max:255',
                 'hf.anticoagulant_none_drip_via_peripheral_iv' => 'boolean',
@@ -95,6 +95,33 @@ class OrderUpdateAction extends AcuteHemodialysisAction
                 'hf.ffp_volume' => 'nullable|integer',
                 'hf.platelet_volume' => 'nullable|numeric',
                 'hf.transfusion_other' => 'nullable|string|max:255',
+            ]);
+        }
+
+        if (isset($data['tpe'])) {
+            $rules = array_merge($rules, [
+                'tpe.access_type' => ['nullable', Rule::in($this->FORM_CONFIGS['access_types'])],
+                'tpe.access_site_coagulant' => 'nullable|string|max:30',
+                'tpe.dialyzer' => ['nullable', Rule::in($this->FORM_CONFIGS['tpe_dialyzers'])],
+                'tpe.replacement_fluid_albumin' => 'boolean',
+                'tpe.replacement_fluid_albumin_concentrated' => ['nullable', Rule::in($this->FORM_CONFIGS['replacement_fluid_albumin_concentrated'])],
+                'tpe.replacement_fluid_albumin_volume' => 'nullable|integer',
+                'tpe.replacement_fluid_ffp' => 'boolean',
+                'tpe.replacement_fluid_ffp_volume' => 'nullable|integer',
+                'tpe.blood_pumb' => ['nullable', Rule::in($this->FORM_CONFIGS['blood_pumb'])],
+                'tpe.filtration_pumb' => ['nullable', Rule::in($this->FORM_CONFIGS['tpe_filtration_pumb_options'])],
+                'tpe.replacement_pumb' => ['nullable', Rule::in($this->FORM_CONFIGS['tpe_filtration_pumb_options'])],
+                'tpe.drain_pumb' => 'nullable|integer',
+                'tpe.calcium_gluconate_10_percent_volume' => ['nullable', Rule::in($this->FORM_CONFIGS['calcium_gluconate_10_percent_volumes'])],
+                'tpe.calcium_gluconate_10_percent_timing' => ['nullable', Rule::in($this->FORM_CONFIGS['calcium_gluconate_10_percent_timings'])],
+                'tpe.anticoagulant' => 'nullable|string|max:255',
+                'tpe.anticoagulant_none_drip_via_peripheral_iv' => 'boolean',
+                'tpe.anticoagulant_none_nss_200ml_flush_q_hour' => 'boolean',
+                'tpe.heparin_loading_dose' => 'nullable|integer',
+                'tpe.heparin_maintenance_dose' => 'nullable|integer',
+                'tpe.enoxaparin_dose' => 'nullable|numeric',
+                'tpe.fondaparinux_bolus_dose' => 'nullable|integer',
+                'tpe.tinzaparin_dose' => 'nullable|integer',
             ]);
         }
 

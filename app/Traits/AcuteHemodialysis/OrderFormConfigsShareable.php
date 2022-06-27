@@ -90,5 +90,9 @@ trait OrderFormConfigsShareable
         'glucose_50_percent_iv_at' => [1, 2, 3, 4],
         'albumin_20_percent_primes' => [50, 100],
         'hf_perform_at' => ['Pre HD', 'Post HD'],
+        'replacement_fluid_albumin_concentrated' => [3, 4],
+        'blood_pumb' => [150, 200],
+        'calcium_gluconate_10_percent_volumes' => [10, 20, 30],
+        'calcium_gluconate_10_percent_timings' => [1, 2],
     ];
 }

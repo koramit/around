@@ -26,7 +26,7 @@
             v-model="form.dialyzer"
             name="hf.dialyzer"
             label="dialyzer"
-            :options="configs.dialyzers"
+            :options="configs.hf_dialyzers"
             :error="$page.props.errors['hf.dialyzer']"
         />
         <FormSelect
@@ -326,7 +326,6 @@ const errors = reactive({
     enoxaparin_dose: null,
     tinzaparin_dose: null,
     ultrafiltration: null,
-    glucose_50_percent_iv_volume: null,
 });
 const validate = (fieldname) => {
     let validator = configs.validators[fieldname];

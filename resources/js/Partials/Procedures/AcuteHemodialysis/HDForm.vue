@@ -388,8 +388,7 @@ import FormSelect from '@/Components/Controls/FormSelect';
 import FormSelectOther from '@/Components/Controls/FormSelectOther';
 import FormRadio from '@/Components/Controls/FormRadio';
 import AlertMessage from '@/Components/Helpers/AlertMessage';
-import { reactive, ref } from 'vue';
-import { watch } from 'vue';
+import { watch, reactive, ref } from 'vue';
 import { useSelectOther } from '@/functions/useSelectOther';
 
 const props = defineProps({
@@ -467,7 +466,6 @@ const errors = reactive({
     enoxaparin_dose: null,
     tinzaparin_dose: null,
     ultrafiltration: null,
-    glucose_50_percent_iv_volume: null,
 });
 const validate = (fieldname) => {
     let validator = configs.validators[fieldname];
