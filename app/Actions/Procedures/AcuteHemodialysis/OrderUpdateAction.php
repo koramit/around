@@ -66,7 +66,35 @@ class OrderUpdateAction extends AcuteHemodialysisAction
                 'hd.prc_volume' => 'nullable|numeric',
                 'hd.ffp_volume' => 'nullable|integer',
                 'hd.platelet_volume' => 'nullable|numeric',
-                'hd.transfusion_other' => 'nullable|string|max:512',
+                'hd.transfusion_other' => 'nullable|string|max:255',
+            ]);
+        }
+
+        if (isset($data['hf'])) {
+            $rules = array_merge($rules, [
+                'hf.access_type' => ['nullable', Rule::in($this->FORM_CONFIGS['access_types'])],
+                'hf.access_site_coagulant' => ['nullable', 'string', 'max:30'],
+                'hf.dialyzer' => ['nullable', Rule::in($this->FORM_CONFIGS['dialyzers'])],
+                'hf.blood_flow_rate' => ['nullable', Rule::in($this->FORM_CONFIGS['blood_flow_rates'])],
+                'hf.anticoagulant' => 'nullable|string|max:255',
+                'hf.anticoagulant_none_drip_via_peripheral_iv' => 'boolean',
+                'hf.anticoagulant_none_nss_200ml_flush_q_hour' => 'boolean',
+                'hf.heparin_loading_dose' => 'nullable|integer',
+                'hf.heparin_maintenance_dose' => 'nullable|integer',
+                'hf.enoxaparin_dose' => 'nullable|numeric',
+                'hf.fondaparinux_bolus_dose' => 'nullable|integer',
+                'hf.tinzaparin_dose' => 'nullable|integer',
+                'hf.ultrafiltration_min' => 'nullable|integer',
+                'hf.ultrafiltration_max' => 'nullable|integer',
+                'hf.dry_weight' => 'nullable|numeric',
+                'hf.glucose_50_percent_iv_volume' => 'nullable|integer',
+                'hf.albumin_20_percent_prime' => 'nullable|integer',
+                'hf.nutrition_iv_type' => 'nullable|string|max:255',
+                'hf.nutrition_iv_volume' => 'nullable|integer',
+                'hf.prc_volume' => 'nullable|numeric',
+                'hf.ffp_volume' => 'nullable|integer',
+                'hf.platelet_volume' => 'nullable|numeric',
+                'hf.transfusion_other' => 'nullable|string|max:255',
             ]);
         }
 

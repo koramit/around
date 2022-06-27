@@ -110,7 +110,6 @@ class OrderStoreAction extends AcuteHemodialysisAction
         'enoxaparin_dose' => null,
         'fondaparinux_bolus_dose' => null,
         'tinzaparin_dose' => null,
-        'anticoagulant_other' => null,
         'ultrafiltration_min' => null,
         'ultrafiltration_max' => null,
         'dry_weight' => null,

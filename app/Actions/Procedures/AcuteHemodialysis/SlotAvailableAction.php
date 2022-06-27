@@ -148,6 +148,7 @@ class SlotAvailableAction extends AcuteHemodialysisAction
 
         /*
          * prefer order
+         * 1 slot treated as free slot
          * 2 slots MAY NEED n slots => pack together then may follow with 2 slots
          * 3 slots NEED 1 slots => must follow with 1 slot
          */
@@ -157,15 +158,15 @@ class SlotAvailableAction extends AcuteHemodialysisAction
             $ordered->push($n);
         }
         if ($sumGroup[2] % 4 !== 0 && $sumGroup[1] >= 2) {
-            $ordered->push($groupBySlotCount[1]->pop());
-            $ordered->push($groupBySlotCount[1]->pop());
+            $ordered->push($groupBySlotCount[1]->shift());
+            $ordered->push($groupBySlotCount[1]->shift());
             $sumGroup[1] = $sumGroup[1] - 2;
         }
 
         foreach ($groupBySlotCount[3] as $n) {
             $ordered->push($n);
             if ($sumGroup[1] > 0) {
-                $ordered->push($groupBySlotCount[1]->pop());
+                $ordered->push($groupBySlotCount[1]->shift());
                 $sumGroup[1] = $sumGroup[1] - 1;
             }
         }
@@ -178,16 +179,17 @@ class SlotAvailableAction extends AcuteHemodialysisAction
             'slots' => $ordered->reverse()->values(),
             'available' => $available,
             'reply' => $reply,
+            'notes' => $notes,
         ];
     }
 
-    protected function getSlotCount($dialysisType): int
+    protected function getSlotCount(string $dialysisType): int
     {
         if ($dialysisType === 'SLEDD') {
             return 4;
         } elseif (str_starts_with($dialysisType, 'HD+TPE')) {
             return 3;
-        } elseif (strpos($dialysisType, '4') !== -1 || strpos($dialysisType, '3') !== -1) {
+        } elseif (strpos($dialysisType, '4') !== false || strpos($dialysisType, '3') !== false) {
             return 2;
         } else {
             return 1;

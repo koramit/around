@@ -105,6 +105,34 @@ class OrderSubmitAction extends AcuteHemodialysisAction
             ]);
         }
 
+        if (isset($data['hf'])) {
+            $rules = array_merge($rules, [
+                'hf.access_type' => ['required', Rule::in($this->FORM_CONFIGS['access_types'])],
+                'hf.access_site_coagulant' => ['prohibited_if:access_type,pending', Rule::requiredIf(fn () => $data['hf']['access_type'] !== 'pending'), Rule::in(str_starts_with($data['hf']['access_type'] ?? '', 'AV') ? $this->FORM_CONFIGS['av_access_sites'] : $this->FORM_CONFIGS['non_av_access_sites'])],
+                'hf.dialyzer' => ['required', Rule::in($this->FORM_CONFIGS['dialyzers'])],
+                'hf.blood_flow_rate' => ['required', Rule::in($this->FORM_CONFIGS['blood_flow_rates'])],
+                'hf.anticoagulant' => 'required|string|max:255',
+                'hf.anticoagulant_none_drip_via_peripheral_iv' => 'required|boolean',
+                'hf.anticoagulant_none_nss_200ml_flush_q_hour' => 'required|boolean',
+                'hf.heparin_loading_dose' => ['required_if:hf.anticoagulant,heparin', 'nullable', 'integer', 'between:'.$this->FORM_CONFIGS['validators']['heparin_loading_dose']['min'].','.$this->FORM_CONFIGS['validators']['heparin_loading_dose']['max']],
+                'hf.heparin_maintenance_dose' => ['required_if:hf.anticoagulant,heparin', 'nullable', 'integer', 'between:'.$this->FORM_CONFIGS['validators']['heparin_maintenance_dose']['min'].','.$this->FORM_CONFIGS['validators']['heparin_maintenance_dose']['max']],
+                'hf.enoxaparin_dose' => ['required_if:hf.anticoagulant,enoxaparin', 'nullable', 'numeric', 'between:'.$this->FORM_CONFIGS['validators']['enoxaparin_dose']['min'].','.$this->FORM_CONFIGS['validators']['enoxaparin_dose']['max']],
+                'hf.fondaparinux_bolus_dose' => ['required_if:hf.anticoagulant,fondaparinux', 'nullable', Rule::in($this->FORM_CONFIGS['fondaparinux_bolus_doses'])],
+                'hf.tinzaparin_dose' => ['required_if:hf.anticoagulant,tinzaparin', 'nullable', 'integer', 'between:'.$this->FORM_CONFIGS['validators']['tinzaparin_dose']['min'].','.$this->FORM_CONFIGS['validators']['tinzaparin_dose']['max']],
+                'hf.ultrafiltration_min' => ['required_if:hf.dry_weight,null', 'nullable', 'integer', 'between:'.$this->FORM_CONFIGS['validators']['ultrafiltration_min']['min'].','.$this->FORM_CONFIGS['validators']['ultrafiltration_min']['max']],
+                'hf.ultrafiltration_max' => ['required_unless:hf.ultrafiltration_min,null', 'nullable', 'integer', 'between:'.$data['hf']['ultrafiltration_min'].','.$this->FORM_CONFIGS['validators']['ultrafiltration_max']['max']],
+                'hf.dry_weight' => 'required_if:hf.ultrafiltration_min,null|nullable|numeric',
+                'hf.glucose_50_percent_iv_volume' => ['nullable', Rule::in($this->FORM_CONFIGS['glucose_50_percent_iv_volumes'])],
+                'hf.albumin_20_percent_prime' => ['nullable', Rule::in($this->FORM_CONFIGS['albumin_20_percent_primes'])],
+                'hf.nutrition_iv_type' => 'nullable|string|max:255',
+                'hf.nutrition_iv_volume' => 'nullable|integer',
+                'hf.prc_volume' => 'nullable|numeric',
+                'hf.ffp_volume' => 'nullable|integer',
+                'hf.platelet_volume' => 'nullable|numeric',
+                'hf.transfusion_other' => 'nullable|string|max:255',
+            ]);
+        }
+
         // base
         $rules = array_merge($rules, [
             'hemodynamic.stable' => ['required', 'boolean', new AcceptedIfOthersFalsy($data['hemodynamic'])],
