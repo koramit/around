@@ -3,6 +3,8 @@
 namespace App\Actions\Procedures\AcuteHemodialysis;
 
 use App\Models\Note;
+use App\Models\Notes\AcuteHemodialysisOrderNote;
+use App\Models\User;
 use App\Rules\HashedKeyExistsInCaseRecords;
 use App\Rules\NameExistsInAttendingStaffs;
 use App\Rules\NameExistsInWards;
@@ -182,34 +184,35 @@ class OrderStoreAction extends AcuteHemodialysisAction
 
     /**
      * @todo recheck date_note+dialysis_type+dialysis_at against available slots
-     * @todo refactor form template to class that can reuse for validation
+     * @todo authorize action
      */
-    public function __invoke(array $data, int $userId): mixed
+    public function __invoke(array $data, User $user): mixed
     {
         if (config('auth.gurads.web.provider') === 'avatar') {
             return []; // call api
         }
 
+        $cacheKeyPrefix = $user->login;
+
         $validated = Validator::make($data, [
             'dialysis_type' => ['required', 'string', Rule::in($this->getAllDialysisType())],
             'patient_type' => ['required', 'string', Rule::in($this->PATIENT_TYPES)],
-            'dialysis_at' => ['required', 'string', 'max:255', new NameExistsInWards],
-            'attending_staff' => ['required', 'string', 'max:255', new NameExistsInAttendingStaffs],
-            'case_record_hashed_key' => ['required', new HashedKeyExistsInCaseRecords],
+            'dialysis_at' => ['required', 'string', 'max:255', new NameExistsInWards($cacheKeyPrefix)],
+            'attending_staff' => ['required', 'string', 'max:255', new NameExistsInAttendingStaffs($cacheKeyPrefix)],
+            'case_record_hashed_key' => ['required', new HashedKeyExistsInCaseRecords($cacheKeyPrefix)],
             'date_note' => ['required', 'date'],
         ])->validate();
 
-        $caseRecord = session()->pull('validatedCaseRecord');
+        $caseRecord = cache()->pull($cacheKeyPrefix.'-validatedCaseRecord');
         if (! $this->isDialysisReservable($caseRecord)) {
             throw ValidationException::withMessages(['status' => 'one active order at a time']);
         }
 
-        $note = new Note();
+        $note = new AcuteHemodialysisOrderNote();
         $note->case_record_id = $caseRecord->id;
-        $note->note_type_id = $this->ACUTE_HD_ORDER_NOTE_TYPE_ID;
-        $note->attending_staff_id = session()->pull('validatedAttending')->id;
+        $note->attending_staff_id = cache()->pull($cacheKeyPrefix.'-validatedAttending')->id;
         $note->place_type = Ward::class;
-        $ward = session()->pull('validatedWard');
+        $ward = cache()->pull($cacheKeyPrefix.'-validatedWard');
         $note->place_id = $ward->id;
         $note->date_note = $validated['date_note'];
         $form = $this->initForm($validated['dialysis_type']);
@@ -223,7 +226,7 @@ class OrderStoreAction extends AcuteHemodialysisAction
             'patient_type' => $validated['patient_type'],
             'dialysis_type' => $validated['dialysis_type'],
         ];
-        $note->user_id = $userId;
+        $note->user_id = $user->id;
         $note->save();
 
         return $note;

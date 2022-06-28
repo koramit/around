@@ -2,8 +2,9 @@
 
 namespace App\Actions\Procedures\AcuteHemodialysis;
 
-use App\Models\Note;
+use App\Models\Notes\AcuteHemodialysisOrderNote;
 use App\Models\Resources\Ward;
+use App\Models\User;
 use App\Traits\AcuteHemodialysis\OrderFormConfigsShareable;
 use Hashids\Hashids;
 
@@ -11,13 +12,17 @@ class OrderEditAction extends AcuteHemodialysisAction
 {
     use OrderFormConfigsShareable;
 
-    public function __invoke(string $hashedKey)
+    public function __invoke(string $hashedKey, User $user)
     {
         if (config('auth.gurads.web.provider') === 'avatar') {
             return []; // call api
         }
 
-        $note = Note::query()->withPlaceName(Ward::class)->findByUnhashKey($hashedKey)->firstOrFail();
+        $note = AcuteHemodialysisOrderNote::query()->withPlaceName(Ward::class)->findByUnhashKey($hashedKey)->firstOrFail();
+
+        if ($user->cannot('edit', $note)) {
+            abort(403);
+        }
 
         $flash = [
             'page-title' => 'Acute HD Order '.$note->patient->profile['first_name'].' @ '.$note->date_note->format('d M Y'),

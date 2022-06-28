@@ -3,9 +3,8 @@
 namespace App\Rules;
 
 use App\Models\Resources\Ward;
-use Illuminate\Contracts\Validation\Rule;
 
-class NameExistsInWards implements Rule
+class NameExistsInWards extends CacheQueryResultRule
 {
     /**
      * Determine if the validation rule passes.
@@ -17,7 +16,9 @@ class NameExistsInWards implements Rule
     public function passes($attribute, $value)
     {
         if ($ward = Ward::where('name', $value)->first()) {
-            session()->put('validatedWard', $ward);
+            if ($this->cacheKeyPrefix) {
+                cache()->put($this->cacheKeyPrefix.'-validatedWard', $ward);
+            }
 
             return true;
         }

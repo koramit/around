@@ -16,16 +16,16 @@ class OrderController extends Controller
 
     public function store(Request $request)
     {
-        $note = (new OrderStoreAction)($request->all(), $request->user()->id);
+        $note = (new OrderStoreAction)(data: $request->all(), user: $request->user());
 
         // if want json return $note
 
         return redirect()->route('procedures.acute-hemodialysis.orders.edit', $note->hashed_key);
     }
 
-    public function edit($hashedKey)
+    public function edit(string $hashedKey, Request $request)
     {
-        $data = (new OrderEditAction)($hashedKey);
+        $data = (new OrderEditAction)(hashedKey: $hashedKey, user: $request->user());
 
         // if want json return $data
 
@@ -37,9 +37,9 @@ class OrderController extends Controller
         ]);
     }
 
-    public function update($hashedKey, Request $request)
+    public function update(string $hashedKey, Request $request)
     {
-        $status = (new OrderUpdateAction)(data: $request->all(), hashedKey: $hashedKey, userId: $request->user()->id);
+        $status = (new OrderUpdateAction)(data: $request->all(), hashedKey: $hashedKey, user: $request->user());
 
         // if want json return $data
 

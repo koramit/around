@@ -2,7 +2,8 @@
 
 namespace App\Actions\Procedures\AcuteHemodialysis;
 
-use App\Models\Note;
+use App\Models\Notes\AcuteHemodialysisOrderNote;
+use App\Models\User;
 use App\Traits\AcuteHemodialysis\OrderFormConfigsShareable;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -15,13 +16,17 @@ class OrderUpdateAction extends AcuteHemodialysisAction
      * Should validate by dialysis type.
      * @todo  validate form before update
      */
-    public function __invoke(array $data, string $hashedKey, int $userId)
+    public function __invoke(array $data, string $hashedKey, User $user)
     {
         if (config('auth.gurads.web.provider') === 'avatar') {
             return []; // call api
         }
 
-        $note = Note::query()->findByUnhashKey($hashedKey)->firstOrFail();
+        $note = AcuteHemodialysisOrderNote::query()->findByUnhashKey($hashedKey)->firstOrFail();
+
+        if ($user->cannot('update', $note)) {
+            abort(403);
+        }
 
         $rules = [];
         if (isset($data['hd'])) {

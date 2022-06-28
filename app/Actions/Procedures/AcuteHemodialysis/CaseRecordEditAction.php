@@ -4,8 +4,9 @@ namespace App\Actions\Procedures\AcuteHemodialysis;
 
 use App\Managers\Resources\AdmissionManager;
 use App\Models\CaseRecord;
-use App\Models\Note;
+use App\Models\Notes\AcuteHemodialysisOrderNote;
 use App\Models\Resources\Ward;
+use App\Models\User;
 use App\Traits\AcuteHemodialysis\OrderShareValidatable;
 
 class CaseRecordEditAction extends AcuteHemodialysisAction
@@ -44,7 +45,10 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
         'ipd_consent_form_pathname' => 'procedures/acute-hemodialysis/ipd-consent-form',
     ];
 
-    public function __invoke(string $hashed)
+    /**
+     * @todo authorize
+     */
+    public function __invoke(string $hashed, User $user): array
     {
         if (config('auth.gurads.web.provider') === 'avatar') {
             return []; // call api
@@ -53,23 +57,27 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
         $caseRecord = CaseRecord::query()->findByUnhashKey($hashed)->firstOrFail();
 
         // HD orders
-        $orders = Note::with(['patient'])
-        ->WithAuthorUsername()
-        ->withPlaceName(Ward::class)
-        ->where('case_record_id', $caseRecord->id)
-        ->where('note_type_id', $this->ACUTE_HD_ORDER_NOTE_TYPE_ID)
-        ->orderByDesc('date_note')
-        ->get()
-        ->transform(function ($note) {
-            return [
-                'edit_route' => route('procedures.acute-hemodialysis.orders.edit', $note->hashed_key),
-                'ward_name' => $note->place_name,
-                'dialysis_type' => $note->meta['dialysis_type'],
-                'date_dialyze' => $note->date_note->format('d M'),
-                'md' => $note->author_username,
-                'status' => $note->status,
-            ];
-        });
+        $orders = AcuteHemodialysisOrderNote::with(['patient'])
+            ->WithAuthorUsername()
+            ->withPlaceName(Ward::class)
+            ->where('case_record_id', $caseRecord->id)
+            ->orderByDesc('date_note')
+            ->orderByDesc('created_at')
+            ->get()
+            ->transform(function ($note) use ($user) {
+                return [
+                    'edit_route' => route('procedures.acute-hemodialysis.orders.edit', $note->hashed_key),
+                    'ward_name' => $note->place_name,
+                    'dialysis_type' => $note->meta['dialysis_type'],
+                    'date_note' => $note->date_note->format('d M'),
+                    'md' => $note->author_username,
+                    'status' => $note->status,
+                    'can' => [
+                        'edit' => $user->can('edit', $note),
+                        'destroy' => $user->can('destroy', $note),
+                    ],
+                ];
+            });
 
         // form
         $form = $caseRecord->form;

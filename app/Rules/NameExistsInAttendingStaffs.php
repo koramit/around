@@ -3,9 +3,8 @@
 namespace App\Rules;
 
 use App\Models\Resources\AttendingStaff;
-use Illuminate\Contracts\Validation\Rule;
 
-class NameExistsInAttendingStaffs implements Rule
+class NameExistsInAttendingStaffs extends CacheQueryResultRule
 {
     /**
      * Determine if the validation rule passes.
@@ -17,7 +16,9 @@ class NameExistsInAttendingStaffs implements Rule
     public function passes($attribute, $value)
     {
         if ($attending = AttendingStaff::where('name', $value)->first()) {
-            session()->put('validatedAttending', $attending);
+            if ($this->cacheKeyPrefix) {
+                cache()->put($this->cacheKeyPrefix.'-validatedAttending', $attending);
+            }
 
             return true;
         }

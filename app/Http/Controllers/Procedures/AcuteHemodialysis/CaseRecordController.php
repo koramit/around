@@ -17,7 +17,7 @@ class CaseRecordController extends Controller
 
     public function index(Request $request)
     {
-        $data = (new CaseRecordIndexAction)($request->all());
+        $data = (new CaseRecordIndexAction)(filters: $request->all(), user: $request->user());
 
         // if want json return $data
 
@@ -32,16 +32,16 @@ class CaseRecordController extends Controller
 
     public function store(Request $request)
     {
-        $case = (new CaseRecordStoreAction)($request->all(), $request->user()->id);
+        $case = (new CaseRecordStoreAction)(data: $request->all(), user: $request->user());
 
         // if want json return $case
 
         return redirect()->route('procedures.acute-hemodialysis.edit', $case->hashed_key);
     }
 
-    public function edit($hashedKey)
+    public function edit($hashedKey, Request $request)
     {
-        $data = (new CaseRecordEditAction)($hashedKey);
+        $data = (new CaseRecordEditAction)(hashed: $hashedKey, user: $request->user());
 
         // if want json return $data
 
@@ -56,7 +56,7 @@ class CaseRecordController extends Controller
 
     public function update($hashedKey, Request $request)
     {
-        $status = (new CaseRecordUpdateAction)(data: $request->all(), hashedKey: $hashedKey, userId: $request->user()->id);
+        $status = (new CaseRecordUpdateAction)(data: $request->all(), hashedKey: $hashedKey, user: $request->user());
 
         // if want json return $data
 

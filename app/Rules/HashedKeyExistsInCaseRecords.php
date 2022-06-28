@@ -3,9 +3,8 @@
 namespace App\Rules;
 
 use App\Models\CaseRecord;
-use Illuminate\Contracts\Validation\Rule;
 
-class HashedKeyExistsInCaseRecords implements Rule
+class HashedKeyExistsInCaseRecords extends CacheQueryResultRule
 {
     /**
      * Determine if the validation rule passes.
@@ -17,7 +16,9 @@ class HashedKeyExistsInCaseRecords implements Rule
     public function passes($attribute, $value)
     {
         if ($caseRecord = CaseRecord::query()->findByUnhashKey($value)->first()) {
-            session()->put('validatedCaseRecord', $caseRecord);
+            if ($this->cacheKeyPrefix) {
+                cache()->put($this->cacheKeyPrefix.'-validatedCaseRecord', $caseRecord);
+            }
 
             return true;
         }

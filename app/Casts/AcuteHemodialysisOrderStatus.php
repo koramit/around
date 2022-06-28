@@ -10,6 +10,8 @@ class AcuteHemodialysisOrderStatus implements NoteStatusCast
 
     protected $activeStatusCodes = [1, 2]; // 'draft', 'submitted'
 
+    protected $updateNotAllowStatuses = ['canceled', 'performed'];
+
     public function getStatuses(): array
     {
         return $this->statuses;
@@ -23,5 +25,10 @@ class AcuteHemodialysisOrderStatus implements NoteStatusCast
     public function getActiveStatusCodes(): array
     {
         return $this->activeStatusCodes;
+    }
+
+    public function getUpdateNotAllowStatuses(): array
+    {
+        return $this->updateNotAllowStatuses;
     }
 }

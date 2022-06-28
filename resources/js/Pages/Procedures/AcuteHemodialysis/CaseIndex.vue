@@ -18,10 +18,10 @@
     <!-- table -->
     <div class="bg-white rounded shadow overflow-x-auto hidden md:block">
         <table class="w-full whitespace-nowrap">
-            <tr class="text-left font-semibold">
+            <tr class="text-left font-semibold text-complement">
                 <th
                     class="px-6 pt-6 pb-4"
-                    v-for="column in ['HN', 'Name', 'Dialyze on', 'Ordered on', 'MD']"
+                    v-for="column in ['HN', 'Name', 'Latest', 'Type', 'MD']"
                     :key="column"
                     v-text="column"
                     :colspan="column === 'MD' ? 2:1"
@@ -34,7 +34,7 @@
             >
                 <td
                     class="px-6 py4 border-t"
-                    v-for="field in ['hn', 'patient_name', 'date_dialyze', 'date_reserved', 'md']"
+                    v-for="field in ['hn', 'patient_name', 'date_note', 'dialysis_type', 'md']"
                     :key="field"
                     v-text="caseRecord[field]"
                 />
@@ -43,8 +43,8 @@
                         class="px-4 py-2 flex items-center focus:text-primary-darker"
                         :href="caseRecord.routes.edit"
                     >
-                        <div class="p-2 rounded-full bg-white hover:bg-primary-darker transition-colors ease-in-out duration-200">
-                            <IconDoubleRight class="w-4 h-4 text-complement" />
+                        <div class="p-2 rounded-full bg-white hover:bg-primary transition-colors ease-in-out duration-200">
+                            <IconDoubleRight class="w-4 h-4 text-accent" />
                         </div>
                     </Link>
                 </td>
@@ -59,53 +59,53 @@
             v-for="(caseRecord, key) in cases.data"
             :key="key"
         >
-            <Link
-                class="flex items-center justify-between focus:text-primary-darker space-x-4"
-                :href="caseRecord.routes.edit"
-            >
-                <div class="w-full">
-                    <div class="my-2 pl-2">
-                        HN: {{ caseRecord.hn }} {{ caseRecord.patient_name }}
-                    </div>
-                    <div class="my-2 p-2 bg-gray-100 rounded space-y-2">
-                        <div
-                            v-if="!caseRecord.md"
-                            class="flex justfy-center items-center h-12"
-                        >
-                            <p class="italic text-center w-full">
-                                No orders
-                            </p>
-                        </div>
-                        <template v-else>
-                            <div class="flex items-center justify-between">
-                                <p class="text-xs italic text-complement font-semibold">
-                                    Latest
-                                </p>
-                                <p class="font-semibold text-accent text-xs flex items-center">
-                                    <IconUserMd class="h-3 w-3 mr-1" />
-                                    <span class="block italic truncate">{{ caseRecord.md }}</span>
-                                </p>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <p>
-                                    Dialyze : <span
-                                        class="text-complement font-semibold"
-                                        v-text="caseRecord.date_dialyze"
-                                    />
-                                </p>
-                                <p>
-                                    Ordered : <span
-                                        class="text-complement font-semibold"
-                                        v-text="caseRecord.date_reserved"
-                                    />
-                                </p>
-                            </div>
-                            <template />
-                        </template>
-                    </div>
+            <div class="flex justify-between items-center my-2 px-2">
+                <div>
+                    HN: {{ caseRecord.hn }} {{ caseRecord.patient_name }}
                 </div>
-                <IconDoubleRight class="w-4 h-4 text-complement" />
-            </Link>
+                <Link
+                    :href="caseRecord.routes.edit"
+                    class="bg-primary-darker p-2 rounded-full"
+                >
+                    <IconDoubleRight class="w-4 h-4 text-accent" />
+                </Link>
+            </div>
+            <div class="my-2 p-2 bg-gray-100 rounded space-y-2">
+                <div
+                    v-if="!caseRecord.md"
+                    class="flex justfy-center items-center h-12"
+                >
+                    <p class="italic text-center w-full">
+                        No order yet
+                    </p>
+                </div>
+                <template v-else>
+                    <div class="flex items-center justify-between">
+                        <p class="text-xs italic text-complement font-semibold">
+                            Latest order
+                        </p>
+                        <p class="font-semibold text-complement text-xs flex items-center">
+                            <IconUserMd class="h-3 w-3 mr-1" />
+                            <span class="block italic truncate">{{ caseRecord.md }}</span>
+                        </p>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <p>
+                            On : <span
+                                class="text-complement font-semibold"
+                                v-text="caseRecord.date_note"
+                            />
+                        </p>
+                        <p>
+                            Type : <span
+                                class="text-complement font-semibold"
+                                v-text="caseRecord.dialysis_type"
+                            />
+                        </p>
+                    </div>
+                    <template />
+                </template>
+            </div>
         </div>
     </div>
 

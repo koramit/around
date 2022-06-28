@@ -2,7 +2,7 @@
 
 namespace App\Actions\Procedures\AcuteHemodialysis;
 
-use App\Models\Note;
+use App\Models\Notes\AcuteHemodialysisOrderNote;
 use App\Rules\NameExistsInWards;
 use App\Traits\AcuteHemodialysis\OrderShareValidatable;
 use Illuminate\Support\Facades\Validator;
@@ -81,8 +81,7 @@ class SlotAvailableAction extends AcuteHemodialysisAction
 
     protected function getNotes(string $dateNote, bool $inUnit = true)
     {
-        return Note::with(['patient', 'author', 'caseRecord'])
-            ->where('note_type_id', $this->ACUTE_HD_ORDER_NOTE_TYPE_ID)
+        return AcuteHemodialysisOrderNote::with(['patient', 'author', 'caseRecord'])
             ->where('date_note', $dateNote)
             ->whereNull('canceled_at')
             ->where('meta->in_unit', $inUnit)

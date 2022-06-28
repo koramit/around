@@ -10,7 +10,7 @@ class OrderSubmitController extends Controller
 {
     public function __invoke($hashedKey, Request $request)
     {
-        $note = (new OrderSubmitAction)(data: $request->all(), hashedKey: $hashedKey, userId: $request->user()->id);
+        $note = (new OrderSubmitAction)(data: $request->all(), hashedKey: $hashedKey, user: $request->user());
 
         // if want json return $data
 

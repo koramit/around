@@ -28,18 +28,4 @@ class CaseRecord extends Model
     {
         return $this->hasMany(Note::class);
     }
-
-    /**
-     * THIS CAN BE REPLACE WITH QUERY ON STATUS.
-     *
-     * @todo use note status instead of this
-     */
-    public function latestAcuteOrder()
-    {
-        return $this->hasOne(Note::class)->ofMany([
-            'date_note' => 'max',
-        ], function ($query) {
-            $query->where('note_type_id', config('notes.acute_hd_order'));
-        });
-    }
 }

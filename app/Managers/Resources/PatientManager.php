@@ -43,7 +43,7 @@ class PatientManager
 
         $data = $api->getPatient($hn);
         if (! $data['found']) {
-            Log::info($hn.' hn cancle or something went wrong');
+            Log::info($hn.' hn canceled or something went wrong');
 
             return $patient;
         }

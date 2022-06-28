@@ -5,6 +5,7 @@ namespace App\Actions\Procedures\AcuteHemodialysis;
 use App\Models\CaseRecord;
 use App\Models\Resources\Admission;
 use App\Models\Resources\Patient;
+use App\Models\User;
 use App\Rules\AnExists;
 use App\Rules\HnExists;
 use Illuminate\Support\Facades\Validator;
@@ -61,7 +62,10 @@ class CaseRecordStoreAction extends AcuteHemodialysisAction
         'cause_of_dead' => null,
     ];
 
-    public function __invoke(array $data, int $userId)
+    /**
+     * @todo authorize
+     */
+    public function __invoke(array $data, User $user): CaseRecord
     {
         if (config('auth.gurads.web.provider') === 'avatar') {
             return []; // call api
@@ -89,8 +93,8 @@ class CaseRecordStoreAction extends AcuteHemodialysisAction
             'name' => $patient->first_name,
             'version' => $this->CRF_VERSION,
         ];
-        $caseRecord->creator_id = $userId;
-        $caseRecord->updater_id = $userId;
+        $caseRecord->creator_id = $user->id;
+        $caseRecord->updater_id = $user->id;
         $caseRecord->save();
 
         return $caseRecord;
