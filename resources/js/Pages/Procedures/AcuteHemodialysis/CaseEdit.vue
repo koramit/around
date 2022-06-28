@@ -391,19 +391,28 @@
                         :options="{ enable: configs.reserve_available_dates, onDayCreate: onDayCreate, inline: true }"
                         ref="dateNoteInput"
                     />
-                    <transition
-                        name="slide-fade"
-                        v-if="order.date_note && order.dialysis_at"
-                    >
-                        <DialysisSlot
-                            :slots="reservedSlots.slots"
-                            v-if="order.dialysis_at.indexOf('Hemo') !== -1"
+                    <div>
+                        <transition
+                            name="slide-fade"
+                            v-if="order.date_note && order.dialysis_at"
+                        >
+                            <DialysisSlot
+                                :slots="reservedSlots.slots"
+                                v-if="order.dialysis_at.indexOf('Hemo') !== -1"
+                            />
+                            <WardSlot
+                                v-else
+                                :slots="reservedSlots.slots"
+                            />
+                        </transition>
+                        <AlertMessage
+                            v-if="reservedSlots.reply && !reservedSlots.available"
+                            class="mt-4"
+                            type="warning"
+                            title="Cannot make a reservation"
+                            :message="reservedSlots.reply"
                         />
-                        <WardSlot
-                            v-else
-                            :reserved-slots="reservedSlots.slots"
-                        />
-                    </transition>
+                    </div>
                 </div>
                 <div class="mt-2 lg:mt-0 md:pt-4">
                     <SpinnerButton
@@ -579,16 +588,21 @@ watch (
     }
 );
 const dateNoteInput = ref(null);
+const resetSlots = () => {
+    reservedSlots.slots = [];
+    reservedSlots.available = false;
+    reservedSlots.reply = '';
+    if (dateNoteInput.value) {
+        dateNoteInput.value.clear();
+    }
+};
 watch (
     () => order.dialysis_at,
-    () => {
-        reservedSlots.slots = [];
-        reservedSlots.available = false;
-        reservedSlots.reply = '';
-        if (dateNoteInput.value) {
-            dateNoteInput.value.clear();
-        }
-    },
+    resetSlots,
+);
+watch (
+    () => order.dialysis_type,
+    resetSlots,
 );
 
 const reservedSlots = reactive({

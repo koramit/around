@@ -11,8 +11,8 @@
             <div
                 class="w-full p-2 md:p-4 rounded shadow"
                 :class="{
-                    'bg-red-300 md:flex justify-between items-center': slot.type,
-                    'bg-green-300 p-4': !slot.type,
+                    'bg-red-300 flex justify-between items-center': slot.type,
+                    'bg-green-300 p-4 h-8': !slot.type,
                 }"
                 v-for="(slot, key) in slots"
                 :key="key"
@@ -43,23 +43,10 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
 import IconPatient from '@/Components/Helpers/Icons/IconPatient';
 import IconUserMd from '@/Components/Helpers/Icons/IconUserMd';
 import { Link } from '@inertiajs/inertia-vue3';
-
-const props = defineProps({
-    reservedSlots: { type: Array, required: true }
-});
-
-const slots = computed(() => {
-    if (props.reservedSlots.length === 6) {
-        return props.reservedSlots;
-    }
-
-    let availableSlots = [...props.reservedSlots];
-
-
-    return availableSlots;
+defineProps({
+    slots: { type: Array, required: true }
 });
 </script>

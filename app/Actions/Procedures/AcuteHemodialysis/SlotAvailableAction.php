@@ -40,9 +40,9 @@ class SlotAvailableAction extends AcuteHemodialysisAction
          * - นอกเวลาในแต่ละวันจะทำนอกหรือในไตเทียมเท่านั้น
          */
 
-        return str_starts_with($data['dialysis_at'], 'ไตเทียม')
-            ? $this->inUnitSlots(dateNote: $data['date_note'], dialysisType: $data['dialysis_type'])
-            : $this->outUnitSlots(dateNote: $data['date_note'], dialysisType: $data['dialysis_type']);
+        return str_starts_with($validated['dialysis_at'], 'ไตเทียม')
+            ? $this->inUnitSlots(dateNote: $validated['date_note'], dialysisType: $validated['dialysis_type'])
+            : $this->outUnitSlots(dateNote: $validated['date_note'], dialysisType: $validated['dialysis_type']);
     }
 
     protected function outUnitSlots(string $dateNote, string $dialysisType): array
@@ -50,7 +50,7 @@ class SlotAvailableAction extends AcuteHemodialysisAction
         $notes = $this->getNotes(dateNote: $dateNote, inUnit: false);
 
         $hemoCount = $notes->count()
-                        ? $notes->countBy(fn ($n) => (strpos($n['type'], 'HD') !== false) || (strpos($n['type'], 'HF') !== false))
+                        ? $notes->filter(fn ($n) => (strpos($n['type'], 'HD') !== false) || (strpos($n['type'], 'HF') !== false))->count()
                         : 0;
 
         $available = true;
@@ -75,6 +75,7 @@ class SlotAvailableAction extends AcuteHemodialysisAction
             'slots' => $notes,
             'available' => $available,
             'reply' => $reply,
+            'hemoCount' => $hemoCount,
         ];
     }
 
@@ -143,32 +144,25 @@ class SlotAvailableAction extends AcuteHemodialysisAction
         $sumGroup = [0];
         for ($i = 1; $i <= 3; $i++) {
             $groupBySlotCount[] = $notes->filter(fn ($n) => $n['slot_count'] == $i)->values();
-            $sumGroup[] = count($groupBySlotCount[$i]) * $i;
         }
 
         /*
          * prefer order
-         * 1 slot treated as free slot
-         * 2 slots MAY NEED n slots => pack together then may follow with 2 slots
          * 3 slots NEED 1 slots => must follow with 1 slot
+         * 2 slots
+         * 1 slot treated as free slot
          */
         $ordered = collect([]);
 
-        foreach ($groupBySlotCount[2] as $n) {
-            $ordered->push($n);
-        }
-        if ($sumGroup[2] % 4 !== 0 && $sumGroup[1] >= 2) {
-            $ordered->push($groupBySlotCount[1]->shift());
-            $ordered->push($groupBySlotCount[1]->shift());
-            $sumGroup[1] = $sumGroup[1] - 2;
-        }
-
         foreach ($groupBySlotCount[3] as $n) {
             $ordered->push($n);
-            if ($sumGroup[1] > 0) {
+            if ($groupBySlotCount[1]->count()) {
                 $ordered->push($groupBySlotCount[1]->shift());
-                $sumGroup[1] = $sumGroup[1] - 1;
             }
+        }
+
+        foreach ($groupBySlotCount[2] as $n) {
+            $ordered->push($n);
         }
 
         foreach ($groupBySlotCount[1] as $n) {

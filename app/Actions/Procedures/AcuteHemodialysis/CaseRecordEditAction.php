@@ -89,7 +89,7 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
             }
             $start->addDay();
             $count++;
-        } while ($count <= $this->LIMIT_ADVANCE_DAYS);
+        } while ($count < $this->LIMIT_ADVANCE_DAYS);
         $configs = $this->FORM_CONFIGS + [
             'in_unit_dialysis_types' => $this->IN_UNIT,
             'out_unit_dialysis_types' => $this->OUT_UNIT,
