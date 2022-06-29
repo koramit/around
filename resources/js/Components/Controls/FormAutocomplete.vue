@@ -76,6 +76,7 @@ const props = defineProps({
     params: { type: String, default: '' },
     name: { type: String, required: true },
     error: { type: String, default: '' },
+    lengthToStart: { type: Number, default: 3}
 });
 
 const items = ref([]);
@@ -84,7 +85,7 @@ const open = ref(false);
 const search = throttle(function () {
     emits('update:modelValue', input.value.value);
 
-    if (input.value.value.length < 3) {
+    if (input.value.value.length < props.lengthToStart) {
         if (open.value) {
             open.value = false;
         }

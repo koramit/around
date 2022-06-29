@@ -354,6 +354,7 @@
                 v-model="order.dialysis_at"
                 :endpoint="configs.endpoints.resources_api_wards"
                 :error="order.errors.dialysis_at"
+                :length-to-start="1"
             />
             <FormAutocomplete
                 label="attending"
@@ -362,6 +363,7 @@
                 :endpoint="configs.endpoints.resources_api_staffs"
                 :params="configs.staffs_scope_params"
                 :error="order.errors.attending_staff"
+                :length-to-start="1"
             />
             <FormSelect
                 label="dialysis type"
@@ -442,23 +444,23 @@
 </template>
 
 <script setup>
-import FormInput from '@/Components/Controls/FormInput';
-import FormAutocomplete from '@/Components/Controls/FormAutocomplete';
-import FormRadio from '@/Components/Controls/FormRadio';
-import FormCheckbox from '@/Components/Controls/FormCheckbox';
-import FormDatetime from '@/Components/Controls/FormDatetime';
-import ImageUploader from '@/Components/Controls/ImageUploader';
-import FormSelectOther from '@/Components/Controls/FormSelectOther';
-import FormSelect from '@/Components/Controls/FormSelect';
-import SpinnerButton from '@/Components/Controls/SpinnerButton';
-import OrderIndex from '@/Partials/Procedures/AcuteHemodialysis/OrderIndex';
-import DialysisSlot from '@/Partials/Procedures/AcuteHemodialysis/DialysisSlot';
-import WardSlot from '@/Partials/Procedures/AcuteHemodialysis/WardSlot';
+import FormInput from '@/Components/Controls/FormInput.vue';
+import FormAutocomplete from '@/Components/Controls/FormAutocomplete.vue';
+import FormRadio from '@/Components/Controls/FormRadio.vue';
+import FormCheckbox from '@/Components/Controls/FormCheckbox.vue';
+import FormDatetime from '@/Components/Controls/FormDatetime.vue';
+import ImageUploader from '@/Components/Controls/ImageUploader.vue';
+import FormSelectOther from '@/Components/Controls/FormSelectOther.vue';
+import FormSelect from '@/Components/Controls/FormSelect.vue';
+import SpinnerButton from '@/Components/Controls/SpinnerButton.vue';
+import OrderIndex from '@/Partials/Procedures/AcuteHemodialysis/OrderIndex.vue';
+import DialysisSlot from '@/Partials/Procedures/AcuteHemodialysis/DialysisSlot.vue';
+import WardSlot from '@/Partials/Procedures/AcuteHemodialysis/WardSlot.vue';
 import { useForm } from '@inertiajs/inertia-vue3';
 import { computed, reactive, ref, watch } from 'vue';
 import debounce from 'lodash/debounce';
-import AlertMessage from '@/Components/Helpers/AlertMessage';
-import { useSelectOther } from '@/functions/useSelectOther';
+import AlertMessage from '@/Components/Helpers/AlertMessage.vue';
+import { useSelectOther } from '@/functions/useSelectOther.js';
 
 const props = defineProps({
     caseRecordForm: { type: Object, required: true },

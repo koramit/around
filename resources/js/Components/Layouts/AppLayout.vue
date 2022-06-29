@@ -182,14 +182,14 @@
 
 <script setup>
 import { Head, Link, usePage } from '@inertiajs/inertia-vue3';
-import DropdownList from '@/Components/Helpers/DropdownList';
-import MainMenu from '@/Components/Helpers/MainMenu';
-import ActionMenu from '@/Components/Helpers/ActionMenu';
-import { pageRoutines } from '@/functions/pageRoutines';
+import DropdownList from '@/Components/Helpers/DropdownList.vue';
+import MainMenu from '@/Components/Helpers/MainMenu.vue';
+import ActionMenu from '@/Components/Helpers/ActionMenu.vue';
+import { pageRoutines } from '@/functions/pageRoutines.js';
 import { nextTick, onMounted, ref } from 'vue';
-import IconHamberger from '@/Components/Helpers/Icons/IconHamberger';
-import IconChevronCircleDown from '@/Components/Helpers/Icons/IconChevronCircleDown';
-import { useInPageLinkHelpers } from '../../functions/useInPageLinkHelpers';
+import IconHamberger from '@/Components/Helpers/Icons/IconHamberger.vue';
+import IconChevronCircleDown from '@/Components/Helpers/Icons/IconChevronCircleDown.vue';
+import { useInPageLinkHelpers } from '../../functions/useInPageLinkHelpers.js';
 import AlertMessage from '../Helpers/AlertMessage.vue';
 
 pageRoutines();

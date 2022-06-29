@@ -333,19 +333,19 @@
 import { useForm, usePage } from '@inertiajs/inertia-vue3';
 import debounce from 'lodash/debounce';
 import { nextTick, reactive, watch, ref, onMounted } from 'vue';
-import FormInput from '@/Components/Controls/FormInput';
-import HDForm from '@/Partials/Procedures/AcuteHemodialysis/HDForm';
-import HFForm from '@/Partials/Procedures/AcuteHemodialysis/HFForm';
-import SLEDDForm from '@/Partials/Procedures/AcuteHemodialysis/SLEDDForm';
-import TPEForm from '@/Partials/Procedures/AcuteHemodialysis/TPEForm';
-import FormCheckbox from '@/Components/Controls/FormCheckbox';
-import FormSelect from '@/Components/Controls/FormSelect';
-import FormTextarea from '@/Components/Controls/FormTextarea';
-import SpinnerButton from '@/Components/Controls/SpinnerButton';
-import AlertMessage from '@/Components/Helpers/AlertMessage';
-import DialysisSlot from '@/Partials/Procedures/AcuteHemodialysis/DialysisSlot';
-import WardSlot from '@/Partials/Procedures/AcuteHemodialysis/WardSlot';
-import FormDatetime from '@/Components/Controls/FormDatetime';
+import FormInput from '@/Components/Controls/FormInput.vue';
+import HDForm from '@/Partials/Procedures/AcuteHemodialysis/HDForm.vue';
+import HFForm from '@/Partials/Procedures/AcuteHemodialysis/HFForm.vue';
+import SLEDDForm from '@/Partials/Procedures/AcuteHemodialysis/SLEDDForm.vue';
+import TPEForm from '@/Partials/Procedures/AcuteHemodialysis/TPEForm.vue';
+import FormCheckbox from '@/Components/Controls/FormCheckbox.vue';
+import FormSelect from '@/Components/Controls/FormSelect.vue';
+import FormTextarea from '@/Components/Controls/FormTextarea.vue';
+import SpinnerButton from '@/Components/Controls/SpinnerButton.vue';
+import AlertMessage from '@/Components/Helpers/AlertMessage.vue';
+import DialysisSlot from '@/Partials/Procedures/AcuteHemodialysis/DialysisSlot.vue';
+import WardSlot from '@/Partials/Procedures/AcuteHemodialysis/WardSlot.vue';
+import FormDatetime from '@/Components/Controls/FormDatetime.vue';
 const props = defineProps({
     orderForm: { type: Object, required: true },
     formConfigs: { type: Object, required: true },

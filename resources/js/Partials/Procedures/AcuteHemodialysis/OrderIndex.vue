@@ -127,9 +127,9 @@
 
 <script setup>
 import { Link } from '@inertiajs/inertia-vue3';
-import IconUserMd from '@/Components/Helpers/Icons/IconUserMd';
-import DropdownList from '@/Components/Helpers/DropdownList';
-import IconDoubleDown from '@/Components/Helpers/Icons/IconDoubleDown';
+import IconUserMd from '@/Components/Helpers/Icons/IconUserMd.vue';
+import DropdownList from '@/Components/Helpers/DropdownList.vue';
+import IconDoubleDown from '@/Components/Helpers/Icons/IconDoubleDown.vue';
 defineProps({
     orders: { type: Array, required: true }
 });

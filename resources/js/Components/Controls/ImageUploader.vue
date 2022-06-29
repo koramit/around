@@ -68,11 +68,11 @@
 </template>
 
 <script setup>
-import IconCircleNotch from '@/Components/Helpers/Icons/IconCircleNotch';
-import IconCamera from '@/Components/Helpers/Icons/IconCamera';
-import IconImage from '@/Components/Helpers/Icons/IconImage';
-import IconEyesSlash from '@/Components/Helpers/Icons/IconEyesSlash';
-import IconEyes from '@/Components/Helpers/Icons/IconEyes';
+import IconCircleNotch from '@/Components/Helpers/Icons/IconCircleNotch.vue';
+import IconCamera from '@/Components/Helpers/Icons/IconCamera.vue';
+import IconImage from '@/Components/Helpers/Icons/IconImage.vue';
+import IconEyesSlash from '@/Components/Helpers/Icons/IconEyesSlash.vue';
+import IconEyes from '@/Components/Helpers/Icons/IconEyes.vue';
 import { ref } from 'vue';
 const emits = defineEmits(['update:modelValue', 'autosave']);
 const props = defineProps({

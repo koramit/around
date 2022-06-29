@@ -46,8 +46,8 @@
 
 <script setup>
 import DropdownList from '../Helpers/DropdownList.vue';
-import _pickBy from 'lodash/pickBy';
-import _throttle from 'lodash/throttle';
+import pickBy from 'lodash/pickBy';
+import throttle from 'lodash/throttle';
 import { watch } from 'vue';
 import { Inertia } from '@inertiajs/inertia';
 
@@ -60,8 +60,8 @@ const props = defineProps({
 
 watch (
     () => props.form,
-    _throttle(function (val) {
-        let queryParams = _pickBy(val);
+    throttle(function (val) {
+        let queryParams = pickBy(val);
         queryParams = Object.keys(queryParams).length ? queryParams : { remember: 'forget' };
         Inertia.get(location.pathname, queryParams, { preserveState: true });
     }, 800),

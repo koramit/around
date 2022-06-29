@@ -49,8 +49,8 @@
 </template>
 
 <script setup>
-import IconPatient from '@/Components/Helpers/Icons/IconPatient';
-import IconUserMd from '@/Components/Helpers/Icons/IconUserMd';
+import IconPatient from '@/Components/Helpers/Icons/IconPatient.vue';
+import IconUserMd from '@/Components/Helpers/Icons/IconUserMd.vue';
 import { Link } from '@inertiajs/inertia-vue3';
 defineProps({
     slots: { type: Array, required: true }

@@ -145,11 +145,11 @@
 
 <script setup>
 import { reactive, ref, watch } from 'vue';
-import SearchIndex from '@/Components/Controls/SearchIndex';
+import SearchIndex from '@/Components/Controls/SearchIndex.vue';
 import { Link, useForm } from '@inertiajs/inertia-vue3';
-import IconDoubleRight from '@/Components/Helpers/Icons/IconDoubleRight';
-import IconUserMd from '@/Components/Helpers/Icons/IconUserMd';
-import SearchAdmission from '@/Components/Forms/SearchAdmission';
+import IconDoubleRight from '@/Components/Helpers/Icons/IconDoubleRight.vue';
+import IconUserMd from '@/Components/Helpers/Icons/IconUserMd.vue';
+import SearchAdmission from '@/Components/Forms/SearchAdmission.vue';
 import { Inertia } from '@inertiajs/inertia';
 import pickBy from 'lodash/pickBy';
 import debounce from 'lodash/debounce';

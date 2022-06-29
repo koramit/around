@@ -40,8 +40,8 @@
 
 <script setup>
 import { useForm } from '@inertiajs/inertia-vue3';
-import FormInput from '@/Components/Controls/FormInput';
-import SpinnerButton from '@/Components/Controls/SpinnerButton';
+import FormInput from '@/Components/Controls/FormInput.vue';
+import SpinnerButton from '@/Components/Controls/SpinnerButton.vue';
 import { nextTick, onMounted, ref } from 'vue';
 
 const props = defineProps({

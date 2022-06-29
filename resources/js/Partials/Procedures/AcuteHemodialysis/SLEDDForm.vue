@@ -359,15 +359,15 @@
 </template>
 
 <script setup>
-import FormCheckbox from '@/Components/Controls/FormCheckbox';
-import FormInput from '@/Components/Controls/FormInput';
-import FormTextarea from '@/Components/Controls/FormTextarea';
-import FormSelect from '@/Components/Controls/FormSelect';
-import FormRadio from '@/Components/Controls/FormRadio';
-import AlertMessage from '@/Components/Helpers/AlertMessage';
-import FormSelectOther from '@/Components/Controls/FormSelectOther';
+import FormCheckbox from '@/Components/Controls/FormCheckbox.vue';
+import FormInput from '@/Components/Controls/FormInput.vue';
+import FormTextarea from '@/Components/Controls/FormTextarea.vue';
+import FormSelect from '@/Components/Controls/FormSelect.vue';
+import FormRadio from '@/Components/Controls/FormRadio.vue';
+import AlertMessage from '@/Components/Helpers/AlertMessage.vue';
+import FormSelectOther from '@/Components/Controls/FormSelectOther.vue';
 import { watch, reactive, ref } from 'vue';
-import { useSelectOther } from '@/functions/useSelectOther';
+import { useSelectOther } from '@/functions/useSelectOther.js';
 
 const props = defineProps({
     modelValue: { type: Object, required: true },

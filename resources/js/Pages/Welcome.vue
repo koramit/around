@@ -6,8 +6,8 @@
 </template>
 
 <script setup>
-import PageNav from '../Shared/PageNav';
-import { useManageLocale } from '../functions/useManageLocale';
+import PageNav from '../Shared/PageNav.vue';
+import { useManageLocale } from '../functions/useManageLocale.js';
 
 const props = defineProps({
     trans: { type: Object, default: null }

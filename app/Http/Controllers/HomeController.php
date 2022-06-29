@@ -16,7 +16,7 @@ class HomeController extends Controller
             ['icon' => 'procedure', 'label' => 'Procedures', 'route' => route('procedures'), 'can' => true],
         ])->filter(fn ($link) => $link['can']));
         Session::flash('action-menu', [
-            ['icon' => 'save', 'label' => 'บันทึก', 'action' => 'save', 'can' => true],
+            // ['icon' => 'save', 'label' => 'บันทึก', 'action' => 'save', 'can' => true],
         ]);
         // ['icon' => 'graduation-cap', 'label' => 'Kidney club', 'route' => route('kidney-club'), 'can' => true],
         // ['icon' => 'graduation-cap', 'label' => 'Club Nephro', 'route' => 'procedures', 'can' => true],

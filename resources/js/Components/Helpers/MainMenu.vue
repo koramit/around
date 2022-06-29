@@ -66,8 +66,8 @@
 
 <script setup>
 import { Link } from '@inertiajs/inertia-vue3';
-import IconVector from '@/Components/Helpers/IconVector';
-import { useInPageLinkHelpers } from '@/functions/useInPageLinkHelpers';
+import IconVector from '@/Components/Helpers/IconVector.vue';
+import { useInPageLinkHelpers } from '@/functions/useInPageLinkHelpers.js';
 defineProps({
     zenMode: { type: Boolean }
 });
