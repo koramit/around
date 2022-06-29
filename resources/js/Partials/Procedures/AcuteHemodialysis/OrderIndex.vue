@@ -5,7 +5,7 @@
     >
         <!-- table  -->
         <div class="bg-white rounded shadow overflow-x-auto hidden md:block">
-            <table class="w-full whitespace-nowrap">
+            <table class="w-full whitespace-nowrap pb-48">
                 <tr class="text-left font-semibold text-complement">
                     <th
                         class="px-6 pt-6 pb-4"
@@ -21,22 +21,35 @@
                     :key="key"
                 >
                     <td
-                        class="px-6 py4 border-t"
+                        class="px-6 py-4 border-t"
                         v-for="field in ['date_note', 'dialysis_type', 'ward_name', 'status', 'md']"
                         :key="field"
                         v-text="order[field]"
                     />
                     <td class="border-t">
-                        <Link
-                            class="px-4 py-2 flex items-center focus:text-primary-darker"
-                            :href="order.edit_route"
-                        >
-                            <div class="p-2 rounded-full bg-white hover:bg-primary transition-colors ease-in-out duration-200">
-                                <IconDoubleRight
-                                    class="w-4 h-4 text-accent"
-                                />
-                            </div>
-                        </Link>
+                        <DropdownList v-if="order.actions.length">
+                            <template #default>
+                                <div class="p-2 rounded-full bg-white hover:bg-primary transition-colors ease-in-out duration-200">
+                                    <IconDoubleDown class="w-4 h-4 text-accent" />
+                                </div>
+                            </template>
+                            <template #dropdown>
+                                <div class="mt-2 py-0 overflow-hidden shadow-xl bg-complement text-white cursor-pointer rounded text-sm">
+                                    <Link
+                                        v-for="(action, action_key) in order.actions"
+                                        :key="action_key"
+                                        :href="action.href"
+                                        :as="action.as"
+                                        :type="action.type"
+                                        :method="action.method"
+                                        :preserve-state="action.preserveState"
+                                        class="block w-full text-left px-6 py-2 hover:bg-complement-darker hover:text-primary transition-colors duration-200 ease-out"
+                                    >
+                                        {{ action.label }}
+                                    </Link>
+                                </div>
+                            </template>
+                        </DropdownList>
                     </td>
                 </tr>
             </table>
@@ -52,12 +65,29 @@
                     <div>
                         {{ order.ward_name }}
                     </div>
-                    <Link
-                        :href="order.edit_route"
-                        class="bg-primary-darker p-2 rounded-full"
-                    >
-                        <IconDoubleRight class="w-4 h-4 text-accent" />
-                    </Link>
+                    <DropdownList v-if="order.actions.length">
+                        <template #default>
+                            <div class="bg-primary-darker p-2 rounded-full">
+                                <IconDoubleDown class="w-4 h-4 text-accent" />
+                            </div>
+                        </template>
+                        <template #dropdown>
+                            <div class="mt-2 py-0 overflow-hidden shadow-xl bg-complement text-white cursor-pointer rounded text-sm whitespace-nowrap">
+                                <Link
+                                    v-for="(action, action_key) in order.actions"
+                                    :key="action_key"
+                                    :href="action.href"
+                                    :as="action.as"
+                                    :type="action.type"
+                                    :method="action.method"
+                                    :preserve-state="action.preserveState"
+                                    class="block w-full text-left p-2"
+                                >
+                                    {{ action.label }}
+                                </Link>
+                            </div>
+                        </template>
+                    </DropdownList>
                 </div>
                 <div class="my-2 p-2 bg-gray-100 rounded space-y-2">
                     <div class="flex items-center justify-between">
@@ -97,8 +127,9 @@
 
 <script setup>
 import { Link } from '@inertiajs/inertia-vue3';
-import IconDoubleRight from '@/Components/Helpers/Icons/IconDoubleRight';
 import IconUserMd from '@/Components/Helpers/Icons/IconUserMd';
+import DropdownList from '@/Components/Helpers/DropdownList';
+import IconDoubleDown from '@/Components/Helpers/Icons/IconDoubleDown';
 defineProps({
     orders: { type: Array, required: true }
 });

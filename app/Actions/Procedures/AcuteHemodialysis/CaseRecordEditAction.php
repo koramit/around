@@ -13,8 +13,6 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
 {
     use OrderShareValidatable;
 
-    protected $LIMIT_ADVANCE_DAYS = 3;
-
     protected $STAFF_DIVISION_ID = 4;
 
     protected $FORM_CONFIGS = [
@@ -65,6 +63,28 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
             ->orderByDesc('created_at')
             ->get()
             ->transform(function ($note) use ($user) {
+                $actions = [];
+                if ($user->can('edit', $note)) {
+                    $actions[] = [
+                        'label' => 'Edit',
+                        'as' => 'a',
+                        'type' => 'text/html',
+                        'href' => route('procedures.acute-hemodialysis.orders.edit', $note->hashed_key),
+                        'method' => 'get',
+                        'preserveState' => true,
+                    ];
+                }
+                if ($user->can('destroy', $note)) {
+                    $actions[] = [
+                        'label' => 'Cancel order',
+                        'as' => 'button',
+                        'type' => 'button',
+                        'href' => route('procedures.acute-hemodialysis.orders.destroy', $note->hashed_key),
+                        'method' => 'delete',
+                        'preserveState' => false,
+                    ];
+                }
+
                 return [
                     'edit_route' => route('procedures.acute-hemodialysis.orders.edit', $note->hashed_key),
                     'ward_name' => $note->place_name,
@@ -76,6 +96,7 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
                         'edit' => $user->can('edit', $note),
                         'destroy' => $user->can('destroy', $note),
                     ],
+                    'actions' => $actions,
                 ];
             });
 
@@ -88,21 +109,11 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
         $form['record']['hn'] = $caseRecord->patient->hn;
 
         // form configs
-        $availableDates = [];
-        $start = now()->tz($this->TIMEZONE)->addDay();
-        $count = 0;
-        do {
-            if (! $start->isSunday()) {
-                $availableDates[] = $start->format('Y-m-d');
-            }
-            $start->addDay();
-            $count++;
-        } while ($count < $this->LIMIT_ADVANCE_DAYS);
         $configs = $this->FORM_CONFIGS + [
             'in_unit_dialysis_types' => $this->IN_UNIT,
             'out_unit_dialysis_types' => $this->OUT_UNIT,
             'patient_types' => $this->PATIENT_TYPES,
-            'reserve_available_dates' => $availableDates,
+            'reserve_available_dates' => $this->reserveAvailableDates(),
             'reserve_disable_dates' => [], // 'August 13, 2021',
             'image_upload_endpoints' => [
                 'store' => route('uploads.store'),

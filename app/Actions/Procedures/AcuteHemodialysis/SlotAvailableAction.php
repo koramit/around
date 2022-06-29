@@ -81,7 +81,7 @@ class SlotAvailableAction extends AcuteHemodialysisAction
 
     protected function getNotes(string $dateNote, bool $inUnit = true)
     {
-        return AcuteHemodialysisOrderNote::with(['patient', 'author', 'caseRecord'])
+        return AcuteHemodialysisOrderNote::with(['patient', 'author', 'attendingStaff', 'caseRecord'])
             ->where('date_note', $dateNote)
             ->whereNull('canceled_at')
             ->where('meta->in_unit', $inUnit)
@@ -92,6 +92,7 @@ class SlotAvailableAction extends AcuteHemodialysisAction
                     'patient_name' => $note->patient->profile['first_name'],
                     'author' => $note->author->name,
                     'type' => explode(' ', $note->meta['dialysis_type'])[0],
+                    'attending' => $note->attendingStaff->first_name,
                 ];
                 if ($inUnit) {
                     $trans['tpe'] = str_contains(strtolower($note->meta['dialysis_type']), 'tpe') ? 1 : 0;
@@ -172,7 +173,6 @@ class SlotAvailableAction extends AcuteHemodialysisAction
             'slots' => $ordered->reverse()->values(),
             'available' => $available,
             'reply' => $reply,
-            'notes' => $notes,
         ];
     }
 

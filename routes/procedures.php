@@ -30,5 +30,7 @@ Route::middleware(['auth'])->prefix('procedures')->group(function () {
                ->name('orders.submit');
             Route::patch('/orders/{hashedKey}', [AcuteHemodialysisOrderController::class, 'update'])
                ->name('orders.update');
+            Route::delete('/orders/{hashedKey}', [AcuteHemodialysisOrderController::class, 'destroy'])
+               ->name('orders.destroy');
         });
 });

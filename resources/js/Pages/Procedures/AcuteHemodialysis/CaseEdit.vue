@@ -457,8 +457,8 @@ import WardSlot from '@/Partials/Procedures/AcuteHemodialysis/WardSlot';
 import { useForm } from '@inertiajs/inertia-vue3';
 import { computed, reactive, ref, watch } from 'vue';
 import debounce from 'lodash/debounce';
-import AlertMessage from '../../../Components/Helpers/AlertMessage.vue';
-import { useSelectOther } from '../../../functions/useSelectOther';
+import AlertMessage from '@/Components/Helpers/AlertMessage';
+import { useSelectOther } from '@/functions/useSelectOther';
 
 const props = defineProps({
     caseRecordForm: { type: Object, required: true },

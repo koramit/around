@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Procedures\AcuteHemodialysis;
 
+use App\Actions\Procedures\AcuteHemodialysis\OrderDestroyAction;
 use App\Actions\Procedures\AcuteHemodialysis\OrderEditAction;
 use App\Actions\Procedures\AcuteHemodialysis\OrderStoreAction;
 use App\Actions\Procedures\AcuteHemodialysis\OrderUpdateAction;
@@ -44,5 +45,14 @@ class OrderController extends Controller
         // if want json return $data
 
         return ['ok' => $status];
+    }
+
+    public function destroy(string $hashedKey, Request $request)
+    {
+        $note = (new OrderDestroyAction)(data: $request->all(), hashedKey: $hashedKey, user: $request->user());
+
+        // if want json return $data
+
+        return redirect()->route('procedures.acute-hemodialysis.edit', $note->caseRecord->hashed_key);
     }
 }

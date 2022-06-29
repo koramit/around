@@ -19,7 +19,7 @@
             >
                 <template v-if="slot.type">
                     <span class="p-1 md:p-2 bg-primary rounded-full text-xs text-accent font-semibold">{{ slot.type }}</span>
-                    <div class="mt-1 md:mt-0 space-y-1 md:space-y-0 md:space-x-2 md:flex md:items-center">
+                    <div class="mt-1 md:mt-0 md:space-x-2 md:flex md:items-center">
                         <Link
                             class="font-semibold text-primary text-xs flex items-center"
                             :href="slot.case_record_route"
@@ -27,13 +27,19 @@
                             <IconPatient
                                 class="h-3 w-3 mr-1 text-white"
                             />
-                            <span class="block italic truncate underline">{{ slot.patient_name }}</span>
+                            <span class="block py-1 italic truncate underline">{{ slot.patient_name }}</span>
                         </Link>
                         <p class="font-semibold text-primary text-xs flex items-center">
                             <IconUserMd
                                 class="h-3 w-3 mr-1 text-white"
                             />
-                            <span class="block italic truncate">{{ slot.author }}</span>
+                            <span class="block py-1 italic truncate">{{ slot.author }}</span>
+                        </p>
+                        <p class="font-semibold text-primary text-xs flex items-center">
+                            <IconUserMd
+                                class="h-3 w-3 mr-1 text-white"
+                            />
+                            <span class="block py-1 italic truncate">{{ slot.attending }}</span>
                         </p>
                     </div>
                 </template>

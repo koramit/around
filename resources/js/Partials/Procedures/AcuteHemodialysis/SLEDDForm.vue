@@ -1,9 +1,14 @@
 <template>
     <h2
-        class="mt-6 md:mt-12 xl:mt-24 form-label italic text-xl text-thick-theme-light"
+        class="mt-6 md:mt-12 xl:mt-24 flex justify-between"
         id="prescription"
     >
-        SLEDD Prescription
+        <span class="form-label text-lg italic text-complement">SLEDD Prescription</span>
+        <button
+            class="text-sm text-accent"
+        >
+            Copy last order
+        </button>
     </h2>
     <hr class="my-4 border-b border-bitter-theme-light">
     <div class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8 2xl:grid-cols-4">

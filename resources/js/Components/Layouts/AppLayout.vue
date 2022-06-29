@@ -73,15 +73,15 @@
                         </div>
                     </template>
                     <template #dropdown>
-                        <div class="mt-2 py-2 shadow-xl bg-complement text-white cursor-pointer rounded text-sm">
+                        <div class="mt-2 py-0 overflow-hidden shadow-xl bg-complement text-white cursor-pointer rounded text-sm">
                             <Link
-                                class="block px-6 py-2 hover:bg-complement-darker hover:text-primary"
+                                class="block w-full text-left px-6 py-2 hover:bg-complement-darker hover:text-primary transition-colors duration-200 ease-out"
                                 :href="$page.props.routePreferences"
                             >
                                 {{ __('Preferences') }}
                             </Link>
                             <Link
-                                class="w-full font-semibold text-left px-6 py-2 hover:bg-complement-darker hover:text-primary"
+                                class="block w-full text-left px-6 py-2 hover:bg-complement-darker hover:text-primary transition-colors duration-200 ease-out"
                                 :href="$page.props.routeLogout"
                                 method="delete"
                                 as="button"

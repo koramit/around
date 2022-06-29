@@ -46,10 +46,17 @@ class OrderEditAction extends AcuteHemodialysisAction
             'formConfigs' => $this->FORM_CONFIGS + [
                 'update_endpoint' => route('procedures.acute-hemodialysis.orders.update', $note->hashed_key),
                 'submit_endpoint' => route('procedures.acute-hemodialysis.orders.submit', $note->hashed_key),
+                'resources_api_acutehemodialysis_slot_available_endpoint' => route('resources.api.acute-hemodialysis-slot-available'),
                 'hn' => $note->meta['hn'],
                 'an' => $note->meta['an'] ?? null,
                 'dialysis_at' => $note->place_name,
                 'dialysis_type' => $note->meta['dialysis_type'],
+                'reserve_available_dates' => $this->reserveAvailableDates(),
+                'reserve_disable_dates' => [], // 'August 13, 2021',
+                'date_note' => $note->date_note->format('Y-m-d'),
+                'dialysis_type' => $note->meta['dialysis_type'],
+                'dialysis_at' => $note->place_name,
+                'swap_code' => 1986,
             ],
         ];
     }

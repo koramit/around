@@ -47,10 +47,15 @@
         </div>
     </template>
     <h2
-        class="mt-6 md:mt-12 xl:mt-24 form-label italic text-xl text-complement"
+        class="mt-6 md:mt-12 xl:mt-24 flex justify-between"
         id="prescription"
     >
-        HD Prescription
+        <span class="form-label text-lg italic text-complement">HD Prescription</span>
+        <button
+            class="text-sm text-accent"
+        >
+            Copy last order
+        </button>
     </h2>
     <hr class="my-4 border-b border-accent">
     <div class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8 2xl:grid-cols-4">

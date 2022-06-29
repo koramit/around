@@ -16,13 +16,15 @@
                         <div class="group-hover:text-accent-darker focus:text-accent-darker mr-1 whitespace-no-wrap">
                             <span class="text-complement group-hover:text-accent-darker focus:text-accent-darker">{{ form.scope }}</span>
                         </div>
-                        <svg
-                            class="w-4 h-4 text-complement group-hover:text-accent-darker focus:text-accent-darker"
-                            viewBox="0 0 320 512"
-                        ><path
-                            fill="currentColor"
-                            d="M143 256.3L7 120.3c-9.4-9.4-9.4-24.6 0-33.9l22.6-22.6c9.4-9.4 24.6-9.4 33.9 0l96.4 96.4 96.4-96.4c9.4-9.4 24.6-9.4 33.9 0L313 86.3c9.4 9.4 9.4 24.6 0 33.9l-136 136c-9.4 9.5-24.6 9.5-34 .1zm34 192l136-136c9.4-9.4 9.4-24.6 0-33.9l-22.6-22.6c-9.4-9.4-24.6-9.4-33.9 0L160 352.1l-96.4-96.4c-9.4-9.4-24.6-9.4-33.9 0L7 278.3c-9.4 9.4-9.4 24.6 0 33.9l136 136c9.4 9.5 24.6 9.5 34 .1z"
-                        /></svg>
+                        <div class="p-1 rounded-full bg-white hover:bg-primary transition-colors ease-in-out duration-200">
+                            <svg
+                                class="w-3 h-3 text-accent group-hover:text-accent-darker focus:text-accent-darker"
+                                viewBox="0 0 320 512"
+                            ><path
+                                fill="currentColor"
+                                d="M143 256.3L7 120.3c-9.4-9.4-9.4-24.6 0-33.9l22.6-22.6c9.4-9.4 24.6-9.4 33.9 0l96.4 96.4 96.4-96.4c9.4-9.4 24.6-9.4 33.9 0L313 86.3c9.4 9.4 9.4 24.6 0 33.9l-136 136c-9.4 9.5-24.6 9.5-34 .1zm34 192l136-136c9.4-9.4 9.4-24.6 0-33.9l-22.6-22.6c-9.4-9.4-24.6-9.4-33.9 0L160 352.1l-96.4-96.4c-9.4-9.4-24.6-9.4-33.9 0L7 278.3c-9.4 9.4-9.4 24.6 0 33.9l136 136c9.4 9.5 24.6 9.5 34 .1z"
+                            /></svg>
+                        </div>
                     </div>
                 </template>
                 <template #dropdown>

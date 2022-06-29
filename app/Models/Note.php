@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Casts\NoteStatus;
+use App\Models\Resources\AttendingStaff;
 use App\Models\Resources\Patient;
 use App\Traits\PKHashable;
 use Illuminate\Database\Eloquent\Casts\AsArrayObject;
@@ -42,6 +43,11 @@ class Note extends Model
     public function author()
     {
         return $this->belongsTo('App\Models\User', 'user_id', 'id');
+    }
+
+    public function attendingStaff()
+    {
+        return $this->belongsTo(AttendingStaff::class);
     }
 
     public function scopeWithAuthorUsername($query)
