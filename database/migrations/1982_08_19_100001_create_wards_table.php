@@ -14,7 +14,7 @@ return new class extends Migration {
     {
         Schema::create('wards', function (Blueprint $table) {
             $table->smallIncrements('id');
-            $table->string('name')->unique()->collation('th-x-icu');
+            $table->string('name')->unique()->collation(config('database.th_collation'));
             $table->string('name_short', 120)->index()->nullable();
             $table->string('name_ref')->unique();
             $table->unsignedSmallInteger('division_id')->default(1);

@@ -1,9 +1,9 @@
 <template>
     <h2
-        class="mt-6 md:mt-12 xl:mt-24 flex justify-between"
+        class="mt-6 md:mt-12 xl:mt-24 flex justify-between items-center"
         id="prescription"
     >
-        <span class="form-label text-lg italic text-complement">TPE Prescription</span>
+        <span class="form-label mb-0 text-lg italic text-complement">TPE Prescription</span>
         <button
             class="text-sm text-accent"
         >

@@ -15,7 +15,7 @@ return new class extends Migration {
         Schema::create('registries', function (Blueprint $table) {
             $table->smallIncrements('id');
             $table->string('name')->unique();
-            $table->string('label')->index()->collation('th-x-icu');
+            $table->string('label')->index()->collation(config('database.th_collation'));
             $table->string('label_eng');
             $table->string('route');
             $table->unsignedSmallInteger('division_id')->default(1);

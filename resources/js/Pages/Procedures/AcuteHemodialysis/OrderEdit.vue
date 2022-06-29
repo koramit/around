@@ -1,10 +1,10 @@
 <template>
     <!-- reservation -->
     <h2
-        class="flex justify-between"
+        class="flex justify-between items-center"
         id="reservation"
     >
-        <span class="form-label text-lg italic text-complement">Reservation data</span>
+        <span class="form-label mb-0 text-lg italic text-complement">Reservation data</span>
         <button
             class="text-sm text-accent"
             @click="showReschedule = !showReschedule"

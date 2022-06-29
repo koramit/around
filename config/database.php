@@ -148,4 +148,6 @@ return [
 
     ],
 
+    'th_collation' => env('DB_CONNECTION') === 'pgsql' ? 'th-x-icu' : null,
+
 ];
