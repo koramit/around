@@ -10,8 +10,6 @@ class AttendingStaff extends Model
 {
     use HasFactory;
 
-    protected $table = 'attending_staffs';
-
     protected function firstName(): Attribute
     {
         return Attribute::make(

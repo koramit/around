@@ -6,7 +6,7 @@ use App\Models\Resources\AttendingStaff;
 use App\Traits\CSVLoader;
 use Illuminate\Database\Seeder;
 
-class AttendingStaffsTableSeeder extends Seeder
+class AttendingStaffTableSeeder extends Seeder
 {
     use CSVLoader;
 

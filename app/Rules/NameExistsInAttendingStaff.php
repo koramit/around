@@ -4,7 +4,7 @@ namespace App\Rules;
 
 use App\Models\Resources\AttendingStaff;
 
-class NameExistsInAttendingStaffs extends CacheQueryResultRule
+class NameExistsInAttendingStaff extends CacheQueryResultRule
 {
     /**
      * Determine if the validation rule passes.

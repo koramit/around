@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LocalizationController;
 use App\Http\Controllers\PreferenceController;
@@ -54,5 +55,13 @@ Route::post('uploads', [UploadController::class, 'store'])
 Route::get('uploads/{path}/{filename}', [UploadController::class, 'show'])
      ->middleware('auth')
      ->name('uploads.show');
+
+// feedback
+Route::get('feedback', [FeedbackController::class, 'index'])
+     ->middleware(['auth'])
+     ->name('feedback');
+Route::post('feedback', [FeedbackController::class, 'store'])
+     ->middleware(['auth'])
+     ->name('feedback.store');
 
 require __DIR__.'/procedures.php';

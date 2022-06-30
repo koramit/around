@@ -12,12 +12,9 @@ return new class extends Migration {
      */
     public function up()
     {
-        Schema::create('attending_staffs', function (Blueprint $table) {
-            $table->smallIncrements('id');
-            $table->string('name')->unique()->collation(config('database.th_collation'));
-            $table->unsignedSmallInteger('division_id')->default(1);
-            $table->foreign('division_id')->references('id')->on('divisions')->constrained();
-            $table->boolean('active')->default(true)->index();
+        Schema::create('feedback', function (Blueprint $table) {
+            $table->id();
+            $table->string('feedback', 512);
             $table->timestamps();
         });
     }
@@ -29,5 +26,6 @@ return new class extends Migration {
      */
     public function down()
     {
+        Schema::dropIfExists('feedback');
     }
 };

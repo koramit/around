@@ -5,7 +5,7 @@ namespace App\Actions\Procedures\AcuteHemodialysis;
 use App\Models\Notes\AcuteHemodialysisOrderNote;
 use App\Models\User;
 use App\Rules\HashedKeyExistsInCaseRecords;
-use App\Rules\NameExistsInAttendingStaffs;
+use App\Rules\NameExistsInAttendingStaff;
 use App\Rules\NameExistsInWards;
 use App\Traits\AcuteHemodialysis\OrderShareValidatable;
 use App\Traits\AcuteHemodialysis\SwapCodeGeneratable;
@@ -198,7 +198,7 @@ class OrderStoreAction extends AcuteHemodialysisAction
             'dialysis_type' => ['required', 'string', Rule::in($this->getAllDialysisType())],
             'patient_type' => ['required', 'string', Rule::in($this->PATIENT_TYPES)],
             'dialysis_at' => ['required', 'string', 'max:255', new NameExistsInWards($cacheKeyPrefix)],
-            'attending_staff' => ['required', 'string', 'max:255', new NameExistsInAttendingStaffs($cacheKeyPrefix)],
+            'attending_staff' => ['required', 'string', 'max:255', new NameExistsInAttendingStaff($cacheKeyPrefix)],
             'case_record_hashed_key' => ['required', new HashedKeyExistsInCaseRecords($cacheKeyPrefix)],
             'date_note' => ['required', 'date'],
         ])->validate();
