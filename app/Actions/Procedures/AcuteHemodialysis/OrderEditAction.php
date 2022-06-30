@@ -48,7 +48,8 @@ class OrderEditAction extends AcuteHemodialysisAction
                     'update' => route('procedures.acute-hemodialysis.orders.update', $note->hashed_key),
                     'submit' => route('procedures.acute-hemodialysis.orders.submit', $note->hashed_key),
                     'reschedule' =>  route('procedures.acute-hemodialysis.orders.reschedule', $note->hashed_key),
-                    'acutehemodialysis_slot_available' => route('resources.api.acute-hemodialysis-slot-available'),
+                    'swap' =>  route('procedures.acute-hemodialysis.orders.swap', $note->hashed_key),
+                    'acutehemodialysis_slot_available' => route('procedures.acute-hemodialysis.slot-available'),
                 ],
                 'hn' => $note->meta['hn'],
                 'an' => $note->meta['an'] ?? null,
@@ -59,7 +60,7 @@ class OrderEditAction extends AcuteHemodialysisAction
                 'date_note' => $note->date_note->format('Y-m-d'),
                 'dialysis_type' => $note->meta['dialysis_type'],
                 'dialysis_at' => $note->place_name,
-                'swap_code' => 1986,
+                'swap_code' => $note->meta['swap_code'],
             ],
         ];
     }

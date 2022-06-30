@@ -570,7 +570,7 @@ watch (
             return;
         }
         window.axios
-            .post(configs.endpoints.resources_api_acutehemodialysis_slot_available, {
+            .post(configs.endpoints.acutehemodialysis_slot_available, {
                 dialysis_type: order.dialysis_type,
                 dialysis_at: order.dialysis_at,
                 date_note: order.date_note,
@@ -617,8 +617,7 @@ const reserveButtonDisable = computed(() => {
 });
 
 const reserve = () => {
-    console.log(configs.endpoints.procedures_acutehemodialysis_orders_store);
-    order.post(configs.endpoints.procedures_acutehemodialysis_orders_store, {
+    order.post(configs.endpoints.orders_store, {
         onFinish: () => order.processing = false,
         onError: (error) => console.log(error),
     });

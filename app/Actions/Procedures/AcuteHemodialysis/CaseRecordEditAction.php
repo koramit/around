@@ -122,8 +122,8 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
             'endpoints' => [
                 'resources_api_wards' => route('resources.api.wards'),
                 'resources_api_staffs' => route('resources.api.staffs'),
-                'resources_api_acutehemodialysis_slot_available' => route('resources.api.acute-hemodialysis-slot-available'),
-                'procedures_acutehemodialysis_orders_store' => route('procedures.acute-hemodialysis.orders.store'),
+                'acutehemodialysis_slot_available' => route('procedures.acute-hemodialysis.slot-available'),
+                'orders_store' => route('procedures.acute-hemodialysis.orders.store'),
                 'update' => route('procedures.acute-hemodialysis.update', $caseRecord->hashed_key),
             ],
             'staffs_scope_params' => '&division_id='.$this->STAFF_DIVISION_ID,

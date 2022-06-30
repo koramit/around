@@ -9,7 +9,8 @@
             class="flex items-center text-sm text-accent"
             @click="showReschedule = !showReschedule"
         >
-            <IconRotate
+            <IconVector
+                name="rotate"
                 class="w-3 h-3 mr-1 transition-all transform duration-200 ease-out"
                 :class="{'rotate-180 text-accent-darker': showReschedule}"
             />
@@ -86,12 +87,15 @@
             </div>
             <div class="mt-4 md:mt-8 xl:mt-16 grid xl:grid-cols-2 gap-2 md:gap-4 lg:gap-6">
                 <div class="space-y-2 md:space-y-4 lg:space-y-6">
-                    <FormInput
-                        v-model="configs.swap_code"
-                        name="swap_code"
-                        label="swap code"
-                        :readonly="true"
-                    />
+                    <label class="form-label block">
+                        swap code :
+                        <CopyToClipboardButton
+                            :text="configs.swap_code"
+                            item-name="Code"
+                        >
+                            <span>{{ configs.swap_code }}</span>
+                        </CopyToClipboardButton>
+                    </label>
                     <FormInput
                         v-model="order.swap_with"
                         name="swap_with"
@@ -101,6 +105,7 @@
                         class="block w-full text-center btn btn-accent"
                         :spin="order.processing"
                         :disabled="!order.swap_with"
+                        @click="order.patch(configs.endpoints.swap)"
                     >
                         SWAP
                     </SpinnerButton>
@@ -338,20 +343,21 @@
 import { useForm, usePage } from '@inertiajs/inertia-vue3';
 import debounce from 'lodash/debounce';
 import { nextTick, reactive, watch, ref, onMounted } from 'vue';
-import FormInput from '@/Components/Controls/FormInput.vue';
 import HDForm from '@/Partials/Procedures/AcuteHemodialysis/HDForm.vue';
 import HFForm from '@/Partials/Procedures/AcuteHemodialysis/HFForm.vue';
 import SLEDDForm from '@/Partials/Procedures/AcuteHemodialysis/SLEDDForm.vue';
 import TPEForm from '@/Partials/Procedures/AcuteHemodialysis/TPEForm.vue';
+import DialysisSlot from '@/Partials/Procedures/AcuteHemodialysis/DialysisSlot.vue';
+import WardSlot from '@/Partials/Procedures/AcuteHemodialysis/WardSlot.vue';
+import FormInput from '@/Components/Controls/FormInput.vue';
 import FormCheckbox from '@/Components/Controls/FormCheckbox.vue';
 import FormSelect from '@/Components/Controls/FormSelect.vue';
 import FormTextarea from '@/Components/Controls/FormTextarea.vue';
 import SpinnerButton from '@/Components/Controls/SpinnerButton.vue';
 import AlertMessage from '@/Components/Helpers/AlertMessage.vue';
-import DialysisSlot from '@/Partials/Procedures/AcuteHemodialysis/DialysisSlot.vue';
-import WardSlot from '@/Partials/Procedures/AcuteHemodialysis/WardSlot.vue';
 import FormDatetime from '@/Components/Controls/FormDatetime.vue';
-import IconRotate from '../../../Components/Helpers/Icons/IconRotate.vue';
+import IconVector from '../../../Components/Helpers/IconVector.vue';
+import CopyToClipboardButton from '../../../Components/Controls/CopyToClipboardButton.vue';
 const props = defineProps({
     orderForm: { type: Object, required: true },
     formConfigs: { type: Object, required: true },
@@ -432,6 +438,7 @@ const order = useForm({
     attending_staff: null,
     date_note: configs.date_note,
     patient_type: null,
+    swap_with: null,
 });
 const dateNoteInput = ref(null);
 const reservedSlots = reactive({
@@ -459,7 +466,4 @@ watch (
         checkSlot();
     }
 );
-// const reschedule = () => {
-//     order.patch(configs.endpoints.reschedule);
-// };
 </script>

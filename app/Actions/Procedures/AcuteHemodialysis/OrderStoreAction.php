@@ -2,13 +2,13 @@
 
 namespace App\Actions\Procedures\AcuteHemodialysis;
 
-use App\Models\Note;
 use App\Models\Notes\AcuteHemodialysisOrderNote;
 use App\Models\User;
 use App\Rules\HashedKeyExistsInCaseRecords;
 use App\Rules\NameExistsInAttendingStaffs;
 use App\Rules\NameExistsInWards;
 use App\Traits\AcuteHemodialysis\OrderShareValidatable;
+use App\Traits\AcuteHemodialysis\SwapCodeGeneratable;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -16,7 +16,7 @@ use Illuminate\Validation\ValidationException;
 
 class OrderStoreAction extends AcuteHemodialysisAction
 {
-    use OrderShareValidatable;
+    use OrderShareValidatable, SwapCodeGeneratable;
 
     protected $FORM_VERSION = 1.0;
 
@@ -230,6 +230,7 @@ class OrderStoreAction extends AcuteHemodialysisAction
             'in_unit' => $ward->id === $this->IN_UNIT_WARD_ID,
             'patient_type' => $validated['patient_type'],
             'dialysis_type' => $validated['dialysis_type'],
+            'swap_code' => $this->genSwapCode(),
         ];
         $note->user_id = $user->id;
         $note->save();

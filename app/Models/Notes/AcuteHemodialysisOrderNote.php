@@ -2,6 +2,7 @@
 
 namespace App\Models\Notes;
 
+use App\Casts\AcuteHemodialysisOrderStatus;
 use App\Models\Note;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -23,5 +24,10 @@ class AcuteHemodialysisOrderNote extends Note
         static::addGlobalScope('acuteHemodialysisOrderNoteTypeScope', function (Builder $builder) {
             $builder->where('note_type_id', config('notes.acute_hd_order'));
         });
+    }
+
+    public function scopeActiveStatuses($query)
+    {
+        $query->whereIn('status', (new AcuteHemodialysisOrderStatus)->getActiveStatusCodes());
     }
 }
