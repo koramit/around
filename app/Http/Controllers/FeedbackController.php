@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Feedback;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 class FeedbackController extends Controller
@@ -40,6 +41,8 @@ class FeedbackController extends Controller
         $validated = $request->validate(['feedback' => 'required|string|max:512']);
 
         Feedback::create(['feedback' => $validated['feedback']]);
+
+        Log::notice("feedback\n".$validated['feedback']);
 
         return redirect()->route('feedback');
     }
