@@ -6,9 +6,13 @@
     >
         <span class="form-label mb-0 text-lg italic text-complement">Reservation data</span>
         <button
-            class="text-sm text-accent"
+            class="flex items-center text-sm text-accent"
             @click="showReschedule = !showReschedule"
         >
+            <IconRotate
+                class="w-3 h-3 mr-1 transition-all transform duration-200 ease-out"
+                :class="{'rotate-180 text-accent-darker': showReschedule}"
+            />
             Reschedule
         </button>
     </h2>
@@ -49,7 +53,7 @@
                     label="reschedule date"
                     name="date_note"
                     v-model="order.date_note"
-                    :options="{ enable: configs.reserve_available_dates, onDayCreate: onDayCreate, inline: true }"
+                    :options="{ enable: configs.reserve_available_dates, inline: true }"
                     ref="dateNoteInput"
                 />
                 <div>
@@ -74,6 +78,7 @@
                         class="block w-full text-center btn btn-accent"
                         :spin="order.processing"
                         :disabled="order.date_note === configs.date_note && reservedSlots.available"
+                        @click="order.patch(configs.endpoints.reschedule)"
                     >
                         RESCHEDULE
                     </SpinnerButton>
@@ -346,12 +351,14 @@ import AlertMessage from '@/Components/Helpers/AlertMessage.vue';
 import DialysisSlot from '@/Partials/Procedures/AcuteHemodialysis/DialysisSlot.vue';
 import WardSlot from '@/Partials/Procedures/AcuteHemodialysis/WardSlot.vue';
 import FormDatetime from '@/Components/Controls/FormDatetime.vue';
+import IconRotate from '../../../Components/Helpers/Icons/IconRotate.vue';
 const props = defineProps({
     orderForm: { type: Object, required: true },
     formConfigs: { type: Object, required: true },
 });
 const configs = reactive({...props.formConfigs});
 const form = useForm({...props.orderForm});
+
 watch (
     () => form,
     (val) => {
@@ -394,12 +401,13 @@ watch (
 );
 const autosave = debounce(function () {
     window.axios
-        .patch(configs.update_endpoint, form.data())
+        .patch(configs.endpoints.update, form.data())
         .catch(error => {
             console.log(error);
         });
 }, 3000);
-const submit = () => form.post(configs.submit_endpoint);
+
+const submit = () => form.patch(configs.endpoints.submit);
 watch (
     () => usePage().props.value.event.fire,
     (event) => {
@@ -416,7 +424,7 @@ watch (
     }
 );
 
-// HD orders
+// Reschedule
 const showReschedule = ref(false);
 const order = useForm({
     dialysis_type: configs.dialysis_type,
@@ -424,57 +432,34 @@ const order = useForm({
     attending_staff: null,
     date_note: configs.date_note,
     patient_type: null,
-    // case_record_hashed_key: form.record.hashed_key,
 });
 const dateNoteInput = ref(null);
-// const resetSlots = () => {
-//     reservedSlots.slots = [];
-//     reservedSlots.available = false;
-//     reservedSlots.reply = '';
-//     if (dateNoteInput.value) {
-//         dateNoteInput.value.clear();
-//     }
-// };
 const reservedSlots = reactive({
     slots: [],
     available: false,
     reply: '',
 });
-const onDayCreate = (dObj, dStr, fp, dayElem) => {
-    if (!configs.reserve_disable_dates.length) return;
-    for (let i = 0; i < configs.reserve_disable_dates.length; i++) {
-        if (dayElem.getAttribute('aria-label') == configs.reserve_disable_dates[i]) {
-            dayElem.innerHTML += '<span class="calendar-event busy"></span>';
-        }
-    }
-};
+const checkSlot = () => window.axios
+    .post(configs.endpoints.acutehemodialysis_slot_available, {
+        dialysis_type: order.dialysis_type,
+        dialysis_at: order.dialysis_at,
+        date_note: order.date_note,
+    }).then(response => {
+        reservedSlots.slots = response.data.slots;
+        reservedSlots.available = response.data.available;
+        reservedSlots.reply = response.data.reply;
+    });
+onMounted(checkSlot);
 watch (
     () => order.date_note,
     (val) => {
         if (!val) {
             return;
         }
-        window.axios
-            .post(configs.resources_api_acutehemodialysis_slot_available_endpoint, {
-                dialysis_type: order.dialysis_type,
-                dialysis_at: order.dialysis_at,
-                date_note: order.date_note,
-            }).then(response => {
-                reservedSlots.slots = response.data.slots;
-                reservedSlots.available = response.data.available;
-                reservedSlots.reply = response.data.reply;
-            });
+        checkSlot();
     }
 );
-
-onMounted(() => window.axios
-    .post(configs.resources_api_acutehemodialysis_slot_available_endpoint, {
-        dialysis_type: configs.dialysis_type,
-        dialysis_at: configs.dialysis_at,
-        date_note: configs.date_note,
-    }).then(response => {
-        reservedSlots.slots = response.data.slots;
-        reservedSlots.available = response.data.available;
-        reservedSlots.reply = response.data.reply;
-    }));
+// const reschedule = () => {
+//     order.patch(configs.endpoints.reschedule);
+// };
 </script>

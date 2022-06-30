@@ -44,9 +44,12 @@ class OrderEditAction extends AcuteHemodialysisAction
             'orderForm' => $note->form,
             'flash' => $flash,
             'formConfigs' => $this->FORM_CONFIGS + [
-                'update_endpoint' => route('procedures.acute-hemodialysis.orders.update', $note->hashed_key),
-                'submit_endpoint' => route('procedures.acute-hemodialysis.orders.submit', $note->hashed_key),
-                'resources_api_acutehemodialysis_slot_available_endpoint' => route('resources.api.acute-hemodialysis-slot-available'),
+                'endpoints' => [
+                    'update' => route('procedures.acute-hemodialysis.orders.update', $note->hashed_key),
+                    'submit' => route('procedures.acute-hemodialysis.orders.submit', $note->hashed_key),
+                    'reschedule' =>  route('procedures.acute-hemodialysis.orders.reschedule', $note->hashed_key),
+                    'acutehemodialysis_slot_available' => route('resources.api.acute-hemodialysis-slot-available'),
+                ],
                 'hn' => $note->meta['hn'],
                 'an' => $note->meta['an'] ?? null,
                 'dialysis_at' => $note->place_name,

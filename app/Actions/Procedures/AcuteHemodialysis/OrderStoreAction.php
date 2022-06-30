@@ -208,6 +208,11 @@ class OrderStoreAction extends AcuteHemodialysisAction
             throw ValidationException::withMessages(['status' => 'one active order at a time']);
         }
 
+        $ensureSlotAvailable = (new SlotAvailableAction)($validated);
+        if (! $ensureSlotAvailable['available']) {
+            throw ValidationException::withMessages(['status' => 'no slot available']);
+        }
+
         $note = new AcuteHemodialysisOrderNote();
         $note->case_record_id = $caseRecord->id;
         $note->attending_staff_id = cache()->pull($cacheKeyPrefix.'-validatedAttending')->id;

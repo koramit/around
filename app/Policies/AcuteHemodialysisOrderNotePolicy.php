@@ -36,6 +36,12 @@ class AcuteHemodialysisOrderNotePolicy
             && ! $this->updateNotAllowStatuses->contains($note->status);
     }
 
+    public function reschedule(User $user, Note $note)
+    {
+        return $user->id === $note->user_id
+            && ! $this->updateNotAllowStatuses->contains($note->status);
+    }
+
     public function destroy(User $user, Note $note)
     {
         return $user->id === $note->user_id
