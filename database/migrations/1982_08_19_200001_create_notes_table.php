@@ -18,7 +18,7 @@ return new class extends Migration {
             $table->unsignedSmallInteger('note_type_id');
             $table->foreign('note_type_id')->references('id')->on('note_types')->constrained();
             $table->unsignedSmallInteger('attending_staff_id')->nullable();
-            $table->foreign('attending_staff_id')->references('id')->on('attending_staffs')->constrained();
+            $table->foreign('attending_staff_id')->references('id')->on('attending_staff')->constrained();
             $table->nullableMorphs('place');
             $table->jsonb('meta');
             $table->json('form');
