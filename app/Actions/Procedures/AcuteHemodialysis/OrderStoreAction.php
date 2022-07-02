@@ -225,6 +225,7 @@ class OrderStoreAction extends AcuteHemodialysisAction
         $patient = $caseRecord->patient;
         $note->meta = [
             'hn' => $patient->hn,
+            'an' => $caseRecord->form['an'] ?? null,
             'name' => $patient->first_name,
             'version' => $this->FORM_VERSION,
             'in_unit' => $ward->id === $this->IN_UNIT_WARD_ID,

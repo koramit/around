@@ -22,7 +22,9 @@ trait OrderShareValidatable
         'HD 3 hrs.',
         'HD 4 hrs.',
         'HD+HF 4 hrs.',
+        'HD+TPE 6 hrs.',
         'HF 2 hrs.',
+        'TPE 2 hrs.',
         'SLEDD',
     ];
 
