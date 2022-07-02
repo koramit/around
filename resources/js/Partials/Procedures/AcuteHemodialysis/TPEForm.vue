@@ -44,7 +44,7 @@
         class="mt-2 md:mt-4"
         :toggler="true"
     />
-    <transition name="slide-fade">
+    <Transition name="slide-fade">
         <div
             v-if="form.replacement_fluid_albumin"
             class="grid gap-2 md:grid-cols-2 md:gap-4 xl:gap-8"
@@ -67,7 +67,7 @@
                 label="volume (ml)"
             />
         </div>
-    </transition>
+    </Transition>
     <FormCheckbox
         v-model="form.replacement_fluid_ffp"
         name="tpe.replacement_fluid_ffp"
@@ -75,7 +75,7 @@
         class="mt-2 md:mt-4"
         :toggler="true"
     />
-    <transition name="slide-fade">
+    <Transition name="slide-fade">
         <FormInput
             v-if="form.replacement_fluid_ffp"
             v-model="form.replacement_fluid_ffp_volume"
@@ -84,7 +84,7 @@
             :error="$page.props.errors['tpe.replacement_fluid_ffp_volume']"
             label="volume (ml)"
         />
-    </transition>
+    </Transition>
 
     <AlertMessage
         class="my-2 md:my-4 xl:my-8"
@@ -163,7 +163,7 @@
             :error="$page.props.errors['tpe.anticoagulant']"
         />
     </div>
-    <transition name="slide-fade">
+    <Transition name="slide-fade">
         <div
             class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8 2xl:grid-cols-4 my-2 md:my-4 xl:my-8"
             v-if="form.anticoagulant == 'none'"
@@ -248,7 +248,7 @@
                 :placeholder="`[${configs.validators.tinzaparin_dose.min}, ${configs.validators.tinzaparin_dose.max}] IU`"
             />
         </div>
-    </transition>
+    </Transition>
 
     <FormSelectOther
         :placeholder="selectOther.placeholder"

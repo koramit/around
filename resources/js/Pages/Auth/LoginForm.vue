@@ -2,12 +2,12 @@
     <div class="flex flex-col justify-center items-center w-full min-h-screen">
         <div class="w-40 h-40 z-10 border-primary border-4 rounded-full floating-logo">
             <img
-                :src="$page.props.baseUrl + '/image/logo.png'"
+                src="../../images/logo.png"
                 alt="around logo"
             >
         </div>
         <div class="mt-4 px-4 py-8 w-80 bg-white rounded shadow -translate-y-20">
-            <span class="block text-xl text-accent-darker mt-12 text-center">around 🤲🏻 about 🙌🏻 arrange</span>
+            <span class="block text-xl text-accent mt-12 text-center">around 🤲🏻 about 🙌🏻 arrange</span>
             <FormInput
                 class="mt-8"
                 :label="__('login')"
@@ -32,17 +32,17 @@
             >
                 {{ __('ENTER') }}
             </SpinnerButton>
-            <a href="/locale/en">ENG</a>
-            <a href="/locale/th">ไทย</a>
+            <!-- <a href="/locale/en">ENG</a>
+            <a href="/locale/th">ไทย</a> -->
         </div>
     </div>
 </template>
 
 <script setup>
 import { useForm } from '@inertiajs/inertia-vue3';
+import { nextTick, onMounted, ref } from 'vue';
 import FormInput from '@/Components/Controls/FormInput.vue';
 import SpinnerButton from '@/Components/Controls/SpinnerButton.vue';
-import { nextTick, onMounted, ref } from 'vue';
 
 const props = defineProps({
     // eslint-disable-next-line vue/require-default-prop

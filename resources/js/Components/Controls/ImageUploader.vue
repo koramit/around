@@ -1,7 +1,7 @@
 <template>
     <div class="flex items-center">
         <p>
-            <span class="form-label m-0">{{ label }}</span>
+            <span class="form-label !mb-0">{{ label }}</span>
             <IconCircleNotch
                 class="ml-1 w-4 h-4 inline-block opacity-25 animate-spin"
                 v-if="busy"

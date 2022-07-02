@@ -46,7 +46,7 @@
                 {{ error }}
             </div>
         </div>
-        <transition name="fade-appear">
+        <Transition name="fade-appear">
             <div
                 class="absolute mt-1 bg-white rounded border-2 border-yellow-200 shadow-xl w-full max-h-44 py-2 overflow-y-scroll z-20 origin-top"
                 :class="{ 'scale-100 opacity-100': open }"
@@ -61,7 +61,7 @@
                     {{ item }}
                 </button>
             </div>
-        </transition>
+        </Transition>
     </div>
 </template>
 

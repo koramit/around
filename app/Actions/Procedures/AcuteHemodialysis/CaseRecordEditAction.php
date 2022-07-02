@@ -132,8 +132,8 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
 
         $flash = [
             'page-title' => 'Acute HD '.$caseRecord->patient->full_name,
+            'hn' => $caseRecord->patient->hn,
             'main-menu-links' => [
-                ['icon' => 'arrow-circle-left', 'label' => 'Back', 'route' => route('procedures.acute-hemodialysis.index'), 'can' => true],
                 ['icon' => 'slack-hash', 'label' => 'Case Record', 'type' => '#', 'route' => '#case-record', 'can' => true],
                 ['icon' => 'slack-hash', 'label' => 'Orders', 'type' => '#', 'route' => '#orders', 'can' => true],
                 ['icon' => 'slack-hash', 'label' => 'Reservation', 'type' => '#', 'route' => '#reservation', 'can' => true],
@@ -142,6 +142,9 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
                 ['icon' => 'procedure', 'label' => 'Procedures', 'route' => route('procedures'), 'can' => true],
             ],
             'action-menu' => [],
+            'breadcrumbs' => $this->getBreadcumbs([
+                ['label' => 'Acute HD', 'route' => route('procedures.acute-hemodialysis.index')],
+            ]),
         ];
 
         return [

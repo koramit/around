@@ -1,5 +1,5 @@
 <template>
-    <teleport to="body">
+    <Teleport to="body">
         <ModalDialog
             ref="modalDialog"
             width-mode="form-cols-1"
@@ -32,7 +32,7 @@
                 </div>
             </template>
         </ModalDialog>
-    </teleport>
+    </Teleport>
 </template>
 
 <script setup>

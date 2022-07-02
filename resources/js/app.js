@@ -23,13 +23,15 @@ createInertiaApp({
         // eslint-disable-next-line no-undef
         return resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue'))
             .then(page => {
-                if (page.default.layout === undefined) {
-                    page.default.layout = AppLayout;
-                }
+                // if (page.layout === undefined) {
+                //     page.default.layout = AppLayout;
+                // }
+                // if (page.props?.layout === null) {
+                //     page.default.layout = PageLayout;
+                // }
+                page.default.layout = name.startsWith('Auth/') ? PageLayout : AppLayout;
 
-                if (page.props?.layout === null) {
-                    page.default.layout = PageLayout;
-                }
+
                 return page;
             });
     },

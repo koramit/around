@@ -3,7 +3,7 @@
         <p class="mt-1 italic text-xs text-accent">
             ๏ Not in any particular order
         </p>
-        <transition-group
+        <TransitionGroup
             name="flip-list"
             class="mt-2 lg:mt-0 grid grid-cols-4 gap-2"
             tag="div"
@@ -47,7 +47,7 @@
                     </div>
                 </template>
             </div>
-        </transition-group>
+        </TransitionGroup>
     </div>
 </template>
 

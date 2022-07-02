@@ -1,5 +1,7 @@
 <?php
 
+\Debugbar::disable();
+
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LocalizationController;

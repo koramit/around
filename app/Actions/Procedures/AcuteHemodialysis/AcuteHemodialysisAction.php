@@ -16,9 +16,15 @@ class AcuteHemodialysisAction
 
     protected $IN_UNIT_WARD_ID = 72;
 
+    protected $BREADCRUMBS;
+
     public function __construct()
     {
         $this->ACUTE_HD_ORDER_NOTE_TYPE_ID = config('notes.acute_hd_order');
+        $this->BREADCRUMBS = [
+            ['label' => 'Home', 'route' => route('home')],
+            ['label' => 'Procedures', 'route' => route('procedures')],
+        ];
     }
 
     protected function reserveAvailableDates(): array
@@ -35,5 +41,10 @@ class AcuteHemodialysisAction
         } while ($count < $this->LIMIT_ADVANCE_DAYS);
 
         return $availableDates;
+    }
+
+    protected function getBreadcumbs(array $links): array
+    {
+        return array_merge($this->BREADCRUMBS, $links);
     }
 }

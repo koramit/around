@@ -14,7 +14,7 @@
         >
             <slot />
         </button>
-        <transition :name="dropup ? 'fade-appear-above':'fade-appear'">
+        <Transition :name="dropup ? 'fade-appear-above':'fade-appear'">
             <div
                 class="origin-top-right absolute right-0 w-auto rounded-md shadow-lg z-20"
                 :class="{' -translate-y-full': dropup}"
@@ -24,7 +24,7 @@
                     <slot name="dropdown" />
                 </div>
             </div>
-        </transition>
+        </Transition>
     </div>
 </template>
 

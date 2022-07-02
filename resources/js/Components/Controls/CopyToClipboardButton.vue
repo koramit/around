@@ -6,26 +6,24 @@
         @click="copyTextToClipboard"
     >
         <slot />
-        <IconVector
-            name="copy"
-            class="ml-1 w-4 h-4"
+        <IconClipboardCopied
+            v-if="notify"
+            class="ml-1 w-5 h-5 text-complement"
         />
-        <transition name="slide-fade">
-            <span
-                class="ml-1 font-extralight italic text-accent-darker"
-                v-if="notify"
-            >{{ itemName }} Copied!</span>
-        </transition>
+        <IconClipboard
+            v-else
+            class="ml-1 w-5 h-5"
+        />
     </button>
 </template>
 
 <script setup>
 import ClipboardJS from 'clipboard';
 import {  ref } from 'vue';
-import IconVector from '../Helpers/IconVector.vue';
+import IconClipboard from '../Helpers/Icons/IconClipboard.vue';
+import IconClipboardCopied from '../Helpers/Icons/IconClipboardCopied.vue';
 defineProps({
     text: { type: [String, Number], default: 'around about arrange' },
-    itemName: { type: [String], default: '' },
 });
 const id = 'btn-' + (+ new Date()) + Math.floor(Math.random() * 10000);
 const notify = ref(false);

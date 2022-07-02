@@ -1,14 +1,14 @@
 <template>
     <div class="flex items-center w-full md:w-auto">
         <input
-            class="form-input md:w-auto border-r-0 rounded-r-none"
+            class="form-input md:w-auto !border-r-0 !rounded-r-none"
             type="text"
             name="search"
             @input="$emit('searchChanged', $event.target.value)"
             placeholder="search..."
             autocomplete="off"
         >
-        <div class="flex justify-end form-input md:w-auto border-l-0 rounded-l-none">
+        <div class="flex justify-end form-input md:w-auto !border-l-0 !rounded-l-none">
             <DropdownList>
                 <template #default>
                     <div class="flex items-center cursor-pointer select-none group">

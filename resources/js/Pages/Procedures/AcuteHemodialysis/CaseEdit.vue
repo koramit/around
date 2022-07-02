@@ -74,7 +74,7 @@
                 v-model="form.renal_outcome"
                 :options="['Recovery', 'ESRD', 'KT']"
             />
-            <transition name="slide-fade">
+            <Transition name="slide-fade">
                 <FormInput
                     v-if="form.renal_outcome === 'Recovery'"
                     label="last creatinine before discharge"
@@ -82,7 +82,7 @@
                     name="cr_before_discharge"
                     v-model="form.cr_before_discharge"
                 />
-            </transition>
+            </Transition>
         </div>
         <div>
             <FormRadio
@@ -91,7 +91,7 @@
                 v-model="form.patient_outcome"
                 :options="['Alive', 'Dead']"
             />
-            <transition name="slide-fade">
+            <Transition name="slide-fade">
                 <FormInput
                     v-if="form.patient_outcome === 'Dead'"
                     label="cause of dead"
@@ -99,7 +99,7 @@
                     name="cause_of_dead"
                     v-model="form.cause_of_dead"
                 />
-            </transition>
+            </Transition>
         </div>
     </div>
     <hr class="border border-dashed my-2 md:my-4 xl:my-8">
@@ -111,7 +111,7 @@
         v-model="form.previous_crrt"
         :toggler="true"
     />
-    <transition name="slide-fade">
+    <Transition name="slide-fade">
         <div
             class="grid gap-2 md:grid md:gap-4 md:grid-cols-2 xl:gap-8"
             v-if="form.previous_crrt"
@@ -127,7 +127,7 @@
                 v-model="form.date_end_crrt"
             />
         </div>
-    </transition>
+    </Transition>
     <hr class="border border-dashed my-2 md:my-4 xl:my-8">
 
     <!-- renal diagnosis -->
@@ -383,7 +383,7 @@
                 />
             </div>
         </div>
-        <transition name="slide-fade">
+        <Transition name="slide-fade">
             <div v-if="order.dialysis_at && order.dialysis_type">
                 <div class="grid xl:grid-cols-2 gap-2 md:gap-4 lg:gap-6">
                     <FormDatetime
@@ -394,7 +394,7 @@
                         ref="dateNoteInput"
                     />
                     <div>
-                        <transition
+                        <Transition
                             name="slide-fade"
                             v-if="order.date_note && order.dialysis_at"
                         >
@@ -406,7 +406,7 @@
                                 v-else
                                 :slots="reservedSlots.slots"
                             />
-                        </transition>
+                        </Transition>
                         <AlertMessage
                             v-if="reservedSlots.reply && !reservedSlots.available"
                             class="mt-4"
@@ -427,7 +427,7 @@
                     </SpinnerButton>
                 </div>
             </div>
-        </transition>
+        </Transition>
     </template>
     <AlertMessage
         v-else
@@ -444,6 +444,10 @@
 </template>
 
 <script setup>
+import { useForm } from '@inertiajs/inertia-vue3';
+import { computed, defineAsyncComponent, reactive, ref, watch } from 'vue';
+import { useSelectOther } from '@/functions/useSelectOther.js';
+import debounce from 'lodash/debounce';
 import FormInput from '@/Components/Controls/FormInput.vue';
 import FormAutocomplete from '@/Components/Controls/FormAutocomplete.vue';
 import FormRadio from '@/Components/Controls/FormRadio.vue';
@@ -454,13 +458,9 @@ import FormSelectOther from '@/Components/Controls/FormSelectOther.vue';
 import FormSelect from '@/Components/Controls/FormSelect.vue';
 import SpinnerButton from '@/Components/Controls/SpinnerButton.vue';
 import OrderIndex from '@/Partials/Procedures/AcuteHemodialysis/OrderIndex.vue';
-import DialysisSlot from '@/Partials/Procedures/AcuteHemodialysis/DialysisSlot.vue';
-import WardSlot from '@/Partials/Procedures/AcuteHemodialysis/WardSlot.vue';
-import { useForm } from '@inertiajs/inertia-vue3';
-import { computed, reactive, ref, watch } from 'vue';
-import debounce from 'lodash/debounce';
-import AlertMessage from '@/Components/Helpers/AlertMessage.vue';
-import { useSelectOther } from '@/functions/useSelectOther.js';
+const DialysisSlot = defineAsyncComponent(() => import('@/Partials/Procedures/AcuteHemodialysis/DialysisSlot.vue'));
+const WardSlot = defineAsyncComponent(() => import('@/Partials/Procedures/AcuteHemodialysis/WardSlot.vue'));
+const AlertMessage = defineAsyncComponent(() => import('@/Components/Helpers/AlertMessage.vue'));
 
 const props = defineProps({
     caseRecordForm: { type: Object, required: true },

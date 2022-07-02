@@ -1,16 +1,16 @@
+
 <template>
     <!-- reservation -->
     <h2
         class="flex justify-between items-center"
         id="reservation"
     >
-        <span class="form-label mb-0 text-lg italic text-complement">Reservation data</span>
+        <span class="form-label !mb-0 text-lg italic text-complement">Reservation data</span>
         <button
             class="flex items-center text-sm text-accent"
             @click="showReschedule = !showReschedule"
         >
-            <IconVector
-                name="rotate"
+            <IconRotate
                 class="w-3 h-3 mr-1 transition-all transform duration-200 ease-out"
                 :class="{'rotate-180 text-accent-darker': showReschedule}"
             />
@@ -47,7 +47,7 @@
     </div>
 
     <!-- reschedule -->
-    <transition name="slide-fade">
+    <Transition name="slide-fade">
         <div v-if="showReschedule">
             <div class="mt-4 md:mt-8 xl:mt-16 grid xl:grid-cols-2 gap-2 md:gap-4 lg:gap-6">
                 <FormDatetime
@@ -89,10 +89,7 @@
                 <div class="space-y-2 md:space-y-4 lg:space-y-6">
                     <label class="form-label block">
                         swap code :
-                        <CopyToClipboardButton
-                            :text="configs.swap_code"
-                            item-name="Code"
-                        >
+                        <CopyToClipboardButton :text="configs.swap_code">
                             <span>{{ configs.swap_code }}</span>
                         </CopyToClipboardButton>
                     </label>
@@ -104,15 +101,15 @@
                     <SpinnerButton
                         class="block w-full text-center btn btn-accent"
                         :spin="order.processing"
-                        :disabled="!order.swap_with"
+                        :disabled="!order.swap_with || order.swap_with == configs.swap_code"
                         @click="order.patch(configs.endpoints.swap)"
                     >
-                        SWAP
+                        {{ order.swap_with !== configs.swap_code ? 'SWAP' : '🙄🙄🙄' }}
                     </SpinnerButton>
                 </div>
             </div>
         </div>
-    </transition>
+    </Transition>
 
     <HDForm
         v-if="orderForm.hd !== undefined"
@@ -158,7 +155,7 @@
         :toggler="true"
         :error="form.errors['hemodynamic.stable']"
     />
-    <transition name="slide-fade">
+    <Transition name="slide-fade">
         <div
             v-if="!form.hemodynamic.stable"
             class="mt-2 md:mt-4 xl:mt-8 space-y-2 md:space-y-4 lg:space-y-0 lg:grid grid-flow-col grid-cols-2 grid-rows-3 gap-4"
@@ -171,7 +168,7 @@
                 :label="symptom.label"
             />
         </div>
-    </transition>
+    </Transition>
 
     <!-- respiration -->
     <hr class="border border-dashed my-2 md:my-4 xl:my-8">
@@ -183,7 +180,7 @@
         :toggler="true"
         :error="form.errors['respiration.stable']"
     />
-    <transition name="slide-fade">
+    <Transition name="slide-fade">
         <div
             v-if="!form.respiration.stable"
             class="mt-2 md:mt-4 xl:mt-8 space-y-2 md:space-y-4 xl:space-y-4"
@@ -196,7 +193,7 @@
                 :label="symptom.label"
             />
         </div>
-    </transition>
+    </Transition>
 
     <!-- o2 support -->
     <hr class="border border-dashed my-2 md:my-4 xl:my-8">
@@ -217,7 +214,7 @@
         :toggler="true"
         :error="form.errors['neurological.stable']"
     />
-    <transition name="slide-fade">
+    <Transition name="slide-fade">
         <div
             v-if="!form.neurological.stable"
             class="mt-2 md:mt-4 xl:mt-8 space-y-2 md:space-y-4 lg:space-y-0 lg:grid grid-flow-col grid-cols-2 grid-rows-1 gap-4"
@@ -230,7 +227,7 @@
                 :label="symptom.label"
             />
         </div>
-    </transition>
+    </Transition>
 
     <!-- Life threatening condition -->
     <hr class="border border-dashed my-2 md:my-4 xl:my-8">
@@ -242,7 +239,7 @@
         :toggler="true"
         :error="form.errors['life_threatening_condition.stable']"
     />
-    <transition name="slide-fade">
+    <Transition name="slide-fade">
         <div
             v-if="!form.life_threatening_condition.stable"
             class="mt-2 md:mt-4 xl:mt-8 space-y-2 md:space-y-4 lg:space-y-0 lg:grid grid-flow-col grid-cols-2 grid-rows-3 gap-4"
@@ -255,7 +252,7 @@
                 :label="symptom.label"
             />
         </div>
-    </transition>
+    </Transition>
 
     <!-- monitoring -->
     <h2
@@ -272,7 +269,7 @@
         :toggler="true"
         :error="form.errors['monitor.standard']"
     />
-    <transition name="slide-fade">
+    <Transition name="slide-fade">
         <div v-if="!form.monitor.standard">
             <div class="mt-2 md:mt-4 xl:mt-8 space-y-2 md:space-y-4 lg:space-y-0 lg:grid grid-flow-col grid-cols-2 grid-rows-2 gap-4">
                 <FormCheckbox
@@ -291,7 +288,7 @@
                 v-model="form.monitor.other"
             />
         </div>
-    </transition>
+    </Transition>
 
     <!-- special order -->
     <h2
@@ -342,13 +339,7 @@
 <script setup>
 import { useForm, usePage } from '@inertiajs/inertia-vue3';
 import debounce from 'lodash/debounce';
-import { nextTick, reactive, watch, ref, onMounted } from 'vue';
-import HDForm from '@/Partials/Procedures/AcuteHemodialysis/HDForm.vue';
-import HFForm from '@/Partials/Procedures/AcuteHemodialysis/HFForm.vue';
-import SLEDDForm from '@/Partials/Procedures/AcuteHemodialysis/SLEDDForm.vue';
-import TPEForm from '@/Partials/Procedures/AcuteHemodialysis/TPEForm.vue';
-import DialysisSlot from '@/Partials/Procedures/AcuteHemodialysis/DialysisSlot.vue';
-import WardSlot from '@/Partials/Procedures/AcuteHemodialysis/WardSlot.vue';
+import { nextTick, reactive, watch, ref, onMounted, defineAsyncComponent } from 'vue';
 import FormInput from '@/Components/Controls/FormInput.vue';
 import FormCheckbox from '@/Components/Controls/FormCheckbox.vue';
 import FormSelect from '@/Components/Controls/FormSelect.vue';
@@ -356,8 +347,16 @@ import FormTextarea from '@/Components/Controls/FormTextarea.vue';
 import SpinnerButton from '@/Components/Controls/SpinnerButton.vue';
 import AlertMessage from '@/Components/Helpers/AlertMessage.vue';
 import FormDatetime from '@/Components/Controls/FormDatetime.vue';
-import IconVector from '../../../Components/Helpers/IconVector.vue';
 import CopyToClipboardButton from '../../../Components/Controls/CopyToClipboardButton.vue';
+import IconRotate from '../../../Components/Helpers/Icons/IconRotate.vue';
+const HDForm = defineAsyncComponent(() => import('@/Partials/Procedures/AcuteHemodialysis/HDForm.vue'));
+const HFForm = defineAsyncComponent(() => import('@/Partials/Procedures/AcuteHemodialysis/HFForm.vue'));
+const SLEDDForm = defineAsyncComponent(() => import('@/Partials/Procedures/AcuteHemodialysis/SLEDDForm.vue'));
+const TPEForm = defineAsyncComponent(() => import('@/Partials/Procedures/AcuteHemodialysis/TPEForm.vue'));
+const DialysisSlot = defineAsyncComponent(() => import('@/Partials/Procedures/AcuteHemodialysis/DialysisSlot.vue'));
+const WardSlot = defineAsyncComponent(() => import('@/Partials/Procedures/AcuteHemodialysis/WardSlot.vue'));
+
+
 const props = defineProps({
     orderForm: { type: Object, required: true },
     formConfigs: { type: Object, required: true },

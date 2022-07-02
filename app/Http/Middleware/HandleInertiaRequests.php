@@ -37,14 +37,15 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request): array
     {
         return array_merge(parent::share($request), [
-            'baseUrl' => url('/'),
             'routeHome' => fn () => route('home'),
             'routePreferences' => fn () => route('preferences'),
             'routeLogout' => fn () => route('logout'),
             'flash' => [
                 'title' => fn () => $request->session()->pull('page-title', 'MISSING'),
+                'hn' => fn () => $request->session()->pull('hn', null),
                 'mainMenuLinks' => fn () => $request->session()->pull('main-menu-links', []),
                 'actionMenu' => fn () => $request->session()->pull('action-menu', []),
+                'breadcrumbs' => fn () => $request->session()->pull('breadcrumbs', []),
             ],
             'user' => fn () => $request->user()
                 ? [

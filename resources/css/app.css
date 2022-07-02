@@ -1,3 +1,4 @@
+@import "anime";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -28,9 +29,9 @@
 
     /* form */
     .form-label {
-        @apply block uppercase tracking-wide text-complement-darker text-xs lg:text-base font-semibold mb-2 truncate;
+        @apply block uppercase tracking-wide text-complement text-xs lg:text-base font-semibold mb-2 truncate;
     }
-    
+
     .form-input {
         @apply text-gray-600 appearance-none w-full py-1 px-2 lg:py-2 lg:px-3 bg-white shadow-sm rounded border-2 border-gray-200 transition-colors duration-200 ease-in-out focus:outline-none focus:bg-yellow-50 focus:border-yellow-200 disabled:bg-gray-200 disabled:border-white disabled:cursor-not-allowed;
     }
@@ -72,21 +73,5 @@
     }
 
     /* anime */
-    .slide-fade-enter-active {
-        transition: all .3s ease;
-    }
     
-    .slide-fade-leave-active {
-        transition: all .3s cubic-bezier(1.0, -1.5, 0.8, 1.0);
-    }
-    
-    .slide-fade-enter-from,
-    .slide-fade-leave-to {
-        transform: translateY(-20px);
-        opacity: 0;
-    }
-    
-    .flip-list-move {
-        transition: transform 0.3s ease;
-    }
 }

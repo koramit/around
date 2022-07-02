@@ -26,8 +26,12 @@
                     />
                 </button>
                 <!-- title display on mobile -->
-                <div class="text-primary text-sm md:hidden">
-                    {{ $page.props.flash.title }}
+                <div class="text-primary flex text-sm md:hidden">
+                    <span>{{ $page.props.flash.title }}</span>
+                    <CopyToClipboardButton
+                        v-if="$page.props.flash.hn"
+                        :text="$page.props.flash.hn"
+                    />
                 </div>
                 <!-- hamberger menu on mobile -->
                 <button
@@ -48,7 +52,13 @@
             >
                 <!-- title display on desktop -->
                 <div class="mr-4 w-full flex justify-between items-center">
-                    <div>{{ $page.props.flash.title }}</div>
+                    <div class="flex">
+                        <span>{{ $page.props.flash.title }}</span>
+                        <CopyToClipboardButton
+                            v-if="$page.props.flash.hn"
+                            :text="$page.props.flash.hn"
+                        />
+                    </div>
                     <div class="text-complement">
                         <button
                             class="w-6 h-6 rounded-full transition-colors duration-200 ease-in hover:bg-white hover:text-accent-darker mr-2"
@@ -147,11 +157,35 @@
             <div
                 class="w-full p-4 md:overflow-y-auto sm:p-8"
                 :class="{
-                    'md:py-12 md:px-12 lg:px-24': !zenMode,
-                    'md:p-4 lg:px-8 xl:px-12': zenMode
+                    'md:pb-12 md:pt-0 md:px-12 lg:px-24': !zenMode,
+                    'md:pt-0 md:pb-4 md:px-4 lg:px-8 xl:px-12': zenMode,
+                    'md:pt-12': !$page.props.flash.breadcrumbs.length,
                 }"
                 scroll-region
             >
+                <!-- breadcrumbs -->
+                <nav
+                    class="flex mb-4 md:mb-0 py-2 md:pb-8 md:pt-12 bg-primary z-10 sticky top-10 md:top-0"
+                    v-if="$page.props.flash.breadcrumbs.length"
+                >
+                    <li
+                        class="list-none text-accent text-sm md:text-base italic"
+                        v-for="(link, key) in $page.props.flash.breadcrumbs"
+                        :key="key"
+                    >
+                        <Link
+                            :href="link.route"
+                            class="whitespace-nowrap"
+                        >
+                            {{ link.label }}
+                        </Link>
+                        <span
+                            v-if="key !== ($page.props.flash.breadcrumbs.length - 1)"
+                            class="px-4 text-primary-darker font-semibold"
+                        >/</span>
+                    </li>
+                </nav>
+
                 <!-- form errors -->
                 <div v-if="Object.keys($page.props.errors).length">
                     <AlertMessage
@@ -191,6 +225,7 @@ import IconHamberger from '@/Components/Helpers/Icons/IconHamberger.vue';
 import IconChevronCircleDown from '@/Components/Helpers/Icons/IconChevronCircleDown.vue';
 import { useInPageLinkHelpers } from '../../functions/useInPageLinkHelpers.js';
 import AlertMessage from '../Helpers/AlertMessage.vue';
+import CopyToClipboardButton from '../Controls/CopyToClipboardButton.vue';
 
 pageRoutines();
 const mobileMenuVisible = ref(false);

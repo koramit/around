@@ -132,7 +132,7 @@
                 v-model="form.sodium_profile"
                 :toggler="true"
             />
-            <transition name="slide-fade">
+            <Transition name="slide-fade">
                 <div
                     v-if="form.sodium_profile"
                     class="grid gap-2 md:gap-4 xl:gap-8 mt-2 md:mt-4 xl:mt-8"
@@ -154,7 +154,7 @@
                         :error="errors.sodium_profile_end ?? $page.props.errors['hd.sodium_profile_end']"
                     />
                 </div>
-            </transition>
+            </Transition>
         </div>
         <FormSelect
             v-model="form.bicarbonate"
@@ -175,7 +175,7 @@
             :error="$page.props.errors['hd.anticoagulant']"
         />
     </div>
-    <transition name="slide-fade">
+    <Transition name="slide-fade">
         <div
             class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8 2xl:grid-cols-4 my-2 md:my-4 xl:my-8"
             v-if="form.anticoagulant == 'none'"
@@ -260,7 +260,7 @@
                 :placeholder="`[${configs.validators.tinzaparin_dose.min}, ${configs.validators.tinzaparin_dose.max}] IU`"
             />
         </div>
-    </transition>
+    </Transition>
     <hr class="border border-dashed my-2 md:my-4 xl:my-8">
     <div class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8 2xl:grid-cols-4">
         <div>

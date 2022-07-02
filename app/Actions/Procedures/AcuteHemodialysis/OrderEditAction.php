@@ -26,8 +26,8 @@ class OrderEditAction extends AcuteHemodialysisAction
 
         $flash = [
             'page-title' => 'Acute HD Order '.$note->patient->profile['first_name'].' @ '.$note->date_note->format('d M Y'),
+            'hn' => $note->patient->hn,
             'main-menu-links' => [
-                ['icon' => 'arrow-circle-left', 'label' => 'Back', 'route' => route('procedures.acute-hemodialysis.edit', app(Hashids::class)->encode($note->case_record_id)), 'can' => true],
                 ['icon' => 'slack-hash', 'label' => 'Prescription', 'type' => '#', 'route' => '#prescription', 'can' => true],
                 ['icon' => 'slack-hash', 'label' => 'Predialysis', 'type' => '#', 'route' => '#predialysis-evaluation', 'can' => true],
                 ['icon' => 'slack-hash', 'label' => 'Monitoring', 'type' => '#', 'route' => '#monitoring', 'can' => true],
@@ -38,6 +38,10 @@ class OrderEditAction extends AcuteHemodialysisAction
             'action-menu' => [
                 ['icon' => 'paper-plain', 'action' => 'submit', 'label' => 'Submit'],
             ],
+            'breadcrumbs' => $this->getBreadcumbs([
+                ['label' => 'Acute HD', 'route' => route('procedures.acute-hemodialysis.index')],
+                ['label' => 'Case Record', 'route' => route('procedures.acute-hemodialysis.edit', app(Hashids::class)->encode($note->case_record_id))],
+            ]),
         ];
 
         return [

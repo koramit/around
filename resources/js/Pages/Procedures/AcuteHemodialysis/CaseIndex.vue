@@ -144,15 +144,15 @@
 </template>
 
 <script setup>
-import { reactive, ref, watch } from 'vue';
-import SearchIndex from '@/Components/Controls/SearchIndex.vue';
+import { defineAsyncComponent, reactive, ref, watch } from 'vue';
 import { Link, useForm } from '@inertiajs/inertia-vue3';
-import IconDoubleRight from '@/Components/Helpers/Icons/IconDoubleRight.vue';
-import IconUserMd from '@/Components/Helpers/Icons/IconUserMd.vue';
-import SearchAdmission from '@/Components/Forms/SearchAdmission.vue';
 import { Inertia } from '@inertiajs/inertia';
 import pickBy from 'lodash/pickBy';
 import debounce from 'lodash/debounce';
+import SearchIndex from '@/Components/Controls/SearchIndex.vue';
+import IconDoubleRight from '@/Components/Helpers/Icons/IconDoubleRight.vue';
+import IconUserMd from '@/Components/Helpers/Icons/IconUserMd.vue';
+const SearchAdmission = defineAsyncComponent(() => import('@/Components/Forms/SearchAdmission.vue'));
 const props = defineProps({
     cases: { type: Object, required: true },
     filters: { type: Object, required: true },
@@ -177,7 +177,7 @@ watch(
             .join('&');
         query = '?' + (query ? query : 'remember=forget');
         Inertia.visit(props.routes.index + query, { preserveState: true });
-    }, 400),
+    }, 500),
     {deep: true}
 );
 
