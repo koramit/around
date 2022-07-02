@@ -157,15 +157,16 @@
             <div
                 class="w-full p-4 md:overflow-y-auto sm:p-8"
                 :class="{
-                    'md:pb-12 md:pt-0 md:px-12 lg:px-24': !zenMode,
-                    'md:pt-0 md:pb-4 md:px-4 lg:px-8 xl:px-12': zenMode,
-                    'md:pt-12': !$page.props.flash.breadcrumbs.length,
+                    'md:p-12 lg:px-24': !zenMode && !$page.props.flash.breadcrumbs.length,
+                    'md:p-12 md:pt-0 md:mt-12 lg:px-24': !zenMode && $page.props.flash.breadcrumbs.length,
+                    'md:p-4 lg:px-8 xl:px-12': zenMode && !$page.props.flash.breadcrumbs.length,
+                    'md:p-4 md:pt-0 md:mt-4 lg:px-8 xl:px-12': zenMode && $page.props.flash.breadcrumbs.length,
                 }"
                 scroll-region
             >
                 <!-- breadcrumbs -->
                 <nav
-                    class="flex mb-4 md:mb-0 py-2 md:pb-8 md:pt-12 bg-primary z-10 sticky top-10 md:top-0"
+                    class="flex mb-4 md:mb-0 py-2 md:pb-8 bg-primary z-10 sticky top-10 md:top-0"
                     v-if="$page.props.flash.breadcrumbs.length"
                 >
                     <li

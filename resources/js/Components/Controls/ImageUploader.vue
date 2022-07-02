@@ -1,70 +1,72 @@
 <template>
-    <div class="flex items-center">
-        <p>
-            <span class="form-label !mb-0">{{ label }}</span>
-            <IconCircleNotch
-                class="ml-1 w-4 h-4 inline-block opacity-25 animate-spin"
-                v-if="busy"
-            />
-        </p>
-        <button
-            v-if="!readonly"
-            class="ml-4"
-            @click="useCamera.click()"
+    <div>
+        <div class="flex items-center">
+            <p>
+                <span class="form-label !mb-0">{{ label }}</span>
+                <IconCircleNotch
+                    class="ml-1 w-4 h-4 inline-block opacity-25 animate-spin"
+                    v-if="busy"
+                />
+            </p>
+            <button
+                v-if="!readonly"
+                class="ml-4"
+                @click="useCamera.click()"
+            >
+                <IconCamera class="w-4 h-4 text-thick-theme-light" />
+            </button>
+            <button
+                v-if="!readonly"
+                class="ml-4"
+                @click="useGallery.click()"
+            >
+                <IconImage class="w-4 h-4 text-thick-theme-light" />
+            </button>
+            <button
+                class="ml-4"
+                v-if="modelValue"
+                @click="show = !show"
+            >
+                <IconEyesSlash
+                    v-if="show"
+                    class="w-4 h-4 text-dark-theme-light"
+                />
+                <IconEyes
+                    v-else
+                    class="w-4 h-4 text-dark-theme-light"
+                />
+            </button>
+        </div>
+        <div
+            v-if="error"
+            class="text-red-700 text-sm"
         >
-            <IconCamera class="w-4 h-4 text-thick-theme-light" />
-        </button>
-        <button
-            v-if="!readonly"
-            class="ml-4"
-            @click="useGallery.click()"
+            {{ error }}
+        </div>
+        <!-- route('uploads.show', {path: name, filename: filename }) -->
+        <img
+            v-if="modelValue !== undefined && show"
+            :src="`${serviceEndpoints.show}/${pathname}/${filename}`"
+            @loadstart="busy = true"
+            @load="$nextTick(() => busy = false)"
+            alt=""
         >
-            <IconImage class="w-4 h-4 text-thick-theme-light" />
-        </button>
-        <button
-            class="ml-4"
-            v-if="modelValue"
-            @click="show = !show"
+        <input
+            class="hidden"
+            type="file"
+            ref="useCamera"
+            @input="fileInput"
+            capture="environment"
+            accept="image/*"
         >
-            <IconEyesSlash
-                v-if="show"
-                class="w-4 h-4 text-dark-theme-light"
-            />
-            <IconEyes
-                v-else
-                class="w-4 h-4 text-dark-theme-light"
-            />
-        </button>
+        <input
+            class="hidden"
+            type="file"
+            ref="useGallery"
+            @input="fileInput"
+            accept="image/*"
+        >
     </div>
-    <div
-        v-if="error"
-        class="text-red-700 text-sm"
-    >
-        {{ error }}
-    </div>
-    <!-- route('uploads.show', {path: name, filename: filename }) -->
-    <img
-        v-if="modelValue !== undefined && show"
-        :src="`${serviceEndpoints.show}/${pathname}/${filename}`"
-        @loadstart="busy = true"
-        @load="$nextTick(() => busy = false)"
-        alt=""
-    >
-    <input
-        class="hidden"
-        type="file"
-        ref="useCamera"
-        @input="fileInput"
-        capture="environment"
-        accept="image/*"
-    >
-    <input
-        class="hidden"
-        type="file"
-        ref="useGallery"
-        @input="fileInput"
-        accept="image/*"
-    >
 </template>
 
 <script setup>
