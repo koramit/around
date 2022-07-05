@@ -10,10 +10,10 @@ class OrderSwapController extends Controller
 {
     public function __invoke($hashedKey, Request $request)
     {
-        $note = (new OrderSwapAction)(data: $request->all(), hashedKey: $hashedKey, user: $request->user());
+        $reply = (new OrderSwapAction)(data: $request->all(), hashedKey: $hashedKey, user: $request->user());
 
-        // if want json return $data
+        // if want json return $reply
 
-        return redirect()->route('procedures.acute-hemodialysis.edit', $note->caseRecord->hashed_key);
+        return back()->with('message', $reply);
     }
 }

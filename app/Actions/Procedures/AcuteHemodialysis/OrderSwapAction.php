@@ -12,7 +12,7 @@ class OrderSwapAction extends AcuteHemodialysisAction
 {
     use SwapCodeGeneratable;
 
-    public function __invoke(array $data, string $hashedKey, User $user): AcuteHemodialysisOrderNote
+    public function __invoke(array $data, string $hashedKey, User $user): array
     {
         if (config('auth.gurads.web.provider') === 'avatar') {
             return []; // call api
@@ -26,18 +26,36 @@ class OrderSwapAction extends AcuteHemodialysisAction
 
         $validated = Validator::make($data, ['swap_with' => 'required|digits:4'])->validate();
 
+        $reply = [];
+
         if (! $noteSwap = AcuteHemodialysisOrderNote::query()->activeStatuses()->where('meta->swap_code', $validated['swap_with'])->first()) {
-            throw ValidationException::withMessages(['status' => 'Swap code not match']);
+            return [
+                'type' => 'danger',
+                'title' => 'Cannot swap slot',
+                'message' => 'Swap code not match',
+            ];
+            // throw ValidationException::withMessages(['status' => 'Swap code not match']);
         }
 
         if ($note->meta['in_unit'] !== $noteSwap->meta['in_unit']) {
-            throw ValidationException::withMessages(['status' => 'Acute dialysis slot type not match']);
+            return [
+                'type' => 'danger',
+                'title' => 'Cannot swap slot',
+                'message' => 'Cannot swap HD unit slot with ward slot',
+            ];
+            // throw ValidationException::withMessages(['status' => 'Acute dialysis slot type not match']);
         }
+
+        $reply = [
+            'type' => 'info',
+            'title' => 'Swap successful',
+            'message' => 'Swap '.$note->meta['name'].' on '.$note->date_note->format('M j').' WITH '.$noteSwap->meta['name'].' on '.$noteSwap->date_note->format('M j'),
+        ];
 
         $dateSwap = $note->date_note;
         $note->update(['date_note' => $noteSwap->date_note, 'meta->swap_code' => $this->genSwapCode()]);
         $noteSwap->update(['date_note' => $dateSwap, 'meta->swap_code' => $this->genSwapCode()]);
 
-        return $note;
+        return $reply;
     }
 }

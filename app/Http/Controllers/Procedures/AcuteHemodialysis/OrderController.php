@@ -17,11 +17,15 @@ class OrderController extends Controller
 
     public function store(Request $request)
     {
-        $note = (new OrderStoreAction)(data: $request->all(), user: $request->user());
+        $data = (new OrderStoreAction)(data: $request->all(), user: $request->user());
 
-        // if want json return $note
+        // if want json return $data
 
-        return redirect()->route('procedures.acute-hemodialysis.orders.edit', $note->hashed_key);
+        if (isset($data['message'])) {
+            session()->flash(key: 'message', value: $data['message']);
+        }
+
+        return redirect()->route('procedures.acute-hemodialysis.orders.edit', $data['note']->hashed_key);
     }
 
     public function edit(string $hashedKey, Request $request)

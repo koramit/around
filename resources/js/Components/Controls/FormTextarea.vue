@@ -16,7 +16,7 @@
             :pattern="pattern"
             :readonly="readonly"
             :value="modelValue"
-            class="form-input scroll-mt-12 md:scroll-mt-0"
+            class="form-input form-scroll-mt"
             :class="{ 'border-red-400 text-red-400': error }"
         />
         <div

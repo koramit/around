@@ -39,6 +39,10 @@
     .form-error-block {
         @apply text-xs text-red-700 mt-2
     }
+
+    .form-scroll-mt {
+        @apply scroll-mt-20 md:scroll-mt-16
+    }
     
     input[type="checkbox"] {
         box-sizing: border-box;

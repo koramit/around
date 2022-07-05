@@ -5,6 +5,7 @@
             type="text"
             name="search"
             @input="$emit('searchChanged', $event.target.value)"
+            :value="form.search"
             placeholder="search..."
             autocomplete="off"
         >

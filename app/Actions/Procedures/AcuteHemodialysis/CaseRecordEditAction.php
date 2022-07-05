@@ -113,6 +113,7 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
             'in_unit_dialysis_types' => $this->IN_UNIT,
             'out_unit_dialysis_types' => $this->OUT_UNIT,
             'patient_types' => $this->PATIENT_TYPES,
+            'today' => $this->TODAY,
             'reserve_available_dates' => $this->reserveAvailableDates(),
             'reserve_disable_dates' => [], // 'August 13, 2021',
             'image_upload_endpoints' => [

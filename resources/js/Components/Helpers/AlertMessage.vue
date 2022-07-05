@@ -29,6 +29,14 @@
                 </p>
             </div>
         </div>
+        <div
+            class="flex justify-end"
+            v-if="$page.props.flash.message?.detail ?? null"
+        >
+            <div class="w-5/6 h-48 bg-primary">
+                extra
+            </div>
+        </div>
     </div>
 </template>
 

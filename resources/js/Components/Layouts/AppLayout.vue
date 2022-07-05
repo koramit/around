@@ -208,7 +208,13 @@
                     </div>
                 </div>
 
-                <!-- <flash-messages /> -->
+                <AlertMessage
+                    v-if="$page.props.flash.message"
+                    :type="$page.props.flash.message.type"
+                    :title="$page.props.flash.message.title"
+                    :message="$page.props.flash.message.message"
+                    class="mb-4 md:mb-8"
+                />
                 <slot />
             </div>
         </main>

@@ -22,12 +22,9 @@ class CaseRecordController extends Controller
         // if want json return $data
 
         $this->setFlash($data['flash']);
+        unset($data['flash']);
 
-        return Inertia::render('Procedures/AcuteHemodialysis/CaseIndex', [
-            'cases' => $data['cases'],
-            'filters' => $data['filters'],
-            'routes' => $data['routes'],
-        ]);
+        return Inertia::render('Procedures/AcuteHemodialysis/CaseIndex', [...$data]);
     }
 
     public function store(Request $request)

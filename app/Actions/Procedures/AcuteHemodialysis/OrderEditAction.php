@@ -52,6 +52,7 @@ class OrderEditAction extends AcuteHemodialysisAction
                     'update' => route('procedures.acute-hemodialysis.orders.update', $note->hashed_key),
                     'submit' => route('procedures.acute-hemodialysis.orders.submit', $note->hashed_key),
                     'reschedule' =>  route('procedures.acute-hemodialysis.orders.reschedule', $note->hashed_key),
+                    'reschedule_to_today' =>  route('procedures.acute-hemodialysis.orders.reschedule-to-today', $note->hashed_key),
                     'swap' =>  route('procedures.acute-hemodialysis.orders.swap', $note->hashed_key),
                     'acutehemodialysis_slot_available' => route('procedures.acute-hemodialysis.slot-available'),
                 ],
@@ -59,12 +60,17 @@ class OrderEditAction extends AcuteHemodialysisAction
                 'an' => $note->meta['an'] ?? null,
                 'dialysis_at' => $note->place_name,
                 'dialysis_type' => $note->meta['dialysis_type'],
-                'reserve_available_dates' => $this->reserveAvailableDates(),
+                'today' => $this->TODAY,
                 'reserve_disable_dates' => [], // 'August 13, 2021',
+                'reserve_available_dates' => $this->reserveAvailableDates(),
                 'date_note' => $note->date_note->format('Y-m-d'),
                 'dialysis_type' => $note->meta['dialysis_type'],
                 'dialysis_at' => $note->place_name,
                 'swap_code' => $note->meta['swap_code'],
+                'can' => [
+                    'update' =>$user->can('update', $note),
+                    'reschedule' =>$user->can('reschedule', $note),
+                ],
             ],
         ];
     }

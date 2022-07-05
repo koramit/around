@@ -2,7 +2,7 @@
     <div v-if="toggler">
         <!-- Toggle Button -->
         <label
-            class="inline-flex items-center cursor-pointer scroll-mt-12 md:scroll-mt-0"
+            class="inline-flex items-center cursor-pointer form-scroll-mt"
             :id="name ?? null"
         >
             <!-- toggle -->
@@ -41,7 +41,7 @@
     </div>
     <div v-else>
         <label
-            class="inline-flex items-center cursor-pointer scroll-mt-12 md:scroll-mt-0"
+            class="inline-flex items-center cursor-pointer form-scroll-mt"
             :id="name ?? null"
         >
             <input

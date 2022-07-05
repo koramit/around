@@ -4,6 +4,7 @@ namespace App\Actions\Procedures\AcuteHemodialysis;
 
 use App\Casts\AcuteHemodialysisOrderStatus;
 use App\Models\CaseRecord;
+use App\Models\DocumentChangeRequest;
 use App\Models\Notes\AcuteHemodialysisOrderNote;
 use App\Models\User;
 
@@ -46,6 +47,21 @@ class CaseRecordIndexAction extends AcuteHemodialysisAction
                 ],
             ]);
 
+        // ['hn', 'patient_name', 'request', 'requester']
+        $requests = DocumentChangeRequest::query()
+            ->with(['changeable', 'requester'])
+            ->where(fn ($q) => $q->where('requester_id', $user->id))
+            ->where('changeable_type', 'App\Models\Notes\AcuteHemodialysisOrderNote')
+            ->get()
+            ->transform(function ($request) {
+                return [
+                    'hn' => $request->changeable->meta['hn'],
+                    'patient_name' => $request->changeable->meta['name'],
+                    'request' => $request->changeable->getChangRequestText($request->changes),
+                    'requester' => $request->requester->first_name,
+                ];
+            });
+
         $flash = [
             'page-title' => 'Acute Hemodialysis',
             'main-menu-links' => [
@@ -66,7 +82,9 @@ class CaseRecordIndexAction extends AcuteHemodialysisAction
                 'index' => route('procedures.acute-hemodialysis.index'),
                 'store' => route('procedures.acute-hemodialysis.store'),
                 'serviceEndpoint' => route('resources.api.patient-recently-admission.show'),
+                'slot' => route('procedures.acute-hemodialysis.slot'),
             ],
+            'requests' => $requests,
             'flash' => $flash,
         ];
     }

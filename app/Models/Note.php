@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Casts\NoteStatus;
 use App\Models\Resources\AttendingStaff;
 use App\Models\Resources\Patient;
 use App\Traits\PKHashable;
@@ -20,7 +19,6 @@ class Note extends Model
         'form' => AsArrayObject::class,
         'meta' => AsArrayObject::class,
         'date_note' => 'date',
-        'status' => NoteStatus::class,
     ];
 
     public function patient()
@@ -48,6 +46,11 @@ class Note extends Model
     public function attendingStaff()
     {
         return $this->belongsTo(AttendingStaff::class);
+    }
+
+    public function changeRequests()
+    {
+        return $this->morphMany(DocumentChangeRequest::class, 'changeable');
     }
 
     public function scopeWithAuthorUsername($query)

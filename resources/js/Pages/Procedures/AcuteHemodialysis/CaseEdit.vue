@@ -423,7 +423,7 @@
                         :spin="order.processing"
                         :disabled="reserveButtonDisable"
                     >
-                        RESERVE
+                        {{ order.date_note !== configs.today ? 'RESERVE' : 'REQUEST RESERVE' }}
                     </SpinnerButton>
                 </div>
             </div>

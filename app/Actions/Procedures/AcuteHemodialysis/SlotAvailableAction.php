@@ -98,7 +98,6 @@ class SlotAvailableAction extends AcuteHemodialysisAction
                     'attending' => $note->attendingStaff->first_name,
                 ];
                 if ($inUnit) {
-                    // $trans['tpe'] = str_contains(strtolower($note->meta['dialysis_type']), 'tpe') ? 1 : 0;
                     $trans['slot_count'] = $this->slotCount($note->meta['dialysis_type']);
                     $trans['available'] = false;
                 }
@@ -111,7 +110,6 @@ class SlotAvailableAction extends AcuteHemodialysisAction
     {
         $notes = $this->getNotes($dateNote);
 
-        // $tpeCount = $notes->sum('tpe');
         $sum = $notes->sum('slot_count');
         $requestSlot = $this->slotCount($dialysisType);
         $available = true;

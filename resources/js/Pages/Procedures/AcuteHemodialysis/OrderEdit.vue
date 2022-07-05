@@ -7,6 +7,7 @@
     >
         <span class="form-label !mb-0 text-lg italic text-complement">Reservation data</span>
         <button
+            v-if="configs.can.reschedule"
             class="flex items-center text-sm text-accent"
             @click="showReschedule = !showReschedule"
         >
@@ -16,6 +17,10 @@
             />
             Reschedule
         </button>
+        <!-- <span
+            v-else
+            class="text-sm text-complement"
+        >Approving</span> -->
     </h2>
     <hr class="my-4 border-b border-accent">
     <div class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8 2xl:grid-cols-4">
@@ -48,7 +53,7 @@
 
     <!-- reschedule -->
     <Transition name="slide-fade">
-        <div v-if="showReschedule">
+        <div v-if="showReschedule && configs.can.reschedule">
             <div class="mt-4 md:mt-8 xl:mt-16 grid xl:grid-cols-2 gap-2 md:gap-4 lg:gap-6">
                 <FormDatetime
                     label="reschedule date"
@@ -78,10 +83,14 @@
                     <SpinnerButton
                         class="block w-full text-center btn btn-accent"
                         :spin="order.processing"
-                        :disabled="order.date_note === configs.date_note && reservedSlots.available"
-                        @click="order.patch(configs.endpoints.reschedule)"
+                        :disabled="order.date_note === configs.date_note || !reservedSlots.available"
+                        @click="
+                            order.date_note !== configs.today
+                                ? order.patch(configs.endpoints.reschedule, { onFinish: ensureConfigsEffectAfterCall })
+                                : order.post(configs.endpoints.reschedule_to_today, { onFinish: ensureConfigsEffectAfterCall })
+                        "
                     >
-                        RESCHEDULE
+                        {{ configs.today !== order.date_note ? 'RESCHEDULE' : 'REQUEST RESCHEDULE' }}
                     </SpinnerButton>
                 </div>
             </div>
@@ -102,7 +111,7 @@
                         class="block w-full text-center btn btn-accent"
                         :spin="order.processing"
                         :disabled="!order.swap_with || order.swap_with == configs.swap_code"
-                        @click="order.patch(configs.endpoints.swap)"
+                        @click="order.patch(configs.endpoints.swap, { onFinish: ensureConfigsEffectAfterCall })"
                     >
                         {{ order.swap_with !== configs.swap_code ? 'SWAP' : '🙄🙄🙄' }}
                     </SpinnerButton>
@@ -405,6 +414,9 @@ watch (
     { deep: true }
 );
 const autosave = debounce(function () {
+    if (!configs.can.update) {
+        return;
+    }
     window.axios
         .patch(configs.endpoints.update, form.data())
         .catch(error => {
@@ -465,4 +477,12 @@ watch (
         checkSlot();
     }
 );
+const ensureConfigsEffectAfterCall = () => {
+    configs.reserve_available_dates = props.formConfigs.reserve_available_dates;
+    configs.date_note = props.formConfigs.date_note;
+    configs.dialysis_type = props.formConfigs.dialysis_type;
+    configs.dialysis_at = props.formConfigs.dialysis_at;
+    configs.swap_code = props.formConfigs.swap_code;
+    configs.can = props.formConfigs.can;
+};
 </script>

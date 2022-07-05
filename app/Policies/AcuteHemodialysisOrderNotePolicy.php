@@ -3,7 +3,7 @@
 namespace App\Policies;
 
 use App\Casts\AcuteHemodialysisOrderStatus;
-use App\Models\Note;
+use App\Models\Notes\AcuteHemodialysisOrderNote;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -11,46 +11,47 @@ class AcuteHemodialysisOrderNotePolicy
 {
     use HandlesAuthorization;
 
-    protected $updateNotAllowStatuses;
+    protected $status;
 
     public function __construct()
     {
-        $this->updateNotAllowStatuses = collect((new AcuteHemodialysisOrderStatus)->getUpdateNotAllowStatuses());
+        $this->status = new AcuteHemodialysisOrderStatus;
     }
 
-    public function edit(User $user, Note $note)
+    public function edit(User $user, AcuteHemodialysisOrderNote $note): bool
     {
         return $user->id === $note->user_id
-            && ! $this->updateNotAllowStatuses->contains($note->status);
+            && ! $this->status->getEditNotAllowStatuses()->contains($note->status);
     }
 
-    public function update(User $user, Note $note)
+    public function update(User $user, AcuteHemodialysisOrderNote $note): bool
     {
         return $user->id === $note->user_id
-            && ! $this->updateNotAllowStatuses->contains($note->status);
+            && ! $this->status->getUpdateNotAllowStatuses()->contains($note->status)
+            && ! ($note->meta['submit_while_rescheduling'] ?? false);
     }
 
-    public function submit(User $user, Note $note)
+    public function submit(User $user, AcuteHemodialysisOrderNote $note): bool
     {
         return $user->id === $note->user_id
-            && ! $this->updateNotAllowStatuses->contains($note->status);
+            && ! $this->status->getSubmitNotAllowStatuses()->contains($note->status);
     }
 
-    public function reschedule(User $user, Note $note)
+    public function reschedule(User $user, AcuteHemodialysisOrderNote $note): bool
     {
         return $user->id === $note->user_id
-            && ! $this->updateNotAllowStatuses->contains($note->status);
+            && ! $this->status->getRescheduleNotAllowStatuses()->contains($note->status);
     }
 
-    public function swap(User $user, Note $note)
+    public function swap(User $user, AcuteHemodialysisOrderNote $note): bool
     {
         return $user->id === $note->user_id
-            && ! $this->updateNotAllowStatuses->contains($note->status);
+            && ! $this->status->getRescheduleNotAllowStatuses()->contains($note->status);
     }
 
-    public function destroy(User $user, Note $note)
+    public function destroy(User $user, AcuteHemodialysisOrderNote $note): bool
     {
         return $user->id === $note->user_id
-            && ! $this->updateNotAllowStatuses->contains($note->status);
+            && ! $this->status->getEditNotAllowStatuses()->contains($note->status);
     }
 }

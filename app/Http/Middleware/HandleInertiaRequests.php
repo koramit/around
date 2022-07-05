@@ -46,6 +46,7 @@ class HandleInertiaRequests extends Middleware
                 'mainMenuLinks' => fn () => $request->session()->pull('main-menu-links', []),
                 'actionMenu' => fn () => $request->session()->pull('action-menu', []),
                 'breadcrumbs' => fn () => $request->session()->pull('breadcrumbs', []),
+                'message' => fn () => $request->session()->pull('message'),
             ],
             'user' => fn () => $request->user()
                 ? [

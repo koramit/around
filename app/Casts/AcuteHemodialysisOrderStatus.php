@@ -3,14 +3,47 @@
 namespace App\Casts;
 
 use App\Contracts\NoteStatusCast;
+use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
+use Illuminate\Support\Collection;
 
-class AcuteHemodialysisOrderStatus implements NoteStatusCast
+class AcuteHemodialysisOrderStatus implements CastsAttributes, NoteStatusCast
 {
-    protected $statuses = ['', 'draft', 'submitted', 'canceled', 'performed'];
+    protected $statuses = ['', 'draft', 'submitted', 'rescheduling', 'canceled', 'performed'];
 
-    protected $activeStatusCodes = [1, 2]; // 'draft', 'submitted'
+    protected $activeStatusCodes = [1, 2, 3]; // 'draft', 'submitted', 'rescheduling'
 
-    protected $updateNotAllowStatuses = ['canceled', 'performed'];
+    protected $editNotAllowStatuses = ['canceled', 'performed'];
+
+    protected $updateNotAllowStatuses = ['submitted', 'canceled', 'performed'];
+
+    protected $rescheduleNotAllowStatuses = ['rescheduling', 'canceled', 'performed'];
+
+    /** Cast the given value.
+     *
+     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @param  string  $key
+     * @param  mixed  $value
+     * @param  array  $attributes
+     * @return array
+     */
+    public function get($model, $key, $value, $attributes)
+    {
+        return $this->statuses[$value] ?? null;
+    }
+
+    /**
+     * Prepare the given value for storage.
+     *
+     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @param  string  $key
+     * @param  array  $value
+     * @param  array  $attributes
+     * @return string
+     */
+    public function set($model, $key, $value, $attributes)
+    {
+        return array_search($value, $this->statuses) ?? null;
+    }
 
     public function getStatuses(): array
     {
@@ -27,8 +60,23 @@ class AcuteHemodialysisOrderStatus implements NoteStatusCast
         return $this->activeStatusCodes;
     }
 
-    public function getUpdateNotAllowStatuses(): array
+    public function getEditNotAllowStatuses(): Collection
     {
-        return $this->updateNotAllowStatuses;
+        return collect($this->editNotAllowStatuses);
+    }
+
+    public function getUpdateNotAllowStatuses(): Collection
+    {
+        return collect($this->updateNotAllowStatuses);
+    }
+
+    public function getSubmitNotAllowStatuses(): Collection
+    {
+        return collect($this->editNotAllowStatuses);
+    }
+
+    public function getRescheduleNotAllowStatuses(): Collection
+    {
+        return collect($this->rescheduleNotAllowStatuses);
     }
 }

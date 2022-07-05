@@ -10,10 +10,10 @@ class OrderRescheduleController extends Controller
 {
     public function __invoke($hashedKey, Request $request)
     {
-        $data = (new OrderRescheduleAction)(data: $request->all(), hashedKey: $hashedKey, user: $request->user());
+        $reply = (new OrderRescheduleAction)(data: $request->all(), hashedKey: $hashedKey, user: $request->user());
 
-        // if want json return $data
+        // if want json return $reply
 
-        return redirect()->route('procedures.acute-hemodialysis.edit', $data['note']->caseRecord->hashed_key);
+        return back()->with('message', $reply);
     }
 }

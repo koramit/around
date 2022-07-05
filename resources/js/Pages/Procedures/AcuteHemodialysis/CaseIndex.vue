@@ -134,6 +134,40 @@
         </div>
     </div>
 
+    <SlotRequest
+        class="mt-4 md:mt-8"
+        :requests="requests"
+    />
+
+    <div class="mt-4 md:mt-8">
+        <FormDatetime
+            label="required date"
+            name="date_note"
+            v-model="slot.date_note"
+            :options="{inline: true}"
+            ref="dateNoteInput"
+        />
+        <!-- :options="{ enable: configs.reserve_available_dates, onDayCreate: onDayCreate, inline: true }" -->
+        <div class="md:grid grid-cols-2 gap-4">
+            <Transition
+                name="slide-fade"
+                v-if="slot.hd_unit.length"
+            >
+                <DialysisSlot
+                    :slots="slot.hd_unit"
+                />
+            </Transition>
+            <Transition
+                name="slide-fade"
+                v-if="slot.ward.length"
+            >
+                <WardSlot
+                    :slots="slot.ward"
+                />
+            </Transition>
+        </div>
+    </div>
+
     <!-- create new case -->
     <SearchAdmission
         ref="searchAdmission"
@@ -152,11 +186,16 @@ import debounce from 'lodash/debounce';
 import SearchIndex from '@/Components/Controls/SearchIndex.vue';
 import IconDoubleRight from '@/Components/Helpers/Icons/IconDoubleRight.vue';
 import IconUserMd from '@/Components/Helpers/Icons/IconUserMd.vue';
+import SlotRequest from '../../../Partials/Procedures/AcuteHemodialysis/SlotRequest.vue';
+import FormDatetime from '../../../Components/Controls/FormDatetime.vue';
+import DialysisSlot from '../../../Partials/Procedures/AcuteHemodialysis/DialysisSlot.vue';
+import WardSlot from '../../../Partials/Procedures/AcuteHemodialysis/WardSlot.vue';
 const SearchAdmission = defineAsyncComponent(() => import('@/Components/Forms/SearchAdmission.vue'));
 const props = defineProps({
     cases: { type: Object, required: true },
     filters: { type: Object, required: true },
     routes: { type: Object, required: true },
+    requests: { type: Array, required: true },
 });
 const searchAdmission = ref(null);
 const newCase = useForm({
@@ -186,4 +225,25 @@ const confirmed = (admission) => {
     newCase.an = admission.an;
     newCase.post(props.routes.store);
 };
+
+const slot = reactive({
+    hd_unit: [],
+    ward: [],
+    date_note: null,
+});
+
+watch(
+    () => slot.date_note,
+    (val) => {
+        window.axios
+            .post(props.routes.slot, {date_note: val})
+            .then(res => {
+                if (!res.data) {
+                    return;
+                }
+                slot.hd_unit = [...res.data.hd_unit];
+                slot.ward = [...res.data.ward];
+            });
+    },
+);
 </script>

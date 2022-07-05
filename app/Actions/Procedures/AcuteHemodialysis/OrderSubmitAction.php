@@ -354,11 +354,13 @@ class OrderSubmitAction extends AcuteHemodialysisAction
 
         $validated = Validator::make($data, $rules)->validate();
 
-        $note->update([
-            'form' => $validated,
-            'submitted_at' => now(),
-            'status' => 'submitted',
-        ]);
+        $note->form = $validated;
+        $note->submitted_at = now();
+        $note->status = $note->status === 'rescheduling' ? 'rescheduling' : 'submitted';
+        if ($note->status === 'rescheduling') {
+            $note->meta['submit_while_rescheduling'] = true;
+        }
+        $note->save();
 
         return $note;
     }

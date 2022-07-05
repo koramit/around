@@ -27,13 +27,22 @@ class OrderRescheduleAction extends AcuteHemodialysisAction
                 'dialysis_type' => $note->meta['dialysis_type'],
                 'dialysis_at' => $note->place_name,
             ]);
-        $reply['ok'] = $ensureSlotAvailable['available'];
-        if ($reply['ok']) {
-            $note->update(['date_note' => $validated['date_note']]);
-        }
-        $reply = ['note' => $note];
-        $reply['message'] = $ensureSlotAvailable['available'] ? 'ok' : 'not ok';
 
-        return $reply;
+        if ($ensureSlotAvailable['available']) {
+            $message = [
+                'type' => $ensureSlotAvailable['available'] ? 'info' : 'danger',
+                'title' => 'Reschedule successful.',
+                'message' => 'Form '.$note->date_note->format('M j').' to '.now()->create($validated['date_note'])->format('M j'),
+            ];
+            $note->update(['date_note' => $validated['date_note']]);
+        } else {
+            $message = [
+                'type' => $ensureSlotAvailable['available'] ? 'info' : 'danger',
+                'title' => 'Cannot reschedule.',
+                'message' => 'Slot not available on '.now()->create($validated['date_note'])->format('M j'),
+            ];
+        }
+
+        return $message;
     }
 }

@@ -18,6 +18,10 @@ class AcuteHemodialysisAction
 
     protected $BREADCRUMBS;
 
+    protected $TODAY;
+
+    protected $APPROVE_ACUTE_HEMODIALYSIS_RESCHEDULE_TO_TODAY_ABILITY_ID = 10;
+
     public function __construct()
     {
         $this->ACUTE_HD_ORDER_NOTE_TYPE_ID = config('notes.acute_hd_order');
@@ -25,12 +29,13 @@ class AcuteHemodialysisAction
             ['label' => 'Home', 'route' => route('home')],
             ['label' => 'Procedures', 'route' => route('procedures')],
         ];
+        $this->TODAY = now()->tz($this->TIMEZONE)->format('Y-m-d');
     }
 
     protected function reserveAvailableDates(): array
     {
         $availableDates = [];
-        $start = now()->tz($this->TIMEZONE)->addDay();
+        $start = now()->create($this->TODAY);
         $count = 0;
         do {
             if (! $start->isSunday()) {
@@ -38,7 +43,7 @@ class AcuteHemodialysisAction
             }
             $start->addDay();
             $count++;
-        } while ($count < $this->LIMIT_ADVANCE_DAYS);
+        } while ($count <= $this->LIMIT_ADVANCE_DAYS);
 
         return $availableDates;
     }

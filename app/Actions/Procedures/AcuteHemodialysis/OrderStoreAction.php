@@ -140,6 +140,14 @@ class OrderStoreAction extends AcuteHemodialysisAction
         'drain_pumb' => null,
         'calcium_gluconate_10_percent_volume' => null,
         'calcium_gluconate_10_percent_timing' => null,
+        'anticoagulant' => null,
+        'anticoagulant_none_drip_via_peripheral_iv' => false,
+        'anticoagulant_none_nss_200ml_flush_q_hour' => false,
+        'heparin_loading_dose' => null,
+        'heparin_maintenance_dose' => null,
+        'enoxaparin_dose' => null,
+        'fondaparinux_bolus_dose' => null,
+        'tinzaparin_dose' => null,
     ];
 
     protected $SLEDD_FORM_TEMPLATE = [
@@ -186,7 +194,7 @@ class OrderStoreAction extends AcuteHemodialysisAction
      * @todo recheck date_note+dialysis_type+dialysis_at against available slots
      * @todo authorize action
      */
-    public function __invoke(array $data, User $user): mixed
+    public function __invoke(array $data, User $user): array
     {
         if (config('auth.gurads.web.provider') === 'avatar') {
             return []; // call api
@@ -213,6 +221,8 @@ class OrderStoreAction extends AcuteHemodialysisAction
             throw ValidationException::withMessages(['status' => 'no slot available']);
         }
 
+        $reserveToday = $validated['date_note'] === $this->TODAY;
+
         $note = new AcuteHemodialysisOrderNote();
         $note->case_record_id = $caseRecord->id;
         $note->attending_staff_id = cache()->pull($cacheKeyPrefix.'-validatedAttending')->id;
@@ -220,6 +230,7 @@ class OrderStoreAction extends AcuteHemodialysisAction
         $ward = cache()->pull($cacheKeyPrefix.'-validatedWard');
         $note->place_id = $ward->id;
         $note->date_note = $validated['date_note'];
+        $note->status = $reserveToday ? 'rescheduling' : 'draft';
         $form = $this->initForm($validated['dialysis_type']);
         $note->form = $form;
         $patient = $caseRecord->patient;
@@ -232,11 +243,31 @@ class OrderStoreAction extends AcuteHemodialysisAction
             'patient_type' => $validated['patient_type'],
             'dialysis_type' => $validated['dialysis_type'],
             'swap_code' => $this->genSwapCode(),
+            'extra_slot' => false,
         ];
         $note->user_id = $user->id;
         $note->save();
 
-        return $note;
+        if (!$reserveToday) {
+            return [
+                'note' => $note,
+            ];
+        }
+
+        $note->changeRequests()->create([
+            'requester_id' => $user->id,
+            'changes' => ['date_note' => $this->TODAY],
+            'authority_ability_id' => $this->APPROVE_ACUTE_HEMODIALYSIS_RESCHEDULE_TO_TODAY_ABILITY_ID, // 'approve_acute_hemodialysis_reschedule_to_today',
+        ]);
+
+        return [
+            'note' => $note,
+            'message' => [
+                'type' => 'warning',
+                'title' => 'Schedule request successful',
+                'message' => 'Order pending for approval',
+            ]
+        ];
     }
 
     protected function initForm(string $dialysisType): array
