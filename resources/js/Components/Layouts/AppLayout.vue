@@ -186,6 +186,29 @@
                         >/</span>
                     </li>
                 </nav>
+                <nav
+                    v-else-if="$page.props.flash.navs.length"
+                    class="md:w-1/2 text-accent form-label"
+                >
+                    <ul class="flex justify-between">
+                        <li
+                            v-for="link in $page.props.flash.navs"
+                            :key="link.route"
+                        >
+                            <Link
+                                :href="link.route"
+                                class="block py-1 px-2 md:py-2 md:px-4 rounded-3xl bg-primary transition-colors duration-300"
+                                preserve-state
+                                :class="{
+                                    'bg-accent text-white italic': isUrl(link.route),
+                                    'hover:bg-primary-darker': !isUrl(link.route),
+                                }"
+                            >
+                                {{ link.label }}
+                            </Link>
+                        </li>
+                    </ul>
+                </nav>
 
                 <!-- form errors -->
                 <div v-if="Object.keys($page.props.errors).length">
@@ -215,7 +238,19 @@
                     :message="$page.props.flash.message.message"
                     class="mb-4 md:mb-8"
                 />
-                <slot />
+
+                <slot v-if="$page.props.shouldTransitionPage" />
+
+                <Transition
+                    v-else
+                    name="page-fade"
+                    mode="out-in"
+                    appear
+                >
+                    <div :key="$page.url">
+                        <slot />
+                    </div>
+                </Transition>
             </div>
         </main>
     </div>
@@ -268,5 +303,5 @@ onMounted(() => {
     }
 });
 
-const { smoothScroll } = useInPageLinkHelpers();
+const { isUrl, smoothScroll } = useInPageLinkHelpers();
 </script>

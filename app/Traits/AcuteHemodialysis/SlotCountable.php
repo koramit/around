@@ -1,44 +1,17 @@
 <?php
 
-namespace App\Actions\Procedures\AcuteHemodialysis;
+namespace App\Traits\AcuteHemodialysis;
 
 use App\Models\Notes\AcuteHemodialysisOrderNote;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Collection;
 
-class SlotAction extends AcuteHemodialysisAction
+trait SlotCountable
 {
     protected $LIMIT_IN_UNIT_SLOTS = 32;
 
+    protected $LIMIT_TPE_SLOTS = 3;
+
     protected $LIMIT_OUT_UNIT_CASES = 6;
-
-    /**
-     * @todo complete out unit slot
-     */
-    public function __invoke(array $data)
-    {
-        // validate
-        $validated = Validator::make($data, ['date_note' => 'required|date'])->validate();
-
-        $hdUnit = $this->getNotes(dateNote: $validated['date_note'], inUnit: true);
-        $availableSlots = $this->LIMIT_IN_UNIT_SLOTS - $hdUnit->sum('slot_count');
-        for ($i = 1; $i <= $availableSlots; $i++) {
-            $hdUnit->push([
-                'slot_count' => 1,
-                'available' => true,
-            ]);
-        }
-
-        $ward = $this->getNotes(dateNote: $validated['date_note'], inUnit: false);
-        $availableCount = ($this->LIMIT_OUT_UNIT_CASES - $ward->count());
-        for ($i = 1; $i <= $availableCount; $i++) {
-            $ward[] = ['type' => null];
-        }
-
-        return [
-            'hd_unit' => $hdUnit,
-            'ward' => $ward,
-        ];
-    }
 
     protected function getNotes(string $dateNote, bool $inUnit = true)
     {
@@ -75,5 +48,47 @@ class SlotAction extends AcuteHemodialysisAction
         } else {
             return 1;
         }
+    }
+
+    protected function orderInUnitSlot(Collection $slots): Collection
+    {
+        $availableSlots = $this->LIMIT_IN_UNIT_SLOTS - $slots->sum('slot_count');
+        for ($i = 1; $i <= $availableSlots; $i++) {
+            $slots->push([
+                'slot_count' => 1,
+                'available' => true,
+            ]);
+        }
+
+        $groupBySlotCount = [[]];
+        $sumGroup = [0];
+        for ($i = 1; $i <= 3; $i++) {
+            $groupBySlotCount[] = $slots->filter(fn ($n) => $n['slot_count'] == $i)->values();
+        }
+
+        /*
+         * prefer order
+         * 3 slots NEED 1 slots => must follow with 1 slot
+         * 2 slots
+         * 1 slot treated as free slot
+         */
+        $ordered = collect([]);
+
+        foreach ($groupBySlotCount[3] as $n) {
+            $ordered->push($n);
+            if ($groupBySlotCount[1]->count()) {
+                $ordered->push($groupBySlotCount[1]->shift());
+            }
+        }
+
+        foreach ($groupBySlotCount[2] as $n) {
+            $ordered->push($n);
+        }
+
+        foreach ($groupBySlotCount[1] as $n) {
+            $ordered->push($n);
+        }
+
+        return $ordered;
     }
 }

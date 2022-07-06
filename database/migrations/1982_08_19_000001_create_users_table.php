@@ -29,6 +29,7 @@ return new class extends Migration {
             $table->smallIncrements('id');
             $table->string('name', 80)->unique();
             $table->string('label', 80)->nullable();
+            $table->unsignedSmallInteger('registry_id')->nullable();
             $table->timestamps();
         });
 
@@ -36,6 +37,7 @@ return new class extends Migration {
             $table->smallIncrements('id');
             $table->string('name', 80)->unique();
             $table->string('label', 80)->nullable();
+            $table->unsignedSmallInteger('registry_id')->nullable();
             $table->timestamps();
         });
 

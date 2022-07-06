@@ -7,6 +7,7 @@ use App\Models\Notes\AcuteHemodialysisOrderNote;
 use App\Policies\AcuteHemodialysisOrderNotePolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -31,5 +32,12 @@ class AuthServiceProvider extends ServiceProvider
         if (config('auth.guards.web.provider') === 'avatars') {
             Auth::provider('avatars', fn () => new AvatarUserProvider(config('auth.avatars')));
         }
+
+        Gate::before(function ($user, $ability) {
+            if ($user->abilities->contains($ability)) {
+                return true;
+            }
+            // check next policy or gate
+        });
     }
 }

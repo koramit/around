@@ -46,8 +46,10 @@ class HandleInertiaRequests extends Middleware
                 'mainMenuLinks' => fn () => $request->session()->pull('main-menu-links', []),
                 'actionMenu' => fn () => $request->session()->pull('action-menu', []),
                 'breadcrumbs' => fn () => $request->session()->pull('breadcrumbs', []),
+                'navs' => fn () => $request->session()->pull('navs', []),
                 'message' => fn () => $request->session()->pull('message'),
             ],
+            'shouldTransitionPage' => fn () => $request->session()->get('should-transition-page'),
             'user' => fn () => $request->user()
                 ? [
                     // 'id' => $request->user()->id,
@@ -58,11 +60,11 @@ class HandleInertiaRequests extends Middleware
                         'appearance' => ['zenMode' => false, 'fontScaleIndex' => 3],
                     ]),
                 ] : null,
-                'event' => [
-                    'fire' => null,
-                    'name' => '',
-                    'payload' => null,
-                ],
+            'event' => [
+                'fire' => null,
+                'name' => '',
+                'payload' => null,
+            ],
         ]);
     }
 }

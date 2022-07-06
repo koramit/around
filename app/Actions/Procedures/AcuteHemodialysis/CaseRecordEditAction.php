@@ -13,8 +13,6 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
 {
     use OrderShareValidatable;
 
-    protected $STAFF_DIVISION_ID = 4;
-
     protected $FORM_CONFIGS = [
         'renal_diagnosis' => ['AKI', 'AKI ontop CKD', 'ESRD', 'Post KT'],
         'comorbidities' => [

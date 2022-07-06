@@ -248,7 +248,7 @@ class OrderStoreAction extends AcuteHemodialysisAction
         $note->user_id = $user->id;
         $note->save();
 
-        if (!$reserveToday) {
+        if (! $reserveToday) {
             return [
                 'note' => $note,
             ];
@@ -257,7 +257,7 @@ class OrderStoreAction extends AcuteHemodialysisAction
         $note->changeRequests()->create([
             'requester_id' => $user->id,
             'changes' => ['date_note' => $this->TODAY],
-            'authority_ability_id' => $this->APPROVE_ACUTE_HEMODIALYSIS_RESCHEDULE_TO_TODAY_ABILITY_ID, // 'approve_acute_hemodialysis_reschedule_to_today',
+            'authority_ability_id' => $this->APPROVE_ACUTE_HEMODIALYSIS_TODAY_SLOT_REQUEST_ABILITY_ID,
         ]);
 
         return [
@@ -266,7 +266,7 @@ class OrderStoreAction extends AcuteHemodialysisAction
                 'type' => 'warning',
                 'title' => 'Schedule request successful',
                 'message' => 'Order pending for approval',
-            ]
+            ],
         ];
     }
 

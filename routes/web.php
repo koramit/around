@@ -35,11 +35,11 @@ Route::middleware(['auth'])->group(function () {
     })->name('clinics');
     Route::get('/patients', function () {
         return 'patients';
-    })->name('patients');
+    })->can('view_any_patients')->name('patients');
 });
 
 // resurces
-Route::middleware('auth')->name('resources.api.')->group(function () {
+Route::middleware(['auth', 'can:get_shared_api_resources'])->name('resources.api.')->group(function () {
     Route::post('admissions', AdmissionController::class)
          ->name('admissions.show');
     Route::post('patient-recently-admission', PatientRecentlyAdmissionController::class)
@@ -52,10 +52,10 @@ Route::middleware('auth')->name('resources.api.')->group(function () {
 
 // uploads
 Route::post('uploads', [UploadController::class, 'store'])
-     ->middleware('auth')
+     ->middleware(['auth', 'can:upload_files'])
      ->name('uploads.store');
 Route::get('uploads/{path}/{filename}', [UploadController::class, 'show'])
-     ->middleware('auth')
+     ->middleware(['auth'])
      ->name('uploads.show');
 
 // feedback

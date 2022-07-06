@@ -6,7 +6,7 @@ use App\Models\Notes\AcuteHemodialysisOrderNote;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 
-class OrderRescheduleToTodayAction extends AcuteHemodialysisAction
+class OrderTodaySlotRequestAction extends AcuteHemodialysisAction
 {
     public function __invoke(array $data, string $hashedKey, User $user): array
     {
@@ -38,7 +38,7 @@ class OrderRescheduleToTodayAction extends AcuteHemodialysisAction
         $note->changeRequests()->create([
             'requester_id' => $user->id,
             'changes' => ['date_note' => $this->TODAY],
-            'authority_ability_id' => $this->APPROVE_ACUTE_HEMODIALYSIS_RESCHEDULE_TO_TODAY_ABILITY_ID, // 'approve_acute_hemodialysis_reschedule_to_today',
+            'authority_ability_id' => $this->APPROVE_ACUTE_HEMODIALYSIS_TODAY_SLOT_REQUEST_ABILITY_ID,
         ]);
         $note->update([
             'status' => 'rescheduling',

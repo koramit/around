@@ -8,6 +8,7 @@
             :value="form.search"
             placeholder="search..."
             autocomplete="off"
+            ref="searchInput"
         >
         <div class="flex justify-end form-input md:w-auto !border-l-0 !rounded-l-none">
             <DropdownList>
@@ -49,7 +50,7 @@
 import DropdownList from '../Helpers/DropdownList.vue';
 import pickBy from 'lodash/pickBy';
 import throttle from 'lodash/throttle';
-import { watch } from 'vue';
+import { ref, watch } from 'vue';
 import { Inertia } from '@inertiajs/inertia';
 
 defineEmits(['searchChanged','scopeChanged']);
@@ -58,6 +59,8 @@ const props = defineProps({
     scopes: { type: Array, default: () => [] },
     form: { type: Object, required: true },
 });
+
+const searchInput = ref(null);
 
 watch (
     () => props.form,
@@ -68,4 +71,8 @@ watch (
     }, 800),
     {deep:true}
 );
+
+const focus = () => searchInput.value.focus();
+
+defineExpose({ focus });
 </script>

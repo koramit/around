@@ -28,20 +28,29 @@ class OrderRescheduleAction extends AcuteHemodialysisAction
                 'dialysis_at' => $note->place_name,
             ]);
 
-        if ($ensureSlotAvailable['available']) {
+        if (! $ensureSlotAvailable['available']) {
             $message = [
-                'type' => $ensureSlotAvailable['available'] ? 'info' : 'danger',
-                'title' => 'Reschedule successful.',
-                'message' => 'Form '.$note->date_note->format('M j').' to '.now()->create($validated['date_note'])->format('M j'),
-            ];
-            $note->update(['date_note' => $validated['date_note']]);
-        } else {
-            $message = [
-                'type' => $ensureSlotAvailable['available'] ? 'info' : 'danger',
+                'type' => 'danger',
                 'title' => 'Cannot reschedule.',
                 'message' => 'Slot not available on '.now()->create($validated['date_note'])->format('M j'),
             ];
         }
+
+        // check if rechedule from today maybe need request
+        if ($note->date_note->format('Y-m-d') === $this->TODAY) {
+            return [
+                'type' => 'warning',
+                'tilte' => 'Cannot reschedule.',
+                'message' => 'Unhandle rechedule from today.',
+            ];
+        }
+
+        $message = [
+            'type' => 'danger',
+            'title' => 'Reschedule successful.',
+            'message' => 'Form '.$note->date_note->format('M j').' to '.now()->create($validated['date_note'])->format('M j'),
+        ];
+        $note->update(['date_note' => $validated['date_note']]);
 
         return $message;
     }

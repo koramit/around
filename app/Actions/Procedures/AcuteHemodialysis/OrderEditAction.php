@@ -52,7 +52,7 @@ class OrderEditAction extends AcuteHemodialysisAction
                     'update' => route('procedures.acute-hemodialysis.orders.update', $note->hashed_key),
                     'submit' => route('procedures.acute-hemodialysis.orders.submit', $note->hashed_key),
                     'reschedule' =>  route('procedures.acute-hemodialysis.orders.reschedule', $note->hashed_key),
-                    'reschedule_to_today' =>  route('procedures.acute-hemodialysis.orders.reschedule-to-today', $note->hashed_key),
+                    'today_slot_request' =>  route('procedures.acute-hemodialysis.orders.today-slot-request', $note->hashed_key),
                     'swap' =>  route('procedures.acute-hemodialysis.orders.swap', $note->hashed_key),
                     'acutehemodialysis_slot_available' => route('procedures.acute-hemodialysis.slot-available'),
                 ],

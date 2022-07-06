@@ -9,14 +9,11 @@ trait AppLayoutSessionFlashable
         session()->flash('page-title', $flash['page-title']);
         session()->flash('main-menu-links', $flash['main-menu-links']);
         session()->flash('action-menu', $flash['action-menu']);
-        if (isset($flash['messages'])) {
-            session()->flash('messages', $flash['messages']);
-        }
-        if (isset($flash['hn'])) {
-            session()->flash('hn', $flash['hn']);
-        }
-        if (isset($flash['breadcrumbs'])) {
-            session()->flash('breadcrumbs', $flash['breadcrumbs']);
+
+        foreach (['messages', 'hn', 'breadcrumbs', 'navs'] as $key) {
+            if (isset($flash[$key])) {
+                session()->flash($key, $flash[$key]);
+            }
         }
     }
 }

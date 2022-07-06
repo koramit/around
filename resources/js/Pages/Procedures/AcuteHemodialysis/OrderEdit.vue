@@ -87,7 +87,7 @@
                         @click="
                             order.date_note !== configs.today
                                 ? order.patch(configs.endpoints.reschedule, { onFinish: ensureConfigsEffectAfterCall })
-                                : order.post(configs.endpoints.reschedule_to_today, { onFinish: ensureConfigsEffectAfterCall })
+                                : order.patch(configs.endpoints.today_slot_request, { onFinish: ensureConfigsEffectAfterCall })
                         "
                     >
                         {{ configs.today !== order.date_note ? 'RESCHEDULE' : 'REQUEST RESCHEDULE' }}

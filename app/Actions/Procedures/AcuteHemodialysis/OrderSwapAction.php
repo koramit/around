@@ -46,6 +46,14 @@ class OrderSwapAction extends AcuteHemodialysisAction
             // throw ValidationException::withMessages(['status' => 'Acute dialysis slot type not match']);
         }
 
+        if ($note->date_note->format('Y-m-d') === $this->TODAY || $noteSwap->date_note->format('Y-m-d') === $this->TODAY) {
+            return [
+                'type' => 'danger',
+                'title' => 'Cannot swap slot',
+                'message' => 'Swap with today slot not available yet',
+            ];
+        }
+
         $reply = [
             'type' => 'info',
             'title' => 'Swap successful',
