@@ -181,6 +181,11 @@ class SubHannahAPI implements PatientAPI, AuthenticationAPI
         return $data;
     }
 
+    public function checkCovidLab($hn)
+    {
+        return $this->makePost('npcr-covid', ['hn' => $hn]);
+    }
+
     protected function makePost(string $route, array $form, int $timeout = 4): array
     {
         $headers = ['app' => config('services.SUBHANNAH_API_NAME'), 'token' => config('services.SUBHANNAH_API_TOKEN')];
