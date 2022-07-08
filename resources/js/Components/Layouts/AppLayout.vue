@@ -254,20 +254,24 @@
             </div>
         </main>
     </div>
+
+    <!-- confirm form -->
+    <ConfirmForm ref="confirmForm" />
 </template>
 
 <script setup>
 import { Head, Link, usePage } from '@inertiajs/inertia-vue3';
+import { pageRoutines } from '@/functions/pageRoutines.js';
+import { defineAsyncComponent, nextTick, onMounted, ref, watch } from 'vue';
+import { useInPageLinkHelpers } from '../../functions/useInPageLinkHelpers.js';
 import DropdownList from '@/Components/Helpers/DropdownList.vue';
 import MainMenu from '@/Components/Helpers/MainMenu.vue';
 import ActionMenu from '@/Components/Helpers/ActionMenu.vue';
-import { pageRoutines } from '@/functions/pageRoutines.js';
-import { nextTick, onMounted, ref } from 'vue';
 import IconHamberger from '@/Components/Helpers/Icons/IconHamberger.vue';
 import IconChevronCircleDown from '@/Components/Helpers/Icons/IconChevronCircleDown.vue';
-import { useInPageLinkHelpers } from '../../functions/useInPageLinkHelpers.js';
 import AlertMessage from '../Helpers/AlertMessage.vue';
 import CopyToClipboardButton from '../Controls/CopyToClipboardButton.vue';
+const ConfirmForm  = defineAsyncComponent(() => import('../Forms/ConfirmForm.vue'));
 
 pageRoutines();
 const mobileMenuVisible = ref(false);
@@ -302,6 +306,20 @@ onMounted(() => {
         document.querySelector('html').style.fontSize = fontScales[fontScaleIndex] + '%';
     }
 });
+
+const confirmForm = ref(null);
+
+watch (
+    () => usePage().props.value.event.fire,
+    (event) => {
+        if (! event) {
+            return;
+        }
+        if (usePage().props.value.event.name === 'confirmation-required') {
+            setTimeout(() => confirmForm.value.open(usePage().props.value.event.payload), 300);
+        }
+    }
+);
 
 const { isUrl, smoothScroll } = useInPageLinkHelpers();
 </script>
