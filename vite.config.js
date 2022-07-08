@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
 import vue from '@vitejs/plugin-vue';
+import FullReload from 'vite-plugin-full-reload';
 
 export default defineConfig({
     plugins: [
@@ -15,6 +16,7 @@ export default defineConfig({
                 },
             },
         }),
+        FullReload(['app/Actions/**/*', 'app/Http/Middleware/HandleInertiaRequests.php'], { delay: 200 })
     ],
     resolve: {
         alias: {
