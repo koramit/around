@@ -230,7 +230,7 @@ class OrderStoreAction extends AcuteHemodialysisAction
         $ward = cache()->pull($cacheKeyPrefix.'-validatedWard');
         $note->place_id = $ward->id;
         $note->date_note = $validated['date_note'];
-        $note->status = $reserveToday ? 'rescheduling' : 'draft';
+        $note->status = $reserveToday ? 'scheduling' : 'draft';
         $form = $this->initForm($validated['dialysis_type']);
         $note->form = $form;
         $patient = $caseRecord->patient;
@@ -245,10 +245,15 @@ class OrderStoreAction extends AcuteHemodialysisAction
             'swap_code' => $this->genSwapCode(),
             'extra_slot' => false,
         ];
-        $note->user_id = $user->id;
+        $note->author_id = $user->id;
         $note->save();
 
         if (! $reserveToday) {
+            $note->actionLogs()->create([
+                'actor_id' => $user->id,
+                'action' => 'create',
+            ]);
+
             return [
                 'note' => $note,
             ];
@@ -258,6 +263,11 @@ class OrderStoreAction extends AcuteHemodialysisAction
             'requester_id' => $user->id,
             'changes' => ['date_note' => $this->TODAY],
             'authority_ability_id' => $this->APPROVE_ACUTE_HEMODIALYSIS_TODAY_SLOT_REQUEST_ABILITY_ID,
+        ]);
+
+        $note->actionLogs()->createMany([
+            ['actor_id' => $user->id, 'action' => 'create'],
+            ['actor_id' => $user->id, 'action' => 'request_change'],
         ]);
 
         return [

@@ -2,6 +2,7 @@
 
 namespace App\Traits\AcuteHemodialysis;
 
+use App\Casts\AcuteHemodialysisOrderStatus;
 use App\Models\Notes\AcuteHemodialysisOrderNote;
 use Illuminate\Support\Collection;
 
@@ -17,7 +18,7 @@ trait SlotCountable
     {
         return AcuteHemodialysisOrderNote::with(['patient', 'author', 'attendingStaff', 'caseRecord'])
             ->where('date_note', $dateNote)
-            ->whereNull('canceled_at')
+            ->whereIn('status', (new AcuteHemodialysisOrderStatus)->getActiveStatusCodes())
             ->where('meta->in_unit', $inUnit)
             ->get()
             ->transform(function ($note) use ($inUnit) {

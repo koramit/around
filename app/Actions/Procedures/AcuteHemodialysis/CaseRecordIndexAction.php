@@ -21,7 +21,7 @@ class CaseRecordIndexAction extends AcuteHemodialysisAction
         $cases = CaseRecord::query()
             ->with([
                 'patient',
-                'notes' => fn ($q) => $q->withAuthorUsername()
+                'notes' => fn ($q) => $q->with('author')
                     ->where('note_type_id', $this->ACUTE_HD_ORDER_NOTE_TYPE_ID)
                     ->whereIn('status', (new AcuteHemodialysisOrderStatus)->getActiveStatusCodes()),
             ])->where('registry_id', $this->REGISTRY_ID)
@@ -40,7 +40,7 @@ class CaseRecordIndexAction extends AcuteHemodialysisAction
                 'patient_name' => $case->patient->full_name,
                 'date_note' => $case->notes->first()?->date_note?->format('M j'),
                 'dialysis_type' =>$case->notes->first()?->meta['dialysis_type'],
-                'md' => $case->notes->first()?->author_username,
+                'md' => $case->notes->first()?->author->first_name,
                 'routes' => [
                     'edit' => route('procedures.acute-hemodialysis.edit', $case->hashed_key),
                 ],

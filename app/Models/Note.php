@@ -40,7 +40,7 @@ class Note extends Model
 
     public function author()
     {
-        return $this->belongsTo('App\Models\User', 'user_id', 'id');
+        return $this->belongsTo(User::class);
     }
 
     public function attendingStaff()
@@ -53,11 +53,16 @@ class Note extends Model
         return $this->morphMany(DocumentChangeRequest::class, 'changeable');
     }
 
+    public function actionLogs()
+    {
+        return $this->morphMany(ResourceActionLog::class, 'loggable');
+    }
+
     public function scopeWithAuthorUsername($query)
     {
         $query->addSelect([
             'author_username' => User::select('name')
-                    ->whereColumn('id', 'notes.user_id')
+                    ->whereColumn('id', 'notes.author_id')
                     ->limit(1)
                     ->latest(),
         ]);

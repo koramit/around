@@ -18,15 +18,9 @@ return new class extends Migration {
             $table->foreign('patient_id')->references('id')->on('patients')->constrained();
             $table->unsignedSmallInteger('registry_id');
             $table->foreign('registry_id')->references('id')->on('registries')->constrained();
-            $table->json('form');
             $table->jsonb('meta');
+            $table->json('form');
             $table->unsignedTinyInteger('status')->default(1)->index();
-            $table->dateTime('dismissed_at')->nullable();
-            $table->dateTime('archived_at')->nullable();
-            $table->unsignedInteger('creator_id');
-            $table->foreign('creator_id')->references('id')->on('users')->constrained();
-            $table->unsignedInteger('updater_id');
-            $table->foreign('updater_id')->references('id')->on('users')->constrained();
             $table->softDeletes();
             $table->timestamps();
         });

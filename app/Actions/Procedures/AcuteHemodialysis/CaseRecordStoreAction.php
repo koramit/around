@@ -93,9 +93,12 @@ class CaseRecordStoreAction extends AcuteHemodialysisAction
             'name' => $patient->first_name,
             'version' => $this->CRF_VERSION,
         ];
-        $caseRecord->creator_id = $user->id;
-        $caseRecord->updater_id = $user->id;
         $caseRecord->save();
+
+        $caseRecord->actionLogs()->create([
+            'actor_id' => $user->id,
+            'action' => 'create',
+        ]);
 
         return $caseRecord;
     }

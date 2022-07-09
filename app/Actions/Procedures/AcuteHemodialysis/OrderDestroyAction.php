@@ -8,6 +8,9 @@ use Illuminate\Support\Facades\Validator;
 
 class OrderDestroyAction extends AcuteHemodialysisAction
 {
+    /**
+     * @todo IF status == scheduling then also expire coressponding request
+     */
     public function __invoke(array $data, string $hashedKey, User $user): array
     {
         if (config('auth.gurads.web.provider') === 'avatar') {
@@ -22,10 +25,14 @@ class OrderDestroyAction extends AcuteHemodialysisAction
             abort(403);
         }
 
-        $note->update([
-            'status' => 'canceled',
-            'canceled_at' => now(),
-            'meta->cancel_reason' => $validated['reason'],
+        // IF status == scheduling then also expire coressponding request
+
+        $note->update(['status' => 'canceled']);
+
+        $note->actionLogs()->create([
+            'actor_id' => $user->id,
+            'action' => 'cancel',
+            'payload' => ['reason' => $validated['reason']],
         ]);
 
         return [

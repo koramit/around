@@ -12,14 +12,12 @@ return new class extends Migration {
      */
     public function up()
     {
-        Schema::create('document_change_requests', function (Blueprint $table) {
+        Schema::create('resource_action_logs', function (Blueprint $table) {
             $table->id();
-            $table->morphs('changeable');
-            $table->unsignedSmallInteger('authority_ability_id');
-            $table->jsonb('changes');
-            $table->unsignedTinyInteger('status')->default(1);
-            $table->unsignedInteger('requester_id');
-            $table->unsignedInteger('authority_id')->nullable();
+            $table->morphs('loggable');
+            $table->unsignedTinyInteger('action');
+            $table->jsonb('payload')->nullable();
+            $table->unsignedInteger('actor_id');
             $table->timestamps();
         });
     }
