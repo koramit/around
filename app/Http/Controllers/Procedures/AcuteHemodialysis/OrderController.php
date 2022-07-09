@@ -53,10 +53,10 @@ class OrderController extends Controller
 
     public function destroy(string $hashedKey, Request $request)
     {
-        $note = (new OrderDestroyAction)(data: $request->all(), hashedKey: $hashedKey, user: $request->user());
+        $reply = (new OrderDestroyAction)(data: $request->all(), hashedKey: $hashedKey, user: $request->user());
 
         // if want json return $data
 
-        return redirect()->route('procedures.acute-hemodialysis.edit', $note->caseRecord->hashed_key);
+        return back()->with('message', $reply);
     }
 }

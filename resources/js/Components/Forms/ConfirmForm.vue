@@ -51,17 +51,18 @@ const requireReason = ref(null);
 const reason = ref(null);
 
 const modal = ref(null);
+let confirmedEvent =null;
 const open = (options) => {
-    console.log(options);
     heading.value = options.heading ?? 'Please confirm';
     confirmText.value = options.confirmText ?? 'Please confirm action or close to cancel';
+    confirmedEvent = options.confirmedEvent ?? '';
     requireReason.value = options.requireReason ?? false;
     modal.value.open();
 };
 
 const confirmed = () => {
     usePage().props.value.event.payload = reason.value;
-    usePage().props.value.event.name = 'delete-acute-hd-order-confirmed';
+    usePage().props.value.event.name = confirmedEvent;
     usePage().props.value.event.fire = + new Date();
     modal.value.close();
 

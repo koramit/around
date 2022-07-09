@@ -30,7 +30,7 @@ class Patient extends Model
         return Attribute::make(
             get: fn ($value) => app(Hashids::class)->decode($value)[0],
             set: fn ($value) => app(Hashids::class)->encode($value),
-        );
+        )->shouldCache();
     }
 
     protected function fullName(): Attribute
@@ -41,14 +41,14 @@ class Patient extends Model
                 $this->profile['first_name'],
                 $this->profile['last_name'],
             ]),
-        );
+        )->shouldCache();
     }
 
     protected function firstName(): Attribute
     {
         return Attribute::make(
             get: fn () => $this->profile['first_name'] ?? null,
-        );
+        )->shouldCache();
     }
 
     protected function gender(): Attribute

@@ -8,15 +8,15 @@ use Illuminate\Support\Collection;
 
 class AcuteHemodialysisOrderStatus implements CastsAttributes, NoteStatusCast
 {
-    protected $statuses = ['', 'draft', 'submitted', 'rescheduling', 'canceled', 'performed'];
+    protected $statuses = ['', 'draft', 'submitted', 'scheduling', 'canceled', 'performed', 'expired'];
 
-    protected $activeStatusCodes = [1, 2, 3]; // 'draft', 'submitted', 'rescheduling'
+    protected $activeStatusCodes = [1, 2, 3]; // 'draft', 'submitted', 'scheduling'
 
-    protected $editNotAllowStatuses = ['canceled', 'performed'];
+    protected $editNotAllowStatuses = ['canceled', 'performed', 'expired'];
 
-    protected $updateNotAllowStatuses = ['submitted', 'canceled', 'performed'];
+    protected $updateNotAllowStatuses = ['submitted', 'canceled', 'performed', 'expired'];
 
-    protected $rescheduleNotAllowStatuses = ['rescheduling', 'canceled', 'performed'];
+    protected $scheduleNotAllowStatuses = ['scheduling', 'canceled', 'performed', 'expired'];
 
     /** Cast the given value.
      *
@@ -75,8 +75,8 @@ class AcuteHemodialysisOrderStatus implements CastsAttributes, NoteStatusCast
         return collect($this->editNotAllowStatuses);
     }
 
-    public function getRescheduleNotAllowStatuses(): Collection
+    public function getScheduleNotAllowStatuses(): Collection
     {
-        return collect($this->rescheduleNotAllowStatuses);
+        return collect($this->scheduleNotAllowStatuses);
     }
 }

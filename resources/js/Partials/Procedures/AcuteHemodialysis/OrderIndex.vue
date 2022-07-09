@@ -35,7 +35,27 @@
                             </template>
                             <template #dropdown>
                                 <div class="mt-2 py-0 overflow-hidden shadow-xl bg-complement text-white cursor-pointer rounded text-sm">
-                                    <Link
+                                    <template
+                                        v-for="(action, action_key) in order.actions"
+                                        :key="action_key"
+                                    >
+                                        <Link
+                                            v-if="action.type === 'link'"
+                                            :href="action.href"
+                                            class="block w-full text-left px-6 py-2 hover:bg-complement-darker hover:text-primary transition-colors duration-200 ease-out"
+                                        >
+                                            {{ action.label }}
+                                        </Link>
+                                        <button
+                                            v-else
+                                            :key="action_key"
+                                            class="block w-full text-left px-6 py-2 hover:bg-complement-darker hover:text-primary transition-colors duration-200 ease-out"
+                                            @click="handleAction(action)"
+                                        >
+                                            {{ action.label }}
+                                        </button>
+                                    </template>
+                                    <!-- <Link
                                         v-for="(action, action_key) in order.actions"
                                         :key="action_key"
                                         :href="action.href"
@@ -46,7 +66,7 @@
                                         class="block w-full text-left px-6 py-2 hover:bg-complement-darker hover:text-primary transition-colors duration-200 ease-out"
                                     >
                                         {{ action.label }}
-                                    </Link>
+                                    </Link> -->
                                 </div>
                             </template>
                         </DropdownList>
@@ -126,11 +146,47 @@
 </template>
 
 <script setup>
-import { Link } from '@inertiajs/inertia-vue3';
+import { Link, usePage } from '@inertiajs/inertia-vue3';
 import IconUserMd from '@/Components/Helpers/Icons/IconUserMd.vue';
 import DropdownList from '@/Components/Helpers/DropdownList.vue';
 import IconDoubleDown from '@/Components/Helpers/Icons/IconDoubleDown.vue';
+import { watch } from 'vue';
+import { Inertia } from '@inertiajs/inertia';
 defineProps({
     orders: { type: Array, required: true }
 });
+
+const showConfirm = (payload) => {
+    usePage().props.value.event.name = 'confirmation-required';
+    usePage().props.value.event.payload = payload;
+    usePage().props.value.event.fire = + new Date();
+};
+
+watch(
+    () => usePage().props.value.event.fire,
+    (event) => {
+        if (! event) {
+            return;
+        }
+        if (usePage().props.value.event.name === cancelOrderConfirmedEvent) {
+            Inertia.visit(cancelOrderEndpoint, {
+                method: 'delete',
+                preserveState: false,
+                data: { reason: usePage().props.value.event.payload },
+                onFinish: () => cancelOrderEndpoint = null,
+            });
+            console.log('perform comfirmed action...');
+        }
+
+    }
+);
+
+const cancelOrderConfirmedEvent = 'cancel-acute-hd-order-confirmed';
+let cancelOrderEndpoint;
+const handleAction = (action) => {
+    if (action.callback == 'cancel-order') {
+        cancelOrderEndpoint = action.href;
+        showConfirm({ confirmText: 'Cancel order aa bb cc dd', confirmedEvent: cancelOrderConfirmedEvent, requireReason: true });
+    }
+};
 </script>

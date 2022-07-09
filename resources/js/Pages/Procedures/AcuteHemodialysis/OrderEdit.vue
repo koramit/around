@@ -86,8 +86,8 @@
                         :disabled="order.date_note === configs.date_note || !reservedSlots.available"
                         @click="
                             order.date_note !== configs.today
-                                ? order.patch(configs.endpoints.reschedule, { onFinish: ensureConfigsEffectAfterCall })
-                                : order.patch(configs.endpoints.today_slot_request, { onFinish: ensureConfigsEffectAfterCall })
+                                ? order.patch(configs.endpoints.reschedule, { onFinish: ensureConfigsRefreshAfterCall })
+                                : order.patch(configs.endpoints.today_slot_request, { onFinish: ensureConfigsRefreshAfterCall })
                         "
                     >
                         {{ configs.today !== order.date_note ? 'RESCHEDULE' : 'REQUEST RESCHEDULE' }}
@@ -111,7 +111,7 @@
                         class="block w-full text-center btn btn-accent"
                         :spin="order.processing"
                         :disabled="!order.swap_with || order.swap_with == configs.swap_code"
-                        @click="order.patch(configs.endpoints.swap, { onFinish: ensureConfigsEffectAfterCall })"
+                        @click="order.patch(configs.endpoints.swap, { onFinish: ensureConfigsRefreshAfterCall })"
                     >
                         {{ order.swap_with !== configs.swap_code ? 'SWAP' : '🙄🙄🙄' }}
                     </SpinnerButton>
@@ -477,7 +477,7 @@ watch (
         checkSlot();
     }
 );
-const ensureConfigsEffectAfterCall = () => {
+const ensureConfigsRefreshAfterCall = () => {
     configs.reserve_available_dates = props.formConfigs.reserve_available_dates;
     configs.date_note = props.formConfigs.date_note;
     configs.dialysis_type = props.formConfigs.dialysis_type;

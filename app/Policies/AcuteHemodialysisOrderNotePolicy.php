@@ -40,13 +40,13 @@ class AcuteHemodialysisOrderNotePolicy
     public function reschedule(User $user, AcuteHemodialysisOrderNote $note): bool
     {
         return $user->id === $note->user_id
-            && ! $this->status->getRescheduleNotAllowStatuses()->contains($note->status);
+            && ! $this->status->getScheduleNotAllowStatuses()->contains($note->status);
     }
 
     public function swap(User $user, AcuteHemodialysisOrderNote $note): bool
     {
         return $user->id === $note->user_id
-            && ! $this->status->getRescheduleNotAllowStatuses()->contains($note->status);
+            && ! $this->status->getScheduleNotAllowStatuses()->contains($note->status);
     }
 
     public function destroy(User $user, AcuteHemodialysisOrderNote $note): bool

@@ -53,47 +53,37 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
         $caseRecord = CaseRecord::query()->findByUnhashKey($hashed)->firstOrFail();
 
         // HD orders
-        $orders = AcuteHemodialysisOrderNote::with(['patient'])
-            ->WithAuthorUsername()
+        $orders = AcuteHemodialysisOrderNote::with(['patient', 'author:id,profile'])
+            // ->WithAuthorUsername()
             ->withPlaceName(Ward::class)
             ->where('case_record_id', $caseRecord->id)
             ->orderByDesc('date_note')
             ->orderByDesc('created_at')
             ->get()
             ->transform(function ($note) use ($user) {
-                $actions = [];
-                if ($user->can('edit', $note)) {
-                    $actions[] = [
+                $actions = collect([
+                    [
                         'label' => 'Edit',
-                        'as' => 'a',
-                        'type' => 'text/html',
+                        'type' => 'link',
                         'href' => route('procedures.acute-hemodialysis.orders.edit', $note->hashed_key),
-                        'method' => 'get',
-                        'preserveState' => true,
-                    ];
-                }
-                if ($user->can('destroy', $note)) {
-                    $actions[] = [
-                        'label' => 'Cancel order',
-                        'as' => 'button',
+                        'can' => $user->can('edit', $note),
+                    ],
+                    [
+                        'label' => 'Cancel',
                         'type' => 'button',
                         'href' => route('procedures.acute-hemodialysis.orders.destroy', $note->hashed_key),
-                        'method' => 'delete',
-                        'preserveState' => false,
-                    ];
-                }
+                        'callback' => 'cancel-order',
+                        'can' => $user->can('destroy', $note),
+                    ],
+                ])->filter(fn ($action) => $action['can']);
 
                 return [
                     'edit_route' => route('procedures.acute-hemodialysis.orders.edit', $note->hashed_key),
                     'ward_name' => $note->place_name,
                     'dialysis_type' => $note->meta['dialysis_type'],
                     'date_note' => $note->date_note->format('d M'),
-                    'md' => $note->author_username,
+                    'md' => $note->author->first_name,
                     'status' => $note->status,
-                    'can' => [
-                        'edit' => $user->can('edit', $note),
-                        'destroy' => $user->can('destroy', $note),
-                    ],
                     'actions' => $actions,
                 ];
             });

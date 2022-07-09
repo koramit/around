@@ -189,7 +189,7 @@ class SubHannahAPI implements PatientAPI, AuthenticationAPI
     protected function makePost(string $route, array $form, int $timeout = 4): array
     {
         $headers = ['app' => config('services.SUBHANNAH_API_NAME'), 'token' => config('services.SUBHANNAH_API_TOKEN')];
-        $options = ['timeout' => 4.0, 'verify' => false];
+        $options = ['timeout' => $timeout, 'verify' => false];
         try {
             $response = Http::withOptions($options)
                             ->withHeaders($headers)
