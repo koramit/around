@@ -2,7 +2,6 @@
 
 namespace App\Traits\AcuteHemodialysis;
 
-use App\Casts\AcuteHemodialysisOrderStatus;
 use App\Models\Notes\AcuteHemodialysisOrderNote;
 use Illuminate\Support\Collection;
 
@@ -16,10 +15,11 @@ trait SlotCountable
 
     protected function getNotes(string $dateNote, bool $inUnit = true)
     {
-        return AcuteHemodialysisOrderNote::with(['patient', 'author', 'attendingStaff', 'caseRecord'])
+        return AcuteHemodialysisOrderNote::query()
+            ->with(['patient', 'author', 'attendingStaff', 'caseRecord'])
             ->where('date_note', $dateNote)
-            ->whereIn('status', (new AcuteHemodialysisOrderStatus)->getActiveStatusCodes())
             ->where('meta->in_unit', $inUnit)
+            ->activeStatuses()
             ->get()
             ->transform(function ($note) use ($inUnit) {
                 $trans = [

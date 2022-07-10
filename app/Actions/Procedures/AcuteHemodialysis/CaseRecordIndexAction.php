@@ -2,9 +2,8 @@
 
 namespace App\Actions\Procedures\AcuteHemodialysis;
 
-use App\Casts\AcuteHemodialysisOrderStatus;
-use App\Models\CaseRecord;
 use App\Models\Notes\AcuteHemodialysisOrderNote;
+use App\Models\Registries\AcuteHemodialysisCaseRecord as CaseRecord;
 use App\Models\User;
 
 class CaseRecordIndexAction extends AcuteHemodialysisAction
@@ -19,12 +18,7 @@ class CaseRecordIndexAction extends AcuteHemodialysisAction
         }
 
         $cases = CaseRecord::query()
-            ->with([
-                'patient',
-                'notes' => fn ($q) => $q->with('author')
-                    ->where('note_type_id', $this->ACUTE_HD_ORDER_NOTE_TYPE_ID)
-                    ->whereIn('status', (new AcuteHemodialysisOrderStatus)->getActiveStatusCodes()),
-            ])->where('registry_id', $this->REGISTRY_ID)
+            ->with(['patient', 'orders' => fn ($q) => $q->with('author')->activeStatuses()])
             ->when($filters['search'] ?? null, function ($query, $search) {
                 $query->where('meta->name', 'like', $search.'%')
                         ->orWhere('meta->hn', 'like', $search.'%');
@@ -38,11 +32,16 @@ class CaseRecordIndexAction extends AcuteHemodialysisAction
             ->through(fn ($case) => [
                 'hn' => $case->patient->hn,
                 'patient_name' => $case->patient->full_name,
-                'date_note' => $case->notes->first()?->date_note?->format('M j'),
-                'dialysis_type' =>$case->notes->first()?->meta['dialysis_type'],
-                'md' => $case->notes->first()?->author->first_name,
+                'date_note' => $case->orders->first()?->date_note?->format('M j'),
+                'dialysis_type' =>$case->orders->first()?->meta['dialysis_type'],
+                'status' =>$case->orders->first()?->status,
+                'md' => $case->orders->first()?->author->first_name,
+                'can' => [
+                    'edit_note' => $case->orders->first() ? $user->can('edit', $case->orders->first()) : false,
+                ],
                 'routes' => [
                     'edit' => route('procedures.acute-hemodialysis.edit', $case->hashed_key),
+                    'edit_note' => $case->orders->first() ? route('procedures.acute-hemodialysis.orders.edit', $case->orders->first()?->hashed_key) : null,
                 ],
             ]);
 

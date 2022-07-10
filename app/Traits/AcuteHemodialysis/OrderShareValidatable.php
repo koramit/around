@@ -2,7 +2,6 @@
 
 namespace App\Traits\AcuteHemodialysis;
 
-use App\Casts\AcuteHemodialysisOrderStatus as NoteStatus;
 use App\Models\CaseRecord;
 
 trait OrderShareValidatable
@@ -35,11 +34,6 @@ trait OrderShareValidatable
 
     public function isDialysisReservable(CaseRecord $caseRecord): bool
     {
-        $activeNoteCount = $caseRecord->notes()
-            ->where('note_type_id', $this->ACUTE_HD_ORDER_NOTE_TYPE_ID)
-            ->whereIn('status', (new NoteStatus)->getActiveStatusCodes())
-            ->count();
-
-        return $activeNoteCount === 0;
+        return $caseRecord->orders()->activeStatuses()->count() === 0;
     }
 }

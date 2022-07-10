@@ -4,7 +4,7 @@ namespace App\Actions\Procedures\AcuteHemodialysis;
 
 class AcuteHemodialysisAction
 {
-    protected $REGISTRY_ID = 1;
+    protected $REGISTRY_ID;
 
     protected $ACUTE_HD_ORDER_NOTE_TYPE_ID;
 
@@ -30,6 +30,7 @@ class AcuteHemodialysisAction
 
     public function __construct()
     {
+        $this->REGISTRY_ID = config('registries.acute_hd');
         $this->ACUTE_HD_ORDER_NOTE_TYPE_ID = config('notes.acute_hd_order');
         $this->MENU = [
             ['icon' => 'patient', 'label' => 'Patients', 'route' => route('patients'), 'can' => true],

@@ -2,7 +2,7 @@
 
 namespace App\Actions\Procedures\AcuteHemodialysis;
 
-use App\Models\CaseRecord;
+use App\Models\Registries\AcuteHemodialysisCaseRecord as CaseRecord;
 use App\Models\User;
 
 class CaseRecordUpdateAction extends AcuteHemodialysisAction
@@ -20,7 +20,6 @@ class CaseRecordUpdateAction extends AcuteHemodialysisAction
         $caseRecord = CaseRecord::query()->findByUnhashKey($hashedKey)->firstOrFail();
 
         $caseRecord->form = $data;
-        $caseRecord->updater_id = $user->id;
 
         return $caseRecord->save();
     }

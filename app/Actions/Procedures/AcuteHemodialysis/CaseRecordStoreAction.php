@@ -2,7 +2,7 @@
 
 namespace App\Actions\Procedures\AcuteHemodialysis;
 
-use App\Models\CaseRecord;
+use App\Models\Registries\AcuteHemodialysisCaseRecord as CaseRecord;
 use App\Models\Resources\Admission;
 use App\Models\Resources\Patient;
 use App\Models\User;
@@ -79,7 +79,6 @@ class CaseRecordStoreAction extends AcuteHemodialysisAction
         $caseRecord = new CaseRecord();
         $patient = Patient::query()->findByHashedKey($validated['hn'])->first();
         $caseRecord->patient_id = $patient->id;
-        $caseRecord->registry_id = $this->REGISTRY_ID;
         $form = $this->FORM_TEMPLATE;
         if ($validated['an'] ?? false) {
             $admission = Admission::query()->findByHashedKey($validated['an'])->first();

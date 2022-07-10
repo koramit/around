@@ -3,8 +3,8 @@
 namespace App\Actions\Procedures\AcuteHemodialysis;
 
 use App\Managers\Resources\AdmissionManager;
-use App\Models\CaseRecord;
 use App\Models\Notes\AcuteHemodialysisOrderNote;
+use App\Models\Registries\AcuteHemodialysisCaseRecord as CaseRecord;
 use App\Models\Resources\Ward;
 use App\Models\User;
 use App\Traits\AcuteHemodialysis\OrderShareValidatable;
@@ -54,7 +54,6 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
 
         // HD orders
         $orders = AcuteHemodialysisOrderNote::with(['patient', 'author:id,profile'])
-            // ->WithAuthorUsername()
             ->withPlaceName(Ward::class)
             ->where('case_record_id', $caseRecord->id)
             ->orderByDesc('date_note')

@@ -23,7 +23,7 @@
             <tr class="text-left font-semibold text-complement">
                 <th
                     class="px-6 pt-6 pb-4"
-                    v-for="column in ['HN', 'Name', 'Latest', 'Type', 'MD']"
+                    v-for="column in ['HN', 'Name', 'Latest', 'Type', 'status', 'MD']"
                     :key="column"
                     v-text="column"
                     :colspan="column === 'MD' ? 2:1"
@@ -36,7 +36,7 @@
             >
                 <td
                     class="px-6 py4 border-t"
-                    v-for="field in ['hn', 'patient_name', 'date_note', 'dialysis_type', 'md']"
+                    v-for="field in ['hn', 'patient_name', 'date_note', 'dialysis_type', 'status', 'md']"
                     :key="field"
                     v-text="caseRecord[field]"
                 />
