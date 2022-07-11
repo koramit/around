@@ -445,27 +445,29 @@
 
 <script setup>
 import { useForm } from '@inertiajs/inertia-vue3';
-import { computed, defineAsyncComponent, reactive, ref, watch } from 'vue';
-import { useSelectOther } from '@/functions/useSelectOther.js';
+import {computed, defineAsyncComponent, nextTick, onMounted, reactive, ref, watch} from 'vue';
+import { useSelectOther } from '../../../functions/useSelectOther.js';
 import debounce from 'lodash/debounce';
-import FormInput from '@/Components/Controls/FormInput.vue';
-import FormAutocomplete from '@/Components/Controls/FormAutocomplete.vue';
-import FormRadio from '@/Components/Controls/FormRadio.vue';
-import FormCheckbox from '@/Components/Controls/FormCheckbox.vue';
-import FormDatetime from '@/Components/Controls/FormDatetime.vue';
-import ImageUploader from '@/Components/Controls/ImageUploader.vue';
-import FormSelectOther from '@/Components/Controls/FormSelectOther.vue';
-import FormSelect from '@/Components/Controls/FormSelect.vue';
-import SpinnerButton from '@/Components/Controls/SpinnerButton.vue';
-import OrderIndex from '@/Partials/Procedures/AcuteHemodialysis/OrderIndex.vue';
-const DialysisSlot = defineAsyncComponent(() => import('@/Partials/Procedures/AcuteHemodialysis/DialysisSlot.vue'));
-const WardSlot = defineAsyncComponent(() => import('@/Partials/Procedures/AcuteHemodialysis/WardSlot.vue'));
-const AlertMessage = defineAsyncComponent(() => import('@/Components/Helpers/AlertMessage.vue'));
+import FormInput from '../../../Components/Controls/FormInput.vue';
+import FormAutocomplete from '../../../Components/Controls/FormAutocomplete.vue';
+import FormRadio from '../../../Components/Controls/FormRadio.vue';
+import FormCheckbox from '../../../Components/Controls/FormCheckbox.vue';
+import FormDatetime from '../../../Components/Controls/FormDatetime.vue';
+import ImageUploader from '../../../Components/Controls/ImageUploader.vue';
+import FormSelectOther from '../../../Components/Controls/FormSelectOther.vue';
+import FormSelect from '../../../Components/Controls/FormSelect.vue';
+import SpinnerButton from '../../../Components/Controls/SpinnerButton.vue';
+import OrderIndex from '../../../Partials/Procedures/AcuteHemodialysis/OrderIndex.vue';
+import {useInPageLinkHelpers} from '../../../functions/useInPageLinkHelpers';
+const DialysisSlot = defineAsyncComponent(() => import('../../../Partials/Procedures/AcuteHemodialysis/DialysisSlot.vue'));
+const WardSlot = defineAsyncComponent(() => import('../../../Partials/Procedures/AcuteHemodialysis/WardSlot.vue'));
+const AlertMessage = defineAsyncComponent(() => import('../../../Components/Helpers/AlertMessage.vue'));
 
 const props = defineProps({
     caseRecordForm: { type: Object, required: true },
     orders: { type: Array, required: true },
-    formConfigs: { type: Object, required: true }
+    formConfigs: { type: Object, required: true },
+    gotoSection: { type: [String, null], default: null },
 });
 
 const configs = reactive({...props.formConfigs});
@@ -558,7 +560,7 @@ const patientTypeInput = ref(null);
 const onDayCreate = (dObj, dStr, fp, dayElem) => {
     if (!configs.reserve_disable_dates.length) return;
     for (let i = 0; i < configs.reserve_disable_dates.length; i++) {
-        if (dayElem.getAttribute('aria-label') == configs.reserve_disable_dates[i]) {
+        if (dayElem.getAttribute('aria-label') === configs.reserve_disable_dates[i]) {
             dayElem.innerHTML += '<span class="calendar-event busy"></span>';
         }
     }
@@ -622,4 +624,15 @@ const reserve = () => {
         onError: (error) => console.log(error),
     });
 };
+
+onMounted(() => {
+    if (props.gotoSection === null) {
+        return;
+    }
+
+    nextTick (() => {
+        const {smoothScroll} = useInPageLinkHelpers();
+        smoothScroll(props.gotoSection);
+    });
+});
 </script>

@@ -47,7 +47,23 @@
                         v-else
                         class="px-6 py4 border-t"
                     >
-                        <span v-html="caseRecord[field]" />
+                        <div class="flex items-center">
+                            <span v-html="caseRecord[field]" />
+                            <Link
+                                v-if="caseRecord.can.edit_order"
+                                :href="caseRecord.routes.edit_order"
+                                class="ml-4 p-2 rounded-full bg-white hover:bg-primary transition-colors ease-in-out duration-200"
+                            >
+                                <IconEdit class="text-accent w-4 h-4" />
+                            </Link>
+                            <Link
+                                v-else
+                                :href="caseRecord.routes.create_order"
+                                class="p-2 rounded-full bg-white hover:bg-primary transition-colors ease-in-out duration-200"
+                            >
+                                <IconCalendarPlus class="text-accent w-4 h-4" />
+                            </Link>
+                        </div>
                     </td>
                 </template>
                 <td class="border-t">
@@ -160,11 +176,13 @@
 <script setup>
 import {defineAsyncComponent, onMounted, reactive, ref} from 'vue';
 import {Link, useForm} from '@inertiajs/inertia-vue3';
-import SearchIndex from '@/Components/Controls/SearchIndex.vue';
-import IconDoubleRight from '@/Components/Helpers/Icons/IconDoubleRight.vue';
-import IconUserMd from '@/Components/Helpers/Icons/IconUserMd.vue';
+import SearchIndex from '../../../Components/Controls/SearchIndex.vue';
+import IconDoubleRight from '../../../Components/Helpers/Icons/IconDoubleRight.vue';
+import IconUserMd from '../../../Components/Helpers/Icons/IconUserMd.vue';
+import IconEdit from '../../../Components/Helpers/Icons/IconEdit.vue';
+import IconCalendarPlus from '../../../Components/Helpers/Icons/IconCalendarPlus.vue';
 
-const SearchAdmission = defineAsyncComponent(() => import('@/Components/Forms/SearchAdmission.vue'));
+const SearchAdmission = defineAsyncComponent(() => import('../../../Components/Forms/SearchAdmission.vue'));
 const props = defineProps({
     cases: {type: Object, required: true},
     filters: {type: Object, required: true},

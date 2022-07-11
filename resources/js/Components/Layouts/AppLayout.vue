@@ -2,7 +2,7 @@
     <Head>
         <title>{{ $page.props.flash.title }}</title>
     </Head>
-    <!-- main contailner, flex makes its childs extend full h -->
+    <!-- main container, flex makes its children extend full h -->
     <div class="md:h-screen md:flex md:flex-col">
         <!-- this is navbar, with no shrink (fixed width) -->
         <header class="md:flex md:shrink-0 sticky top-0 z-30">
@@ -33,7 +33,7 @@
                         :text="$page.props.flash.hn"
                     />
                 </div>
-                <!-- hamberger menu on mobile -->
+                <!-- hamburger menu on mobile -->
                 <button
                     class="md:hidden transition-all duration-300 ease-out transform"
                     :class="{ 'scale-y-90 text-primary-darker' : mobileMenuVisible }"

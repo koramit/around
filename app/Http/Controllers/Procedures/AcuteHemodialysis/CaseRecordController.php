@@ -19,7 +19,7 @@ class CaseRecordController extends Controller
     {
         $data = (new CaseRecordIndexAction)(filters: $request->all(), user: $request->user());
 
-        // if want json return $data
+        // if request want json then return $data
 
         $this->setFlash($data['flash']);
         unset($data['flash']);
@@ -31,7 +31,7 @@ class CaseRecordController extends Controller
     {
         $case = (new CaseRecordStoreAction)(data: $request->all(), user: $request->user());
 
-        // if want json return $case
+        // if request want json then return $case
 
         return redirect()->route('procedures.acute-hemodialysis.edit', $case->hashed_key);
     }
@@ -40,22 +40,23 @@ class CaseRecordController extends Controller
     {
         $data = (new CaseRecordEditAction)(hashed: $hashedKey, user: $request->user());
 
-        // if want json return $data
+        // if request want json then return $data
 
         $this->setFlash($data['flash']);
+        unset($data['flash']);
 
-        return Inertia::render('Procedures/AcuteHemodialysis/CaseEdit', [
-            'caseRecordForm' => $data['caseRecordForm'],
-            'formConfigs' => $data['formConfigs'],
-            'orders' => $data['orders'],
-        ]);
+        if ($request->has('section')) {
+            $data['gotoSection'] = '#'.$request->input('section');
+        }
+
+        return Inertia::render('Procedures/AcuteHemodialysis/CaseEdit', [...$data]);
     }
 
     public function update($hashedKey, Request $request)
     {
         $status = (new CaseRecordUpdateAction)(data: $request->all(), hashedKey: $hashedKey, user: $request->user());
 
-        // if want json return $data
+        // if request want json then return $data
 
         return ['ok' => $status];
     }

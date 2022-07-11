@@ -38,11 +38,12 @@ class CaseRecordIndexAction extends AcuteHemodialysisAction
                 'status' => $this->styleOrderStatus($case->orders->first()?->status),
                 'md' => $case->orders->first()?->author->first_name,
                 'can' => [
-                    'edit_note' => $case->orders->first() ?? $user->can('edit', $case->orders->first()),
+                    'edit_order' => $case->orders->first() ?? $user->can('edit', $case->orders->first()),
                 ],
                 'routes' => [
                     'edit' => route('procedures.acute-hemodialysis.edit', $case->hashed_key),
-                    'edit_note' => $case->orders->first() ? route('procedures.acute-hemodialysis.orders.edit', $case->orders->first()?->hashed_key) : null,
+                    'edit_order' => $case->orders->first() ? route('procedures.acute-hemodialysis.orders.edit', $case->orders->first()?->hashed_key) : null,
+                    'create_order' => route('procedures.acute-hemodialysis.edit', ['hashedKey' => $case->hashed_key, 'section' => 'reservation']),
                 ],
             ]);
 
