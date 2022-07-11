@@ -11,7 +11,7 @@ class ScheduleIndexAction extends AcuteHemodialysisAction
 
     public function __invoke(mixed $dateNote, User $user): array
     {
-        if (config('auth.gurads.web.provider') === 'avatar') {
+        if (config('auth.guards.web.provider') === 'avatar') {
             return []; // call api + query params
         }
 

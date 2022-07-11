@@ -10,7 +10,7 @@ class OrderRescheduleAction extends AcuteHemodialysisAction
 {
     public function __invoke(array $data, string $hashedKey, User $user): array
     {
-        if (config('auth.gurads.web.provider') === 'avatar') {
+        if (config('auth.guards.web.provider') === 'avatar') {
             return []; // call api
         }
 
@@ -23,10 +23,10 @@ class OrderRescheduleAction extends AcuteHemodialysisAction
         }
 
         $ensureSlotAvailable = (new SlotAvailableAction)([
-                'date_note' => $validated['date_note'],
-                'dialysis_type' => $note->meta['dialysis_type'],
-                'dialysis_at' => $note->place_name,
-            ]);
+            'date_note' => $validated['date_note'],
+            'dialysis_type' => $note->meta['dialysis_type'],
+            'dialysis_at' => $note->place_name,
+        ]);
 
         if (! $ensureSlotAvailable['available']) {
             $message = [

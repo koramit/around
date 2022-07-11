@@ -46,7 +46,7 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
      */
     public function __invoke(string $hashed, User $user): array
     {
-        if (config('auth.gurads.web.provider') === 'avatar') {
+        if (config('auth.guards.web.provider') === 'avatar') {
             return []; // call api
         }
 

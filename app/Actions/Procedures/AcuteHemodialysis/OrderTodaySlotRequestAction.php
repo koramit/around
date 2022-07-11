@@ -10,7 +10,7 @@ class OrderTodaySlotRequestAction extends AcuteHemodialysisAction
 {
     public function __invoke(array $data, string $hashedKey, User $user): array
     {
-        if (config('auth.gurads.web.provider') === 'avatar') {
+        if (config('auth.guards.web.provider') === 'avatar') {
             return []; // call api
         }
 

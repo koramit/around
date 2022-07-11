@@ -14,7 +14,7 @@ class OrderEditAction extends AcuteHemodialysisAction
 
     public function __invoke(string $hashedKey, User $user)
     {
-        if (config('auth.gurads.web.provider') === 'avatar') {
+        if (config('auth.guards.web.provider') === 'avatar') {
             return []; // call api
         }
 
@@ -51,9 +51,9 @@ class OrderEditAction extends AcuteHemodialysisAction
                 'endpoints' => [
                     'update' => route('procedures.acute-hemodialysis.orders.update', $note->hashed_key),
                     'submit' => route('procedures.acute-hemodialysis.orders.submit', $note->hashed_key),
-                    'reschedule' =>  route('procedures.acute-hemodialysis.orders.reschedule', $note->hashed_key),
-                    'today_slot_request' =>  route('procedures.acute-hemodialysis.orders.today-slot-request', $note->hashed_key),
-                    'swap' =>  route('procedures.acute-hemodialysis.orders.swap', $note->hashed_key),
+                    'reschedule' => route('procedures.acute-hemodialysis.orders.reschedule', $note->hashed_key),
+                    'today_slot_request' => route('procedures.acute-hemodialysis.orders.today-slot-request', $note->hashed_key),
+                    'swap' => route('procedures.acute-hemodialysis.orders.swap', $note->hashed_key),
                     'acutehemodialysis_slot_available' => route('procedures.acute-hemodialysis.slot-available'),
                 ],
                 'hn' => $note->meta['hn'],
@@ -68,8 +68,8 @@ class OrderEditAction extends AcuteHemodialysisAction
                 'dialysis_at' => $note->place_name,
                 'swap_code' => $note->meta['swap_code'],
                 'can' => [
-                    'update' =>$user->can('update', $note),
-                    'reschedule' =>$user->can('reschedule', $note),
+                    'update' => $user->can('update', $note),
+                    'reschedule' => $user->can('reschedule', $note),
                 ],
             ],
         ];

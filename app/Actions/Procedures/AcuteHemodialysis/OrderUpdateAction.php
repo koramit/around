@@ -14,11 +14,12 @@ class OrderUpdateAction extends AcuteHemodialysisAction
 
     /**
      * Should validate by dialysis type.
+     *
      * @todo  validate form before update
      */
     public function __invoke(array $data, string $hashedKey, User $user)
     {
-        if (config('auth.gurads.web.provider') === 'avatar') {
+        if (config('auth.guards.web.provider') === 'avatar') {
             return []; // call api
         }
 

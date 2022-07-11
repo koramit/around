@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Http;
 class AvatarUserProvider implements UserProvider
 {
     private $providerUrl;
+
     private $providerToken;
 
     public function __construct(array $config)

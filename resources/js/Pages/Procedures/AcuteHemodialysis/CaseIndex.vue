@@ -34,18 +34,30 @@
                 v-for="(caseRecord, key) in cases.data"
                 :key="key"
             >
-                <td
-                    class="px-6 py4 border-t"
+                <template
                     v-for="field in ['hn', 'patient_name', 'date_note', 'dialysis_type', 'status', 'md']"
                     :key="field"
-                    v-text="caseRecord[field]"
-                />
+                >
+                    <td
+                        v-if="field !== 'status'"
+                        class="px-6 py4 border-t"
+                        v-text="caseRecord[field]"
+                    />
+                    <td
+                        v-else
+                        class="px-6 py4 border-t"
+                    >
+                        <span v-html="caseRecord[field]" />
+                    </td>
+                </template>
                 <td class="border-t">
                     <Link
                         class="px-4 py-2 flex items-center focus:text-primary-darker"
                         :href="caseRecord.routes.edit"
                     >
-                        <div class="p-2 rounded-full bg-white hover:bg-primary transition-colors ease-in-out duration-200">
+                        <div
+                            class="p-2 rounded-full bg-white hover:bg-primary transition-colors ease-in-out duration-200"
+                        >
                             <IconDoubleRight class="w-4 h-4 text-accent" />
                         </div>
                     </Link>
@@ -75,7 +87,7 @@
             <div class="my-2 p-2 bg-gray-100 rounded space-y-2">
                 <div
                     v-if="!caseRecord.md"
-                    class="flex justfy-center items-center h-12"
+                    class="flex justify-center items-center h-12"
                 >
                     <p class="italic text-center w-full">
                         No order yet
@@ -146,17 +158,18 @@
 </template>
 
 <script setup>
-import { defineAsyncComponent, onMounted, reactive, ref } from 'vue';
-import { Link, useForm } from '@inertiajs/inertia-vue3';
+import {defineAsyncComponent, onMounted, reactive, ref} from 'vue';
+import {Link, useForm} from '@inertiajs/inertia-vue3';
 import SearchIndex from '@/Components/Controls/SearchIndex.vue';
 import IconDoubleRight from '@/Components/Helpers/Icons/IconDoubleRight.vue';
 import IconUserMd from '@/Components/Helpers/Icons/IconUserMd.vue';
+
 const SearchAdmission = defineAsyncComponent(() => import('@/Components/Forms/SearchAdmission.vue'));
 const props = defineProps({
-    cases: { type: Object, required: true },
-    filters: { type: Object, required: true },
-    routes: { type: Object, required: true },
-    can: { type: Object, required: true },
+    cases: {type: Object, required: true},
+    filters: {type: Object, required: true},
+    routes: {type: Object, required: true},
+    can: {type: Object, required: true},
 });
 const searchAdmission = ref(null);
 const newCase = useForm({

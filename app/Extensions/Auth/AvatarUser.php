@@ -7,10 +7,15 @@ use Illuminate\Contracts\Auth\Authenticatable;
 class AvatarUser implements Authenticatable
 {
     private $avatar_token;
+
     private $password;
+
     public $profile;
+
     public $login;
+
     public $name;
+
     public $home_page;
 
     public function __construct($user)

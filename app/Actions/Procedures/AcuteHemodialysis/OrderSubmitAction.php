@@ -15,7 +15,7 @@ class OrderSubmitAction extends AcuteHemodialysisAction
 
     public function __invoke(array $data, string $hashedKey, User $user)
     {
-        if (config('auth.gurads.web.provider') === 'avatar') {
+        if (config('auth.guards.web.provider') === 'avatar') {
             return []; // call api
         }
 
@@ -63,7 +63,7 @@ class OrderSubmitAction extends AcuteHemodialysisAction
                 ],
                 'hd.sodium_profile' => 'required|boolean',
                 'hd.sodium_profile_start' => 'required_if:hd.sodium_profile,true|nullable|integer',
-                'hd.sodium_profile_end' =>  'required_unless:hd.sodium_profile_start,null|nullable|integer',
+                'hd.sodium_profile_end' => 'required_unless:hd.sodium_profile_start,null|nullable|integer',
                 'hd.bicarbonate' => ['required', Rule::in($this->FORM_CONFIGS['bicarbonates'])],
                 'hd.anticoagulant' => 'required|string|max:255',
                 'hd.anticoagulant_none_drip_via_peripheral_iv' => 'required|boolean',
@@ -257,7 +257,7 @@ class OrderSubmitAction extends AcuteHemodialysisAction
                 ],
                 'sledd.sodium_profile' => 'required|boolean',
                 'sledd.sodium_profile_start' => 'required_if:sledd.sodium_profile,true|nullable|integer',
-                'sledd.sodium_profile_end' =>  'required_unless:sledd.sodium_profile_start,null|nullable|integer',
+                'sledd.sodium_profile_end' => 'required_unless:sledd.sodium_profile_start,null|nullable|integer',
                 'sledd.bicarbonate' => ['required', Rule::in($this->FORM_CONFIGS['bicarbonates'])],
                 'sledd.anticoagulant' => 'required|string|max:255',
                 'sledd.anticoagulant_none_drip_via_peripheral_iv' => 'required|boolean',

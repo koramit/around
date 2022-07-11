@@ -68,7 +68,7 @@ class SubHannahAPI implements PatientAPI, AuthenticationAPI
         return $data;
     }
 
-    public function getPatient(string $hn):array
+    public function getPatient(string $hn): array
     {
         $data = $this->makePost(route: 'patient', form: ['hn' => $hn]);
         if (! $data || ! $data['ok']) { // error: $data = null
@@ -117,7 +117,7 @@ class SubHannahAPI implements PatientAPI, AuthenticationAPI
         return $data;
     }
 
-    public function recentlyAdmission(string $hn):array
+    public function recentlyAdmission(string $hn): array
     {
         $data = $this->makePost(route: 'patient-recently-admit', form: ['hn' => $hn]);
         if (! $data || ! $data['ok']) { // error: $data = null

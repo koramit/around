@@ -110,6 +110,6 @@ return [
     'avatars' => [
         'url' => env('AVARTAR_USER_PROVIDER_URL'),
         'token' => env('AVARTAR_USER_PROVIDER_TOKEN'),
-    ]
+    ],
 
 ];
