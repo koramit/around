@@ -4,29 +4,29 @@ namespace App\Actions\Procedures\AcuteHemodialysis;
 
 class AcuteHemodialysisAction
 {
-    protected $REGISTRY_ID;
+    protected int $REGISTRY_ID;
 
-    protected $ACUTE_HD_ORDER_NOTE_TYPE_ID;
+    protected int $ACUTE_HD_ORDER_NOTE_TYPE_ID;
 
-    protected $TIMEZONE = 7;
+    protected int $TIMEZONE = 7;
 
-    protected $LIMIT_ADVANCE_DAYS = 3;
+    protected int $LIMIT_ADVANCE_DAYS = 3;
 
-    protected $PATIENT_TYPES = ['Acute', 'Chronic'];
+    protected array $PATIENT_TYPES = ['Acute', 'Chronic'];
 
-    protected $IN_UNIT_WARD_ID = 72;
+    protected int $IN_UNIT_WARD_ID = 72;
 
-    protected $MENU;
+    protected array $MENU;
 
-    protected $NAVS;
+    protected array $NAVS;
 
-    protected $BREADCRUMBS;
+    protected array $BREADCRUMBS;
 
-    protected $TODAY;
+    protected string $TODAY;
 
-    protected $APPROVE_ACUTE_HEMODIALYSIS_TODAY_SLOT_REQUEST_ABILITY_ID = 10;
+    protected int $APPROVE_ACUTE_HEMODIALYSIS_TODAY_SLOT_REQUEST_ABILITY_ID = 10;
 
-    protected $STAFF_DIVISION_ID = 4;
+    protected int $STAFF_DIVISION_ID = 4;
 
     public function __construct()
     {
@@ -66,7 +66,7 @@ class AcuteHemodialysisAction
         return $availableDates;
     }
 
-    protected function getBreadcumbs(array $links): array
+    protected function getBreadcrumbs(array $links): array
     {
         return array_merge($this->BREADCRUMBS, $links);
     }

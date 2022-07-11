@@ -38,7 +38,7 @@ class OrderEditAction extends AcuteHemodialysisAction
             'action-menu' => [
                 ['icon' => 'paper-plain', 'action' => 'submit', 'label' => 'Submit'],
             ],
-            'breadcrumbs' => $this->getBreadcumbs([
+            'breadcrumbs' => $this->getBreadcrumbs([
                 ['label' => 'Acute HD', 'route' => route('procedures.acute-hemodialysis.index')],
                 ['label' => 'Case Record', 'route' => route('procedures.acute-hemodialysis.edit', app(Hashids::class)->encode($note->case_record_id))],
             ]),

@@ -130,7 +130,7 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
                 ['icon' => 'procedure', 'label' => 'Procedures', 'route' => route('procedures'), 'can' => true],
             ],
             'action-menu' => [],
-            'breadcrumbs' => $this->getBreadcumbs([
+            'breadcrumbs' => $this->getBreadcrumbs([
                 ['label' => 'Acute HD', 'route' => route('procedures.acute-hemodialysis.index')],
             ]),
         ];
