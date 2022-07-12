@@ -138,7 +138,7 @@
         class="sm:grid grid-cols-2 gap-x-2 lg:grid-cols-4"
         name="renal_diagnosis"
         v-model="form.renal_diagnosis"
-        :options="configs.renal_diagnosis"
+        :options="[...configs.renal_diagnosis]"
     />
     <hr class="border border-dashed my-2 md:my-4 xl:my-8">
 
@@ -248,7 +248,7 @@
                 class="grid lg:grid-cols-2 gap-x-2"
                 name="hbs_ag"
                 v-model="form.hbs_ag"
-                :options="['Positive', 'Intermediate', 'Negative']"
+                :options="configs.serology_results"
             />
         </div>
         <FormDatetime
@@ -262,7 +262,7 @@
                 class="grid lg:grid-cols-2 gap-x-2"
                 name="anti_hcv"
                 v-model="form.anti_hcv"
-                :options="['Positive', 'Intermediate', 'Negative']"
+                :options="configs.serology_results"
             />
         </div>
         <FormDatetime
@@ -276,7 +276,7 @@
                 class="grid lg:grid-cols-2 gap-x-2"
                 name="anti_hiv"
                 v-model="form.anti_hiv"
-                :options="['Positive', 'Intermediate', 'Negative']"
+                :options="configs.serology_results"
             />
         </div>
         <FormDatetime
@@ -369,7 +369,7 @@
                 label="dialysis type"
                 name="order_dialysis_type"
                 v-model="order.dialysis_type"
-                :options="order.dialysis_at && order.dialysis_at.startsWith('ไตเทียม') ? configs.in_unit_dialysis_types : configs.out_unit_dialysis_types"
+                :options="order.dialysis_at && order.dialysis_at.search('Hemodialysis') !== -1 ? configs.in_unit_dialysis_types : configs.out_unit_dialysis_types"
                 :disabled="!order.dialysis_at"
             />
             <div>
@@ -572,7 +572,7 @@ watch (
             return;
         }
         window.axios
-            .post(configs.endpoints.acutehemodialysis_slot_available, {
+            .post(configs.endpoints.acute_hemodialysis_slot_available, {
                 dialysis_type: order.dialysis_type,
                 dialysis_at: order.dialysis_at,
                 date_note: order.date_note,
@@ -620,7 +620,7 @@ const reserveButtonDisable = computed(() => {
 
 const reserve = () => {
     order.post(configs.endpoints.orders_store, {
-        onFinish: () => order.processing = false,
+        onFinish: () => {order.processing = false;},
         onError: (error) => console.log(error),
     });
 };

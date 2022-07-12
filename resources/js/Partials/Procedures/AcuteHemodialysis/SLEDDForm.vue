@@ -313,7 +313,7 @@
     />
 
     <hr class="border border-dashed my-2 md:my-4 xl:my-8">
-    <label class="form-label">transfustion :</label>
+    <label class="form-label">transfusion :</label>
     <div class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8 2xl:grid-cols-4">
         <FormInput
             label="prc volume (unit)"

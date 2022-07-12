@@ -105,16 +105,7 @@ class SubHannahAPI implements PatientAPI, AuthenticationAPI
             return $data;
         }
 
-        $data['patient']['found'] = true;
-        $data['attending_name'] = $data['attending'];
-        $data['discharge_type_name'] = $data['discharge_type'];
-        $data['discharge_status_name'] = $data['discharge_status'];
-        $data['encountered_at'] = $data['admitted_at'] ? Carbon::parse($data['admitted_at'], 'asia/bangkok')->tz('UTC') : null;
-        $data['dismissed_at'] = $data['discharged_at'] ? Carbon::parse($data['discharged_at'], 'asia/bangkok')->tz('UTC') : null;
-        $data['patient']['marital_status_name'] = $data['patient']['marital_status'];
-        $data['patient']['location'] = $data['patient']['postcode'];
-
-        return $data;
+        return $this->handleAdmission($data);
     }
 
     public function recentlyAdmission(string $hn): array
@@ -127,17 +118,8 @@ class SubHannahAPI implements PatientAPI, AuthenticationAPI
             ];
         }
 
-        if (isset($data['found']) && $data['found']) { // error: not found found
-            $data['patient']['found'] = true;
-            $data['attending_name'] = $data['attending'];
-            $data['discharge_type_name'] = $data['discharge_type'];
-            $data['discharge_status_name'] = $data['discharge_status'];
-            $data['encountered_at'] = $data['admitted_at'] ? Carbon::parse($data['admitted_at'], 'asia/bangkok')->tz('UTC') : null;
-            $data['dismissed_at'] = $data['discharged_at'] ? Carbon::parse($data['discharged_at'], 'asia/bangkok')->tz('UTC') : null;
-            $data['patient']['marital_status_name'] = $data['patient']['marital_status'];
-            $data['patient']['location'] = $data['patient']['postcode'];
-
-            return $data;
+        if (isset($data['found']) && $data['found']) { // error: not found
+            return $this->handleAdmission($data);
         }
 
         $data['message'] = __('service.item_not_found', ['item' => 'admission']);
@@ -167,7 +149,7 @@ class SubHannahAPI implements PatientAPI, AuthenticationAPI
         return $data;
     }
 
-    public function checkUserById($orgId)
+    public function checkUserById($orgId): array
     {
         $data = $this->makePost('user-status-by-id', ['org_id' => $orgId]);
 
@@ -181,7 +163,7 @@ class SubHannahAPI implements PatientAPI, AuthenticationAPI
         return $data;
     }
 
-    public function checkCovidLab($hn)
+    public function checkCovidLab($hn): array
     {
         return $this->makePost('npcr-covid', ['hn' => $hn]);
     }
@@ -212,5 +194,22 @@ class SubHannahAPI implements PatientAPI, AuthenticationAPI
             'error' => $response->serverError() ? 'server' : 'client',
             'body' => 'Service is not available at the moment, please try again.',
         ];
+    }
+
+    /**
+     * @param array $data
+     * @return array
+     */
+    public function handleAdmission(array $data): array
+    {
+        $data['patient']['found'] = true;
+        $data['attending_name'] = $data['attending'];
+        $data['discharge_type_name'] = $data['discharge_type'];
+        $data['discharge_status_name'] = $data['discharge_status'];
+        $data['encountered_at'] = $data['admitted_at'] ? Carbon::parse($data['admitted_at'], 'asia/bangkok')->tz('UTC') : null;
+        $data['dismissed_at'] = $data['discharged_at'] ? Carbon::parse($data['discharged_at'], 'asia/bangkok')->tz('UTC') : null;
+        $data['patient']['marital_status_name'] = $data['patient']['marital_status'];
+        $data['patient']['location'] = $data['patient']['postcode'];
+        return $data;
     }
 }

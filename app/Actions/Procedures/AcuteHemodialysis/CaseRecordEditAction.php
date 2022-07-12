@@ -13,8 +13,8 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
 {
     use OrderShareValidatable;
 
-    protected $FORM_CONFIGS = [
-        'renal_diagnosis' => ['AKI', 'AKI ontop CKD', 'ESRD', 'Post KT'],
+    protected array $FORM_CONFIGS = [
+        'renal_diagnosis' => ['AKI', 'AKI on top CKD', 'ESRD', 'Post KT'],
         'comorbidities' => [
             ['name' => 'DM', 'label' => 'DM'],
             ['name' => 'HT', 'label' => 'HT'],
@@ -39,6 +39,7 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
         'insurances' => ['เบิกจ่ายตรง', 'ประกันสังคม', '30 บาท'],
         'opd_consent_form_pathname' => 'procedures/acute-hemodialysis/opd-consent-form',
         'ipd_consent_form_pathname' => 'procedures/acute-hemodialysis/ipd-consent-form',
+        'serology_results' => ['positive', 'intermediate', 'negative'],
     ];
 
     /**
@@ -53,7 +54,8 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
         $caseRecord = CaseRecord::query()->findByUnhashKey($hashed)->firstOrFail();
 
         // HD orders
-        $orders = AcuteHemodialysisOrderNote::with(['patient', 'author:id,profile'])
+        $orders = AcuteHemodialysisOrderNote::query()
+            ->with(['patient', 'author:id,profile'])
             ->withPlaceName(Ward::class)
             ->where('case_record_id', $caseRecord->id)
             ->orderByDesc('date_note')
@@ -110,7 +112,7 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
             'endpoints' => [
                 'resources_api_wards' => route('resources.api.wards'),
                 'resources_api_staffs' => route('resources.api.staffs'),
-                'acutehemodialysis_slot_available' => route('procedures.acute-hemodialysis.slot-available'),
+                'acute_hemodialysis_slot_available' => route('procedures.acute-hemodialysis.slot-available'),
                 'orders_store' => route('procedures.acute-hemodialysis.orders.store'),
                 'update' => route('procedures.acute-hemodialysis.update', $caseRecord->hashed_key),
             ],

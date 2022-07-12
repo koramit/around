@@ -39,7 +39,7 @@ class SlotRequestIndexAction extends AcuteHemodialysisAction
             'endpoints' => [
                 'resources_api_wards' => route('resources.api.wards'),
                 'resources_api_staffs' => route('resources.api.staffs'),
-                'acutehemodialysis_slot_available' => route('procedures.acute-hemodialysis.slot-available'),
+                'acute_hemodialysis_slot_available' => route('procedures.acute-hemodialysis.slot-available'),
                 'cases' => route('procedures.acute-hemodialysis.slot-requests.case'),
                 'orders_store' => route('procedures.acute-hemodialysis.orders.store'),
             ],

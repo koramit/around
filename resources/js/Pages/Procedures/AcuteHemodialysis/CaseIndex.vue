@@ -172,7 +172,7 @@
                     class="mr-1 mb-1 px-4 py-3 text-sm text-complement-darker leading-4 border border-primary-darker rounded hover:bg-white focus:border-complement-darker focus:text-complement-darker transition-colors"
                     :class="{ 'bg-primary-darker cursor-not-allowed hover:bg-primary-darker': link.active }"
                     :href="link.url"
-                    as="button"
+                    :as="'button'"
                     :disabled="link.active"
                 >
                     <span v-html="link.label" />
@@ -200,13 +200,6 @@ import IconEdit from '../../../Components/Helpers/Icons/IconEdit.vue';
 import IconCalendarPlus from '../../../Components/Helpers/Icons/IconCalendarPlus.vue';
 
 const SearchAdmission = defineAsyncComponent(() => import('../../../Components/Forms/SearchAdmission.vue'));
-/**
- * @param cases.data[].patient_name
- * @param cases.data[].md
- * @param cases.data[].can.edit
- * @param cases.data[].can.edit_order
- * @param cases.data[].routes.create_order
- * */
 const props = defineProps({
     cases: {type: Object, required: true},
     filters: {type: Object, required: true},

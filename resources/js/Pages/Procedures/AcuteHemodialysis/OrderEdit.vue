@@ -458,7 +458,7 @@ const reservedSlots = reactive({
     reply: '',
 });
 const checkSlot = () => window.axios
-    .post(configs.endpoints.acutehemodialysis_slot_available, {
+    .post(configs.endpoints.acute_hemodialysis_slot_available, {
         dialysis_type: order.dialysis_type,
         dialysis_at: order.dialysis_at,
         date_note: order.date_note,
