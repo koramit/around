@@ -13,11 +13,11 @@ class AbilitiesTableSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
         $datetime = ['created_at' => now(), 'updated_at' => now()];
 
-        Ability::insert([
+        Ability::query()->insert([
             ['registry_id' => null, 'name' => 'view_any_abilities'] + $datetime,
             ['registry_id' => null, 'name' => 'create_ability'] + $datetime,
             ['registry_id' => null, 'name' => 'edit_ability'] + $datetime,
@@ -44,28 +44,28 @@ class AbilitiesTableSeeder extends Seeder
             ['registry_id' => 1, 'name' => 'cancel_acute_hemodialysis_case'] + $datetime, // destroy + policy
 
             // acute hd order
-            ['registry_id' => 1, 'name' => 'view_any_acute_hemodialysis_notes'] + $datetime, // index [view schedule]
-            ['registry_id' => 1, 'name' => 'create_acute_hemodialysis_note'] + $datetime, // create/store
-            ['registry_id' => 1, 'name' => 'view_acute_hemodialysis_note'] + $datetime, // show + policy
-            ['registry_id' => 1, 'name' => 'perform_acute_hemodialysis_note'] + $datetime, // perform + policy
+            ['registry_id' => 1, 'name' => 'view_any_acute_hemodialysis_orders'] + $datetime, // index [view schedule]
+            ['registry_id' => 1, 'name' => 'create_acute_hemodialysis_order'] + $datetime, // create/store
+            ['registry_id' => 1, 'name' => 'view_acute_hemodialysis_order'] + $datetime, // show + policy
+            ['registry_id' => 1, 'name' => 'perform_acute_hemodialysis_order'] + $datetime, // perform + policy
             // ['registry_id' => 1, 'name' => 'cancel_acute_hemodialysis_note'] + $datetime, // destroy + policy only!
             // ['registry_id' => 1, 'name' => 'edit_acute_hemodialysis_note'] + $datetime, // edit/update + policy only!
 
             // today slot request
             ['registry_id' => 1, 'name' => 'view_any_acute_hemodialysis_slot_requests'] + $datetime, // index
-            ['registry_id' => 1, 'name' => 'create_acute_hemodialysis_today_slot_request'] + $datetime, // schedule/reschedule/swap with today invole
+            ['registry_id' => 1, 'name' => 'create_acute_hemodialysis_today_slot_request'] + $datetime, // schedule/reschedule/swap with today involve
             ['registry_id' => 1, 'name' => 'approve_acute_hemodialysis_today_slot_request'] + $datetime, // approve + policy
             // ['registry_id' => 1, 'name' => 'cancel_acute_hemodialysis_today_slot_request'] + $datetime, // destroy + policy only!
             // ['registry_id' => 1, 'name' => 'edit_acute_hemodialysis_today_slot_request'] + $datetime, // no edit just destroy
             // ['registry_id' => 1, 'name' => 'view_acute_hemodialysis_today_slot_request'] + $datetime, // no show just detail in index
         ]);
 
-        Role::insert([
+        Role::query()->insert([
             ['registry_id' => null, 'name' => 'root', 'label' => null] + $datetime,
             ['registry_id' => null, 'name' => 'authority', 'label' => null] + $datetime, // authorize role to user
             ['registry_id' => null, 'name' => 'participant', 'label' => null] + $datetime,
 
-            ['registry_id' => 1, 'name' => 'acute_hemodialysis_nurse', 'label' => 'Aucte HD nurse'] + $datetime,
+            ['registry_id' => 1, 'name' => 'acute_hemodialysis_nurse', 'label' => 'Acute HD nurse'] + $datetime,
             ['registry_id' => 1, 'name' => 'acute_hemodialysis_nurse_manager', 'label' => 'Acute HD in charge nurse'] + $datetime,
             ['registry_id' => 1, 'name' => 'acute_hemodialysis_fellow', 'label' => 'Acute HD fellow'] + $datetime,
             ['registry_id' => 1, 'name' => 'acute_hemodialysis_staff', 'label' => 'Acute HD nephrologist'] + $datetime,

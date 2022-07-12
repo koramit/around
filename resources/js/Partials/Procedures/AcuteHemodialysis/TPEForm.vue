@@ -94,32 +94,32 @@
     <hr class="border border-dashed my-2 md:my-4 xl:my-8">
     <div class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8 2xl:grid-cols-4">
         <FormSelect
-            v-model="form.blood_pumb"
-            name="tpe.blood_pumb"
-            :error="$page.props.errors['tpe.blood_pumb']"
-            label="blood pumb (ml/min)"
-            :options="configs.blood_pumb"
+            v-model="form.blood_pump"
+            name="tpe.blood_pump"
+            :error="$page.props.errors['tpe.blood_pump']"
+            label="blood pump (ml/min)"
+            :options="configs.blood_pump"
         />
         <FormSelect
-            v-model="form.filtration_pumb"
-            name="tpe.filtration_pumb"
-            :error="$page.props.errors['tpe.filtration_pumb']"
-            label="filtration pumb (%)"
-            :options="configs.tpe_filtration_pumb_options"
+            v-model="form.filtration_pump"
+            name="tpe.filtration_pump"
+            :error="$page.props.errors['tpe.filtration_pump']"
+            label="filtration pump (%)"
+            :options="configs.tpe_filtration_pump_options"
         />
         <FormSelect
-            v-model="form.replacement_pumb"
-            name="tpe.replacement_pumb"
-            :error="$page.props.errors['tpe.replacement_pumb']"
-            label="replacement pumb (%)"
-            :options="configs.tpe_filtration_pumb_options"
+            v-model="form.replacement_pump"
+            name="tpe.replacement_pump"
+            :error="$page.props.errors['tpe.replacement_pump']"
+            label="replacement pump (%)"
+            :options="configs.tpe_filtration_pump_options"
         />
         <FormInput
-            v-model="form.drain_pumb"
+            v-model="form.drain_pump"
             type="tel"
-            name="tpe.drain_pumb"
-            :error="$page.props.errors['tpe.drain_pumb']"
-            label="drain pumb (%)"
+            name="tpe.drain_pump"
+            :error="$page.props.errors['tpe.drain_pump']"
+            label="drain pump (%)"
         />
     </div>
     <hr class="border border-dashed my-2 md:my-4 xl:my-8">
@@ -166,7 +166,7 @@
     <Transition name="slide-fade">
         <div
             class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8 2xl:grid-cols-4 my-2 md:my-4 xl:my-8"
-            v-if="form.anticoagulant == 'none'"
+            v-if="form.anticoagulant === 'none'"
         >
             <FormCheckbox
                 label="anticoagulant drip via peripheral IV"
@@ -179,7 +179,7 @@
                 v-model="form.anticoagulant_none_nss_200ml_flush_q_hour"
             />
         </div>
-        <div v-else-if="form.anticoagulant == 'heparin'">
+        <div v-else-if="form.anticoagulant === 'heparin'">
             <div class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8 2xl:grid-cols-4 my-2 md:my-4 xl:my-8">
                 <FormInput
                     label="loading dose (iu)"
@@ -209,7 +209,7 @@
         </div>
         <div
             class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8 2xl:grid-cols-4 my-2 md:my-4 xl:my-8"
-            v-else-if="form.anticoagulant == 'enoxaparin'"
+            v-else-if="form.anticoagulant === 'enoxaparin'"
         >
             <FormInput
                 label="dose (ml)"
@@ -223,7 +223,7 @@
         </div>
         <div
             class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8 2xl:grid-cols-4 my-2 md:my-4 xl:my-8"
-            v-else-if="form.anticoagulant == 'fondaparinux'"
+            v-else-if="form.anticoagulant === 'fondaparinux'"
         >
             <FormSelect
                 label="bolus dose (iu)"
@@ -235,7 +235,7 @@
         </div>
         <div
             class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8 2xl:grid-cols-4 my-2 md:my-4 xl:my-8"
-            v-else-if="form.anticoagulant == 'tinzaparin'"
+            v-else-if="form.anticoagulant === 'tinzaparin'"
         >
             <FormInput
                 label="dose (iu)"
@@ -258,14 +258,14 @@
 </template>
 
 <script setup>
-import FormCheckbox from '@/Components/Controls/FormCheckbox.vue';
-import FormInput from '@/Components/Controls/FormInput.vue';
-import FormSelect from '@/Components/Controls/FormSelect.vue';
-import FormRadio from '@/Components/Controls/FormRadio.vue';
-import AlertMessage from '@/Components/Helpers/AlertMessage.vue';
-import FormSelectOther from '@/Components/Controls/FormSelectOther.vue';
+import FormCheckbox from '../../../Components/Controls/FormCheckbox.vue';
+import FormInput from '../../../Components/Controls/FormInput.vue';
+import FormSelect from '../../../Components/Controls/FormSelect.vue';
+import FormRadio from '../../../Components/Controls/FormRadio.vue';
+import AlertMessage from '../../../Components/Helpers/AlertMessage.vue';
+import FormSelectOther from '../../../Components/Controls/FormSelectOther.vue';
 import { watch, reactive, ref } from 'vue';
-import { useSelectOther } from '@/functions/useSelectOther.js';
+import { useSelectOther } from '../../../functions/useSelectOther.js';
 
 const props = defineProps({
     modelValue: { type: Object, required: true },
@@ -320,7 +320,7 @@ watch (
     { deep: true }
 );
 const configs = reactive({...props.formConfigs});
-if (form.anticoagulant && configs.anticoagulants.findIndex(item => item.value == form.anticoagulant) === -1) {
+if (form.anticoagulant && configs.anticoagulants.findIndex(item => item.value === form.anticoagulant) === -1) {
     configs.anticoagulants.push({ value: form.anticoagulant, label: form.anticoagulant });
 }
 const anticoagulantInput = ref(null);
@@ -345,14 +345,14 @@ const errors = reactive({
     enoxaparin_dose: null,
     tinzaparin_dose: null,
 });
-const validate = (fieldname) => {
-    let validator = configs.validators[fieldname];
-    const value = validator.type == 'integer' ? parseInt(form[fieldname]) :  parseFloat(form[fieldname]);
+const validate = (fieldName) => {
+    let validator = configs.validators[fieldName];
+    const value = validator.type === 'integer' ? parseInt(form[fieldName]) :  parseFloat(form[fieldName]);
     if (value < validator.min || value > validator.max) {
-        errors[fieldname] = `${form[fieldname]} could not be saved. Accept range [${validator.min}, ${validator.max}].`;
-        form[fieldname] = null;
+        errors[fieldName] = `${form[fieldName]} could not be saved. Accept range [${validator.min}, ${validator.max}].`;
+        form[fieldName] = null;
     } else {
-        errors[fieldname] = '';
+        errors[fieldName] = '';
     }
 };
 </script>

@@ -2,8 +2,6 @@
 
 namespace App\Rules;
 
-use App\Models\CaseRecord;
-
 class HashedKeyExistsInCaseRecords extends CacheQueryResultRule
 {
     /**
@@ -13,9 +11,10 @@ class HashedKeyExistsInCaseRecords extends CacheQueryResultRule
      * @param  mixed  $value
      * @return bool
      */
-    public function passes($attribute, $value)
+    public function passes($attribute, $value): bool
     {
-        if ($caseRecord = CaseRecord::query()->findByUnhashKey($value)->first()) {
+        $classname = $this->subclass ?? 'App\Models\CaseRecord';
+        if ($caseRecord = $classname::query()->findByUnhashKey($value)->first()) {
             if ($this->cacheKeyPrefix) {
                 cache()->put($this->cacheKeyPrefix.'-validatedCaseRecord', $caseRecord);
             }
@@ -31,7 +30,7 @@ class HashedKeyExistsInCaseRecords extends CacheQueryResultRule
      *
      * @return string
      */
-    public function message()
+    public function message(): string
     {
         return trans('validation.exists');
     }

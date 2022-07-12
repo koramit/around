@@ -39,6 +39,7 @@ class CaseRecordIndexAction extends AcuteHemodialysisAction
                 'md' => $case->orders->first()?->author->first_name,
                 'can' => [
                     'edit_order' => $case->orders->first() ?? $user->can('edit', $case->orders->first()),
+                    'create_order' => $case->orders->first() || $user->can('create_acute_hemodialysis_order'),
                 ],
                 'routes' => [
                     'edit' => route('procedures.acute-hemodialysis.edit', $case->hashed_key),

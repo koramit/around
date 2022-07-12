@@ -28,7 +28,7 @@
                             class="px-4 py-2 flex items-center focus:text-primary-darker"
                             href="#"
                         >
-                            <div class="p-2 rounded-full bg-white hover:bg-primary transition-colors ease-in-out duration-200">
+                            <div class="action-icon">
                                 <IconCheckCircle class="w-4 h-4 text-green-600" />
                             </div>
                         </Link>
@@ -36,7 +36,7 @@
                             class="px-4 py-2 flex items-center focus:text-primary-darker"
                             href="#"
                         >
-                            <div class="p-2 rounded-full bg-white hover:bg-primary transition-colors ease-in-out duration-200">
+                            <div class="action-icon">
                                 <IconTimesCircle class="w-4 h-4 text-red-600" />
                             </div>
                         </Link>
@@ -44,7 +44,7 @@
                             class="px-4 py-2 flex items-center focus:text-primary-darker"
                             href="#"
                         >
-                            <div class="p-2 rounded-full bg-white hover:bg-primary transition-colors ease-in-out duration-200">
+                            <div class="action-icon">
                                 <IconTrash class="w-4 h-4 text-red-600" />
                             </div>
                         </Link>

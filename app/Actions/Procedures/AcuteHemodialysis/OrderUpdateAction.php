@@ -114,10 +114,10 @@ class OrderUpdateAction extends AcuteHemodialysisAction
                 'tpe.replacement_fluid_albumin_volume' => 'nullable|integer',
                 'tpe.replacement_fluid_ffp' => 'boolean',
                 'tpe.replacement_fluid_ffp_volume' => 'nullable|integer',
-                'tpe.blood_pumb' => ['nullable', Rule::in($this->FORM_CONFIGS['blood_pumb'])],
-                'tpe.filtration_pumb' => ['nullable', Rule::in($this->FORM_CONFIGS['tpe_filtration_pumb_options'])],
-                'tpe.replacement_pumb' => ['nullable', Rule::in($this->FORM_CONFIGS['tpe_filtration_pumb_options'])],
-                'tpe.drain_pumb' => 'nullable|integer',
+                'tpe.blood_pump' => ['nullable', Rule::in($this->FORM_CONFIGS['blood_pump'])],
+                'tpe.filtration_pump' => ['nullable', Rule::in($this->FORM_CONFIGS['tpe_filtration_pump_options'])],
+                'tpe.replacement_pump' => ['nullable', Rule::in($this->FORM_CONFIGS['tpe_filtration_pump_options'])],
+                'tpe.drain_pump' => 'nullable|integer',
                 'tpe.calcium_gluconate_10_percent_volume' => ['nullable', Rule::in($this->FORM_CONFIGS['calcium_gluconate_10_percent_volumes'])],
                 'tpe.calcium_gluconate_10_percent_timing' => ['nullable', Rule::in($this->FORM_CONFIGS['calcium_gluconate_10_percent_timings'])],
                 'tpe.anticoagulant' => 'nullable|string|max:255',
@@ -175,7 +175,7 @@ class OrderUpdateAction extends AcuteHemodialysisAction
         // base
         $rules = array_merge($rules, [
             'hemodynamic.stable' => 'boolean',
-            'hemodynamic.hypotention' => 'boolean',
+            'hemodynamic.hypotension' => 'boolean',
             'hemodynamic.inotropic_dependent' => 'boolean',
             'hemodynamic.severe_hypertension' => 'boolean',
             'hemodynamic.bradycardia' => 'boolean',
@@ -192,7 +192,7 @@ class OrderUpdateAction extends AcuteHemodialysisAction
 
             'life_threatening_condition.stable' => 'boolean',
             'life_threatening_condition.acute_coronary_syndrome' => 'boolean',
-            'life_threatening_condition.cardiac_arrhymia_with_hypotension' => 'boolean',
+            'life_threatening_condition.cardiac_arrhythmia_with_hypotension' => 'boolean',
             'life_threatening_condition.acute_ischemic_stroke' => 'boolean',
             'life_threatening_condition.acute_ich' => 'boolean',
             'life_threatening_condition.seizure' => 'boolean',

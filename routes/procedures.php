@@ -32,7 +32,7 @@ Route::middleware(['auth'])->prefix('procedures')->group(function () {
             Route::patch('/{hashedKey}', [AcuteHemodialysisCaseController::class, 'update'])
                ->name('update');
             Route::post('/orders', [AcuteHemodialysisOrderController::class, 'store'])
-               ->can('create_acute_hemodialysis_note')
+               ->can('create_acute_hemodialysis_order')
                ->name('orders.store');
             Route::get('/orders/{hashedKey}/edit', [AcuteHemodialysisOrderController::class, 'edit'])
                ->name('orders.edit');

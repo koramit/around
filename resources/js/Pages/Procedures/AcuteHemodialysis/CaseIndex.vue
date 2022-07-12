@@ -47,21 +47,21 @@
                         v-else
                         class="px-6 py4 border-t"
                     >
-                        <div class="flex items-center">
+                        <div class="flex items-center justify-center">
                             <span v-html="caseRecord[field]" />
                             <Link
                                 v-if="caseRecord.can.edit_order"
                                 :href="caseRecord.routes.edit_order"
-                                class="ml-4 p-2 rounded-full bg-white hover:bg-primary transition-colors ease-in-out duration-200"
+                                class="ml-2 action-icon"
                             >
-                                <IconEdit class="text-accent w-4 h-4" />
+                                <IconEdit class="w-4 h-4" />
                             </Link>
                             <Link
-                                v-else
+                                v-else-if="caseRecord.can.create_order"
                                 :href="caseRecord.routes.create_order"
-                                class="p-2 rounded-full bg-white hover:bg-primary transition-colors ease-in-out duration-200"
+                                class="action-icon"
                             >
-                                <IconCalendarPlus class="text-accent w-4 h-4" />
+                                <IconCalendarPlus class="w-4 h-4" />
                             </Link>
                         </div>
                     </td>
@@ -72,9 +72,9 @@
                         :href="caseRecord.routes.edit"
                     >
                         <div
-                            class="p-2 rounded-full bg-white hover:bg-primary transition-colors ease-in-out duration-200"
+                            class="action-icon"
                         >
-                            <IconDoubleRight class="w-4 h-4 text-accent" />
+                            <IconDoubleRight class="w-4 h-4" />
                         </div>
                     </Link>
                 </td>
@@ -105,7 +105,17 @@
                     v-if="!caseRecord.md"
                     class="flex justify-center items-center h-12"
                 >
-                    <p class="italic text-center w-full">
+                    <Link
+                        v-if="caseRecord.can.create_order"
+                        :href="caseRecord.routes.create_order"
+                        class="p-2 rounded-full bg-primary-darker text-accent"
+                    >
+                        <IconCalendarPlus class="w-4 h-4" />
+                    </Link>
+                    <p
+                        v-else
+                        class="italic text-center w-full"
+                    >
                         No order yet
                     </p>
                 </div>
@@ -120,11 +130,18 @@
                         </p>
                     </div>
                     <div class="flex items-center justify-between">
-                        <p>
+                        <p class="flex items-center">
                             On : <span
                                 class="text-complement font-semibold"
                                 v-text="caseRecord.date_note"
                             />
+                            <Link
+                                v-if="caseRecord.can.edit_order"
+                                :href="caseRecord.routes.edit_order"
+                                class="ml-2 p-2 rounded-full bg-primary-darker text-accent"
+                            >
+                                <IconEdit class="w-4 h-4" />
+                            </Link>
                         </p>
                         <p>
                             Type : <span
@@ -183,6 +200,13 @@ import IconEdit from '../../../Components/Helpers/Icons/IconEdit.vue';
 import IconCalendarPlus from '../../../Components/Helpers/Icons/IconCalendarPlus.vue';
 
 const SearchAdmission = defineAsyncComponent(() => import('../../../Components/Forms/SearchAdmission.vue'));
+/**
+ * @param cases.data[].patient_name
+ * @param cases.data[].md
+ * @param cases.data[].can.edit
+ * @param cases.data[].can.edit_order
+ * @param cases.data[].routes.create_order
+ * */
 const props = defineProps({
     cases: {type: Object, required: true},
     filters: {type: Object, required: true},

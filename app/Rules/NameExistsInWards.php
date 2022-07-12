@@ -13,9 +13,9 @@ class NameExistsInWards extends CacheQueryResultRule
      * @param  mixed  $value
      * @return bool
      */
-    public function passes($attribute, $value)
+    public function passes($attribute, $value): bool
     {
-        if ($ward = Ward::where('name', $value)->first()) {
+        if ($ward = Ward::query()->where('name', $value)->first()) {
             if ($this->cacheKeyPrefix) {
                 cache()->put($this->cacheKeyPrefix.'-validatedWard', $ward);
             }
@@ -31,7 +31,7 @@ class NameExistsInWards extends CacheQueryResultRule
      *
      * @return string
      */
-    public function message()
+    public function message(): string
     {
         return trans('validation.exists');
     }

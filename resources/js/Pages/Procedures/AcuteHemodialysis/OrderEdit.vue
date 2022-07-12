@@ -378,7 +378,7 @@ watch (
     (val) => {
         // reset predialysis_evaluations
         if (val.hemodynamic.stable) {
-            val.hemodynamic.hypotention = false;
+            val.hemodynamic.hypotension = false;
             val.hemodynamic.inotropic_dependent = false;
             val.hemodynamic.severe_hypertension = false;
             val.hemodynamic.bradycardia = false;
@@ -394,7 +394,7 @@ watch (
         }
         if (val.life_threatening_condition.stable) {
             val.life_threatening_condition.acute_coronary_syndrome = false;
-            val.life_threatening_condition.cardiac_arrhymia_with_hypotension = false;
+            val.life_threatening_condition.cardiac_arrhythmia_with_hypotension = false;
             val.life_threatening_condition.acute_ischemic_stroke = false;
             val.life_threatening_condition.acute_ich = false;
             val.life_threatening_condition.seizure = false;

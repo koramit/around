@@ -3,6 +3,7 @@
 namespace App\Actions\Procedures\AcuteHemodialysis;
 
 use App\Models\Notes\AcuteHemodialysisOrderNote;
+use App\Models\Resources\Ward;
 use App\Models\User;
 use App\Rules\HashedKeyExistsInCaseRecords;
 use App\Rules\NameExistsInAttendingStaff;
@@ -18,12 +19,12 @@ class OrderStoreAction extends AcuteHemodialysisAction
 {
     use OrderShareValidatable, SwapCodeGeneratable;
 
-    protected $FORM_VERSION = 1.0;
+    protected float $FORM_VERSION = 1.0;
 
-    protected $BASE_FORM_TEMPLATE = [
+    protected array $BASE_FORM_TEMPLATE = [
         'hemodynamic' => [
             'stable' => false,
-            'hypotention' => false,
+            'hypotension' => false,
             'inotropic_dependent' => false,
             'severe_hypertension' => false,
             'bradycardia' => false,
@@ -43,7 +44,7 @@ class OrderStoreAction extends AcuteHemodialysisAction
         'life_threatening_condition' => [
             'stable' => false,
             'acute_coronary_syndrome' => false,
-            'cardiac_arrhymia_with_hypotension' => false,
+            'cardiac_arrhythmia_with_hypotension' => false,
             'acute_ischemic_stroke' => false,
             'acute_ich' => false,
             'seizure' => false,
@@ -62,7 +63,7 @@ class OrderStoreAction extends AcuteHemodialysisAction
         'treatments_request' => null,
     ];
 
-    protected $HD_FORM_TEMPLATE = [
+    protected array $HD_FORM_TEMPLATE = [
         'access_type' => null,
         'access_site_coagulant' => null,
         'dialyzer' => null,
@@ -99,7 +100,7 @@ class OrderStoreAction extends AcuteHemodialysisAction
         'transfusion_other' => null,
     ];
 
-    protected $HF_FORM_TEMPLATE = [
+    protected array $HF_FORM_TEMPLATE = [
         'access_type' => null,
         'access_site_coagulant' => null,
         'dialyzer' => null,
@@ -125,7 +126,7 @@ class OrderStoreAction extends AcuteHemodialysisAction
         'transfusion_other' => null,
     ];
 
-    protected $TPE_FORM_TEMPLATE = [
+    protected array $TPE_FORM_TEMPLATE = [
         'access_type' => null,
         'access_site_coagulant' => null,
         'dialyzer' => 'Plasmaflo',
@@ -134,10 +135,10 @@ class OrderStoreAction extends AcuteHemodialysisAction
         'replacement_fluid_albumin_volume' => null,
         'replacement_fluid_ffp' => false,
         'replacement_fluid_ffp_volume' => null,
-        'blood_pumb' => 150,
-        'filtration_pumb' => 30,
-        'replacement_pumb' => 30,
-        'drain_pumb' => null,
+        'blood_pump' => 150,
+        'filtration_pump' => 30,
+        'replacement_pump' => 30,
+        'drain_pump' => null,
         'calcium_gluconate_10_percent_volume' => null,
         'calcium_gluconate_10_percent_timing' => null,
         'anticoagulant' => null,
@@ -150,7 +151,7 @@ class OrderStoreAction extends AcuteHemodialysisAction
         'tinzaparin_dose' => null,
     ];
 
-    protected $SLEDD_FORM_TEMPLATE = [
+    protected array $SLEDD_FORM_TEMPLATE = [
         'duration' => null,
         'access_type' => null,
         'access_site_coagulant' => null,
@@ -207,7 +208,7 @@ class OrderStoreAction extends AcuteHemodialysisAction
             'patient_type' => ['required', 'string', Rule::in($this->PATIENT_TYPES)],
             'dialysis_at' => ['required', 'string', 'max:255', new NameExistsInWards($cacheKeyPrefix)],
             'attending_staff' => ['required', 'string', 'max:255', new NameExistsInAttendingStaff($cacheKeyPrefix)],
-            'case_record_hashed_key' => ['required', new HashedKeyExistsInCaseRecords($cacheKeyPrefix)],
+            'case_record_hashed_key' => ['required', new HashedKeyExistsInCaseRecords($cacheKeyPrefix, 'App\Models\Registries\AcuteHemodialysisCaseRecord')],
             'date_note' => ['required', 'date'],
         ])->validate();
 

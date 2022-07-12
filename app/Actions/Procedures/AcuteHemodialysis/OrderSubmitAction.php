@@ -197,10 +197,10 @@ class OrderSubmitAction extends AcuteHemodialysisAction
                 'tpe.replacement_fluid_albumin_volume' => 'required_if:tpe.replacement_fluid_albumin,true|nullable|integer',
                 'tpe.replacement_fluid_ffp' => 'boolean',
                 'tpe.replacement_fluid_ffp_volume' => 'required_if:replacement_fluid_ffp_volume,true|nullable|integer',
-                'tpe.blood_pumb' => ['required', Rule::in($this->FORM_CONFIGS['blood_pumb'])],
-                'tpe.filtration_pumb' => ['required', Rule::in($this->FORM_CONFIGS['tpe_filtration_pumb_options'])],
-                'tpe.replacement_pumb' => ['required', Rule::in($this->FORM_CONFIGS['tpe_filtration_pumb_options'])],
-                'tpe.drain_pumb' => 'nullable|integer',
+                'tpe.blood_pump' => ['required', Rule::in($this->FORM_CONFIGS['blood_pump'])],
+                'tpe.filtration_pump' => ['required', Rule::in($this->FORM_CONFIGS['tpe_filtration_pump_options'])],
+                'tpe.replacement_pump' => ['required', Rule::in($this->FORM_CONFIGS['tpe_filtration_pump_options'])],
+                'tpe.drain_pump' => 'nullable|integer',
                 'tpe.calcium_gluconate_10_percent_volume' => ['nullable', Rule::in($this->FORM_CONFIGS['calcium_gluconate_10_percent_volumes'])],
                 'tpe.calcium_gluconate_10_percent_timing' => ['nullable', Rule::in($this->FORM_CONFIGS['calcium_gluconate_10_percent_timings'])],
                 'tpe.anticoagulant' => 'required|string|max:255',
@@ -317,7 +317,7 @@ class OrderSubmitAction extends AcuteHemodialysisAction
         // base
         $rules = array_merge($rules, [
             'hemodynamic.stable' => ['required', 'boolean', new AcceptedIfOthersFalsy($data['hemodynamic'])],
-            'hemodynamic.hypotention' => 'declined_if:hemodynamic.stable,true',
+            'hemodynamic.hypotension' => 'declined_if:hemodynamic.stable,true',
             'hemodynamic.inotropic_dependent' => 'declined_if:hemodynamic.stable,true',
             'hemodynamic.severe_hypertension' => 'declined_if:hemodynamic.stable,true',
             'hemodynamic.bradycardia' => 'declined_if:hemodynamic.stable,true',
@@ -334,7 +334,7 @@ class OrderSubmitAction extends AcuteHemodialysisAction
 
             'life_threatening_condition.stable' => ['required', 'boolean', new AcceptedIfOthersFalsy($data['life_threatening_condition'])],
             'life_threatening_condition.acute_coronary_syndrome' => 'declined_if:life_threatening_condition.stable,true',
-            'life_threatening_condition.cardiac_arrhymia_with_hypotension' => 'declined_if:life_threatening_condition.stable,true',
+            'life_threatening_condition.cardiac_arrhythmia_with_hypotension' => 'declined_if:life_threatening_condition.stable,true',
             'life_threatening_condition.acute_ischemic_stroke' => 'declined_if:life_threatening_condition.stable,true',
             'life_threatening_condition.acute_ich' => 'declined_if:life_threatening_condition.stable,true',
             'life_threatening_condition.seizure' => 'declined_if:life_threatening_condition.stable,true',

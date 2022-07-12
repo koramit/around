@@ -29,7 +29,7 @@
                     <td class="border-t">
                         <DropdownList v-if="order.actions.length">
                             <template #default>
-                                <div class="p-2 rounded-full bg-white hover:bg-primary transition-colors ease-in-out duration-200">
+                                <div class="action-icon">
                                     <IconDoubleDown class="w-4 h-4 text-accent" />
                                 </div>
                             </template>
