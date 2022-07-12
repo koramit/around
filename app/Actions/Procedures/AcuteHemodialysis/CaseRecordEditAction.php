@@ -64,17 +64,21 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
             ->transform(function ($note) use ($user) {
                 $actions = collect([
                     [
-                        'label' => 'Edit',
-                        'type' => 'link',
-                        'href' => route('procedures.acute-hemodialysis.orders.edit', $note->hashed_key),
-                        'can' => $user->can('edit', $note),
-                    ],
-                    [
                         'label' => 'Cancel',
                         'type' => 'button',
+                        'icon' => 'trash',
+                        'theme' => 'warning',
                         'href' => route('procedures.acute-hemodialysis.orders.destroy', $note->hashed_key),
                         'callback' => 'cancel-order',
                         'can' => $user->can('destroy', $note),
+                    ],
+                    [
+                        'label' => 'Edit',
+                        'type' => 'link',
+                        'icon' => 'edit',
+                        'theme' => 'accent',
+                        'href' => route('procedures.acute-hemodialysis.orders.edit', $note->hashed_key),
+                        'can' => $user->can('edit', $note),
                     ],
                 ])->filter(fn ($action) => $action['can']);
 

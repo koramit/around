@@ -16,7 +16,7 @@ class AcuteHemodialysisOrderNote extends Note
      *
      * @return void
      */
-    protected static function booted()
+    protected static function booted(): void
     {
         static::creating(function ($note) {
             $note->note_type_id = config('notes.acute_hd_order');
@@ -30,7 +30,7 @@ class AcuteHemodialysisOrderNote extends Note
     /**
      * Override.
      */
-    public function getCasts()
+    public function getCasts(): array
     {
         return array_merge(parent::getCasts(), ['status' => AcuteHemodialysisOrderStatus::class]);
     }
@@ -42,7 +42,7 @@ class AcuteHemodialysisOrderNote extends Note
 
     public function getChangRequestText(ArrayObject $changes): string
     {
-        $text = trim($this->meta['dialysis_type']).' / '.($this->meta['in_unit'] ? 'ไตเทียม' : 'ward').' / ';
+        $text = trim($this->meta['dialysis_type']).' / '.($this->meta['in_unit'] ? 'ห้อง Acute' : 'ward').' / ';
         $dateNoteStr = $this->date_note->format('Y-m-d');
         if ($dateNoteStr === $changes['date_note']) {
             $text = 'ขอ set '.$text.'วันนี้';

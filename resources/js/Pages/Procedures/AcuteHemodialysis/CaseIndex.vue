@@ -47,15 +47,16 @@
                         v-else
                         class="px-6 py4 border-t"
                     >
-                        <div class="flex items-center justify-center">
-                            <span v-html="caseRecord[field]" />
-                            <Link
-                                v-if="caseRecord.can.edit_order"
-                                :href="caseRecord.routes.edit_order"
-                                class="ml-2 action-icon"
-                            >
-                                <IconEdit class="w-4 h-4" />
-                            </Link>
+                        <div class="flex items-center justify-between">
+                            <template v-if="caseRecord.can.edit_order">
+                                <Link
+                                    :href="caseRecord.routes.edit_order"
+                                    class="action-icon"
+                                >
+                                    <IconEdit class="w-4 h-4" />
+                                </Link>
+                                <span v-html="caseRecord[field]" />
+                            </template>
                             <Link
                                 v-else-if="caseRecord.can.create_order"
                                 :href="caseRecord.routes.create_order"

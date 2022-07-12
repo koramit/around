@@ -27,49 +27,45 @@
                         v-text="order[field]"
                     />
                     <td class="border-t">
-                        <DropdownList v-if="order.actions.length">
-                            <template #default>
-                                <div class="action-icon">
-                                    <IconDoubleDown class="w-4 h-4 text-accent" />
-                                </div>
+                        <div
+                            v-if="order.actions.length"
+                            class="flex items-center justify-center"
+                        >
+                            <template
+                                v-for="(action, action_key) in order.actions"
+                                :key="action_key"
+                            >
+                                <Link
+                                    v-if="action.type === 'link'"
+                                    :href="action.href"
+                                    class="flex items-center px-4 py-2 group"
+                                >
+                                    <span class="mr-2 p-2 group-hover:bg-primary-darker rounded-full transition-colors duration-200 ease-in">
+                                        <IconVector
+                                            :name="action.icon"
+                                            :theme="action.theme"
+                                            class="w-4 h-4"
+                                        />
+                                    </span>
+                                    {{ action.label }}
+                                </Link>
+                                <button
+                                    v-else
+                                    :key="action_key"
+                                    class="flex items-center px-4 py-2 group"
+                                    @click="handleAction(action)"
+                                >
+                                    <span class="mr-2 p-2 group-hover:bg-primary-darker rounded-full transition-colors duration-200 ease-in">
+                                        <IconVector
+                                            :name="action.icon"
+                                            :theme="action.theme"
+                                            class="w-4 h-4"
+                                        />
+                                    </span>
+                                    {{ action.label }}
+                                </button>
                             </template>
-                            <template #dropdown>
-                                <div class="mt-2 py-0 overflow-hidden shadow-xl bg-complement text-white cursor-pointer rounded text-sm">
-                                    <template
-                                        v-for="(action, action_key) in order.actions"
-                                        :key="action_key"
-                                    >
-                                        <Link
-                                            v-if="action.type === 'link'"
-                                            :href="action.href"
-                                            class="block w-full text-left px-6 py-2 hover:bg-complement-darker hover:text-primary transition-colors duration-200 ease-out"
-                                        >
-                                            {{ action.label }}
-                                        </Link>
-                                        <button
-                                            v-else
-                                            :key="action_key"
-                                            class="block w-full text-left px-6 py-2 hover:bg-complement-darker hover:text-primary transition-colors duration-200 ease-out"
-                                            @click="handleAction(action)"
-                                        >
-                                            {{ action.label }}
-                                        </button>
-                                    </template>
-                                    <!-- <Link
-                                        v-for="(action, action_key) in order.actions"
-                                        :key="action_key"
-                                        :href="action.href"
-                                        :as="action.as"
-                                        :type="action.type"
-                                        :method="action.method"
-                                        :preserve-state="action.preserveState"
-                                        class="block w-full text-left px-6 py-2 hover:bg-complement-darker hover:text-primary transition-colors duration-200 ease-out"
-                                    >
-                                        {{ action.label }}
-                                    </Link> -->
-                                </div>
-                            </template>
-                        </DropdownList>
+                        </div>
                     </td>
                 </tr>
             </table>
@@ -93,18 +89,38 @@
                         </template>
                         <template #dropdown>
                             <div class="mt-2 py-0 overflow-hidden shadow-xl bg-complement text-white cursor-pointer rounded text-sm whitespace-nowrap">
-                                <Link
+                                <template
                                     v-for="(action, action_key) in order.actions"
                                     :key="action_key"
-                                    :href="action.href"
-                                    :as="action.as"
-                                    :type="action.type"
-                                    :method="action.method"
-                                    :preserve-state="action.preserveState"
-                                    class="block w-full text-left p-2"
                                 >
-                                    {{ action.label }}
-                                </Link>
+                                    <Link
+                                        v-if="action.type === 'link'"
+                                        :href="action.href"
+                                        class="block w-full text-left px-6 py-2 hover:bg-complement-darker hover:text-primary transition-colors duration-200 ease-out"
+                                    >
+                                        <span class="flex items-center">
+                                            <IconVector
+                                                :name="action.icon"
+                                                class="w-4 h-4 mr-2"
+                                            />
+                                            {{ action.label }}
+                                        </span>
+                                    </Link>
+                                    <button
+                                        v-else
+                                        :key="action_key"
+                                        class="block w-full text-left px-6 py-2 hover:bg-complement-darker hover:text-primary transition-colors duration-200 ease-out"
+                                        @click="handleAction(action)"
+                                    >
+                                        <span class="flex items-center">
+                                            <IconVector
+                                                :name="action.icon"
+                                                class="w-4 h-4 mr-2"
+                                            />
+                                            {{ action.label }}
+                                        </span>
+                                    </button>
+                                </template>
                             </div>
                         </template>
                     </DropdownList>
@@ -146,12 +162,12 @@
 </template>
 
 <script setup>
-import { Link, usePage } from '@inertiajs/inertia-vue3';
-import IconUserMd from '@/Components/Helpers/Icons/IconUserMd.vue';
-import DropdownList from '@/Components/Helpers/DropdownList.vue';
-import IconDoubleDown from '@/Components/Helpers/Icons/IconDoubleDown.vue';
+import {Link, useForm, usePage} from '@inertiajs/inertia-vue3';
+import IconUserMd from '../../../Components/Helpers/Icons/IconUserMd.vue';
+import DropdownList from '../../../Components/Helpers/DropdownList.vue';
+import IconDoubleDown from '../../../Components/Helpers/Icons/IconDoubleDown.vue';
 import { watch } from 'vue';
-import { Inertia } from '@inertiajs/inertia';
+import IconVector from '../../../Components/Helpers/IconVector.vue';
 defineProps({
     orders: { type: Array, required: true }
 });
@@ -169,13 +185,9 @@ watch(
             return;
         }
         if (usePage().props.value.event.name === cancelOrderConfirmedEvent) {
-            Inertia.visit(cancelOrderEndpoint, {
-                method: 'delete',
-                preserveState: false,
-                data: { reason: usePage().props.value.event.payload },
-                onFinish: () => cancelOrderEndpoint = null,
-            });
-            console.log('perform comfirmed action...');
+            useForm({reason: usePage().props.value.event.payload}).delete(cancelOrderEndpoint, {preserveState: false});
+
+            console.log('perform confirmed action...');
         }
 
     }
@@ -184,7 +196,7 @@ watch(
 const cancelOrderConfirmedEvent = 'cancel-acute-hd-order-confirmed';
 let cancelOrderEndpoint;
 const handleAction = (action) => {
-    if (action.callback == 'cancel-order') {
+    if (action.callback === 'cancel-order') {
         cancelOrderEndpoint = action.href;
         showConfirm({ confirmText: 'Cancel order aa bb cc dd', confirmedEvent: cancelOrderConfirmedEvent, requireReason: true });
     }

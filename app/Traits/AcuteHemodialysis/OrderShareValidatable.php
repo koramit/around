@@ -2,7 +2,7 @@
 
 namespace App\Traits\AcuteHemodialysis;
 
-use App\Models\Registries\AcuteHemodialysisCaseRecord as CaseRecord;
+use Illuminate\Database\Eloquent\Model;
 
 trait OrderShareValidatable
 {
@@ -32,7 +32,7 @@ trait OrderShareValidatable
         return collect($this->IN_UNIT)->merge($this->OUT_UNIT)->unique()->values()->all();
     }
 
-    public function isDialysisReservable(CaseRecord $caseRecord): bool
+    public function isDialysisReservable(Model $caseRecord): bool
     {
         return $caseRecord->orders()->activeStatuses()->count() === 0;
     }

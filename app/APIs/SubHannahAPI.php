@@ -197,7 +197,7 @@ class SubHannahAPI implements PatientAPI, AuthenticationAPI
     }
 
     /**
-     * @param array $data
+     * @param  array  $data
      * @return array
      */
     public function handleAdmission(array $data): array
@@ -210,6 +210,7 @@ class SubHannahAPI implements PatientAPI, AuthenticationAPI
         $data['dismissed_at'] = $data['discharged_at'] ? Carbon::parse($data['discharged_at'], 'asia/bangkok')->tz('UTC') : null;
         $data['patient']['marital_status_name'] = $data['patient']['marital_status'];
         $data['patient']['location'] = $data['patient']['postcode'];
+
         return $data;
     }
 }

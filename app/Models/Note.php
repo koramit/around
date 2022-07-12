@@ -8,7 +8,16 @@ use App\Traits\PKHashable;
 use Illuminate\Database\Eloquent\Casts\AsArrayObject;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
+/**
+ * App\Models\Note
+ *
+ * @property-read string $hashed_key
+ * @property-read string place_name
+ */
 class Note extends Model
 {
     use HasFactory, PKHashable;
@@ -21,7 +30,7 @@ class Note extends Model
         'date_note' => 'date',
     ];
 
-    public function patient()
+    public function patient(): HasOneThrough
     {
         return $this->hasOneThrough(
             Patient::class, // target
@@ -29,31 +38,31 @@ class Note extends Model
             'id', // selected key on the via table...
             'id', // selected key on the target table...
             'case_record_id', // link key this table => via table...
-            'patient_id', // link key via table => target table...
+            'patient_id' // link key via table => target table...
         );
     }
 
-    public function caseRecord()
+    public function caseRecord(): BelongsTo
     {
         return $this->belongsTo(CaseRecord::class);
     }
 
-    public function author()
+    public function author(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    public function attendingStaff()
+    public function attendingStaff(): BelongsTo
     {
         return $this->belongsTo(AttendingStaff::class);
     }
 
-    public function changeRequests()
+    public function changeRequests(): MorphMany
     {
         return $this->morphMany(DocumentChangeRequest::class, 'changeable');
     }
 
-    public function actionLogs()
+    public function actionLogs(): MorphMany
     {
         return $this->morphMany(ResourceActionLog::class, 'loggable');
     }
