@@ -6,7 +6,7 @@ use App\Models\Notes\AcuteHemodialysisOrderNote;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 
-class OrderRescheduleAction extends AcuteHemodialysisAction
+class OrderScheduleAction extends AcuteHemodialysisAction
 {
     public function __invoke(array $data, string $hashedKey, User $user): array
     {
@@ -29,24 +29,24 @@ class OrderRescheduleAction extends AcuteHemodialysisAction
         ]);
 
         if (! $ensureSlotAvailable['available']) {
-            $message = [
+            return [
                 'type' => 'danger',
                 'title' => 'Cannot reschedule.',
                 'message' => 'Slot not available on '.now()->create($validated['date_note'])->format('M j'),
             ];
         }
 
-        // check if rechedule from today maybe need request
+        // check if reschedule from today maybe need request
         if ($note->date_note->format('Y-m-d') === $this->TODAY) {
             return [
                 'type' => 'warning',
-                'tilte' => 'Cannot reschedule.',
-                'message' => 'Unhandle rechedule from today.',
+                'title' => 'Cannot reschedule.',
+                'message' => 'Unhandled reschedule from today.',
             ];
         }
 
         $message = [
-            'type' => 'danger',
+            'type' => 'info',
             'title' => 'Reschedule successful.',
             'message' => 'Form '.$note->date_note->format('M j').' to '.now()->create($validated['date_note'])->format('M j'),
         ];
