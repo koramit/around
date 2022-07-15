@@ -7,8 +7,8 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LocalizationController;
 use App\Http\Controllers\PreferenceController;
 use App\Http\Controllers\Resources\AdmissionController;
-use App\Http\Controllers\Resources\AttendingStaffController;
 use App\Http\Controllers\Resources\PatientRecentlyAdmissionController;
+use App\Http\Controllers\Resources\PeopleController;
 use App\Http\Controllers\Resources\WardController;
 use App\Http\Controllers\TermsAndPoliciesController;
 use App\Http\Controllers\UploadController;
@@ -38,7 +38,7 @@ Route::middleware(['auth'])->group(function () {
     })->can('view_any_patients')->name('patients');
 });
 
-// resurces
+// resources
 Route::middleware(['auth', 'can:get_shared_api_resources'])->name('resources.api.')->group(function () {
     Route::post('admissions', AdmissionController::class)
          ->name('admissions.show');
@@ -46,8 +46,8 @@ Route::middleware(['auth', 'can:get_shared_api_resources'])->name('resources.api
          ->name('patient-recently-admission.show');
     Route::get('wards', WardController::class)
          ->name('wards');
-    Route::get('staffs', AttendingStaffController::class)
-         ->name('staffs');
+    Route::get('people', PeopleController::class)
+         ->name('people');
 });
 
 // uploads
