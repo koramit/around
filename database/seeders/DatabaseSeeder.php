@@ -11,12 +11,12 @@ class DatabaseSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
         $this->call([
             DivisionsTableSeeder::class,
             WardsTableSeeder::class,
-            AttendingStaffTableSeeder::class,
+            PeopleTableSeeder::class,
             NoteTypesTableSeeder::class,
             RegistriesTableSeeder::class,
             AbilitiesTableSeeder::class,

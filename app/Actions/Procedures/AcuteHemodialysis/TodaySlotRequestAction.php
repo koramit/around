@@ -41,14 +41,14 @@ class OrderTodaySlotRequestAction extends AcuteHemodialysisAction
             'authority_ability_id' => $this->APPROVE_ACUTE_HEMODIALYSIS_TODAY_SLOT_REQUEST_ABILITY_ID,
         ]);
         $note->update([
-            'status' => 'rescheduling',
+            'status' => 'scheduling',
             'meta->submit_while_rescheduling' => $note->status === 'submitted',
         ]);
 
         return [
             'type' => 'warning',
-            'title' => 'Reschedule request successful',
-            'message' => 'Order pending for approval',
+            'title' => 'Reschedule request successful.',
+            'message' => 'Order pending for approval.',
         ];
     }
 }

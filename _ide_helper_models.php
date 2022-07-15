@@ -39,6 +39,7 @@ namespace App\Models{
 /**
  * App\Models\CaseRecord
  *
+ * @property-read string $hashed_key
  * @property int $id
  * @property int $patient_id
  * @property int $registry_id
@@ -74,6 +75,8 @@ namespace App\Models{
 /**
  * App\Models\DocumentChangeRequest
  *
+ * @property-read string $hashed_key
+ * @property-read string $change_request_text
  * @property int $id
  * @property string $changeable_type
  * @property int $changeable_id
@@ -81,26 +84,57 @@ namespace App\Models{
  * @property mixed $changes
  * @property int $status
  * @property int $requester_id
- * @property int|null $authority_id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon $submitted_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ResourceActionLog[] $actionLogs
+ * @property-read int|null $action_logs_count
  * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $changeable
  * @property-read \App\Models\User|null $requester
+ * @method static \Illuminate\Database\Eloquent\Builder|DocumentChangeRequest findByUnhashKey(string $hashed)
  * @method static \Illuminate\Database\Eloquent\Builder|DocumentChangeRequest newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|DocumentChangeRequest newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|DocumentChangeRequest query()
  * @method static \Illuminate\Database\Eloquent\Builder|DocumentChangeRequest whereAuthorityAbilityId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|DocumentChangeRequest whereAuthorityId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|DocumentChangeRequest whereChangeableId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|DocumentChangeRequest whereChangeableType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|DocumentChangeRequest whereChanges($value)
- * @method static \Illuminate\Database\Eloquent\Builder|DocumentChangeRequest whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|DocumentChangeRequest whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|DocumentChangeRequest whereRequesterId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|DocumentChangeRequest whereStatus($value)
- * @method static \Illuminate\Database\Eloquent\Builder|DocumentChangeRequest whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|DocumentChangeRequest whereSubmittedAt($value)
  */
 	class DocumentChangeRequest extends \Eloquent {}
+}
+
+namespace App\Models\DocumentChangeRequests{
+/**
+ * App\Models\DocumentChangeRequests\AcuteHemodialysisSlotRequest
+ *
+ * @property int $id
+ * @property string $changeable_type
+ * @property int $changeable_id
+ * @property int $authority_ability_id
+ * @property mixed $changes
+ * @property int $status
+ * @property int $requester_id
+ * @property \Illuminate\Support\Carbon $submitted_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ResourceActionLog[] $actionLogs
+ * @property-read int|null $action_logs_count
+ * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $changeable
+ * @property-read \App\Models\User|null $requester
+ * @method static \Illuminate\Database\Eloquent\Builder|DocumentChangeRequest findByUnhashKey(string $hashed)
+ * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisSlotRequest newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisSlotRequest newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisSlotRequest query()
+ * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisSlotRequest whereAuthorityAbilityId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisSlotRequest whereChangeableId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisSlotRequest whereChangeableType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisSlotRequest whereChanges($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisSlotRequest whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisSlotRequest whereRequesterId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisSlotRequest whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisSlotRequest whereSubmittedAt($value)
+ */
+	class AcuteHemodialysisSlotRequest extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -126,6 +160,8 @@ namespace App\Models{
 /**
  * App\Models\Note
  *
+ * @property-read string $hashed_key
+ * @property-read string $place_name
  * @property int $id
  * @property int $case_record_id
  * @property int $note_type_id
@@ -142,7 +178,7 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ResourceActionLog[] $actionLogs
  * @property-read int|null $action_logs_count
- * @property-read \App\Models\Resources\AttendingStaff|null $attendingStaff
+ * @property-read \App\Models\Resources\Person|null $attendingStaff
  * @property-read \App\Models\User|null $author
  * @property-read \App\Models\CaseRecord $caseRecord
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\DocumentChangeRequest[] $changeRequests
@@ -176,6 +212,7 @@ namespace App\Models\Notes{
 /**
  * App\Models\Notes\AcuteHemodialysisOrderNote
  *
+ * @property-read string $cancel_confirm_text
  * @property int $id
  * @property int $case_record_id
  * @property int $note_type_id
@@ -185,14 +222,14 @@ namespace App\Models\Notes{
  * @property mixed $meta
  * @property mixed $form
  * @property mixed|null $report
- * @property array $status
+ * @property string|null $status
  * @property \Illuminate\Support\Carbon $date_note
  * @property int $author_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ResourceActionLog[] $actionLogs
  * @property-read int|null $action_logs_count
- * @property-read \App\Models\Resources\AttendingStaff|null $attendingStaff
+ * @property-read \App\Models\Resources\Person|null $attendingStaff
  * @property-read \App\Models\User|null $author
  * @property-read \App\Models\CaseRecord $caseRecord
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\DocumentChangeRequest[] $changeRequests
@@ -203,6 +240,7 @@ namespace App\Models\Notes{
  * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisOrderNote newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisOrderNote newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisOrderNote query()
+ * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisOrderNote slotOccupiedStatuses()
  * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisOrderNote whereAttendingStaffId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisOrderNote whereAuthorId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisOrderNote whereCaseRecordId($value)
@@ -270,8 +308,7 @@ namespace App\Models{
  * @property int $action
  * @property mixed|null $payload
  * @property int $actor_id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon $performed_at
  * @property-read \App\Models\User|null $actor
  * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $loggable
  * @method static \Illuminate\Database\Eloquent\Builder|ResourceActionLog newModelQuery()
@@ -279,12 +316,11 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|ResourceActionLog query()
  * @method static \Illuminate\Database\Eloquent\Builder|ResourceActionLog whereAction($value)
  * @method static \Illuminate\Database\Eloquent\Builder|ResourceActionLog whereActorId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ResourceActionLog whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|ResourceActionLog whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|ResourceActionLog whereLoggableId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|ResourceActionLog whereLoggableType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|ResourceActionLog wherePayload($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ResourceActionLog whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ResourceActionLog wherePerformedAt($value)
  */
 	class ResourceActionLog extends \Eloquent {}
 }
@@ -320,29 +356,6 @@ namespace App\Models\Resources{
  * @method static \Illuminate\Database\Eloquent\Builder|Admission withPlaceName()
  */
 	class Admission extends \Eloquent {}
-}
-
-namespace App\Models\Resources{
-/**
- * App\Models\Resources\AttendingStaff
- *
- * @property int $id
- * @property string $name
- * @property int $division_id
- * @property bool $active
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @method static \Illuminate\Database\Eloquent\Builder|AttendingStaff newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|AttendingStaff newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|AttendingStaff query()
- * @method static \Illuminate\Database\Eloquent\Builder|AttendingStaff whereActive($value)
- * @method static \Illuminate\Database\Eloquent\Builder|AttendingStaff whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|AttendingStaff whereDivisionId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|AttendingStaff whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|AttendingStaff whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|AttendingStaff whereUpdatedAt($value)
- */
-	class AttendingStaff extends \Eloquent {}
 }
 
 namespace App\Models\Resources{
@@ -397,8 +410,9 @@ namespace App\Models\Resources{
 
 namespace App\Models\Resources{
 /**
- * App\Models\Resources\Patient
+ * App\Models\Resources
  *
+ * @property-read string $first_name
  * @property int $id
  * @property string $hn
  * @property bool $gender
@@ -423,6 +437,31 @@ namespace App\Models\Resources{
  * @method static \Illuminate\Database\Eloquent\Builder|Patient whereUpdatedAt($value)
  */
 	class Patient extends \Eloquent {}
+}
+
+namespace App\Models\Resources{
+/**
+ * App\Models\Resources\Person
+ *
+ * @property int $id
+ * @property string $name
+ * @property int $division_id
+ * @property int $position
+ * @property bool $active
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder|Person newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Person newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Person query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Person whereActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Person whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Person whereDivisionId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Person whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Person whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Person wherePosition($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Person whereUpdatedAt($value)
+ */
+	class Person extends \Eloquent {}
 }
 
 namespace App\Models\Resources{
@@ -510,8 +549,9 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * App\Models\User
+ * App\Modes\User
  *
+ * @property-read string $first_name
  * @property int $id
  * @property string $name
  * @property string $login

@@ -11,14 +11,15 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
-        Schema::create('attending_staff', function (Blueprint $table) {
+        Schema::create('people', function (Blueprint $table) {
             $table->smallIncrements('id');
             $table->string('name')->unique()->collation(config('database.th_collation'));
             $table->unsignedSmallInteger('division_id')->default(1);
-            $table->foreign('division_id')->references('id')->on('divisions')->constrained();
-            $table->boolean('active')->default(true)->index();
+            $table->unsignedTinyInteger('position')->default(1);
+            $table->boolean('active')->default(true);
+            $table->index(['position', 'division_id', 'active']);
             $table->timestamps();
         });
     }
@@ -28,7 +29,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
     }
 };
