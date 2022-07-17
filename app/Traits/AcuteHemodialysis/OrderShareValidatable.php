@@ -2,8 +2,6 @@
 
 namespace App\Traits\AcuteHemodialysis;
 
-use Illuminate\Database\Eloquent\Model;
-
 trait OrderShareValidatable
 {
     protected array $IN_UNIT = [
@@ -32,7 +30,7 @@ trait OrderShareValidatable
         return collect($this->IN_UNIT)->merge($this->OUT_UNIT)->unique()->values()->all();
     }
 
-    public function isDialysisReservable(Model $caseRecord): bool
+    public function isDialysisReservable($caseRecord): bool
     {
         return $caseRecord->orders()->activeStatuses()->count() === 0;
     }

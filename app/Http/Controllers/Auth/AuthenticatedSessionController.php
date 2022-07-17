@@ -5,22 +5,21 @@ namespace App\Http\Controllers\Auth;
 use App\Contracts\AuthenticationAPI;
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Request;
-use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class AuthenticatedSessionController extends Controller
 {
     /**
      * Display the login view.
      *
-     * @return \Inertia\Respons
+     * @return Response
      */
     public function create()
     {
-        Session::flash('page-title', __('Please Login'));
+        session()->flash('page-title', __('Please Login'));
 
         return Inertia::render('Auth/LoginForm', [
             'links' => [
@@ -29,18 +28,18 @@ class AuthenticatedSessionController extends Controller
         ]);
     }
 
-    public function store(AuthenticationAPI $api)
+    public function store(Request $request, AuthenticationAPI $api)
     {
-        Request::validate([
+        $validated = $request->validate([
             'login' => 'required|string',
             'password' => 'required|string',
         ]);
 
         if (config('auth.guards.web.provider') === 'avatars') {
-            return $this->storeAvatarUser();
+            return $this->storeAvatarUser($request);
         }
 
-        $data = $api->authenticate(Request::input('login'), Request::input('password'));
+        $data = $api->authenticate($validated['login'], $validated['password']);
 
         if (! $data['found']) {
             return back()->withErrors([
@@ -48,16 +47,15 @@ class AuthenticatedSessionController extends Controller
             ]);
         }
 
-        $user = User::whereLogin(Request::input('login'))->first();
-        if ($user = User::whereLogin(Request::input('login'))->first()) {
+        if ($user = User::whereLogin($validated['login'])->first()) {
             Auth::login($user);
 
-            return Redirect::intended(route($user->home_page));
+            return redirect()->intended(route($user->home_page));
         }
 
-        Session::put('profile', $data);
+        session()->put('profile', $data);
 
-        return Redirect::route('register');
+        return redirect()->route('register');
     }
 
     public function update()
@@ -65,21 +63,21 @@ class AuthenticatedSessionController extends Controller
         return ['active' => true];
     }
 
-    public function destroy()
+    public function destroy(Request $request)
     {
         Auth::guard('web')->logout();
 
-        Request::session()->invalidate();
+        $request->session()->invalidate();
 
-        Request::session()->regenerateToken();
+        $request->session()->regenerateToken();
 
-        return Redirect::route('login');
+        return redirect()->route('login');
     }
 
-    protected function storeAvatarUser()
+    protected function storeAvatarUser(Request $request)
     {
-        if (Auth::attempt(Request::only(['login', 'password']), )) {
-            return Redirect::intended(route(Auth::user()->home_page));
+        if (Auth::attempt($request->only(['login', 'password']))) {
+            return redirect()->intended(route(Auth::user()->home_page));
         }
 
         return back()->withErrors([

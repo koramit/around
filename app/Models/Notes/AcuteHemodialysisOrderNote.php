@@ -5,11 +5,18 @@ namespace App\Models\Notes;
 use App\Casts\AcuteHemodialysisOrderStatus;
 use App\Models\Note;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Casts\ArrayObject;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
+/**
+ * App\Models\Notes\AcuteHemodialysisOrderNote
+ *
+ * @property-read string $cancel_confirm_text
+ * */
 class AcuteHemodialysisOrderNote extends Note
 {
     protected $table = 'notes';
+
+    protected string $defaultChangeRequestClass = '\App\Models\DocumentChangeRequests\AcuteHemodialysisSlotRequest';
 
     /**
      * The "booted" method of the model.
@@ -35,21 +42,21 @@ class AcuteHemodialysisOrderNote extends Note
         return array_merge(parent::getCasts(), ['status' => AcuteHemodialysisOrderStatus::class]);
     }
 
+    /** @alias $cancel_confirm_text */
+    protected function cancelConfirmText(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => "Cancel {$this->meta['dialysis_type']} order on {$this->date_note->format('M j')}",
+        );
+    }
+
     public function scopeActiveStatuses($query)
     {
         $query->whereIn('status', (new AcuteHemodialysisOrderStatus)->getActiveStatusCodes());
     }
 
-    public function getChangRequestText(ArrayObject $changes): string
+    public function scopeSlotOccupiedStatuses($query)
     {
-        $text = trim($this->meta['dialysis_type']).' / '.($this->meta['in_unit'] ? 'ห้อง Acute' : 'ward').' / ';
-        $dateNoteStr = $this->date_note->format('Y-m-d');
-        if ($dateNoteStr === $changes['date_note']) {
-            $text = 'ขอ set '.$text.'วันนี้';
-        } else {
-            $text = 'ขอย้าย '.$text.'มาวันนี้';
-        }
-
-        return $text;
+        $query->whereIn('status', (new AcuteHemodialysisOrderStatus)->getSlotOccupiedStatusCodes());
     }
 }

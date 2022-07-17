@@ -17,14 +17,16 @@ class CaseRecordIndexAction extends AcuteHemodialysisAction
             return []; // call api + query params
         }
 
+        $ilike = config('database.ilike');
+
         $cases = CaseRecord::query()
             ->with(['patient', 'orders' => fn ($q) => $q->with('author')->activeStatuses()])
-            ->when($filters['search'] ?? null, function ($query, $search) {
-                $query->where('meta->name', 'like', $search.'%')
-                    ->orWhere('meta->hn', 'like', $search.'%');
+            ->when($filters['search'] ?? null, function ($query, $search) use ($ilike) {
+                $query->where('meta->name', $ilike, $search.'%')
+                    ->orWhere('meta->hn', $ilike, $search.'%');
             })->orderByDesc(
                 AcuteHemodialysisOrderNote::query()
-                    ->select('created_at')
+                    ->select('date_note')
                     ->whereColumn('notes.case_record_id', 'case_records.id')
                     ->latest('date_note')
                     ->take(1)
@@ -35,11 +37,12 @@ class CaseRecordIndexAction extends AcuteHemodialysisAction
                 'patient_name' => $case->patient->full_name,
                 'date_note' => $case->orders->first()?->date_note?->format('M j'),
                 'dialysis_type' => $case->orders->first()?->meta['dialysis_type'],
-                'status' => $this->styleOrderStatus($case->orders->first()?->status),
+                'dialysis_at' => $case->orders->first() ? ($case->orders->first()->meta['in_unit'] ? 'in' : 'out') : null,
+                'status' => $this->styleStatusBadge($case->orders->first()?->status),
                 'md' => $case->orders->first()?->author->first_name,
                 'can' => [
-                    'edit_order' => $case->orders->first() ?? $user->can('edit', $case->orders->first()),
-                    'create_order' => $case->orders->first() || $user->can('create_acute_hemodialysis_order'),
+                    'edit_order' => $case->orders->first() && $user->can('edit', $case->orders->first()),
+                    'create_order' => ! $case->orders->first() && $user->can('create_acute_hemodialysis_order'),
                 ],
                 'routes' => [
                     'edit' => route('procedures.acute-hemodialysis.edit', $case->hashed_key),
@@ -71,14 +74,5 @@ class CaseRecordIndexAction extends AcuteHemodialysisAction
             ],
             'flash' => $flash,
         ];
-    }
-
-    protected function styleOrderStatus(mixed $status): ?string
-    {
-        if (! $status) {
-            return null;
-        }
-
-        return view('partials.status-badge.acute-hd-order')->with(['status' => $status])->toHtml();
     }
 }

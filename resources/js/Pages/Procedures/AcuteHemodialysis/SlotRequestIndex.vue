@@ -23,34 +23,62 @@
                         :key="field"
                         v-text="request[field]"
                     />
-                    <td class="border-t flex">
-                        <Link
-                            class="px-4 py-2 flex items-center focus:text-primary-darker"
-                            href="#"
+                    <!--actions -->
+                    <td class="border-t">
+                        <ActionColumn
+                            v-if="request.actions.length"
+                            :actions="request.actions"
+                            @action-clicked="handleActionCLicked"
+                        />
+                        <div
+                            v-else
+                            class="p-2 flex justify-center items-center"
                         >
-                            <div class="action-icon">
-                                <IconCheckCircle class="w-4 h-4 text-green-600" />
-                            </div>
-                        </Link>
-                        <Link
-                            class="px-4 py-2 flex items-center focus:text-primary-darker"
-                            href="#"
-                        >
-                            <div class="action-icon">
-                                <IconTimesCircle class="w-4 h-4 text-red-600" />
-                            </div>
-                        </Link>
-                        <Link
-                            class="px-4 py-2 flex items-center focus:text-primary-darker"
-                            href="#"
-                        >
-                            <div class="action-icon">
-                                <IconTrash class="w-4 h-4 text-red-600" />
-                            </div>
-                        </Link>
+                            <span v-html="request.status" />
+                        </div>
                     </td>
                 </tr>
             </table>
+        </div>
+
+        <!-- card -->
+        <div class="md:hidden">
+            <div
+                class="bg-white rounded shadow my-4 p-4"
+                v-for="(request, key) in requests"
+                :key="key"
+            >
+                <div class="flex justify-between items-center my-2 px-2">
+                    <div>
+                        HN: {{ request.hn }} {{ request.patient_name }}
+                    </div>
+                    <p class="font-semibold text-complement text-xs flex items-center">
+                        <IconUserMd class="h-3 w-3 mr-1" />
+                        <span class="block italic truncate">{{ request.requester }}</span>
+                    </p>
+                </div>
+                <div class="my-2 p-2 bg-gray-100 rounded space-y-2">
+                    <div class="flex justify-center items-center h-12">
+                        <p class="italic text-center w-full">
+                            {{ request.request }}
+                        </p>
+                    </div>
+                </div>
+                <div
+                    class="flex justify-end items-center"
+                    :class="{'-mt-2': request.actions.length}"
+                >
+                    <ActionColumn
+                        v-if="request.actions.length"
+                        :actions="request.actions"
+                        @action-clicked="handleActionCLicked"
+                    />
+                    <span
+                        v-else
+                        v-html="request.status"
+                    />
+                </div>
+            </div>
         </div>
 
         <!-- today slot  -->
@@ -112,7 +140,7 @@
                 label="dialysis type"
                 name="order_dialysis_type"
                 v-model="order.dialysis_type"
-                :options="order.dialysis_at && order.dialysis_at.startsWith('ไตเทียม') ? configs.in_unit_dialysis_types : configs.out_unit_dialysis_types"
+                :options="order.dialysis_at && order.dialysis_at.search('Hemo') !== -1 ? configs.in_unit_dialysis_types : configs.out_unit_dialysis_types"
                 :disabled="!order.dialysis_at"
             />
             <div>
@@ -139,16 +167,16 @@
 </template>
 
 <script setup>
-import { Link, useForm } from '@inertiajs/inertia-vue3';
-import IconCheckCircle from '../../../Components/Helpers/Icons/IconCheckCircle.vue';
-import IconTimesCircle from '../../../Components/Helpers/Icons/IconTimesCircle.vue';
-import IconTrash from '../../../Components/Helpers/Icons/IconTrash.vue';
+import {useForm, usePage} from '@inertiajs/inertia-vue3';
 import DialysisSlot from '../../../Partials/Procedures/AcuteHemodialysis/DialysisSlot.vue';
 import WardSlot from '../../../Partials/Procedures/AcuteHemodialysis/WardSlot.vue';
 import FormAutocomplete from '../../../Components/Controls/FormAutocomplete.vue';
 import FormSelect from '../../../Components/Controls/FormSelect.vue';
 import FormRadio from '../../../Components/Controls/FormRadio.vue';
 import SpinnerButton from '../../../Components/Controls/SpinnerButton.vue';
+import ActionColumn from '../../../Components/Controls/ActionColumn.vue';
+import {watch} from 'vue';
+import IconUserMd from '../../../Components/Helpers/Icons/IconUserMd.vue';
 defineProps({
     requests: { type: Array, required: true },
     slot: { type: Object, required: true },
@@ -165,4 +193,47 @@ const order = useForm({
     date_note: null,
     patient_type: null,
 });
+
+const showConfirm = (payload) => {
+    usePage().props.value.event.name = 'confirmation-required';
+    usePage().props.value.event.payload = payload;
+    usePage().props.value.event.fire = + new Date();
+};
+
+const handleActionCLicked = (action) => {
+    if (action.callback === 'approve-request') {
+        useForm({approve: true}).patch(action.href);
+    } else if (action.callback === 'disapprove-request') {
+        selectedAction = {...action};
+        showConfirm({heading: action.confirm_heading, confirmText: action.confirm_text, confirmedEvent: disapproveRequestConfirmedEvent, requireReason: true});
+    } else if (action.callback === 'cancel-request') {
+        selectedAction = {...action};
+        showConfirm({heading: action.confirm_heading, confirmText: action.confirm_text, confirmedEvent: cancelRequestConfirmedEvent, requireReason: true});
+    }
+};
+
+const disapproveRequestConfirmedEvent = 'disapprove-acute-hemodialysis-slot-request';
+const cancelRequestConfirmedEvent = 'cancel-acute-hemodialysis-slot-request';
+let selectedAction;
+watch(
+    () => usePage().props.value.event.fire,
+    (event) => {
+        if (! event) {
+            return;
+        }
+        if (usePage().props.value.event.name === disapproveRequestConfirmedEvent) {
+            useForm({approve: false, reason: usePage().props.value.event.payload})
+                .patch(selectedAction.href, {
+                    preserveState: false,
+                    onFinish: () => selectedAction = null,
+                });
+        } else if (usePage().props.value.event.name === cancelRequestConfirmedEvent) {
+            useForm({reason: usePage().props.value.event.payload})
+                .delete(selectedAction.href, {
+                    preserveState: false,
+                    onFinish: () => selectedAction = null,
+                });
+        }
+    }
+);
 </script>

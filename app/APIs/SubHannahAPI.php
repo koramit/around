@@ -14,14 +14,14 @@ class SubHannahAPI implements PatientAPI, AuthenticationAPI
     public function authenticate(string $login, string $password): array
     {
         $data = $this->makePost(route: 'auth', form: ['login' => $login, 'password' => $password]);
-        if (! $data || ! $data['ok']) { // error: $data = null
+        if (! $data['ok']) { // error: $data = null
             return [
                 'found' => false,
                 'message' => ($data['status'] ?? 500) === 400 ? __('auth.failed') : __('service.failed'),
             ];
         }
 
-        if (! isset($data['found']) || ! $data['found']) {
+        if (! $data['found']) {
             $data['message'] = $data['message'] ?? __('auth.failed');
             unset($data['UserInfo']);
             unset($data['body']);

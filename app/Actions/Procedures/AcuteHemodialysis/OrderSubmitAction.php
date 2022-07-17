@@ -13,12 +13,13 @@ class OrderSubmitAction extends AcuteHemodialysisAction
 {
     use OrderFormConfigsShareable;
 
-    public function __invoke(array $data, string $hashedKey, User $user)
+    public function __invoke(array $data, string $hashedKey, User $user): AcuteHemodialysisOrderNote
     {
         if (config('auth.guards.web.provider') === 'avatar') {
             return []; // call api
         }
 
+        /** @var AcuteHemodialysisOrderNote $note */
         $note = AcuteHemodialysisOrderNote::query()->findByUnhashKey($hashedKey)->firstOrFail();
 
         if ($user->cannot('submit', $note)) {
@@ -356,9 +357,10 @@ class OrderSubmitAction extends AcuteHemodialysisAction
 
         $note->form = $validated;
         $note->submitted_at = now();
-        $note->status = $note->status === 'rescheduling' ? 'rescheduling' : 'submitted';
-        if ($note->status === 'rescheduling') {
-            $note->meta['submit_while_rescheduling'] = true;
+        if ($note->status === 'scheduling') {
+            $note->meta['submitted'] = true;
+        } else {
+            $note->status = 'submitted';
         }
         $note->save();
 

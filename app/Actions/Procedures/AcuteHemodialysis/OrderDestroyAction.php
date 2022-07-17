@@ -19,17 +19,25 @@ class OrderDestroyAction extends AcuteHemodialysisAction
 
         $validated = Validator::make($data, ['reason' => 'required|string|max:255'])->validate();
 
-        $note = AcuteHemodialysisOrderNote::query()->findByUnhashKey($hashedKey)->firstOrFail();
+        /** @var AcuteHemodialysisOrderNote $order */
+        $order = AcuteHemodialysisOrderNote::query()->findByUnhashKey($hashedKey)->firstOrFail();
 
-        if ($user->cannot('destroy', $note)) {
+        if ($user->cannot('destroy', $order)) {
             abort(403);
         }
 
-        // IF status == scheduling then also expire coressponding request
+        // IF status == scheduling then also expire corresponding request
+        if ($order->status === 'scheduling') {
+            return [
+                'type' => 'warning',
+                'title' => 'Cannot cancel order.',
+                'message' => 'Please cancel related request first.',
+            ];
+        }
 
-        $note->update(['status' => 'canceled']);
+        $order->update(['status' => 'canceled']);
 
-        $note->actionLogs()->create([
+        $order->actionLogs()->create([
             'actor_id' => $user->id,
             'action' => 'cancel',
             'payload' => ['reason' => $validated['reason']],
@@ -38,7 +46,7 @@ class OrderDestroyAction extends AcuteHemodialysisAction
         return [
             'type' => 'info',
             'title' => 'Order canceled successfully.',
-            'message' => 'Order '.$note->meta['dialysis_type'].' on '.$note->date_note->format('M j').' canceled',
+            'message' => 'Order '.$order->meta['dialysis_type'].' on '.$order->date_note->format('M j').' canceled',
         ];
     }
 }

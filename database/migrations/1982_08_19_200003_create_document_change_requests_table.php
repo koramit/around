@@ -11,7 +11,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('document_change_requests', function (Blueprint $table) {
             $table->id();
@@ -20,8 +20,7 @@ return new class extends Migration
             $table->jsonb('changes');
             $table->unsignedTinyInteger('status')->default(1);
             $table->unsignedInteger('requester_id');
-            $table->unsignedInteger('authority_id')->nullable();
-            $table->timestamps();
+            $table->timestamp('submitted_at')->index();
         });
     }
 
@@ -30,7 +29,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
     }
 };

@@ -19,7 +19,7 @@ class ScheduleIndexAction extends AcuteHemodialysisAction
             $dateNote = $this->TODAY;
         }
 
-        $hdUnit = $this->getNotes(dateNote: $dateNote, inUnit: true);
+        $hdUnit = $this->getNotes(dateNote: $dateNote);
         $ordered = $this->orderInUnitSlot($hdUnit);
 
         $ward = $this->getNotes(dateNote: $dateNote, inUnit: false);

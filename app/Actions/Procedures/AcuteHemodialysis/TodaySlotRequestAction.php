@@ -2,19 +2,17 @@
 
 namespace App\Actions\Procedures\AcuteHemodialysis;
 
+use App\Models\DocumentChangeRequests\AcuteHemodialysisSlotRequest;
 use App\Models\Notes\AcuteHemodialysisOrderNote;
 use App\Models\User;
-use Illuminate\Support\Facades\Validator;
 
-class OrderTodaySlotRequestAction extends AcuteHemodialysisAction
+class TodaySlotRequestAction extends AcuteHemodialysisAction
 {
-    public function __invoke(array $data, string $hashedKey, User $user): array
+    public function __invoke(string $hashedKey, User $user): array
     {
         if (config('auth.guards.web.provider') === 'avatar') {
             return []; // call api
         }
-
-        Validator::make($data, ['date_note' => 'required|date'])->validate();
 
         $note = AcuteHemodialysisOrderNote::query()->withPlaceName('App\Models\Resources\Ward')->findByUnhashKey($hashedKey)->firstOrFail();
 
@@ -35,10 +33,20 @@ class OrderTodaySlotRequestAction extends AcuteHemodialysisAction
             ];
         }
 
-        $note->changeRequests()->create([
+        /** @var AcuteHemodialysisSlotRequest $request */
+        $request = $note->changeRequests()->create([
             'requester_id' => $user->id,
             'changes' => ['date_note' => $this->TODAY],
             'authority_ability_id' => $this->APPROVE_ACUTE_HEMODIALYSIS_TODAY_SLOT_REQUEST_ABILITY_ID,
+        ]);
+        $request->actionLogs()->create([
+            'action' => 'create',
+            'actor_id' => $user->id,
+        ]);
+        $note->actionLogs()->create([
+            'action' => 'request_change',
+            'actor_id' => $user->id,
+            'payload' => ['request_id' => $request->id],
         ]);
         $note->update([
             'status' => 'scheduling',

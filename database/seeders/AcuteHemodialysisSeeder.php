@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Actions\Procedures\AcuteHemodialysis\AcuteHemodialysisAction;
 use App\Actions\Procedures\AcuteHemodialysis\CaseRecordStoreAction;
 use App\Actions\Procedures\AcuteHemodialysis\OrderStoreAction;
 use App\Actions\Procedures\AcuteHemodialysis\SlotRequestUpdateAction;
@@ -22,18 +23,19 @@ class AcuteHemodialysisSeeder extends Seeder
      * Run the database seeds.
      *
      * @return void
+     *
      * @throws Exception
      */
     public function run(): void
     {
         /** users */
-        User::factory()->create(['login' => 'nurse.ahd'])->roles()->attach([3,4]); // participant, nurse;
-        User::factory()->create(['login' => 'manager.ahd'])->roles()->attach([2,3,4,5]); // authority, participant, nurse, manager;
-        User::factory()->create(['login' => 'fellow1.ahd'])->roles()->attach([3,6]); // participant, fellow;
-        User::factory()->create(['login' => 'fellow2.ahd'])->roles()->attach([3,6]); // participant, fellow;
-        User::factory()->create(['login' => 'fellow3.ahd'])->roles()->attach([3,6]); // participant, fellow;
-        User::factory()->create(['login' => 'fellow4.ahd'])->roles()->attach([3,6]); // participant, fellow;
-        User::factory()->create(['login' => 'staff.ahd'])->roles()->attach([2,3,6,7]); // authority, participant, fellow, staff;
+        User::factory()->create(['login' => 'nurse.ahd'])->roles()->attach([3, 4]); // participant, nurse;
+        User::factory()->create(['login' => 'manager.ahd'])->roles()->attach([2, 3, 4, 5]); // authority, participant, nurse, manager;
+        User::factory()->create(['login' => 'fellow1.ahd'])->roles()->attach([3, 6]); // participant, fellow;
+        User::factory()->create(['login' => 'fellow2.ahd'])->roles()->attach([3, 6]); // participant, fellow;
+        User::factory()->create(['login' => 'fellow3.ahd'])->roles()->attach([3, 6]); // participant, fellow;
+        User::factory()->create(['login' => 'fellow4.ahd'])->roles()->attach([3, 6]); // participant, fellow;
+        User::factory()->create(['login' => 'staff.ahd'])->roles()->attach([2, 3, 6, 7]); // authority, participant, fellow, staff;
 
         /** admissions */
         $anRun = env('SEED_AN_START');
@@ -59,8 +61,9 @@ class AcuteHemodialysisSeeder extends Seeder
         Note::query()->truncate();
         $dateNote = now()->tz(7);
         $countAn = 1;
-        for($day = 0; $day <= 3; $day++) { // next 3 days
-            if ($dateNote->isSunday()) {
+        for ($day = 0; $day <= 3; $day++) { // next 3 days
+            if ($dateNote->is((new AcuteHemodialysisAction())->getUnitDayOff())) {
+                $dateNote->addDay();
                 continue;
             }
             for ($i = 1; $i <= 11; $i++) { // in unit, 11 HD cases
@@ -92,7 +95,7 @@ class AcuteHemodialysisSeeder extends Seeder
         // approve today request
         $manager = User::query()->where('login', 'manager.ahd')->first();
         AcuteHemodialysisSlotRequest::query()
-            ->each(function ($r) use($manager) {
+            ->each(function ($r) use ($manager) {
                 (new SlotRequestUpdateAction())($r->hashed_key, ['approve' => true], $manager);
             });
 
@@ -126,7 +129,7 @@ class AcuteHemodialysisSeeder extends Seeder
             ->where('division_id', 5)
             ->where('position', 8)
             ->each(function ($s) {
-                $s->name = 'Prof. '.fake()->firstName.' '.fake()->lastName();
+                $s->name = 'Prof. '.fake()->firstName().' '.fake()->lastName();
                 $s->save();
             });
     }

@@ -10,7 +10,8 @@ class PeopleController extends Controller
 {
     public function __invoke(Request $request)
     {
-        $like = config('database.default') === 'pgsql' ? 'ilike' : 'like';
+        $ilike = config('database.ilike');
+
         return Person::query()
             ->select('name')
             ->when($request->input('position') ?? null, function ($query, $position) {
@@ -19,7 +20,7 @@ class PeopleController extends Controller
             ->when($request->input('division_id') ?? null, function ($query, $division_id) {
                 $query->where('division_id', $division_id);
             })
-            ->where('name', $like, '%'.$request->input('search').'%')
+            ->where('name', $ilike, '%'.$request->input('search').'%')
             ->where('active', true)
             ->get()
             ->pluck('name');

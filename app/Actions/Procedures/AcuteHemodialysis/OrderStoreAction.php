@@ -2,14 +2,16 @@
 
 namespace App\Actions\Procedures\AcuteHemodialysis;
 
+use App\Models\DocumentChangeRequests\AcuteHemodialysisSlotRequest;
 use App\Models\Notes\AcuteHemodialysisOrderNote;
 use App\Models\Resources\Ward;
 use App\Models\User;
 use App\Rules\HashedKeyExistsInCaseRecords;
-use App\Rules\NameExistsInAttendingStaff;
+use App\Rules\NameExistsInPeople;
 use App\Rules\NameExistsInWards;
 use App\Traits\AcuteHemodialysis\OrderShareValidatable;
-use App\Traits\AcuteHemodialysis\SwapCodeGeneratable;
+use App\Traits\AcuteHemodialysis\OrderSwappable;
+use Exception;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -17,7 +19,7 @@ use Illuminate\Validation\ValidationException;
 
 class OrderStoreAction extends AcuteHemodialysisAction
 {
-    use OrderShareValidatable, SwapCodeGeneratable;
+    use OrderShareValidatable, OrderSwappable;
 
     protected float $FORM_VERSION = 1.0;
 
@@ -192,8 +194,10 @@ class OrderStoreAction extends AcuteHemodialysisAction
     ];
 
     /**
-     * @todo recheck date_note+dialysis_type+dialysis_at against available slots
+     * @throws Exception
+     *
      * @todo authorize action
+     * @todo recheck date_note+dialysis_type+dialysis_at against available slots
      */
     public function __invoke(array $data, User $user): array
     {
@@ -207,7 +211,7 @@ class OrderStoreAction extends AcuteHemodialysisAction
             'dialysis_type' => ['required', 'string', Rule::in($this->getAllDialysisType())],
             'patient_type' => ['required', 'string', Rule::in($this->PATIENT_TYPES)],
             'dialysis_at' => ['required', 'string', 'max:255', new NameExistsInWards($cacheKeyPrefix)],
-            'attending_staff' => ['required', 'string', 'max:255', new NameExistsInAttendingStaff($cacheKeyPrefix)],
+            'attending_staff' => ['required', 'string', 'max:255', new NameExistsInPeople($cacheKeyPrefix)],
             'case_record_hashed_key' => ['required', new HashedKeyExistsInCaseRecords($cacheKeyPrefix, 'App\Models\Registries\AcuteHemodialysisCaseRecord')],
             'date_note' => ['required', 'date'],
         ])->validate();
@@ -226,7 +230,7 @@ class OrderStoreAction extends AcuteHemodialysisAction
 
         $note = new AcuteHemodialysisOrderNote();
         $note->case_record_id = $caseRecord->id;
-        $note->attending_staff_id = cache()->pull($cacheKeyPrefix.'-validatedAttending')->id;
+        $note->attending_staff_id = cache()->pull($cacheKeyPrefix.'-validatedPerson')->id;
         $note->place_type = Ward::class;
         $ward = cache()->pull($cacheKeyPrefix.'-validatedWard');
         $note->place_id = $ward->id;
@@ -260,23 +264,28 @@ class OrderStoreAction extends AcuteHemodialysisAction
             ];
         }
 
-        $note->changeRequests()->create([
+        /** @var AcuteHemodialysisSlotRequest $request */
+        $request = $note->changeRequests()->create([
             'requester_id' => $user->id,
             'changes' => ['date_note' => $this->TODAY],
             'authority_ability_id' => $this->APPROVE_ACUTE_HEMODIALYSIS_TODAY_SLOT_REQUEST_ABILITY_ID,
         ]);
+        $request->actionLogs()->create([
+            'action' => 'create',
+            'actor_id' => $user->id,
+        ]);
 
         $note->actionLogs()->createMany([
             ['actor_id' => $user->id, 'action' => 'create'],
-            ['actor_id' => $user->id, 'action' => 'request_change'],
+            ['actor_id' => $user->id, 'action' => 'request_change', 'payload' => ['request_id' => $request->id]],
         ]);
 
         return [
             'note' => $note,
             'message' => [
                 'type' => 'warning',
-                'title' => 'Schedule request successful',
-                'message' => 'Order pending for approval',
+                'title' => 'Your slot request has been submitted.',
+                'message' => 'Pending for approval.',
             ],
         ];
     }

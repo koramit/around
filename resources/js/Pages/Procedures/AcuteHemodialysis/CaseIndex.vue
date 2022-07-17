@@ -23,7 +23,7 @@
             <tr class="text-left font-semibold text-complement">
                 <th
                     class="px-6 pt-6 pb-4"
-                    v-for="column in ['HN', 'Name', 'Latest', 'Type', 'status', 'MD']"
+                    v-for="column in ['HN', 'Name', 'On', 'Type', 'Status', 'MD']"
                     :key="column"
                     v-text="column"
                     :colspan="column === 'MD' ? 2:1"
@@ -39,23 +39,33 @@
                     :key="field"
                 >
                     <td
-                        v-if="field !== 'status'"
+                        v-if="field === 'date_note'"
                         class="px-6 py4 border-t"
-                        v-text="caseRecord[field]"
-                    />
+                    >
+                        <span
+                            class="inline-flex h-6 w-6 mr-2 rounded-full items-center justify-center text-sm italic"
+                            :class="{
+                                'text-complement bg-primary-darker': caseRecord.dialysis_at === 'in',
+                                'text-primary bg-complement': caseRecord.dialysis_at === 'out',
+                            }"
+                        >
+                            {{ caseRecord.dialysis_at }}
+                        </span>
+                        <span class="">{{ caseRecord.date_note }}</span>
+                    </td>
                     <td
-                        v-else
+                        v-else-if="field === 'status'"
                         class="px-6 py4 border-t"
                     >
                         <div class="flex items-center justify-between">
                             <template v-if="caseRecord.can.edit_order">
+                                <span v-html="caseRecord[field]" />
                                 <Link
                                     :href="caseRecord.routes.edit_order"
                                     class="action-icon"
                                 >
                                     <IconEdit class="w-4 h-4" />
                                 </Link>
-                                <span v-html="caseRecord[field]" />
                             </template>
                             <Link
                                 v-else-if="caseRecord.can.create_order"
@@ -64,19 +74,26 @@
                             >
                                 <IconCalendarPlus class="w-4 h-4" />
                             </Link>
+                            <span
+                                v-else
+                                v-html="caseRecord[field]"
+                            />
                         </div>
                     </td>
+                    <td
+                        v-else
+                        class="px-6 py4 border-t"
+                        v-text="caseRecord[field]"
+                    />
                 </template>
                 <td class="border-t">
                     <Link
-                        class="px-4 py-2 flex items-center focus:text-primary-darker"
+                        class="px-4 py-2 flex items-center"
                         :href="caseRecord.routes.edit"
                     >
-                        <div
-                            class="action-icon"
-                        >
-                            <IconDoubleRight class="w-4 h-4" />
-                        </div>
+                        <span class="action-icon">
+                            <IconDoubleRight class=" w-4 h-4" />
+                        </span>
                     </Link>
                 </td>
             </tr>
@@ -113,28 +130,33 @@
                     >
                         <IconCalendarPlus class="w-4 h-4" />
                     </Link>
-                    <p
-                        v-else
-                        class="italic text-center w-full"
-                    >
-                        No order yet
-                    </p>
                 </div>
                 <template v-else>
                     <div class="flex items-center justify-between">
-                        <p class="text-xs italic text-complement font-semibold">
-                            Latest order
-                        </p>
+                        <span v-html="caseRecord.status" />
                         <p class="font-semibold text-complement text-xs flex items-center">
                             <IconUserMd class="h-3 w-3 mr-1" />
                             <span class="block italic truncate">{{ caseRecord.md }}</span>
                         </p>
                     </div>
                     <div class="flex items-center justify-between">
-                        <p class="flex items-center">
+                        <p>
                             On : <span
                                 class="text-complement font-semibold"
                                 v-text="caseRecord.date_note"
+                            />
+                            <span
+                                class="text-sm italic ml-1"
+                                :class="{
+                                    'text-accent': caseRecord.dialysis_at === 'in',
+                                    'text-complement': caseRecord.dialysis_at === 'out',
+                                }"
+                            >{{ caseRecord.dialysis_at }}</span>
+                        </p>
+                        <p class="flex items-center">
+                            Type : <span
+                                class="text-complement font-semibold"
+                                v-text="caseRecord.dialysis_type"
                             />
                             <Link
                                 v-if="caseRecord.can.edit_order"
@@ -143,12 +165,6 @@
                             >
                                 <IconEdit class="w-4 h-4" />
                             </Link>
-                        </p>
-                        <p>
-                            Type : <span
-                                class="text-complement font-semibold"
-                                v-text="caseRecord.dialysis_type"
-                            />
                         </p>
                     </div>
                     <template />

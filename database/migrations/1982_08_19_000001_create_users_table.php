@@ -20,7 +20,6 @@ return new class extends Migration
             $table->string('password');
             $table->json('profile');
             $table->unsignedSmallInteger('division_id')->default(1);
-            $table->foreign('division_id')->references('id')->on('divisions')->constrained();
             $table->rememberToken();
             $table->softDeletes();
             $table->timestamps();

@@ -5,10 +5,10 @@ use App\Http\Controllers\Procedures\AcuteHemodialysis\OrderController as AcuteHe
 use App\Http\Controllers\Procedures\AcuteHemodialysis\OrderRescheduleController as AcuteHemodialysisOrderRescheduleController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\OrderSubmitController as AcuteHemodialysisOrderSubmitController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\OrderSwapController as AcuteHemodialysisOrderSwapController;
-use App\Http\Controllers\Procedures\AcuteHemodialysis\OrderTodaySlotRequestController as AcuteHemodialysisOrderTodaySlotRequestController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\ScheduleController as AcuteHemodialysisScheduleController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\SlotAvailableController as AcuteHemodialysisSlotAvailableController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\SlotRequestController as AcuteHemodialysisSlotRequestController;
+use App\Http\Controllers\Procedures\AcuteHemodialysis\TodaySlotRequestController as AcuteHemodialysisTodaySlotRequestController;
 use App\Http\Controllers\Procedures\ProcedureController;
 use Illuminate\Support\Facades\Route;
 
@@ -42,27 +42,31 @@ Route::middleware(['auth'])->prefix('procedures')->group(function () {
                ->name('orders.reschedule');
             Route::patch('/orders/{hashedKey}/swap', AcuteHemodialysisOrderSwapController::class)
                   ->name('orders.swap');
-            Route::patch('/orders/{hashedKey}/today-slot-request', AcuteHemodialysisOrderTodaySlotRequestController::class)
+            Route::patch('/orders/{hashedKey}/today-slot-request', AcuteHemodialysisTodaySlotRequestController::class)
                ->name('orders.today-slot-request');
             Route::patch('/orders/{hashedKey}', [AcuteHemodialysisOrderController::class, 'update'])
                ->name('orders.update');
             Route::delete('/orders/{hashedKey}', [AcuteHemodialysisOrderController::class, 'destroy'])
                ->name('orders.destroy');
 
-            Route::post('slot-available', AcuteHemodialysisSlotAvailableController::class)
+            Route::post('/slot-available', AcuteHemodialysisSlotAvailableController::class)
                ->can('view_any_acute_hemodialysis_slot_requests')
                ->name('slot-available');
 
-            Route::get('schedule', AcuteHemodialysisScheduleController::class)
+            Route::get('/schedule', AcuteHemodialysisScheduleController::class)
                ->middleware('remember')
                ->can('view_any_acute_hemodialysis_slot_requests')
                ->name('schedule');
 
-            Route::get('slot-requests', [AcuteHemodialysisSlotRequestController::class, 'index'])
+            Route::get('/slot-requests', [AcuteHemodialysisSlotRequestController::class, 'index'])
                ->can('view_any_acute_hemodialysis_slot_requests')
                ->name('slot-requests');
+            Route::patch('/slot-requests/{hashedKey}', [AcuteHemodialysisSlotRequestController::class, 'update'])
+                ->name('slot-requests.approve');
+            Route::delete('/slot-requests/{hashedKey}', [AcuteHemodialysisSlotRequestController::class, 'destroy'])
+                ->name('slot-requests.cancel');
 
-            Route::get('slot-requests-show-case', [AcuteHemodialysisSlotRequestController::class, 'case'])
+            Route::get('/slot-requests-show-case', [AcuteHemodialysisSlotRequestController::class, 'case'])
                ->can('view_any_acute_hemodialysis_slot_requests')
                ->name('slot-requests.case');
         });

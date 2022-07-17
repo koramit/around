@@ -5,6 +5,7 @@ namespace App\Models\Registries;
 use App\Models\CaseRecord;
 use App\Models\Notes\AcuteHemodialysisOrderNote;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class AcuteHemodialysisCaseRecord extends CaseRecord
 {
@@ -15,7 +16,7 @@ class AcuteHemodialysisCaseRecord extends CaseRecord
      *
      * @return void
      */
-    protected static function booted()
+    protected static function booted(): void
     {
         static::creating(function ($case) {
             $case->registry_id = config('registries.acute_hd');
@@ -26,7 +27,7 @@ class AcuteHemodialysisCaseRecord extends CaseRecord
         });
     }
 
-    public function orders()
+    public function orders(): HasMany
     {
         return $this->hasMany(AcuteHemodialysisOrderNote::class, 'case_record_id', 'id');
     }

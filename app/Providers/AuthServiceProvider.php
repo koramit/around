@@ -3,8 +3,10 @@
 namespace App\Providers;
 
 use App\Extensions\Auth\AvatarUserProvider;
+use App\Models\DocumentChangeRequests\AcuteHemodialysisSlotRequest;
 use App\Models\Notes\AcuteHemodialysisOrderNote;
 use App\Policies\AcuteHemodialysisOrderNotePolicy;
+use App\Policies\AcuteHemodialysisSlotRequestPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -18,6 +20,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         AcuteHemodialysisOrderNote::class => AcuteHemodialysisOrderNotePolicy::class,
+        AcuteHemodialysisSlotRequest::class => AcuteHemodialysisSlotRequestPolicy::class,
     ];
 
     /**
@@ -25,7 +28,7 @@ class AuthServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         $this->registerPolicies();
 

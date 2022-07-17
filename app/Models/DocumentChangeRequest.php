@@ -2,33 +2,63 @@
 
 namespace App\Models;
 
+use App\Traits\PKHashable;
 use Illuminate\Database\Eloquent\Casts\AsArrayObject;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
+/**
+ * App\Models\DocumentChangeRequest
+ *
+ * @property-read string $hashed_key
+ * @property-read string $change_request_text
+ */
 class DocumentChangeRequest extends Model
 {
-    use HasFactory;
+    use HasFactory, PKHashable;
 
     protected $guarded = [];
 
     protected $casts = [
         'changes' => AsArrayObject::class,
+        'submitted_at' => 'datetime',
         'approved_at' => 'datetime',
         'disapproved_at' => 'datetime',
     ];
 
-    protected $statuses = ['', 'pending', 'approved', 'disapproved', 'canceled', 'expired'];
+    protected array $statuses = ['', 'pending', 'approved', 'disapproved', 'canceled', 'expired'];
 
-    public function changeable()
+    public $timestamps = false;
+
+    /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
+    protected static function booted(): void
+    {
+        static::creating(function ($request) {
+            $request->submitted_at = now();
+        });
+    }
+
+    public function changeable(): MorphTo
     {
         return $this->morphTo();
     }
 
-    public function requester()
+    public function requester(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function actionLogs(): MorphMany
+    {
+        return $this->morphMany(ResourceActionLog::class, 'loggable');
     }
 
     protected function status(): Attribute

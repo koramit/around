@@ -2,7 +2,6 @@
 
 namespace App\Actions\Procedures\AcuteHemodialysis;
 
-use App\Models\Notes\AcuteHemodialysisOrderNote;
 use App\Rules\NameExistsInWards;
 use App\Traits\AcuteHemodialysis\OrderShareValidatable;
 use App\Traits\AcuteHemodialysis\SlotCountable;
@@ -16,7 +15,7 @@ class SlotAvailableAction extends AcuteHemodialysisAction
     /**
      * @todo complete out unit slot
      */
-    public function __invoke(array $data)
+    public function __invoke(array $data): array
     {
         // validate
         $validated = Validator::make($data, [
@@ -30,7 +29,7 @@ class SlotAvailableAction extends AcuteHemodialysisAction
          * - tpe ทำวันละ 3 เท่านั้น
          * - sledd ทำนอกไตเทียมเท่านั้น
          * - นอกไตเทียมทำ hd4 hd+hf ได้วันละ 2 เคส
-         * - นอกไตเทียมทำ sleddได้วันละ = (6 - (hd4 + (hf+hf))) เคส
+         * - นอกไตเทียมทำ sledd ได้วันละ = (6 - (hd4 + (hf+hf))) เคส
          * - นอกเวลาให้ f submit แล้วรอ chief nurse accept
          * - นอกเวลาในแต่ละวันจะทำนอกหรือในไตเทียมเท่านั้น
          */
@@ -45,7 +44,7 @@ class SlotAvailableAction extends AcuteHemodialysisAction
         $notes = $this->getNotes(dateNote: $dateNote, inUnit: false);
 
         $hemoCount = $notes->count()
-                        ? $notes->filter(fn ($n) => (strpos($n['type'], 'HD') !== false) || (strpos($n['type'], 'HF') !== false))->count()
+                        ? $notes->filter(fn ($n) => (str_contains($n['type'], 'HD')) || (str_contains($n['type'], 'HF')))->count()
                         : 0;
 
         $available = true;
@@ -57,7 +56,7 @@ class SlotAvailableAction extends AcuteHemodialysisAction
         } elseif ($dialysisType !== 'SLEDD' && $hemoCount === 2) {
             $available = false;
             $reply = 'HD/HF cases limit reached for the date';
-        } elseif (strpos($dialysisType, 'TPE') !== false && $this->tpeCaseCount($dateNote) === $this->LIMIT_TPE_SLOTS) {
+        } elseif (str_contains($dialysisType, 'TPE') && $this->tpeCaseCount($dateNote) === $this->LIMIT_TPE_SLOTS) {
             $available = false;
             $reply = 'TPE limit has been reached';
         }
@@ -88,19 +87,9 @@ class SlotAvailableAction extends AcuteHemodialysisAction
         if (($this->LIMIT_IN_UNIT_SLOTS - $notes->sum('slot_count')) < $requestSlot) {
             $available = false;
             $reply = 'not enough slots';
-        }
-
-        if ($available && str_contains(strtolower($dialysisType), 'tpe') && $this->tpeCaseCount($dateNote) === $this->LIMIT_TPE_SLOTS) {
+        } elseif (str_contains(strtolower($dialysisType), 'tpe') && $this->tpeCaseCount($dateNote) === $this->LIMIT_TPE_SLOTS) {
             $available = false;
             $reply = 'TPE limit has been reached';
-        }
-
-        if (! $available) {
-            return [
-                'slots' => $notes,
-                'available' => $available,
-                'reply' => $reply,
-            ];
         }
 
         $ordered = $this->orderInUnitSlot($notes);
@@ -110,10 +99,5 @@ class SlotAvailableAction extends AcuteHemodialysisAction
             'available' => $available,
             'reply' => $reply,
         ];
-    }
-
-    protected function tpeCaseCount(string $dateNote): int
-    {
-        return AcuteHemodialysisOrderNote::where('date_note', $dateNote)->where('meta->dialysis_type', 'like', '%TPE%')->count();
     }
 }

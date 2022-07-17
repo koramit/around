@@ -8,19 +8,25 @@ use Illuminate\Database\Eloquent\Casts\AsEncryptedArrayObject;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * App\Models\Resources
+ *
+ * @property-read string $first_name
+ * */
 class Patient extends Model
 {
     use HasFactory, CKHashable;
 
-    protected $hashIdName = 'hn';
+    protected string $hashIdName = 'hn';
 
     protected $casts = [
         'profile' => AsEncryptedArrayObject::class,
         'dob' => 'date',
     ];
 
-    public function admissions()
+    public function admissions(): HasMany
     {
         return $this->hasMany(Admission::class);
     }

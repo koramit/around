@@ -21,5 +21,11 @@ class DatabaseSeeder extends Seeder
             RegistriesTableSeeder::class,
             AbilitiesTableSeeder::class,
         ]);
+
+        if (config('app.env') !== 'production') {
+            $this->call([
+                AcuteHemodialysisSeeder::class,
+            ]);
+        }
     }
 }

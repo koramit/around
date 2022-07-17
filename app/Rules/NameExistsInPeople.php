@@ -2,9 +2,9 @@
 
 namespace App\Rules;
 
-use App\Models\Resources\AttendingStaff;
+use App\Models\Resources\Person;
 
-class NameExistsInAttendingStaff extends CacheQueryResultRule
+class NameExistsInPeople extends CacheQueryResultRule
 {
     /**
      * Determine if the validation rule passes.
@@ -15,9 +15,9 @@ class NameExistsInAttendingStaff extends CacheQueryResultRule
      */
     public function passes($attribute, $value): bool
     {
-        if ($attending = AttendingStaff::query()->where('name', $value)->first()) {
+        if ($person = Person::query()->where('name', $value)->first()) {
             if ($this->cacheKeyPrefix) {
-                cache()->put($this->cacheKeyPrefix.'-validatedAttending', $attending);
+                cache()->put($this->cacheKeyPrefix.'-validatedPerson', $person);
             }
 
             return true;

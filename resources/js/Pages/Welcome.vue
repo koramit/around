@@ -1,5 +1,5 @@
 <template>
-    <h1 class="text-3xl font-bold underline text-blue-700">
+    <h1 class="text-3xl font-semibold underline text-blue-700">
         {{ __('Welcome') }} {{ __('bar') }}
     </h1>
     <PageNav />

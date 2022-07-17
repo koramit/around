@@ -3,12 +3,15 @@
 namespace App\Traits\AcuteHemodialysis;
 
 use App\Models\Notes\AcuteHemodialysisOrderNote;
+use Exception;
 
-trait SwapCodeGeneratable
+trait OrderSwappable
 {
+    /**
+     * @throws Exception
+     */
     protected function genSwapCode(): string
     {
-        $unique = false;
         do {
             $code = str_pad((string) random_int(0, 9999), 4, '0');
             $unique = AcuteHemodialysisOrderNote::query()

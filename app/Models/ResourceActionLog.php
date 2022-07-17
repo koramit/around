@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Casts\AsArrayObject;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class ResourceActionLog extends Model
 {
@@ -15,34 +17,48 @@ class ResourceActionLog extends Model
 
     protected $casts = [
         'payload' => AsArrayObject::class,
+        'performed_at' => 'datetime',
     ];
 
-    protected $actions = [
+    public $timestamps = false;
+
+    protected array $actions = [
         '',
         'create',
         'update', // use before submitted
         'submit',
         'resubmit', // use after submitted
+        'reschedule', // NOTE ONLY
         'view',
         'print',
-        'cancel',
-        'expire', // NOTE ONLY
+        'cancel', // NOTE & REQUEST
+        'expire', // NOTE & REQUEST
         'request_change',
-        'approve_change',
-        'disapprove_change',
-        'cancel_request',
-        'expire_request',
+        'approve', // NOTE & REQUEST
+        'disapprove', // NOTE & REQUEST
         'perform', // NOTE ONLY
         'dismiss', // CRF ONLY
         'archive', // CRF ONLY
     ];
 
-    public function loggable()
+    /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
+    protected static function booted(): void
+    {
+        static::creating(function ($log) {
+            $log->performed_at = now();
+        });
+    }
+
+    public function loggable(): MorphTo
     {
         return $this->morphTo();
     }
 
-    public function actor()
+    public function actor(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }

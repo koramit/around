@@ -16,14 +16,9 @@ use Inertia\Inertia;
 
 class RegisteredUserController extends Controller
 {
-    /**
-     * Display the registration view.
-     *
-     * @return \Illuminate\View\View
-     */
     public function create()
     {
-        if (! $profile = Session::get('profile', null)) {
+        if (! $profile = Session::get('profile')) {
             return Redirect::route('login');
         }
         if (! isset($profile['is_md'])) {
@@ -51,7 +46,7 @@ class RegisteredUserController extends Controller
                 'string',
                 function ($attribute, $value, $fail) {
                     $value = strtolower($value);
-                    if (User::whereRaw("lower(name) = '{$value}'")->first()) {
+                    if (User::query()->whereRaw("lower(name) = '$value'")->first()) {
                         $fail('This '.$attribute.' is already taken.');
                     }
                 },

@@ -4,7 +4,10 @@ namespace Database\Seeders;
 
 use App\Models\Ability;
 use App\Models\Role;
+use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class AbilitiesTableSeeder extends Seeder
 {
@@ -48,8 +51,8 @@ class AbilitiesTableSeeder extends Seeder
             ['registry_id' => 1, 'name' => 'create_acute_hemodialysis_order'] + $datetime, // create/store
             ['registry_id' => 1, 'name' => 'view_acute_hemodialysis_order'] + $datetime, // show + policy
             ['registry_id' => 1, 'name' => 'perform_acute_hemodialysis_order'] + $datetime, // perform + policy
-            // ['registry_id' => 1, 'name' => 'cancel_acute_hemodialysis_note'] + $datetime, // destroy + policy only!
-            // ['registry_id' => 1, 'name' => 'edit_acute_hemodialysis_note'] + $datetime, // edit/update + policy only!
+            // ['registry_id' => 1, 'name' => 'cancel_acute_hemodialysis_order'] + $datetime, // destroy + policy only!
+            // ['registry_id' => 1, 'name' => 'edit_acute_hemodialysis_order'] + $datetime, // edit/update + policy only!
 
             // today slot request
             ['registry_id' => 1, 'name' => 'view_any_acute_hemodialysis_slot_requests'] + $datetime, // index
@@ -77,9 +80,9 @@ class AbilitiesTableSeeder extends Seeder
             'acute_hemodialysis_nurse' => [
                 'view_any_acute_hemodialysis_cases',
                 'view_acute_hemodialysis_case',
-                'view_any_acute_hemodialysis_notes',
-                'view_acute_hemodialysis_note',
-                'perform_acute_hemodialysis_note',
+                'view_any_acute_hemodialysis_orders',
+                'view_acute_hemodialysis_order',
+                'perform_acute_hemodialysis_order',
                 'view_any_acute_hemodialysis_slot_requests',
             ],
             'acute_hemodialysis_nurse_manager' => [
@@ -93,9 +96,9 @@ class AbilitiesTableSeeder extends Seeder
                 'view_acute_hemodialysis_case',
                 'archive_acute_hemodialysis_case',
                 'cancel_acute_hemodialysis_case',
-                'view_any_acute_hemodialysis_notes',
-                'create_acute_hemodialysis_note',
-                'view_acute_hemodialysis_note',
+                'view_any_acute_hemodialysis_orders',
+                'create_acute_hemodialysis_order',
+                'view_acute_hemodialysis_order',
                 'view_any_acute_hemodialysis_slot_requests',
                 'create_acute_hemodialysis_today_slot_request',
             ],
@@ -109,5 +112,22 @@ class AbilitiesTableSeeder extends Seeder
 
         $root = Role::query()->where('name', 'root')->first();
         $root->abilities()->attach(Ability::query()->select('id')->pluck('id'));
+
+        User::query()->create([
+            'name' => 'around',
+            'login' => 'around.app',
+            'division_id' => 1,
+            'profile' => [
+                'full_name' => 'Around System',
+                'tel_no' => 'HELPDESK',
+                'org_id' => 1,
+                'division' => 'system',
+                'position' => 'program',
+                'pln' => null,
+                'remark' => 'system program',
+            ],
+            'password' => Hash::make(Str::random(10)),
+            'remember_token' => Str::random(10),
+        ]);
     }
 }

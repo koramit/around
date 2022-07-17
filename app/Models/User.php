@@ -10,6 +10,12 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
+/**
+ * App\Modes\User
+ *
+ * @property-read string $first_name
+ * @property-read string $home_page
+ */
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
@@ -82,14 +88,7 @@ class User extends Authenticatable
     protected function abilities(): Attribute
     {
         return Attribute::make(
-            get: fn () => cache()->remember("uid-$this->id-abilities", config('session.lifetime') * 60, function () {
-                unset($this->roles); // reload for new role
-
-                // if unique() is not activated then the output is an array
-                // but the output is an associated array so, provide
-                // flatten() to guarantee output always an array
-                return $this->roles->map->abilities->flatten()->pluck('name')->unique()->flatten();
-            }),
+            get: fn () => $this->cacheAbilities("uid-$this->id-abilities", 'name'),
         );
     }
 
@@ -122,8 +121,29 @@ class User extends Authenticatable
         cache()->put("uid-$this->id-role-names", $this->roles->pluck('name'), config('session.lifetime') * 60);
     }
 
-    public function hasRole($name)
+    public function hasAbility(string|int $ability): bool
+    {
+        $abilities = (gettype($ability) === 'integer')
+            ? $this->cacheAbilities("uid-$this->id-abilities-id", 'id')
+            : $this->abilities;
+
+        return $abilities->contains($ability);
+    }
+
+    public function hasRole(string $name): bool
     {
         return $this->role_names->contains($name);
+    }
+
+    protected function cacheAbilities(string $key, string $field)
+    {
+        return cache()->remember($key, config('session.lifetime') * 60, function () use ($field) {
+            unset($this->roles); // reload for new role
+
+            // if unique() is not activated then the output is an array
+            // but the output is an associated array so, provide
+            // flatten() to guarantee output always an array
+            return $this->roles->map->abilities->flatten()->pluck($field)->unique()->flatten();
+        });
     }
 }

@@ -232,7 +232,7 @@ namespace App\Models\Notes{
  * @property-read \App\Models\Resources\Person|null $attendingStaff
  * @property-read \App\Models\User|null $author
  * @property-read \App\Models\CaseRecord $caseRecord
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\DocumentChangeRequest[] $changeRequests
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\DocumentChangeRequests\AcuteHemodialysisSlotRequest[] $changeRequests
  * @property-read int|null $change_requests_count
  * @property-read \App\Models\Resources\Patient|null $patient
  * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisOrderNote activeStatuses()
@@ -443,6 +443,7 @@ namespace App\Models\Resources{
 /**
  * App\Models\Resources\Person
  *
+ * @property-read string $first_name
  * @property int $id
  * @property string $name
  * @property int $division_id
@@ -552,6 +553,7 @@ namespace App\Models{
  * App\Modes\User
  *
  * @property-read string $first_name
+ * @property-read string $home_page
  * @property int $id
  * @property string $name
  * @property string $login

@@ -12,11 +12,19 @@ class DivisionsTableSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
         $datetime = now();
 
-        Division::insert([
+        Division::query()->insert([
+            [
+                'name' => 'system',
+                'name_eng' => 'system',
+                'name_eng_short' => 'system',
+                'department' => 'system',
+                'created_at' => $datetime,
+                'updated_at' => $datetime,
+            ],
             [
                 'name' => 'คณะแพทยศาสตร์ศิริราชพยาบาล',
                 'name_eng' => 'Faculty of Medicine Siriraj Hospital',

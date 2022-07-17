@@ -15,7 +15,7 @@
                 'border-red-400': error,
                 'border-gray-200': !selected && !error,
                 'opacity-50': selected && selected !== item.value,
-                'border-accent font-medium': selected === item.value && !error,
+                'border-accent font-normal': selected === item.value && !error,
             }"
         >
             <div class="text-accent flex items-center">

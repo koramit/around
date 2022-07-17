@@ -16,11 +16,11 @@
             >
                 <!-- zen mode switch -->
                 <button
-                    class="hidden md:inline-block font-bold text-lg md:text-2xl font-lobster"
+                    class="hidden md:inline-block text-lg md:text-2xl font-lobster"
                     @click="zenMode = !zenMode"
                 >
                     <span v-if="!zenMode">@round</span>
-                    <IconHamberger
+                    <IconHamburger
                         v-else
                         class="w-6 h-6"
                     />
@@ -39,7 +39,7 @@
                     :class="{ 'scale-y-90 text-primary-darker' : mobileMenuVisible }"
                     @click="mobileMenuVisible = !mobileMenuVisible"
                 >
-                    <IconHamberger class="w-6 h-6" />
+                    <IconHamburger class="w-6 h-6" />
                 </button>
             </div>
             <!-- right navbar on desktop -->
@@ -84,13 +84,13 @@
                     </template>
                     <template #dropdown>
                         <div class="mt-2 py-0 overflow-hidden shadow-xl bg-complement text-white cursor-pointer rounded text-sm">
-                            <Link
+                            <InertiaLink
                                 class="block w-full text-left px-6 py-2 hover:bg-complement-darker hover:text-primary transition-colors duration-200 ease-out"
                                 :href="$page.props.routePreferences"
                             >
                                 {{ __('Preferences') }}
-                            </Link>
-                            <Link
+                            </InertiaLink>
+                            <InertiaLink
                                 class="block w-full text-left px-6 py-2 hover:bg-complement-darker hover:text-primary transition-colors duration-200 ease-out"
                                 :href="$page.props.routeLogout"
                                 method="delete"
@@ -98,7 +98,7 @@
                                 type="button"
                             >
                                 {{ __('Logout') }}
-                            </Link>
+                            </InertiaLink>
                         </div>
                     </template>
                 </DropdownList>
@@ -115,13 +115,13 @@
                         @click="mobileMenuVisible = false"
                     >
                         <span class="inline-block py-1 text-white">{{ $page.props.user.name }}</span>
-                        <Link
+                        <InertiaLink
                             class="block py-1"
                             :href="$page.props.routePreferences"
                         >
                             {{ __('Preferences') }}
-                        </Link>
-                        <Link
+                        </InertiaLink>
+                        <InertiaLink
                             class="block py-1"
                             :href="$page.props.routeLogout"
                             method="delete"
@@ -129,7 +129,7 @@
                             type="button"
                         >
                             {{ __('Logout') }}
-                        </Link>
+                        </InertiaLink>
                     </div>
                     <hr class="my-4">
                     <MainMenu @click="mobileMenuVisible = false" />
@@ -169,45 +169,48 @@
                     class="flex mb-4 md:mb-0 py-2 md:pb-8 bg-primary z-10 sticky top-10 md:top-0"
                     v-if="$page.props.flash.breadcrumbs.length"
                 >
-                    <li
-                        class="list-none text-accent text-sm md:text-base italic"
-                        v-for="(link, key) in $page.props.flash.breadcrumbs"
-                        :key="key"
-                    >
-                        <Link
-                            :href="link.route"
-                            class="whitespace-nowrap"
+                    <menu class="flex justify-between">
+                        <li
+                            class="list-none text-accent text-sm md:text-base italic"
+                            v-for="(link, key) in $page.props.flash.breadcrumbs"
+                            :key="key"
                         >
-                            {{ link.label }}
-                        </Link>
-                        <span
-                            v-if="key !== ($page.props.flash.breadcrumbs.length - 1)"
-                            class="px-4 text-primary-darker font-semibold"
-                        >/</span>
-                    </li>
+                            <InertiaLink
+                                :href="link.route"
+                                class="whitespace-nowrap"
+                            >
+                                {{ link.label }}
+                            </InertiaLink>
+                            <span
+                                v-if="key !== ($page.props.flash.breadcrumbs.length - 1)"
+                                class="px-4 text-primary-darker font-semibold"
+                            >/</span>
+                        </li>
+                    </menu>
                 </nav>
+                <!--navbar-->
                 <nav
                     v-else-if="$page.props.flash.navs.length"
-                    class="md:w-1/2 text-accent form-label"
+                    class="mb-4 md:w-1/2 text-accent font-lobster"
                 >
-                    <ul class="flex justify-between">
+                    <menu class="flex justify-between">
                         <li
                             v-for="link in $page.props.flash.navs"
                             :key="link.route"
                         >
-                            <Link
+                            <InertiaLink
                                 :href="link.route"
                                 class="block py-1 px-2 md:py-2 md:px-4 rounded-3xl bg-primary transition-colors duration-300"
                                 preserve-state
                                 :class="{
-                                    'bg-accent text-white italic': isUrl(link.route),
+                                    'bg-accent text-white': isUrl(link.route),
                                     'hover:bg-primary-darker': !isUrl(link.route),
                                 }"
                             >
                                 {{ link.label }}
-                            </Link>
+                            </InertiaLink>
                         </li>
-                    </ul>
+                    </menu>
                 </nav>
 
                 <!-- form errors -->
@@ -260,22 +263,22 @@
 </template>
 
 <script setup>
-import { Head, Link, usePage } from '@inertiajs/inertia-vue3';
-import { pageRoutines } from '@/functions/pageRoutines.js';
+import { Head, InertiaLink, usePage } from '@inertiajs/inertia-vue3';
+import { pageRoutines } from '../../functions/pageRoutines.js';
 import { defineAsyncComponent, nextTick, onMounted, ref, watch } from 'vue';
 import { useInPageLinkHelpers } from '../../functions/useInPageLinkHelpers.js';
-import DropdownList from '@/Components/Helpers/DropdownList.vue';
-import MainMenu from '@/Components/Helpers/MainMenu.vue';
-import ActionMenu from '@/Components/Helpers/ActionMenu.vue';
-import IconHamberger from '@/Components/Helpers/Icons/IconHamberger.vue';
-import IconChevronCircleDown from '@/Components/Helpers/Icons/IconChevronCircleDown.vue';
+import DropdownList from '../../Components/Helpers/DropdownList.vue';
+import MainMenu from '../../Components/Helpers/MainMenu.vue';
+import ActionMenu from '../../Components/Helpers/ActionMenu.vue';
+import IconHamburger from '../../Components/Helpers/Icons/IconHamburger.vue';
+import IconChevronCircleDown from '../../Components/Helpers/Icons/IconChevronCircleDown.vue';
 import AlertMessage from '../Helpers/AlertMessage.vue';
 import CopyToClipboardButton from '../Controls/CopyToClipboardButton.vue';
 const ConfirmForm  = defineAsyncComponent(() => import('../Forms/ConfirmForm.vue'));
 
 pageRoutines();
 const mobileMenuVisible = ref(false);
-const zenMode = ref(usePage().props.value.user.configs.appearance?.zenMode ?? false);
+const zenMode = ref(Boolean(usePage().props.value.user.configs.appearance?.zenMode ?? false));
 
 const actionClicked = (action) => {
     mobileMenuVisible.value = false;

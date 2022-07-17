@@ -11,7 +11,7 @@ class AcuteHemodialysisOrderNotePolicy
 {
     use HandlesAuthorization;
 
-    protected $status;
+    protected AcuteHemodialysisOrderStatus $status;
 
     public function __construct()
     {

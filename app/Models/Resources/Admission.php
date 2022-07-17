@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Casts\AsArrayObject;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Admission extends Model
 {
@@ -15,7 +16,7 @@ class Admission extends Model
 
     protected $guarded = [];
 
-    protected $hashIdName = 'an';
+    protected string $hashIdName = 'an';
 
     protected $casts = [
         'meta' => AsArrayObject::class,
@@ -23,12 +24,12 @@ class Admission extends Model
         'dismissed_at' => 'datetime',
     ];
 
-    public function patient()
+    public function patient(): BelongsTo
     {
         return $this->belongsTo(Patient::class);
     }
 
-    public function place()
+    public function place(): BelongsTo
     {
         return $this->belongsTo('App\Models\Resources\Ward', 'ward_id', 'id');
     }

@@ -26,46 +26,13 @@
                         :key="field"
                         v-text="order[field]"
                     />
+                    <!--actions-->
                     <td class="border-t">
-                        <div
+                        <ActionColumn
                             v-if="order.actions.length"
-                            class="flex items-center justify-center"
-                        >
-                            <template
-                                v-for="(action, action_key) in order.actions"
-                                :key="action_key"
-                            >
-                                <Link
-                                    v-if="action.type === 'link'"
-                                    :href="action.href"
-                                    class="flex items-center px-4 py-2 group"
-                                >
-                                    <span class="mr-2 p-2 group-hover:bg-primary-darker rounded-full transition-colors duration-200 ease-in">
-                                        <IconVector
-                                            :name="action.icon"
-                                            :theme="action.theme"
-                                            class="w-4 h-4"
-                                        />
-                                    </span>
-                                    {{ action.label }}
-                                </Link>
-                                <button
-                                    v-else
-                                    :key="action_key"
-                                    class="flex items-center px-4 py-2 group"
-                                    @click="handleAction(action)"
-                                >
-                                    <span class="mr-2 p-2 group-hover:bg-primary-darker rounded-full transition-colors duration-200 ease-in">
-                                        <IconVector
-                                            :name="action.icon"
-                                            :theme="action.theme"
-                                            class="w-4 h-4"
-                                        />
-                                    </span>
-                                    {{ action.label }}
-                                </button>
-                            </template>
-                        </div>
+                            :actions="order.actions"
+                            @action-clicked="handleActionClicked"
+                        />
                     </td>
                 </tr>
             </table>
@@ -88,40 +55,10 @@
                             </div>
                         </template>
                         <template #dropdown>
-                            <div class="mt-2 py-0 overflow-hidden shadow-xl bg-complement text-white cursor-pointer rounded text-sm whitespace-nowrap">
-                                <template
-                                    v-for="(action, action_key) in order.actions"
-                                    :key="action_key"
-                                >
-                                    <Link
-                                        v-if="action.type === 'link'"
-                                        :href="action.href"
-                                        class="block w-full text-left px-6 py-2 hover:bg-complement-darker hover:text-primary transition-colors duration-200 ease-out"
-                                    >
-                                        <span class="flex items-center">
-                                            <IconVector
-                                                :name="action.icon"
-                                                class="w-4 h-4 mr-2"
-                                            />
-                                            {{ action.label }}
-                                        </span>
-                                    </Link>
-                                    <button
-                                        v-else
-                                        :key="action_key"
-                                        class="block w-full text-left px-6 py-2 hover:bg-complement-darker hover:text-primary transition-colors duration-200 ease-out"
-                                        @click="handleAction(action)"
-                                    >
-                                        <span class="flex items-center">
-                                            <IconVector
-                                                :name="action.icon"
-                                                class="w-4 h-4 mr-2"
-                                            />
-                                            {{ action.label }}
-                                        </span>
-                                    </button>
-                                </template>
-                            </div>
+                            <ActionDropdown
+                                :actions="order.actions"
+                                @action-clicked="handleActionClicked"
+                            />
                         </template>
                     </DropdownList>
                 </div>
@@ -162,21 +99,16 @@
 </template>
 
 <script setup>
-import {Link, useForm, usePage} from '@inertiajs/inertia-vue3';
+import {useForm, usePage} from '@inertiajs/inertia-vue3';
+import { watch } from 'vue';
 import IconUserMd from '../../../Components/Helpers/Icons/IconUserMd.vue';
 import DropdownList from '../../../Components/Helpers/DropdownList.vue';
 import IconDoubleDown from '../../../Components/Helpers/Icons/IconDoubleDown.vue';
-import { watch } from 'vue';
-import IconVector from '../../../Components/Helpers/IconVector.vue';
+import ActionColumn from '../../../Components/Controls/ActionColumn.vue';
+import ActionDropdown from '../../../Components/Controls/ActionDropdown.vue';
 defineProps({
     orders: { type: Array, required: true }
 });
-
-const showConfirm = (payload) => {
-    usePage().props.value.event.name = 'confirmation-required';
-    usePage().props.value.event.payload = payload;
-    usePage().props.value.event.fire = + new Date();
-};
 
 watch(
     () => usePage().props.value.event.fire,
@@ -185,20 +117,23 @@ watch(
             return;
         }
         if (usePage().props.value.event.name === cancelOrderConfirmedEvent) {
-            useForm({reason: usePage().props.value.event.payload}).delete(cancelOrderEndpoint, {preserveState: false});
-
-            console.log('perform confirmed action...');
+            useForm({reason: usePage().props.value.event.payload})
+                .delete(selectedEndpoint, {
+                    preserveState: false,
+                    onFinish: () => selectedEndpoint = null,
+                });
         }
-
     }
 );
 
 const cancelOrderConfirmedEvent = 'cancel-acute-hd-order-confirmed';
-let cancelOrderEndpoint;
-const handleAction = (action) => {
+let selectedEndpoint;
+const handleActionClicked = (action) => {
     if (action.callback === 'cancel-order') {
-        cancelOrderEndpoint = action.href;
-        showConfirm({ confirmText: 'Cancel order aa bb cc dd', confirmedEvent: cancelOrderConfirmedEvent, requireReason: true });
+        selectedEndpoint = action.href;
+        usePage().props.value.event.name = 'confirmation-required';
+        usePage().props.value.event.payload = { heading: usePage().props.value.flash.title, confirmText: action.confirm_text, confirmedEvent: cancelOrderConfirmedEvent, requireReason: true };
+        usePage().props.value.event.fire = + new Date();
     }
 };
 </script>

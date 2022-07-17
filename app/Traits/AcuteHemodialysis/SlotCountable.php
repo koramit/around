@@ -7,26 +7,28 @@ use Illuminate\Support\Collection;
 
 trait SlotCountable
 {
-    protected $LIMIT_IN_UNIT_SLOTS = 32;
+    protected int $LIMIT_IN_UNIT_SLOTS = 32;
 
-    protected $LIMIT_TPE_SLOTS = 3;
+    protected int $LIMIT_TPE_SLOTS = 3;
 
-    protected $LIMIT_OUT_UNIT_CASES = 6;
+    protected int $LIMIT_OUT_UNIT_CASES = 6;
 
-    protected function getNotes(string $dateNote, bool $inUnit = true)
+    protected function getNotes(string $dateNote, bool $inUnit = true): \Illuminate\Database\Eloquent\Collection|array
     {
         return AcuteHemodialysisOrderNote::query()
-            ->with(['patient', 'author', 'attendingStaff', 'caseRecord'])
+            ->select(['id', 'date_note', 'status', 'meta', 'author_id', 'attending_staff_id', 'case_record_id'])
+            ->with(['author:id,profile', 'attendingStaff:id,name,position', 'caseRecord:id,meta'])
             ->where('date_note', $dateNote)
             ->where('meta->in_unit', $inUnit)
-            ->activeStatuses()
+            ->slotOccupiedStatuses()
             ->get()
             ->transform(function ($note) use ($inUnit) {
                 $trans = [
                     'case_record_route' => route('procedures.acute-hemodialysis.edit', $note->caseRecord->hashed_key),
-                    'patient_name' => $note->patient->profile['first_name'],
-                    'author' => $note->author->name,
+                    'patient_name' => $note->caseRecord->meta['name'],
+                    'author' => 'พ.'.$note->author->first_name,
                     'type' => explode(' ', $note->meta['dialysis_type'])[0],
+                    'status' => $note->status,
                     'attending' => $note->attendingStaff->first_name,
                 ];
                 if ($inUnit) {
@@ -44,7 +46,7 @@ trait SlotCountable
             return 4;
         } elseif (str_starts_with($dialysisType, 'HD+TPE')) {
             return 3;
-        } elseif (strpos($dialysisType, '4') !== false || strpos($dialysisType, '3') !== false) {
+        } elseif (str_contains($dialysisType, '4') || str_contains($dialysisType, '3')) {
             return 2;
         } else {
             return 1;
@@ -61,8 +63,7 @@ trait SlotCountable
             ]);
         }
 
-        $groupBySlotCount = [[]];
-        $sumGroup = [0];
+        $groupBySlotCount = collect([[]]);
         for ($i = 1; $i <= 3; $i++) {
             $groupBySlotCount[] = $slots->filter(fn ($n) => $n['slot_count'] == $i)->values();
         }
@@ -91,5 +92,10 @@ trait SlotCountable
         }
 
         return $ordered;
+    }
+
+    protected function tpeCaseCount(string $dateNote): int
+    {
+        return AcuteHemodialysisOrderNote::query()->where('date_note', $dateNote)->where('meta->dialysis_type', config('database.ilike'), '%TPE%')->count();
     }
 }

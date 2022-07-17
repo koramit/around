@@ -26,7 +26,9 @@ class AcuteHemodialysisAction
 
     protected int $APPROVE_ACUTE_HEMODIALYSIS_TODAY_SLOT_REQUEST_ABILITY_ID = 10;
 
-    protected int $STAFF_DIVISION_ID = 4;
+    protected string $STAFF_SCOPE_PARAMS = '&position=8&division_id=5';
+
+    protected string $UNIT_DAY_OFF = 'Saturday';
 
     public function __construct()
     {
@@ -50,13 +52,22 @@ class AcuteHemodialysisAction
         $this->TODAY = now()->tz($this->TIMEZONE)->format('Y-m-d');
     }
 
+    protected function styleStatusBadge(mixed $status, string $resource = 'order'): ?string
+    {
+        if (! $status) {
+            return null;
+        }
+
+        return view("partials.status-badge.acute-hd-$resource")->with(['status' => $status])->toHtml();
+    }
+
     protected function reserveAvailableDates(): array
     {
         $availableDates = [];
         $start = now()->create($this->TODAY);
         $count = 0;
         do {
-            if (! $start->isSunday()) {
+            if (! $start->is($this->UNIT_DAY_OFF)) {
                 $availableDates[] = $start->format('Y-m-d');
             }
             $start->addDay();
@@ -69,5 +80,15 @@ class AcuteHemodialysisAction
     protected function getBreadcrumbs(array $links): array
     {
         return array_merge($this->BREADCRUMBS, $links);
+    }
+
+    public function getToday(): string
+    {
+        return $this->TODAY;
+    }
+
+    public function getUnitDayOff(): string
+    {
+        return $this->UNIT_DAY_OFF;
     }
 }

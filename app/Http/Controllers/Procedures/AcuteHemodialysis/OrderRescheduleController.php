@@ -12,7 +12,7 @@ class OrderRescheduleController extends Controller
     {
         $reply = (new OrderRescheduleAction)(data: $request->all(), hashedKey: $hashedKey, user: $request->user());
 
-        // if want json return $reply
+        // if request want json return $reply
 
         return back()->with('message', $reply);
     }

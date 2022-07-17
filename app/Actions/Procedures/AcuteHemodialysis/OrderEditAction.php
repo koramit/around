@@ -12,7 +12,7 @@ class OrderEditAction extends AcuteHemodialysisAction
 {
     use OrderFormConfigsShareable;
 
-    public function __invoke(string $hashedKey, User $user)
+    public function __invoke(string $hashedKey, User $user): array
     {
         if (config('auth.guards.web.provider') === 'avatar') {
             return []; // call api
@@ -25,7 +25,7 @@ class OrderEditAction extends AcuteHemodialysisAction
         }
 
         $flash = [
-            'page-title' => 'Acute HD Order '.$note->patient->profile['first_name'].' @ '.$note->date_note->format('d M Y'),
+            'page-title' => 'Acute '.$note->meta['dialysis_type'].' '.$note->patient->profile['first_name'].' @ '.$note->date_note->format('d M Y'),
             'hn' => $note->patient->hn,
             'main-menu-links' => [
                 ['icon' => 'slack-hash', 'label' => 'Prescription', 'type' => '#', 'route' => '#prescription', 'can' => true],
@@ -64,8 +64,6 @@ class OrderEditAction extends AcuteHemodialysisAction
                 'reserve_disable_dates' => [], // 'August 13, 2021',
                 'reserve_available_dates' => $this->reserveAvailableDates(),
                 'date_note' => $note->date_note->format('Y-m-d'),
-                'dialysis_type' => $note->meta['dialysis_type'],
-                'dialysis_at' => $note->place_name,
                 'swap_code' => $note->meta['swap_code'],
                 'can' => [
                     'update' => $user->can('update', $note),

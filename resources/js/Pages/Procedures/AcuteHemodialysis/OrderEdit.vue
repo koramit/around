@@ -90,7 +90,7 @@
                                 : order.patch(configs.endpoints.today_slot_request, { onFinish: ensureConfigsRefreshAfterCall })
                         "
                     >
-                        {{ configs.today !== order.date_note ? 'RESCHEDULE' : 'REQUEST RESCHEDULE' }}
+                        {{ order.date_note === configs.today || configs.date_note === configs.today ? 'REQUEST RESCHEDULE' : 'RESCHEDULE' }}
                     </SpinnerButton>
                 </div>
             </div>
@@ -110,7 +110,7 @@
                     <SpinnerButton
                         class="block w-full text-center btn btn-accent"
                         :spin="order.processing"
-                        :disabled="!order.swap_with || order.swap_with == configs.swap_code"
+                        :disabled="!order.swap_with || order.swap_with === configs.swap_code"
                         @click="order.patch(configs.endpoints.swap, { onFinish: ensureConfigsRefreshAfterCall })"
                     >
                         {{ order.swap_with !== configs.swap_code ? 'SWAP' : '🙄🙄🙄' }}
@@ -213,7 +213,7 @@
         :options="configs.oxygen_options"
     />
 
-    <!-- nurological -->
+    <!-- neurological -->
     <hr class="border border-dashed my-2 md:my-4 xl:my-8">
     <label class="form-label">Neurological evaluation :</label>
     <FormCheckbox
@@ -349,21 +349,21 @@
 import { useForm, usePage } from '@inertiajs/inertia-vue3';
 import debounce from 'lodash/debounce';
 import { nextTick, reactive, watch, ref, onMounted, defineAsyncComponent } from 'vue';
-import FormInput from '@/Components/Controls/FormInput.vue';
-import FormCheckbox from '@/Components/Controls/FormCheckbox.vue';
-import FormSelect from '@/Components/Controls/FormSelect.vue';
-import FormTextarea from '@/Components/Controls/FormTextarea.vue';
-import SpinnerButton from '@/Components/Controls/SpinnerButton.vue';
-import AlertMessage from '@/Components/Helpers/AlertMessage.vue';
-import FormDatetime from '@/Components/Controls/FormDatetime.vue';
+import FormInput from '../../../Components/Controls/FormInput.vue';
+import FormCheckbox from '../../../Components/Controls/FormCheckbox.vue';
+import FormSelect from '../../../Components/Controls/FormSelect.vue';
+import FormTextarea from '../../../Components/Controls/FormTextarea.vue';
+import SpinnerButton from '../../../Components/Controls/SpinnerButton.vue';
+import AlertMessage from '../../../Components/Helpers/AlertMessage.vue';
+import FormDatetime from '../../../Components/Controls/FormDatetime.vue';
 import CopyToClipboardButton from '../../../Components/Controls/CopyToClipboardButton.vue';
 import IconRotate from '../../../Components/Helpers/Icons/IconRotate.vue';
-const HDForm = defineAsyncComponent(() => import('@/Partials/Procedures/AcuteHemodialysis/HDForm.vue'));
-const HFForm = defineAsyncComponent(() => import('@/Partials/Procedures/AcuteHemodialysis/HFForm.vue'));
-const SLEDDForm = defineAsyncComponent(() => import('@/Partials/Procedures/AcuteHemodialysis/SLEDDForm.vue'));
-const TPEForm = defineAsyncComponent(() => import('@/Partials/Procedures/AcuteHemodialysis/TPEForm.vue'));
-const DialysisSlot = defineAsyncComponent(() => import('@/Partials/Procedures/AcuteHemodialysis/DialysisSlot.vue'));
-const WardSlot = defineAsyncComponent(() => import('@/Partials/Procedures/AcuteHemodialysis/WardSlot.vue'));
+const HDForm = defineAsyncComponent(() => import('../../../Partials/Procedures/AcuteHemodialysis/HDForm.vue'));
+const HFForm = defineAsyncComponent(() => import('../../../Partials/Procedures/AcuteHemodialysis/HFForm.vue'));
+const SLEDDForm = defineAsyncComponent(() => import('../../../Partials/Procedures/AcuteHemodialysis/SLEDDForm.vue'));
+const TPEForm = defineAsyncComponent(() => import('../../../Partials/Procedures/AcuteHemodialysis/TPEForm.vue'));
+const DialysisSlot = defineAsyncComponent(() => import('../../../Partials/Procedures/AcuteHemodialysis/DialysisSlot.vue'));
+const WardSlot = defineAsyncComponent(() => import('../../../Partials/Procedures/AcuteHemodialysis/WardSlot.vue'));
 
 
 const props = defineProps({
@@ -371,6 +371,7 @@ const props = defineProps({
     formConfigs: { type: Object, required: true },
 });
 const configs = reactive({...props.formConfigs});
+/** @member {Object} */
 const form = useForm({...props.orderForm});
 
 watch (

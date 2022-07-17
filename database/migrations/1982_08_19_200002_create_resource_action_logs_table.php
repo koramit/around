@@ -11,7 +11,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('resource_action_logs', function (Blueprint $table) {
             $table->id();
@@ -19,7 +19,7 @@ return new class extends Migration
             $table->unsignedTinyInteger('action');
             $table->jsonb('payload')->nullable();
             $table->unsignedInteger('actor_id');
-            $table->timestamps();
+            $table->timestamp('performed_at')->index();
         });
     }
 
@@ -28,7 +28,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
     }
 };

@@ -18,7 +18,7 @@ class ScheduleController extends Controller
 
         $data = (new ScheduleIndexAction)(dateNote: $validated['date_note'] ?? null, user: $request->user());
 
-        // if want json return $data
+        // if request want json return $data
 
         $this->setFlash($data['flash']);
         unset($data['flash']);

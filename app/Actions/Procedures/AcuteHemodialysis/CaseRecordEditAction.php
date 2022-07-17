@@ -58,37 +58,39 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
             ->with(['patient', 'author:id,profile'])
             ->withPlaceName(Ward::class)
             ->where('case_record_id', $caseRecord->id)
+            ->orderBy('status')
             ->orderByDesc('date_note')
             ->orderByDesc('created_at')
             ->get()
-            ->transform(function ($note) use ($user) {
+            ->transform(function (AcuteHemodialysisOrderNote $order) use ($user) {
                 $actions = collect([
                     [
                         'label' => 'Cancel',
                         'type' => 'button',
                         'icon' => 'trash',
                         'theme' => 'warning',
-                        'href' => route('procedures.acute-hemodialysis.orders.destroy', $note->hashed_key),
+                        'href' => route('procedures.acute-hemodialysis.orders.destroy', $order->hashed_key),
                         'callback' => 'cancel-order',
-                        'can' => $user->can('destroy', $note),
+                        'confirm_text' => $order->cancel_confirm_text,
+                        'can' => $user->can('destroy', $order),
                     ],
                     [
                         'label' => 'Edit',
                         'type' => 'link',
                         'icon' => 'edit',
                         'theme' => 'accent',
-                        'href' => route('procedures.acute-hemodialysis.orders.edit', $note->hashed_key),
-                        'can' => $user->can('edit', $note),
+                        'href' => route('procedures.acute-hemodialysis.orders.edit', $order->hashed_key),
+                        'can' => $user->can('edit', $order),
                     ],
-                ])->filter(fn ($action) => $action['can']);
+                ])->filter(fn ($action) => $action['can'])->values()->all();
 
                 return [
-                    'edit_route' => route('procedures.acute-hemodialysis.orders.edit', $note->hashed_key),
-                    'ward_name' => $note->place_name,
-                    'dialysis_type' => $note->meta['dialysis_type'],
-                    'date_note' => $note->date_note->format('d M'),
-                    'md' => $note->author->first_name,
-                    'status' => $note->status,
+                    'edit_route' => route('procedures.acute-hemodialysis.orders.edit', $order->hashed_key),
+                    'ward_name' => $order->place_name,
+                    'dialysis_type' => $order->meta['dialysis_type'],
+                    'date_note' => $order->date_note->format('d M'),
+                    'md' => $order->author->first_name,
+                    'status' => $order->status,
                     'actions' => $actions,
                 ];
             });
@@ -115,12 +117,12 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
             ],
             'endpoints' => [
                 'resources_api_wards' => route('resources.api.wards'),
-                'resources_api_staffs' => route('resources.api.staffs'),
+                'resources_api_staffs' => route('resources.api.people'),
                 'acute_hemodialysis_slot_available' => route('procedures.acute-hemodialysis.slot-available'),
                 'orders_store' => route('procedures.acute-hemodialysis.orders.store'),
                 'update' => route('procedures.acute-hemodialysis.update', $caseRecord->hashed_key),
             ],
-            'staffs_scope_params' => '&division_id='.$this->STAFF_DIVISION_ID,
+            'staffs_scope_params' => $this->STAFF_SCOPE_PARAMS,
             'dialysis_reservable' => $this->isDialysisReservable($caseRecord),
         ];
 

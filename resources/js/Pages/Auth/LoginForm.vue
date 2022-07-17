@@ -2,7 +2,7 @@
     <div class="flex flex-col justify-center items-center w-full min-h-screen">
         <div class="w-40 h-40 z-10 border-primary border-4 rounded-full floating-logo">
             <img
-                src="../../images/logo.png"
+                src="../../../images/logo.png"
                 alt="around logo"
             >
         </div>
