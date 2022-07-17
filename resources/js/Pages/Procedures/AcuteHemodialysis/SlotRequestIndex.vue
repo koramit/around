@@ -28,7 +28,7 @@
                         <ActionColumn
                             v-if="request.actions.length"
                             :actions="request.actions"
-                            @action-clicked="handleActionCLicked"
+                            @action-clicked="handleActionClicked"
                         />
                         <div
                             v-else
@@ -52,31 +52,43 @@
                     <div>
                         HN: {{ request.hn }} {{ request.patient_name }}
                     </div>
-                    <p class="font-semibold text-complement text-xs flex items-center">
-                        <IconUserMd class="h-3 w-3 mr-1" />
-                        <span class="block italic truncate">{{ request.requester }}</span>
-                    </p>
+                    <!--<ActionDropdown-->
+                    <!--    v-if="request.actions.length > 1"-->
+                    <!--    :actions="request.actions"-->
+                    <!--    @action-clicked="handleActionClicked"-->
+                    <!--/>-->
+                    <DropdownList v-if="request.actions.length > 1">
+                        <template #default>
+                            <div class="bg-primary-darker p-2 rounded-full">
+                                <IconDoubleDown class="w-4 h-4 text-accent" />
+                            </div>
+                        </template>
+                        <template #dropdown>
+                            <ActionDropdown
+                                :actions="request.actions"
+                                @action-clicked="handleActionClicked"
+                            />
+                        </template>
+                    </DropdownList>
+                    <ActionColumn
+                        v-else-if="request.actions.length === 1"
+                        :actions="request.actions"
+                        @action-clicked="handleActionClicked"
+                    />
                 </div>
                 <div class="my-2 p-2 bg-gray-100 rounded space-y-2">
-                    <div class="flex justify-center items-center h-12">
+                    <div class="flex justify-between items-center">
+                        <span v-html="request.status" />
+                        <p class="font-semibold text-complement text-xs flex items-center">
+                            <IconUserMd class="h-3 w-3 mr-1" />
+                            <span class="block italic truncate">{{ request.requester }}</span>
+                        </p>
+                    </div>
+                    <div class="flex justify-center items-center">
                         <p class="italic text-center w-full">
                             {{ request.request }}
                         </p>
                     </div>
-                </div>
-                <div
-                    class="flex justify-end items-center"
-                    :class="{'-mt-2': request.actions.length}"
-                >
-                    <ActionColumn
-                        v-if="request.actions.length"
-                        :actions="request.actions"
-                        @action-clicked="handleActionCLicked"
-                    />
-                    <span
-                        v-else
-                        v-html="request.status"
-                    />
                 </div>
             </div>
         </div>
@@ -177,6 +189,9 @@ import SpinnerButton from '../../../Components/Controls/SpinnerButton.vue';
 import ActionColumn from '../../../Components/Controls/ActionColumn.vue';
 import {watch} from 'vue';
 import IconUserMd from '../../../Components/Helpers/Icons/IconUserMd.vue';
+import ActionDropdown from '../../../Components/Controls/ActionDropdown.vue';
+import DropdownList from '../../../Components/Helpers/DropdownList.vue';
+import IconDoubleDown from '../../../Components/Helpers/Icons/IconDoubleDown.vue';
 defineProps({
     requests: { type: Array, required: true },
     slot: { type: Object, required: true },
@@ -200,7 +215,7 @@ const showConfirm = (payload) => {
     usePage().props.value.event.fire = + new Date();
 };
 
-const handleActionCLicked = (action) => {
+const handleActionClicked = (action) => {
     if (action.callback === 'approve-request') {
         useForm({approve: true}).patch(action.href);
     } else if (action.callback === 'disapprove-request') {

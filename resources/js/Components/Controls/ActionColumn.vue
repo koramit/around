@@ -7,9 +7,12 @@
             <InertiaLink
                 v-if="action.type === 'link'"
                 :href="action.href"
-                class="flex items-center m-2 group"
+                class="md:m-2 flex items-center group"
+                :class="{'m-2': actions.length > 1}"
             >
-                <span class="p-2 group-hover:bg-primary-darker rounded-full transition-colors duration-200 ease-in">
+                <span
+                    class="bg-primary-darker md:bg-white md:group-hover:bg-primary-darker rounded-full transition-colors duration-200 ease-in"
+                >
                     <IconVector
                         :name="action.icon"
                         :theme="action.theme"
@@ -21,10 +24,13 @@
             <button
                 v-else
                 :key="key"
-                class="flex items-center m-2 group"
+                class="md:m-2 flex items-center group"
+                :class="{'m-2': actions.length > 1}"
                 @click="$emit('action-clicked', action)"
             >
-                <span class="p-2 group-hover:bg-primary-darker rounded-full transition-colors duration-200 ease-in">
+                <span
+                    class="bg-primary-darker md:bg-white p-2 md:group-hover:bg-primary-darker rounded-full transition-colors duration-200 ease-in"
+                >
                     <IconVector
                         :name="action.icon"
                         :theme="action.theme"
