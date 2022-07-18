@@ -28,7 +28,7 @@ class AcuteHemodialysisAction
 
     protected string $STAFF_SCOPE_PARAMS = '&position=8&division_id=5';
 
-    protected string $UNIT_DAY_OFF = 'Saturday';
+    protected string $UNIT_DAY_OFF = 'Sunday';
 
     public function __construct()
     {

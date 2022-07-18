@@ -12,7 +12,7 @@ class SlotAvailableController extends Controller
     {
         $data = (new SlotAvailableAction)($request->all());
 
-        // if want json return $data
+        // if request want json return $data
 
         return $data;
     }
