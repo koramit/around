@@ -1,15 +1,11 @@
 <?php
 
-Barryvdh\Debugbar\Facades\Debugbar::disable();
+//Barryvdh\Debugbar\Facades\Debugbar::disable();
 
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LocalizationController;
 use App\Http\Controllers\PreferenceController;
-use App\Http\Controllers\Resources\AdmissionController;
-use App\Http\Controllers\Resources\PatientRecentlyAdmissionController;
-use App\Http\Controllers\Resources\PeopleController;
-use App\Http\Controllers\Resources\WardController;
 use App\Http\Controllers\TermsAndPoliciesController;
 use App\Http\Controllers\UploadController;
 use Illuminate\Support\Facades\Route;
@@ -39,15 +35,11 @@ Route::middleware(['auth'])->group(function () {
 });
 
 // resources
-Route::middleware(['auth', 'can:get_shared_api_resources'])->name('resources.api.')->group(function () {
-    Route::post('admissions', AdmissionController::class)
-         ->name('admissions.show');
-    Route::post('patient-recently-admission', PatientRecentlyAdmissionController::class)
-         ->name('patient-recently-admission.show');
-    Route::get('wards', WardController::class)
-         ->name('wards');
-    Route::get('people', PeopleController::class)
-         ->name('people');
+Route::middleware(['auth', 'can:get_shared_api_resources'])
+    ->prefix('resources')
+    ->name('resources.api.')
+    ->group(function () {
+        require __DIR__.'/resources.php';
 });
 
 // uploads
@@ -66,4 +58,9 @@ Route::post('feedback', [FeedbackController::class, 'store'])
      ->middleware(['auth'])
      ->name('feedback.store');
 
-require __DIR__.'/procedures.php';
+Route::middleware(['auth'])
+    ->prefix('procedures')
+    ->name('procedures.')
+    ->group(function () {
+        require __DIR__ . '/procedures.php';
+});
