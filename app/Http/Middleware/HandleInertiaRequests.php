@@ -21,7 +21,7 @@ class HandleInertiaRequests extends Middleware
      *
      * @see https://inertiajs.com/asset-versioning
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Request $request
      * @return string|null
      */
     public function version(Request $request): ?string
@@ -34,7 +34,7 @@ class HandleInertiaRequests extends Middleware
      *
      * @see https://inertiajs.com/shared-data
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Request $request
      * @return array
      */
     public function share(Request $request): array
@@ -43,9 +43,12 @@ class HandleInertiaRequests extends Middleware
             'routeHome' => fn () => route('home'),
             'routePreferences' => fn () => route('preferences'),
             'routeLogout' => fn () => route('logout'),
+            'routeCovidLab' => fn () => route('resources.api.covid-lab'),
+            'routeCovidVaccine' => fn () => route('resources.api.covid-vaccine'),
             'flash' => [
                 'title' => fn () => $request->session()->pull('page-title', 'MISSING'),
-                'hn' => fn () => $request->session()->pull('hn', null),
+                'hn' => fn () => $request->session()->pull('hn'),
+                'cid' => fn () => $request->session()->pull('cid'),
                 'mainMenuLinks' => fn () => $request->session()->pull('main-menu-links', []),
                 'actionMenu' => fn () => $request->session()->pull('action-menu', []),
                 'breadcrumbs' => fn () => $request->session()->pull('breadcrumbs', []),
@@ -55,10 +58,7 @@ class HandleInertiaRequests extends Middleware
             'shouldTransitionPage' => fn () => $request->session()->get('should-transition-page'),
             'user' => fn () => $request->user()
                 ? [
-                    // 'id' => $request->user()->id,
                     'name' => $request->user()->name,
-                    // 'roles' => $request->user()->role_names->toArray(),
-                    // 'abilities' => $request->user()->abilities->toArray(),
                     'configs' => $request->session()->get('configs', [
                         'appearance' => ['zenMode' => false, 'fontScaleIndex' => 3],
                     ]),

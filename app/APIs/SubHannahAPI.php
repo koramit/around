@@ -168,6 +168,11 @@ class SubHannahAPI implements PatientAPI, AuthenticationAPI
         return $this->makePost('npcr-covid', ['hn' => $hn]);
     }
 
+    public function checkCovidVaccine($cid, $raw = false): array
+    {
+        return $this->makePost(route: 'vaccine-covid', form: ['cid' => $cid, 'raw' => $raw], timeout: 62);
+    }
+
     protected function makePost(string $route, array $form, int $timeout = 4): array
     {
         $headers = ['app' => config('services.SUBHANNAH_API_NAME'), 'token' => config('services.SUBHANNAH_API_TOKEN')];

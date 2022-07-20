@@ -1,4 +1,15 @@
 <template>
+    <Transition
+        mode="in-out"
+        name="fade-slide"
+    >
+        <Suspense>
+            <CovidInfo class="mb-4" />
+            <template #fallback>
+                <FallbackSpinner />
+            </template>
+        </Suspense>
+    </Transition>
     <!-- summary  -->
     <h2
         class="form-label text-lg italic text-complement scroll-mt-16 md:scroll-mt-8"
@@ -444,9 +455,9 @@
 </template>
 
 <script setup>
-import { useForm } from '@inertiajs/inertia-vue3';
+import {useForm} from '@inertiajs/inertia-vue3';
 import {computed, defineAsyncComponent, nextTick, onMounted, reactive, ref, watch} from 'vue';
-import { useSelectOther } from '../../../functions/useSelectOther.js';
+import {useSelectOther} from '../../../functions/useSelectOther.js';
 import debounce from 'lodash/debounce';
 import FormInput from '../../../Components/Controls/FormInput.vue';
 import FormAutocomplete from '../../../Components/Controls/FormAutocomplete.vue';
@@ -459,6 +470,9 @@ import FormSelect from '../../../Components/Controls/FormSelect.vue';
 import SpinnerButton from '../../../Components/Controls/SpinnerButton.vue';
 import OrderIndex from '../../../Partials/Procedures/AcuteHemodialysis/OrderIndex.vue';
 import {useInPageLinkHelpers} from '../../../functions/useInPageLinkHelpers';
+import CovidInfo from '../../../Components/Helpers/CovidInfo.vue';
+import FallbackSpinner from '../../../Components/Helpers/FallbackSpinner.vue';
+
 const DialysisSlot = defineAsyncComponent(() => import('../../../Partials/Procedures/AcuteHemodialysis/DialysisSlot.vue'));
 const WardSlot = defineAsyncComponent(() => import('../../../Partials/Procedures/AcuteHemodialysis/WardSlot.vue'));
 const AlertMessage = defineAsyncComponent(() => import('../../../Components/Helpers/AlertMessage.vue'));

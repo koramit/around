@@ -33,7 +33,7 @@ class OrderEditAction extends AcuteHemodialysisAction
                 ['icon' => 'slack-hash', 'label' => 'Monitoring', 'type' => '#', 'route' => '#monitoring', 'can' => true],
                 ['icon' => 'patient', 'label' => 'Patients', 'route' => route('patients'), 'can' => true],
                 ['icon' => 'clinic', 'label' => 'Clinics', 'route' => route('clinics'), 'can' => true],
-                ['icon' => 'procedure', 'label' => 'Procedures', 'route' => route('procedures'), 'can' => true],
+                ['icon' => 'procedure', 'label' => 'Procedures', 'route' => route('procedures.index'), 'can' => true],
             ],
             'action-menu' => [
                 ['icon' => 'paper-plain', 'action' => 'submit', 'label' => 'Submit'],

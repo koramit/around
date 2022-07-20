@@ -55,7 +55,7 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
 
         // HD orders
         $orders = AcuteHemodialysisOrderNote::query()
-            ->with(['patient', 'author:id,profile'])
+            ->with(['author:id,profile'])
             ->withPlaceName(Ward::class)
             ->where('case_record_id', $caseRecord->id)
             ->orderBy('status')
@@ -102,6 +102,7 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
                         : [];
         $form['record']['hashed_key'] = $caseRecord->hashed_key;
         $form['record']['hn'] = $caseRecord->patient->hn;
+//        $form['record']['cid'] = $caseRecord->patient->profile['document_id'];
 
         // form configs
         $configs = $this->FORM_CONFIGS + [
@@ -129,18 +130,23 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
         $flash = [
             'page-title' => 'Acute HD '.$caseRecord->patient->full_name,
             'hn' => $caseRecord->patient->hn,
+            'cid' => $caseRecord->patient->profile['document_id'],
             'main-menu-links' => [
                 ['icon' => 'slack-hash', 'label' => 'Case Record', 'type' => '#', 'route' => '#case-record', 'can' => true],
                 ['icon' => 'slack-hash', 'label' => 'Orders', 'type' => '#', 'route' => '#orders', 'can' => true],
                 ['icon' => 'slack-hash', 'label' => 'Reservation', 'type' => '#', 'route' => '#reservation', 'can' => true],
                 ['icon' => 'patient', 'label' => 'Patients', 'route' => route('patients'), 'can' => true],
                 ['icon' => 'clinic', 'label' => 'Clinics', 'route' => route('clinics'), 'can' => true],
-                ['icon' => 'procedure', 'label' => 'Procedures', 'route' => route('procedures'), 'can' => true],
+                ['icon' => 'procedure', 'label' => 'Procedures', 'route' => route('procedures.index'), 'can' => true],
             ],
             'action-menu' => [],
             'breadcrumbs' => $this->getBreadcrumbs([
                 ['label' => 'Acute HD', 'route' => route('procedures.acute-hemodialysis.index')],
             ]),
+            'covid' => [
+                'hn' => $caseRecord->patient->hn,
+                'cid' => $caseRecord->patient->profile['document_id'],
+            ]
         ];
 
         return [
