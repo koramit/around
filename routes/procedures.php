@@ -20,13 +20,14 @@ Route::prefix('acute-hemodialysis')
     ->name('acute-hemodialysis.')
     ->group(function () {
         Route::get('/', [AcuteHemodialysisCaseController::class, 'index'])
-            ->middleware('remember')
+            ->middleware(['remember', 'page-transition'])
             ->can('view_any_acute_hemodialysis_cases')
             ->name('index');
         Route::post('/', [AcuteHemodialysisCaseController::class, 'store'])
            ->can('create_acute_hemodialysis_case')
            ->name('store');
         Route::get('/{hashedKey}/edit', [AcuteHemodialysisCaseController::class, 'edit'])
+            ->middleware(['page-transition'])
            ->can('edit_acute_hemodialysis_case')
            ->name('edit');
         Route::patch('/{hashedKey}', [AcuteHemodialysisCaseController::class, 'update'])
@@ -35,6 +36,7 @@ Route::prefix('acute-hemodialysis')
            ->can('create_acute_hemodialysis_order')
            ->name('orders.store');
         Route::get('/orders/{hashedKey}/edit', [AcuteHemodialysisOrderController::class, 'edit'])
+            ->middleware(['page-transition'])
            ->name('orders.edit');
         Route::patch('/orders/{hashedKey}/submit', AcuteHemodialysisOrderSubmitController::class)
            ->name('orders.submit');
@@ -54,11 +56,12 @@ Route::prefix('acute-hemodialysis')
            ->name('slot-available');
 
         Route::get('/schedule', AcuteHemodialysisScheduleController::class)
-           ->middleware('remember')
+           ->middleware(['remember', 'page-transition'])
            ->can('view_any_acute_hemodialysis_slot_requests')
            ->name('schedule');
 
         Route::get('/slot-requests', [AcuteHemodialysisSlotRequestController::class, 'index'])
+            ->middleware(['page-transition'])
            ->can('view_any_acute_hemodialysis_slot_requests')
            ->name('slot-requests');
         Route::patch('/slot-requests/{hashedKey}', [AcuteHemodialysisSlotRequestController::class, 'update'])

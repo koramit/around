@@ -38,7 +38,6 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\HandleInertiaRequests::class,
             \App\Http\Middleware\LocalizationMiddleware::class,
-            \App\Http\Middleware\VerifyRequestIsSameRouteAsPrevious::class,
         ],
 
         'api' => [
@@ -67,5 +66,6 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'remember' => \App\Http\Middleware\RememberQueryStrings::class,
+        'page-transition' => \App\Http\Middleware\PageTransition::class,
     ];
 }
