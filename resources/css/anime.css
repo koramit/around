@@ -55,3 +55,20 @@
 .flip-list-leave-active {
     position: absolute;
 }
+
+.fade-appear-enter-active {
+    animation: fade-appear .2s;
+}
+.fade-appear-leave-active {
+    animation: fade-appear .2s reverse;
+}
+@keyframes fade-appear {
+    0% {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}

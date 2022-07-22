@@ -3,11 +3,12 @@
 namespace App\Actions\Procedures\AcuteHemodialysis;
 
 use App\Models\User;
+use App\Traits\AcuteHemodialysis\OrderShareValidatable;
 use App\Traits\AcuteHemodialysis\SlotCountable;
 
 class ScheduleIndexAction extends AcuteHemodialysisAction
 {
-    use SlotCountable;
+    use SlotCountable, OrderShareValidatable;
 
     public function __invoke(mixed $dateNote, User $user): array
     {
@@ -42,6 +43,22 @@ class ScheduleIndexAction extends AcuteHemodialysisAction
                 'action-menu' => [],
             ],
             'slot' => $slot,
+            'configs' => [
+                'routes' => [
+                    'idle_cases' => route('procedures.acute-hemodialysis.idle-cases'),
+                    'resources_api_wards' => route('resources.api.wards'),
+                    'resources_api_staffs' => route('resources.api.people'),
+                    'staffs_scope_params' => $this->STAFF_SCOPE_PARAMS,
+                    'slot_available_dates' => route('procedures.acute-hemodialysis.slot-available-dates')
+                ],
+                'in_unit_dialysis_types' => $this->IN_UNIT,
+                'out_unit_dialysis_types' => $this->OUT_UNIT,
+                'patient_types' => $this->PATIENT_TYPES,
+                'covid' => [
+                    'route_lab' => fn () => route('resources.api.covid-lab'),
+                    'route_vaccine' => fn () => route('resources.api.covid-vaccine'),
+                ],
+            ]
         ];
     }
 }

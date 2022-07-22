@@ -84,7 +84,7 @@ class SlotRequestIndexAction extends AcuteHemodialysisAction
                 'resources_api_wards' => route('resources.api.wards'),
                 'resources_api_staffs' => route('resources.api.people'),
                 'acute_hemodialysis_slot_available' => route('procedures.acute-hemodialysis.slot-available'),
-                'cases' => route('procedures.acute-hemodialysis.slot-requests.case'),
+                'cases' => route('procedures.acute-hemodialysis.idle-cases'),
                 'orders_store' => route('procedures.acute-hemodialysis.orders.store'),
             ],
             'configs' => [
@@ -92,6 +92,7 @@ class SlotRequestIndexAction extends AcuteHemodialysisAction
                 'in_unit_dialysis_types' => $this->IN_UNIT,
                 'out_unit_dialysis_types' => $this->OUT_UNIT,
                 'patient_types' => $this->PATIENT_TYPES,
+                'extra_slot_requests_endpoint' => route('procedures.acute-hemodialysis.extra-slot-requests.store')
             ],
         ];
     }

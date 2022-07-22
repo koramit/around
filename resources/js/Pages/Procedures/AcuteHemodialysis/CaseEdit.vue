@@ -1,15 +1,13 @@
 <template>
-    <Transition
-        mode="in-out"
-        name="fade-slide"
-    >
-        <Suspense>
-            <CovidInfo class="mb-4" />
-            <template #fallback>
-                <FallbackSpinner />
-            </template>
-        </Suspense>
-    </Transition>
+    <Suspense>
+        <CovidInfo
+            :configs="configs.covid"
+            class="mb-4"
+        />
+        <template #fallback>
+            <FallbackSpinner />
+        </template>
+    </Suspense>
     <!-- summary  -->
     <h2
         class="form-label text-lg italic text-complement scroll-mt-16 md:scroll-mt-8"

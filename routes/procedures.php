@@ -1,12 +1,14 @@
 <?php
 
 use App\Http\Controllers\Procedures\AcuteHemodialysis\CaseRecordController as AcuteHemodialysisCaseController;
+use App\Http\Controllers\Procedures\AcuteHemodialysis\IdleCaseController as AcuteHemodialysisIdleCase;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\OrderController as AcuteHemodialysisOrderController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\OrderRescheduleController as AcuteHemodialysisOrderRescheduleController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\OrderSubmitController as AcuteHemodialysisOrderSubmitController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\OrderSwapController as AcuteHemodialysisOrderSwapController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\ScheduleController as AcuteHemodialysisScheduleController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\SlotAvailableController as AcuteHemodialysisSlotAvailableController;
+use App\Http\Controllers\Procedures\AcuteHemodialysis\SlotAvailableDatesController as AcuteHemodialysisSlotAvailableDatesController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\SlotRequestController as AcuteHemodialysisSlotRequestController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\TodaySlotRequestController as AcuteHemodialysisTodaySlotRequestController;
 use App\Http\Controllers\Procedures\ProcedureController;
@@ -69,7 +71,15 @@ Route::prefix('acute-hemodialysis')
         Route::delete('/slot-requests/{hashedKey}', [AcuteHemodialysisSlotRequestController::class, 'destroy'])
             ->name('slot-requests.cancel');
 
-        Route::get('/slot-requests-show-case', [AcuteHemodialysisSlotRequestController::class, 'case'])
-           ->can('view_any_acute_hemodialysis_slot_requests')
-           ->name('slot-requests.case');
+        Route::get('/idle-cases', AcuteHemodialysisIdleCase::class)
+           ->can('view_any_acute_hemodialysis_cases')
+           ->name('idle-cases');
+
+        Route::post('/extra-slot-requests', [AcuteHemodialysisSlotRequestController::class, 'store'])
+            ->can('create_acute_hemodialysis_order')
+            ->name('extra-slot-requests.store');
+
+        Route::post('/slot-available-dates', AcuteHemodialysisSlotAvailableDatesController::class)
+            ->can('create_acute_hemodialysis_order')
+            ->name('slot-available-dates');
     });

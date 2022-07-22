@@ -64,7 +64,7 @@ class OrderRescheduleAction extends AcuteHemodialysisAction
             ]);
             $order->update([
                 'status' => 'scheduling',
-                'meta->submit_while_rescheduling' => $order->status === 'submitted',
+                'meta->submitted' => $order->status === 'submitted',
             ]);
 
             return [

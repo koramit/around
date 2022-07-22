@@ -123,7 +123,7 @@
         </h2>
         <hr class="my-4 border-b border-accent">
         <div class="grid md:grid-cols-2 gap-2 lg:gap-6">
-            <FormAutocomplete
+            <FormAutocompleteValue
                 label="case"
                 name="case"
                 v-model="order.case"
@@ -131,7 +131,7 @@
                 :error="order.errors.case"
                 :length-to-start="1"
             />
-            <FormAutocomplete
+            <FormAutocompleteValue
                 label="dialysis at"
                 name="dialysis_at"
                 v-model="order.dialysis_at"
@@ -139,7 +139,7 @@
                 :error="order.errors.dialysis_at"
                 :length-to-start="1"
             />
-            <FormAutocomplete
+            <FormAutocompleteValue
                 label="attending"
                 name="attending_staff"
                 v-model="order.attending_staff"
@@ -182,7 +182,7 @@
 import {useForm, usePage} from '@inertiajs/inertia-vue3';
 import DialysisSlot from '../../../Partials/Procedures/AcuteHemodialysis/DialysisSlot.vue';
 import WardSlot from '../../../Partials/Procedures/AcuteHemodialysis/WardSlot.vue';
-import FormAutocomplete from '../../../Components/Controls/FormAutocomplete.vue';
+import FormAutocompleteValue from '../../../Components/Controls/FormAutocomplete.vue';
 import FormSelect from '../../../Components/Controls/FormSelect.vue';
 import FormRadio from '../../../Components/Controls/FormRadio.vue';
 import SpinnerButton from '../../../Components/Controls/SpinnerButton.vue';

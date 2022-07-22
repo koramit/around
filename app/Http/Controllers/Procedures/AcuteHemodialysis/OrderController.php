@@ -8,6 +8,7 @@ use App\Actions\Procedures\AcuteHemodialysis\OrderStoreAction;
 use App\Actions\Procedures\AcuteHemodialysis\OrderUpdateAction;
 use App\Http\Controllers\Controller;
 use App\Traits\AppLayoutSessionFlashable;
+use Exception;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -15,11 +16,14 @@ class OrderController extends Controller
 {
     use AppLayoutSessionFlashable;
 
+    /**
+     * @throws Exception
+     */
     public function store(Request $request)
     {
         $data = (new OrderStoreAction)(data: $request->all(), user: $request->user());
 
-        // if want json return $data
+        // if request want json return $data
 
         if (isset($data['message'])) {
             session()->flash(key: 'message', value: $data['message']);
@@ -32,7 +36,7 @@ class OrderController extends Controller
     {
         $data = (new OrderEditAction)(hashedKey: $hashedKey, user: $request->user());
 
-        // if want json return $data
+        // if request want json return $data
 
         $this->setFlash($data['flash']);
 
@@ -46,7 +50,7 @@ class OrderController extends Controller
     {
         $status = (new OrderUpdateAction)(data: $request->all(), hashedKey: $hashedKey, user: $request->user());
 
-        // if want json return $data
+        // if request want json return $data
 
         return ['ok' => $status];
     }
@@ -55,7 +59,7 @@ class OrderController extends Controller
     {
         $reply = (new OrderDestroyAction)(data: $request->all(), hashedKey: $hashedKey, user: $request->user());
 
-        // if want json return $data
+        // if request want json return $data
 
         return back()->with('message', $reply);
     }

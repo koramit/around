@@ -102,7 +102,6 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
                         : [];
         $form['record']['hashed_key'] = $caseRecord->hashed_key;
         $form['record']['hn'] = $caseRecord->patient->hn;
-//        $form['record']['cid'] = $caseRecord->patient->profile['document_id'];
 
         // form configs
         $configs = $this->FORM_CONFIGS + [
@@ -125,12 +124,17 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
             ],
             'staffs_scope_params' => $this->STAFF_SCOPE_PARAMS,
             'dialysis_reservable' => $this->isDialysisReservable($caseRecord),
+            'covid' => [
+                'hn' => $caseRecord->patient->hn,
+                'cid' => $caseRecord->patient->profile['document_id'],
+                'route_lab' => fn () => route('resources.api.covid-lab'),
+                'route_vaccine' => fn () => route('resources.api.covid-vaccine'),
+            ]
         ];
 
         $flash = [
             'page-title' => 'Acute HD '.$caseRecord->patient->full_name,
             'hn' => $caseRecord->patient->hn,
-            'cid' => $caseRecord->patient->profile['document_id'],
             'main-menu-links' => [
                 ['icon' => 'slack-hash', 'label' => 'Case Record', 'type' => '#', 'route' => '#case-record', 'can' => true],
                 ['icon' => 'slack-hash', 'label' => 'Orders', 'type' => '#', 'route' => '#orders', 'can' => true],
@@ -142,11 +146,7 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
             'action-menu' => [],
             'breadcrumbs' => $this->getBreadcrumbs([
                 ['label' => 'Acute HD', 'route' => route('procedures.acute-hemodialysis.index')],
-            ]),
-            'covid' => [
-                'hn' => $caseRecord->patient->hn,
-                'cid' => $caseRecord->patient->profile['document_id'],
-            ]
+            ])
         ];
 
         return [

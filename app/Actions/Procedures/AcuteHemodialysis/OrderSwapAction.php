@@ -123,7 +123,7 @@ class OrderSwapAction extends AcuteHemodialysisAction
             ]);
             $order->update([
                 'status' => 'scheduling',
-                'meta->submit_while_rescheduling' => $order->status === 'submitted',
+                'meta->submitted' => $order->status === 'submitted',
                 'meta->swap_code' => $this->genSwapCode(),
             ]);
 
@@ -134,7 +134,7 @@ class OrderSwapAction extends AcuteHemodialysisAction
             ]);
             $swap->update([
                 'status' => 'scheduling',
-                'meta->submit_while_rescheduling' => $swap->status === 'submitted',
+                'meta->submitted' => $swap->status === 'submitted',
                 'meta->swap_code' => $this->genSwapCode(),
             ]);
 

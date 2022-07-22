@@ -43,12 +43,9 @@ class HandleInertiaRequests extends Middleware
             'routeHome' => fn () => route('home'),
             'routePreferences' => fn () => route('preferences'),
             'routeLogout' => fn () => route('logout'),
-            'routeCovidLab' => fn () => route('resources.api.covid-lab'),
-            'routeCovidVaccine' => fn () => route('resources.api.covid-vaccine'),
             'flash' => [
                 'title' => fn () => $request->session()->pull('page-title', 'MISSING'),
                 'hn' => fn () => $request->session()->pull('hn'),
-                'cid' => fn () => $request->session()->pull('cid'),
                 'mainMenuLinks' => fn () => $request->session()->pull('main-menu-links', []),
                 'actionMenu' => fn () => $request->session()->pull('action-menu', []),
                 'breadcrumbs' => fn () => $request->session()->pull('breadcrumbs', []),

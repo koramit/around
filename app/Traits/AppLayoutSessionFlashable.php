@@ -10,7 +10,7 @@ trait AppLayoutSessionFlashable
         session()->flash('main-menu-links', $flash['main-menu-links']);
         session()->flash('action-menu', $flash['action-menu']);
 
-        foreach (['messages', 'hn', 'breadcrumbs', 'navs', 'cid'] as $key) {
+        foreach (['messages', 'hn', 'breadcrumbs', 'navs'] as $key) {
             if (isset($flash[$key])) {
                 session()->flash($key, $flash[$key]);
             }

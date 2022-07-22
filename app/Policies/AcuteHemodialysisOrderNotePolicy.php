@@ -28,7 +28,7 @@ class AcuteHemodialysisOrderNotePolicy
     {
         return $user->id === $note->author_id
             && ! $this->status->getUpdateNotAllowStatuses()->contains($note->status)
-            && ! ($note->meta['submit_while_rescheduling'] ?? false);
+            && ! ($note->meta['submitted'] ?? false);
     }
 
     public function submit(User $user, AcuteHemodialysisOrderNote $note): bool

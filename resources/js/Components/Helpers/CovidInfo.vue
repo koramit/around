@@ -19,7 +19,7 @@
                 :class="{'border-b border-accent': labs.labs?.length}"
             >
                 <label class="form-label !mb-0">
-                    siriraj pcr :
+                    siriraj test :
                     <span class="italic" v-if="!labs.ok">ERROR</span>
                     <span class="italic" v-else-if="!labs.found">No results</span>
                 </label>
@@ -94,28 +94,26 @@
 </template>
 
 <script setup>
-import {usePage} from '@inertiajs/inertia-vue3';
 import IconInfoCircle from './Icons/IconInfoCircle.vue';
+
+const props = defineProps({
+    configs: {type: Object, required: true},
+})
 
 const handleError = (error) => {
     console.log(error);
     return {ok: false};
 };
 
-/** @type {string} routeCovidVaccine */
-const routeCovidVaccine = usePage().props.value.routeCovidVaccine;
-/** @type {string} routeCovidLab */
-const routeCovidLab = usePage().props.value.routeCovidLab;
-
-let cid = usePage().props.value.flash.cid;
+let cid = props.configs.cid;
 const vaccinations = cid
     ? await window.axios
-        .post(routeCovidVaccine, {cid: cid})
+        .post(props.configs.route_vaccine, {cid: cid})
         .then(res => res.data)
         .catch(handleError)
     : {ok:true,found:false} ;
 const labs = await window.axios
-    .post(routeCovidLab, {hn: usePage().props.value.flash.hn})
+    .post(props.configs.route_lab, {hn: props.configs.hn})
     .then(res => res.data)
     .catch(handleError);
 </script>

@@ -19,7 +19,7 @@
                     :id="name"
                     :name="name"
                     ref="input"
-                    :value="modelValue"
+                    :value="valueModel"
                     :class="{ 'border-red-400 text-red-400': error }"
                 >
                 <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2">
@@ -54,11 +54,11 @@
             >
                 <button
                     class="block w-full py-1 px-2 lg:px-3 hover:bg-primary hover:text-accent text-left"
-                    v-for="(item, key) in items"
-                    :key="key"
+                    v-for="item in items"
+                    :key="item.key"
                     @click="selectItem(item)"
                 >
-                    {{ item }}
+                    {{ item.value }}
                 </button>
             </div>
         </Transition>
@@ -68,23 +68,24 @@
 <script setup>
 import { ref } from 'vue';
 import throttle from 'lodash/throttle';
-const emits = defineEmits(['update:modelValue', 'autosave']);
+const emits = defineEmits(['update:keyModel', 'update:valueModel', 'autosave']);
 const props = defineProps({
-    modelValue: { type: String, default: '' },
-    modelKey: { type: String, default: '' },
+    keyModel: { type: [String,null], default: null },
+    valueModel: { type: [String,null], default: null },
     label: { type: String, default: '' },
     endpoint: { type: String, default: '' },
     params: { type: String, default: '' },
     name: { type: String, required: true },
     error: { type: String, default: '' },
-    lengthToStart: { type: Number, default: 3}
+    lengthToStart: { type: [Number,String], default: 3}
 });
 
 const items = ref([]);
 const input = ref(null);
 const open = ref(false);
 const search = throttle(function () {
-    emits('update:modelValue', input.value.value);
+    emits('update:valueModel', input.value.value);
+    emits('update:keyModel', null);
 
     if (input.value.value.length < props.lengthToStart) {
         if (open.value) {
@@ -100,7 +101,7 @@ const search = throttle(function () {
     window.axios
         .get(props.endpoint + '?search=' + input.value.value + props.params)
         .then(response => {
-            items.value = response.data.length ? response.data : ['No match found'];
+            items.value = response.data.length ? response.data : [{key:'', value:'No match found'}];
             open.value = true;
         }).catch(error => {
             console.log(error);
@@ -108,9 +109,10 @@ const search = throttle(function () {
 }, 300);
 
 const selectItem = (item) => {
-    input.value.value = item;
+    input.value.value = item.value;
     open.value = false;
-    emits('update:modelValue', item);
+    emits('update:valueModel', item.value);
+    emits('update:keyModel', item.key);
     emits('autosave');
 };
 </script>

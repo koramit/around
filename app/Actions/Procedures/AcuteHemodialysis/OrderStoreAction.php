@@ -199,7 +199,7 @@ class OrderStoreAction extends AcuteHemodialysisAction
      * @todo authorize action
      * @todo recheck date_note+dialysis_type+dialysis_at against available slots
      */
-    public function __invoke(array $data, User $user): array
+    public function __invoke(array $data, User $user, bool $extraSlot = false): array
     {
         if (config('auth.guards.web.provider') === 'avatar') {
             return []; // call api
@@ -248,7 +248,8 @@ class OrderStoreAction extends AcuteHemodialysisAction
             'patient_type' => $validated['patient_type'],
             'dialysis_type' => $validated['dialysis_type'],
             'swap_code' => $this->genSwapCode(),
-            'extra_slot' => false,
+            'extra_slot' => $extraSlot,
+            'submitted' => false,
         ];
         $note->author_id = $user->id;
         $note->save();

@@ -50,7 +50,7 @@ class TodaySlotRequestAction extends AcuteHemodialysisAction
         ]);
         $note->update([
             'status' => 'scheduling',
-            'meta->submit_while_rescheduling' => $note->status === 'submitted',
+            'meta->submitted' => $note->status === 'submitted',
         ]);
 
         return [

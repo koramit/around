@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Validator;
 class OrderDestroyAction extends AcuteHemodialysisAction
 {
     /**
-     * @todo IF status == scheduling then also expire coressponding request
+     * @todo IF status == scheduling then also expire corresponding request
      */
     public function __invoke(array $data, string $hashedKey, User $user): array
     {
