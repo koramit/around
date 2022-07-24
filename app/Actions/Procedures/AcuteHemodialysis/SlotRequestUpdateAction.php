@@ -63,7 +63,7 @@ class SlotRequestUpdateAction
             $order->actionLogs()->create([
                 'action' => 'disapprove',
                 'actor_id' => $user->id,
-                'payload' => ['reason' => 'the request is not approved']
+                'payload' => ['reason' => 'the request is not approved'],
             ]);
         } else {
             if (isset($request->changes['swap'])) {

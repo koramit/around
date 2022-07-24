@@ -10,30 +10,62 @@ class ScheduleIndexAction extends AcuteHemodialysisAction
 {
     use SlotCountable, OrderShareValidatable;
 
-    public function __invoke(mixed $dateNote, User $user): array
+    public function __invoke(mixed $refDate, User $user): array
     {
         if (config('auth.guards.web.provider') === 'avatar') {
             return []; // call api + query params
         }
 
-        if (! $dateNote) {
-            $dateNote = $this->TODAY;
+        if (! $refDate) {
+            $refDate = $this->TODAY;
         }
 
-        $hdUnit = $this->getNotes(dateNote: $dateNote);
-        $ordered = $this->orderInUnitSlot($hdUnit);
+        $refDate = now()->create($refDate)->tz($this->TIMEZONE);
 
-        $ward = $this->getNotes(dateNote: $dateNote, inUnit: false);
-        $availableCount = ($this->LIMIT_OUT_UNIT_CASES - $ward->count());
-        for ($i = 1; $i <= $availableCount; $i++) {
-            $ward[] = ['type' => null];
-        }
+        $slots = collect([
+            $refDate->clone()->addDays(-3),
+            $refDate->clone()->addDays(-2),
+            $refDate->clone()->addDays(-1),
+            $refDate,
+            $refDate->clone()->addDay(),
+            $refDate->clone()->addDays(2),
+            $refDate->clone()->addDays(3),
+        ])->transform(function ($date) use ($user) {
+            $dateNote = $date->format('Y-m-d');
+            $hdUnit = $this->getNotes(dateNote: $dateNote, user: $user);
+            /** Filter COVID cases */
+            $hdUnitCovid = $hdUnit->filter(fn ($order) => $order['covid_case']);
+            $hdUnit = $hdUnit->filter(fn ($order) => ! $order['covid_case']);
+            $ordered = $this->orderInUnitSlot($hdUnit);
 
-        $slot = [
-            'hd_unit' => $ordered,
-            'ward' => $ward,
-            'date_note' => $dateNote,
-        ];
+            $ward = $this->getNotes(dateNote: $dateNote, user: $user, inUnit: false);
+            /** Filter COVID cases */
+            $wardCovid = $ward->filter(fn ($order) => $order['covid_case']);
+            $ward = $ward->filter(fn ($order) => ! $order['covid_case']);
+            $availableCount = ($this->LIMIT_OUT_UNIT_CASES - $ward->count());
+            for ($i = 1; $i <= $availableCount; $i++) {
+                $ward[] = ['type' => null];
+            }
+
+            $label = $date->format('j M - ');
+
+            if ($date->isToday()) {
+                $label .= 'Today';
+            } else {
+                $label .= $date->dayName;
+            }
+
+            return [
+                'hd_unit' => $ordered,
+                'ward' => $ward,
+                'date_note' => $dateNote,
+                'date_label' => $label,
+                'covid_cases' => [
+                    'in' => $hdUnitCovid,
+                    'out' => $wardCovid,
+                ],
+            ];
+        });
 
         return [
             'flash' => [
@@ -42,14 +74,15 @@ class ScheduleIndexAction extends AcuteHemodialysisAction
                 'navs' => $this->NAVS,
                 'action-menu' => [],
             ],
-            'slot' => $slot,
+            'slots' => $slots,
             'configs' => [
                 'routes' => [
                     'idle_cases' => route('procedures.acute-hemodialysis.idle-cases'),
                     'resources_api_wards' => route('resources.api.wards'),
                     'resources_api_staffs' => route('resources.api.people'),
                     'staffs_scope_params' => $this->STAFF_SCOPE_PARAMS,
-                    'slot_available_dates' => route('procedures.acute-hemodialysis.slot-available-dates')
+                    'slot_available_dates' => route('procedures.acute-hemodialysis.slot-available-dates'),
+                    'orders_store' => route('procedures.acute-hemodialysis.orders.store'),
                 ],
                 'in_unit_dialysis_types' => $this->IN_UNIT,
                 'out_unit_dialysis_types' => $this->OUT_UNIT,
@@ -58,7 +91,7 @@ class ScheduleIndexAction extends AcuteHemodialysisAction
                     'route_lab' => fn () => route('resources.api.covid-lab'),
                     'route_vaccine' => fn () => route('resources.api.covid-vaccine'),
                 ],
-            ]
+            ],
         ];
     }
 }

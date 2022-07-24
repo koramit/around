@@ -10,6 +10,7 @@
                 :endpoint="configs.routes.idle_cases"
             />
             <FormCheckbox
+                class="border border-dashed border-l-0 border-r-0 border-accent py-2"
                 label="covid-19 infected"
                 :toggler="true"
                 name="covid_case"
@@ -21,15 +22,6 @@
                 v-model="form.dialysis_at"
                 :endpoint="configs.routes.resources_api_wards"
                 :error="form.errors.dialysis_at"
-                :length-to-start="1"
-            />
-            <FormAutocomplete
-                label="attending"
-                name="attending_staff"
-                v-model="form.attending_staff"
-                :endpoint="configs.routes.resources_api_staffs"
-                :params="configs.routes.staffs_scope_params"
-                :error="form.errors.attending_staff"
                 :length-to-start="1"
             />
             <FormSelect
@@ -49,6 +41,15 @@
                     ref="patientTypeInput"
                 />
             </div>
+            <FormAutocomplete
+                label="attending"
+                name="attending_staff"
+                v-model="form.attending_staff"
+                :endpoint="configs.routes.resources_api_staffs"
+                :params="configs.routes.staffs_scope_params"
+                :error="form.errors.attending_staff"
+                :length-to-start="1"
+            />
             <SpinnerButton
                 class="btn btn-complement w-full"
                 :spin="checking"
@@ -57,25 +58,42 @@
             >
                 Check available dates
             </SpinnerButton>
-            <FormSelect
-                label="required date"
-                name="date_note"
-                v-model="form.date_note"
-                :options="availableDates"
-                :disabled="availableDates.length === 0"
-            />
+            <Transition name="slide-fade">
+                <div
+                    class="space-y-2"
+                    v-if="availableDates.length"
+                >
+                    <FormSelect
+                        label="required date"
+                        name="date_note"
+                        v-model="form.date_note"
+                        :options="availableDates"
+                        :error="form.errors.date_note"
+                    />
+                    <SpinnerButton
+                        class="btn btn-accent w-full"
+                        :spin="form.processing"
+                        :disabled="Object.keys(form.data()).reduce((a,b) => a || (form[b] === null), false)"
+                        @click="reserve"
+                    >
+                        {{ (form.date_note ?? '').includes('Approval') ? 'REQUEST ' : '' }} RESERVE
+                    </SpinnerButton>
+                </div>
+            </Transition>
         </div>
         <div class="md:w-1/2">
-            <Suspense
-                v-if="covid.hn"
-            >
-                <CovidInfo
-                    :configs="covid"
-                />
-                <template #fallback>
-                    <FallbackSpinner />
-                </template>
-            </Suspense>
+            <Transition mode="out-in">
+                <Suspense
+                    v-if="covid.hn"
+                >
+                    <CovidInfo
+                        :configs="covid"
+                    />
+                    <template #fallback>
+                        <FallbackSpinner />
+                    </template>
+                </Suspense>
+            </Transition>
         </div>
     </div>
 </template>
@@ -98,11 +116,12 @@ const props = defineProps({
 
 const form = useForm({
     case_key: null,
-    case_label: null,
     attending_staff: null,
     dialysis_type: null,
+    patient_type: null,
     dialysis_at: null,
     covid_case: false,
+    case_label: null,
     date_note: null,
 });
 const covid = reactive({
@@ -124,14 +143,41 @@ watch(
     }
 );
 watch(
-    () => form,
+    [() => form.dialysis_type, () => form.dialysis_at, () => form.covid_case],
     () => {
         if (availableDates.value.length) {
             availableDates.value = [];
+            form.date_note = null;
         }
-    },
-    {deep: true}
+    }
 );
+watch(
+    () => form.date_note,
+    (val) => {
+        if (!val) {
+            return;
+        }
+
+        let index = availableDates.value.findIndex((date) => date.value === val);
+
+        if (index === -1) {
+            return;
+        }
+
+        if (availableDates.value[index].error !== undefined) {
+            form.errors.date_note = availableDates.value[index].error;
+        } else {
+            form.errors.date_note = null;
+        }
+    }
+);
+const reserve = () => form.transform((data) => ({...data, case_record_hashed_key: data.case_key.split('|')[0]}))
+    .post(props.configs.routes.orders_store, {
+        preserveState: true,
+        onFinish: () => {
+            form.processing = false;
+        },
+    });
 
 const availableDates = ref([]);
 const checking = ref(false);

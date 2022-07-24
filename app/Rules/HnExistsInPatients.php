@@ -9,7 +9,7 @@ class HnExistsInPatients implements InvokableRule
 {
     public function __invoke($attribute, $value, $fail)
     {
-        if(!Patient::query()->findByHashedKey($value)->first()) {
+        if (! Patient::query()->findByHashedKey($value)->first()) {
             $fail(trans('validation.exists'));
         }
     }

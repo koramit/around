@@ -25,41 +25,33 @@ class SlotAvailableDatesAction extends AcuteHemodialysisAction
         ])->validate();
 
         // possible dates
-        $today = now()->create($this->TODAY);
-        $dates = [$today->clone()];
-        for($i = 1; $i <= 3; $i++) {
-            $nextDay = $today->addDay();
-            if ($nextDay->is($this->UNIT_DAY_OFF)) {
-                continue;
-            }
-            $dates[] = $nextDay->clone();
-        }
+        $dates = $this->getPossibleDates();
 
-        return collect($dates)->transform(function ($d) use($validated) {
+        return collect($dates)->transform(function ($d) use ($validated) {
             $data = [...$validated];
             $data['date_note'] = $d->format('Y-m-d');
-            $label = $d->format('d M') . ' | ';
-            $label .= ($data['date_note'] === $this->TODAY ? 'Today' : $d->dayName) . ' | ';
+            $label = $d->format('d M').' | ';
+            $label .= ($data['date_note'] === $this->TODAY ? 'Today' : $d->dayName).' | ';
 
             if ($validated['covid_case']) {
-                return $label . 'Approval needed';
+                return ['value' => $d->format('Y-m-d'), 'label' => $label.'Approval needed'];
             }
 
             $slot = (new SlotAvailableAction)($data);
 
-            if ($data['date_note'] === $this->TODAY && $slot['available']) {
-                return $label . 'Approval needed';
+            if ($data['date_note'] === $this->TODAY && (! $slot['available'] || $d->is($this->UNIT_DAY_OFF))) {
+                return ['value' => $d->format('Y-m-d'), 'label' => $label.'Approval and extra slot needed'];
             }
 
-            if ($data['date_note'] === $this->TODAY && !$slot['available']) {
-                return $label . 'Approval and extra slot needed';
+            if ($data['date_note'] === $this->TODAY && $slot['available']) {
+                return ['value' => $d->format('Y-m-d'), 'label' => $label.'Approval needed'];
             }
 
             if ($data['date_note'] !== $this->TODAY && $slot['available']) {
-                return $label . 'Available';
+                return ['value' => $d->format('Y-m-d'), 'label' => $label.'Available'];
             }
 
-            return $label . 'Unavailable'; // next day and no slot
+            return ['value' => $d->format('Y-m-d'), 'label' => $label.'Unavailable', 'error' => $slot['reply']]; // next day and no slot
         })->all();
     }
 }

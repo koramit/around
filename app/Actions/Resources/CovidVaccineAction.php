@@ -15,16 +15,16 @@ class CovidVaccineAction
 
         $validated = Validator::make($data, ['cid' => 'required|string|max:13'])->validate();
         $key = "{$validated['cid']}-check-covid-vaccine";
-        if (($data['refresh'] ?? false) || !(cache($key)['ok'] ?? false)) {
+        if (($data['refresh'] ?? false) || ! (cache($key)['ok'] ?? false)) {
             cache()->forget($key);
         }
 
         $cached = cache()->remember(
             key: $key,
             ttl: now()->addDay(),
-            callback: function () use($validated, $api) {
+            callback: function () use ($validated, $api) {
                 $data = $api->checkCovidVaccine($validated['cid']) + ['when' => now()];
-                if (!isset($data['vaccinations'])) {
+                if (! isset($data['vaccinations'])) {
                     return $data;
                 }
                 $data['vaccinations'] = collect($data['vaccinations'])->transform(fn ($v) => [

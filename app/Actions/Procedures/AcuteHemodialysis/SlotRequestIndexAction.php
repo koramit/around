@@ -17,7 +17,7 @@ class SlotRequestIndexAction extends AcuteHemodialysisAction
      */
     public function __invoke(User $user): array
     {
-        $slot = (new ScheduleIndexAction)(dateNote: null, user: $user)['slot'];
+//        $slot = (new ScheduleIndexAction)(dateNote: null, user: $user)['slot'];
         $requests = AcuteHemodialysisSlotRequest::query()
             ->with(['changeable:id,date_note,meta', 'requester:id,profile'])
             ->where('submitted_at', '>=', now()->tz($this->TIMEZONE)->addDays(-7))
@@ -73,7 +73,7 @@ class SlotRequestIndexAction extends AcuteHemodialysisAction
 
         return [
             'requests' => $requests,
-            'slot' => $slot,
+            //            'slot' => $slot,
             'flash' => [
                 'page-title' => 'Acute Hemodialysis - Slot Request',
                 'main-menu-links' => $this->MENU,
@@ -92,7 +92,7 @@ class SlotRequestIndexAction extends AcuteHemodialysisAction
                 'in_unit_dialysis_types' => $this->IN_UNIT,
                 'out_unit_dialysis_types' => $this->OUT_UNIT,
                 'patient_types' => $this->PATIENT_TYPES,
-                'extra_slot_requests_endpoint' => route('procedures.acute-hemodialysis.extra-slot-requests.store')
+                'extra_slot_requests_endpoint' => route('procedures.acute-hemodialysis.extra-slot-requests.store'),
             ],
         ];
     }

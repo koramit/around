@@ -19,12 +19,12 @@ class IdleCaseAction
             ->select(['id', 'meta', 'patient_id'])
             ->with(['patient:id,hn,profile'])
             ->whereDoesntHave('orders', fn ($q) => $q->activeStatuses())
-            ->where( fn ($q) => $q->where('meta->name', $ilike, '%'.$search.'%')
+            ->where(fn ($q) => $q->where('meta->name', $ilike, '%'.$search.'%')
                 ->orWhere('meta->hn', $ilike, '%'.$search.'%')
             )->get()
             ->transform(fn ($c) => [
-                'key' => implode('|',[$c->hashed_key, $c->patient->hn, $c->patient->profile['document_id']]),
-                'value' => "HN {$c->meta['hn']} {$c->meta['name']}"
-        ]);
+                'key' => implode('|', [$c->hashed_key, $c->patient->hn, $c->patient->profile['document_id']]),
+                'value' => "HN {$c->meta['hn']} {$c->meta['name']}",
+            ]);
     }
 }

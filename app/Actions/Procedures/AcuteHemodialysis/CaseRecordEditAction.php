@@ -129,7 +129,7 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
                 'cid' => $caseRecord->patient->profile['document_id'],
                 'route_lab' => fn () => route('resources.api.covid-lab'),
                 'route_vaccine' => fn () => route('resources.api.covid-vaccine'),
-            ]
+            ],
         ];
 
         $flash = [
@@ -146,7 +146,7 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
             'action-menu' => [],
             'breadcrumbs' => $this->getBreadcrumbs([
                 ['label' => 'Acute HD', 'route' => route('procedures.acute-hemodialysis.index')],
-            ])
+            ]),
         ];
 
         return [

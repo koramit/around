@@ -348,7 +348,7 @@
     <OrderIndex :orders="orders" />
 
     <!-- reservation -->
-    <h2
+    <!--    <h2
         class="mt-6 md:mt-12 xl:mt-24 form-label italic text-xl text-complement"
         id="reservation"
     >
@@ -443,7 +443,7 @@
         title="Cannot make a reservation"
         type="warning"
         message="One active order at a time"
-    />
+    />-->
 
     <FormSelectOther
         :placeholder="selectOther.placeholder"

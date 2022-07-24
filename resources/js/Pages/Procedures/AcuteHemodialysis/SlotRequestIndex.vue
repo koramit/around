@@ -94,7 +94,7 @@
         </div>
 
         <!-- today slot  -->
-        <h2 class="mt-4 md:mt-8 form-label text-lg italic text-complement scroll-mt-16 md:scroll-mt-8">
+        <!--        <h2 class="mt-4 md:mt-8 form-label text-lg italic text-complement scroll-mt-16 md:scroll-mt-8">
             Today Slot
         </h2>
         <hr class="my-4 border-b border-accent">
@@ -115,10 +115,10 @@
                     :slots="slot.ward"
                 />
             </Transition>
-        </div>
+        </div>-->
 
         <!-- request form  -->
-        <h2 class="mt-4 md:mt-8 form-label text-lg italic text-complement scroll-mt-16 md:scroll-mt-8">
+        <!--        <h2 class="mt-4 md:mt-8 form-label text-lg italic text-complement scroll-mt-16 md:scroll-mt-8">
             request today extra slot
         </h2>
         <hr class="my-4 border-b border-accent">
@@ -174,7 +174,7 @@
             >
                 REQUEST RESERVE
             </SpinnerButton>
-        </div>
+        </div>-->
     </div>
 </template>
 
@@ -194,7 +194,7 @@ import DropdownList from '../../../Components/Helpers/DropdownList.vue';
 import IconDoubleDown from '../../../Components/Helpers/Icons/IconDoubleDown.vue';
 defineProps({
     requests: { type: Array, required: true },
-    slot: { type: Object, required: true },
+    // slot: { type: Object, required: true },
     configs: { type: Object, required: true },
     endpoints: { type: Object, required: true },
 });

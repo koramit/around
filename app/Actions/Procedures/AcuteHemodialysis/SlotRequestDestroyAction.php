@@ -33,7 +33,7 @@ class SlotRequestDestroyAction
             $order->actionLogs()->create([
                 'action' => 'cancel',
                 'actor_id' => $user->id,
-                'payload' => ['reason' => 'the request was canceled']
+                'payload' => ['reason' => 'the request was canceled'],
             ]);
 
             return [

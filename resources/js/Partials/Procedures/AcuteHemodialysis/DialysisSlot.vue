@@ -25,7 +25,9 @@
             >
                 <template v-if="!slot.available">
                     <div class="w-1/3">
-                        <span class="p-1 md:p-2 bg-primary rounded-full text-xs text-accent font-semibold">{{ slot.type }}</span>
+                        <Link :href="slot.order_route">
+                            <span class="p-1 md:p-2 bg-primary rounded-full text-xs text-accent font-semibold underline">{{ slot.type }}</span>
+                        </Link>
                     </div>
                     <div class="w-2/3 mt-1 md:mt-0">
                         <Link

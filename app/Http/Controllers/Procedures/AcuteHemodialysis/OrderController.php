@@ -63,4 +63,9 @@ class OrderController extends Controller
 
         return back()->with('message', $reply);
     }
+
+    public function show(string $hashedKey)
+    {
+        return 'hello - show - '.$hashedKey;
+    }
 }

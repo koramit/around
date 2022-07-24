@@ -23,10 +23,10 @@ class CovidLabAction
         $cached = cache()->remember(
             key: $key,
             ttl: now()->addHour(),
-            callback: function () use($data, $api) {
+            callback: function () use ($data, $api) {
                 $validated = Validator::make($data, ['hn' => new HnExistsInPatients])->validate();
                 $data = $api->checkCovidLab($validated['hn']) + ['when' => now()];
-                if (!isset($data['labs'])) {
+                if (! isset($data['labs'])) {
                     return $data;
                 }
                 $data['labs'] = collect($data['labs'])->transform(fn ($v) => [

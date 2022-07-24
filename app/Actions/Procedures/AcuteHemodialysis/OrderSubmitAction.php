@@ -356,13 +356,16 @@ class OrderSubmitAction extends AcuteHemodialysisAction
         $validated = Validator::make($data, $rules)->validate();
 
         $note->form = $validated;
-        $note->submitted_at = now();
         if ($note->status === 'scheduling') {
             $note->meta['submitted'] = true;
         } else {
             $note->status = 'submitted';
         }
         $note->save();
+        $note->actionLogs()->create([
+            'action' => 'submit',
+            'actor_id' => $user->id,
+        ]);
 
         return $note;
     }

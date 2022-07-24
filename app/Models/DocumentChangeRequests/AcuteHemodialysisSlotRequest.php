@@ -44,6 +44,11 @@ class AcuteHemodialysisSlotRequest extends DocumentChangeRequest
                 } else {
                     $text = 'ขอเลื่อนออก '.$text.'ไป '.$dateLabel;
                 }
+                if ($changeable->meta['extra_slot']) {
+                    $text .= ' / Extra slot';
+                } elseif ($changeable->meta['covid_case'] ?? false) {
+                    $text .= ' / COVID case';
+                }
 
                 return $text;
             },

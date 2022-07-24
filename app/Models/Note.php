@@ -102,7 +102,7 @@ class Note extends Model
                         'request' => $request->change_request_text,
                         'status' => $request->status,
                         'actor' => $request->actionLogs->first()->actor->name,
-                        'at' => $request->submitted_at->format('M j H:i'),
+                        'at' => $request->actionLogs->first()->performed_at->format('M j H:i'),
                         'id' => $request->id,
                     ])
         );
@@ -126,13 +126,14 @@ class Note extends Model
                             return $data;
                         }
 
-                        return $data + ['request' => [
-                            'requester' => $this->request_list[$key]['requester'],
-                            'request' => $this->request_list[$key]['request'],
-                            'status' => $this->request_list[$key]['status'],
-                            'actor' => $this->request_list[$key]['actor'],
-                            'at' => $this->request_list[$key]['at'],
-                        ],
+                        return $data + [
+                            'request' => [
+                                'requester' => $this->request_list[$key]['requester'],
+                                'request' => $this->request_list[$key]['request'],
+                                'status' => $this->request_list[$key]['status'],
+                                'actor' => $this->request_list[$key]['actor'],
+                                'at' => $this->request_list[$key]['at'],
+                            ],
                         ];
                     })
         );

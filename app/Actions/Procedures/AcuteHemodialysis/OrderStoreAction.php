@@ -199,7 +199,7 @@ class OrderStoreAction extends AcuteHemodialysisAction
      * @todo authorize action
      * @todo recheck date_note+dialysis_type+dialysis_at against available slots
      */
-    public function __invoke(array $data, User $user, bool $extraSlot = false): array
+    public function __invoke(array $data, User $user): array
     {
         if (config('auth.guards.web.provider') === 'avatar') {
             return []; // call api
@@ -213,7 +213,8 @@ class OrderStoreAction extends AcuteHemodialysisAction
             'dialysis_at' => ['required', 'string', 'max:255', new NameExistsInWards($cacheKeyPrefix)],
             'attending_staff' => ['required', 'string', 'max:255', new NameExistsInPeople($cacheKeyPrefix)],
             'case_record_hashed_key' => ['required', new HashedKeyExistsInCaseRecords($cacheKeyPrefix, 'App\Models\Registries\AcuteHemodialysisCaseRecord')],
-            'date_note' => ['required', 'date'],
+            'date_note' => ['required', 'date', Rule::in(collect($this->getPossibleDates())->transform(fn ($d) => $d->format('Y-m-d')))],
+            'covid_case' => ['required', 'bool'],
         ])->validate();
 
         $caseRecord = cache()->pull($cacheKeyPrefix.'-validatedCaseRecord');
@@ -221,12 +222,26 @@ class OrderStoreAction extends AcuteHemodialysisAction
             throw ValidationException::withMessages(['status' => 'one active order at a time']);
         }
 
-        $ensureSlotAvailable = (new SlotAvailableAction)($validated);
-        if (! $ensureSlotAvailable['available']) {
-            throw ValidationException::withMessages(['status' => 'no slot available']);
+        $extraSlot = false;
+        $reserveToday = $validated['date_note'] === $this->TODAY;
+
+        if (! $validated['covid_case']) { // Covid case has no limit
+            $ensureSlotAvailable = (new SlotAvailableAction)($validated);
+            if (! $ensureSlotAvailable['available']) {
+                if ($reserveToday) {
+                    $extraSlot = true;
+                } else {
+                    throw ValidationException::withMessages(['status' => 'no slot available']);
+                }
+            } elseif (now()->create($validated['date_note'])->is($this->UNIT_DAY_OFF)) {
+                $extraSlot = true;
+            }
         }
 
-        $reserveToday = $validated['date_note'] === $this->TODAY;
+        /*$ensureSlotAvailable = (new SlotAvailableAction)($validated);
+        if (! $ensureSlotAvailable['available']) {
+            throw ValidationException::withMessages(['status' => 'no slot available']);
+        }*/
 
         $note = new AcuteHemodialysisOrderNote();
         $note->case_record_id = $caseRecord->id;
@@ -235,7 +250,7 @@ class OrderStoreAction extends AcuteHemodialysisAction
         $ward = cache()->pull($cacheKeyPrefix.'-validatedWard');
         $note->place_id = $ward->id;
         $note->date_note = $validated['date_note'];
-        $note->status = $reserveToday ? 'scheduling' : 'draft';
+        $note->status = ($reserveToday || $validated['covid_case']) ? 'scheduling' : 'draft';
         $form = $this->initForm($validated['dialysis_type']);
         $note->form = $form;
         $patient = $caseRecord->patient;
@@ -249,12 +264,13 @@ class OrderStoreAction extends AcuteHemodialysisAction
             'dialysis_type' => $validated['dialysis_type'],
             'swap_code' => $this->genSwapCode(),
             'extra_slot' => $extraSlot,
+            'covid_case' => $validated['covid_case'],
             'submitted' => false,
         ];
         $note->author_id = $user->id;
         $note->save();
 
-        if (! $reserveToday) {
+        if (! $reserveToday && ! $validated['covid_case']) {
             $note->actionLogs()->create([
                 'actor_id' => $user->id,
                 'action' => 'create',
@@ -268,7 +284,7 @@ class OrderStoreAction extends AcuteHemodialysisAction
         /** @var AcuteHemodialysisSlotRequest $request */
         $request = $note->changeRequests()->create([
             'requester_id' => $user->id,
-            'changes' => ['date_note' => $this->TODAY],
+            'changes' => ['date_note' => $validated['date_note']], // covid case can reserve in advance
             'authority_ability_id' => $this->APPROVE_ACUTE_HEMODIALYSIS_TODAY_SLOT_REQUEST_ABILITY_ID,
         ]);
         $request->actionLogs()->create([

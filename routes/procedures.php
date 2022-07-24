@@ -14,7 +14,6 @@ use App\Http\Controllers\Procedures\AcuteHemodialysis\TodaySlotRequestController
 use App\Http\Controllers\Procedures\ProcedureController;
 use Illuminate\Support\Facades\Route;
 
-
 Route::get('/', ProcedureController::class)->name('index');
 
 // Acute HD
@@ -52,6 +51,9 @@ Route::prefix('acute-hemodialysis')
            ->name('orders.update');
         Route::delete('/orders/{hashedKey}', [AcuteHemodialysisOrderController::class, 'destroy'])
            ->name('orders.destroy');
+        Route::get('/orders/{hashedKey}', [AcuteHemodialysisOrderController::class, 'show'])
+            ->middleware(['page-transition'])
+            ->name('orders.show');
 
         Route::post('/slot-available', AcuteHemodialysisSlotAvailableController::class)
            ->can('view_any_acute_hemodialysis_slot_requests')

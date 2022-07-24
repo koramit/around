@@ -34,4 +34,19 @@ trait OrderShareValidatable
     {
         return $caseRecord->orders()->activeStatuses()->count() === 0;
     }
+
+    protected function getPossibleDates(): array
+    {
+        $today = now()->create($this->TODAY);
+        $dates = [$today->clone()];
+        for ($i = 1; $i <= 3; $i++) {
+            $nextDay = $today->addDay();
+            if ($nextDay->is($this->UNIT_DAY_OFF)) {
+                continue;
+            }
+            $dates[] = $nextDay->clone();
+        }
+
+        return $dates;
+    }
 }

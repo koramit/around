@@ -40,7 +40,7 @@ Route::middleware(['auth', 'can:get_shared_api_resources'])
     ->name('resources.api.')
     ->group(function () {
         require __DIR__.'/resources.php';
-});
+    });
 
 // uploads
 Route::post('uploads', [UploadController::class, 'store'])
@@ -62,5 +62,5 @@ Route::middleware(['auth'])
     ->prefix('procedures')
     ->name('procedures.')
     ->group(function () {
-        require __DIR__ . '/procedures.php';
-});
+        require __DIR__.'/procedures.php';
+    });

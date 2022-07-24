@@ -21,7 +21,7 @@
                 <label class="form-label !mb-0">
                     siriraj test :
                     <span class="italic" v-if="!labs.ok">ERROR</span>
-                    <span class="italic" v-else-if="!labs.found">No results</span>
+                    <span class="italic" v-else-if="!labs.found">No test</span>
                 </label>
                 <label class="text-sm italic text-complement">{{ labs.when }}</label>
             </div>
@@ -84,7 +84,7 @@
                     </div>
                 </div>
                 <div class="hidden md:flex md:space-x-4">
-                    <p class="font-medium text-complement">{{ vaccine.date }} </p>
+                    <p class="font-medium text-complement whitespace-nowrap">{{ vaccine.date }} </p>
                     <p>{{ vaccine.place }} </p>
                     <p class="italic text-blue-400">{{ vaccine.brand }} </p>
                 </div>

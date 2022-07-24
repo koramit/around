@@ -7,7 +7,6 @@ use App\Actions\Procedures\AcuteHemodialysis\SlotRequestDestroyAction;
 use App\Actions\Procedures\AcuteHemodialysis\SlotRequestIndexAction;
 use App\Actions\Procedures\AcuteHemodialysis\SlotRequestUpdateAction;
 use App\Http\Controllers\Controller;
-use App\Models\Registries\AcuteHemodialysisCaseRecord;
 use App\Traits\AppLayoutSessionFlashable;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
