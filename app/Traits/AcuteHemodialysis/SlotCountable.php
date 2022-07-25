@@ -30,6 +30,7 @@ trait SlotCountable
                     'author' => 'พ.'.$note->author->first_name,
                     'type' => explode(' ', $note->meta['dialysis_type'])[0],
                     'status' => $note->status,
+                    'extra_slot' => $note->meta['extra_slot'],
                     'attending' => $note->attendingStaff->first_name,
                     'covid_case' => $note->meta['covid_case'] ?? false,
                     'order_route' => $user->can('edit', $note)

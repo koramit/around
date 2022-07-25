@@ -16,6 +16,7 @@
                     'text-complement-darker bg-amber-400': slot.status !== undefined && slot.status === 'scheduling',
                     'text-primary bg-complement': slot.status !== undefined && slot.status === 'performed',
                     'text-primary bg-red-400': slot.status !== undefined && slot.status !== 'scheduling' && slot.status !== 'performed',
+                    'border-4 border-white border-dashed': slot.extra_slot
                 }"
                 v-for="(slot, key) in slots"
                 :key="key"
@@ -54,8 +55,8 @@
 </template>
 
 <script setup>
-import IconPatient from '@/Components/Helpers/Icons/IconPatient.vue';
-import IconUserMd from '@/Components/Helpers/Icons/IconUserMd.vue';
+import IconPatient from '../../../Components/Helpers/Icons/IconPatient.vue';
+import IconUserMd from '../../../Components/Helpers/Icons/IconUserMd.vue';
 import { Link } from '@inertiajs/inertia-vue3';
 defineProps({
     slots: { type: Array, required: true }

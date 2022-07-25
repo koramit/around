@@ -21,11 +21,13 @@
         v-model="queryParams.full_week"
         label="Full week"
     />
-
     <h2 class="mt-6 md:mt-12 xl:mt-24 form-label italic text-xl text-complement">
         Acute dialysis unit
     </h2>
-    <div class="grid grid-flow-col grid-rows-1 gap-4 xl:gap-8 overflow-x-scroll pb-2 md:pb-4 border-b-2 border-dashed border-complement">
+
+    <div
+        class="grid grid-flow-col grid-rows-1 gap-4 xl:gap-8 overflow-x-scroll pb-2 md:pb-4 border-b-2 border-dashed border-complement"
+    >
         <div
             v-for="slot in slots"
             class="w-72 md:w-[22rem]"
@@ -37,6 +39,7 @@
             />
         </div>
     </div>
+
 
     <h2 class="mt-6 md:mt-12 xl:mt-24 form-label italic text-xl text-complement">
         Ward
@@ -75,7 +78,7 @@
 import FormDatetime from '../../../Components/Controls/FormDatetime.vue';
 import DialysisSlot from '../../../Partials/Procedures/AcuteHemodialysis/DialysisSlot.vue';
 import WardSlot from '../../../Partials/Procedures/AcuteHemodialysis/WardSlot.vue';
-import {reactive, watch} from 'vue';
+import {nextTick, onMounted, reactive, ref, watch} from 'vue';
 import { Inertia } from '@inertiajs/inertia';
 import SlotReservationForm from '../../../Partials/Procedures/AcuteHemodialysis/SlotReservationForm.vue';
 import CovidSlot from '../../../Partials/Procedures/AcuteHemodialysis/CovidSlot.vue';
@@ -91,6 +94,10 @@ const queryParams = reactive({
     ref_date: props.query.ref_date ?? null,
     full_week: (props.query.full_week ?? false) === 'on'
 });
+
+const mounted = ref(false);
+
+onMounted(() => nextTick(() => mounted.value = true));
 
 watch(
     () => queryParams,

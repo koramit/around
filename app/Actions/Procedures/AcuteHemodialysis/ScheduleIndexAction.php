@@ -42,14 +42,14 @@ class ScheduleIndexAction extends AcuteHemodialysisAction
             $dateNote = $date->format('Y-m-d');
             $hdUnit = $this->getNotes(dateNote: $dateNote, user: $user);
             /** Filter COVID cases */
-            $hdUnitCovid = $hdUnit->filter(fn ($order) => $order['covid_case']);
-            $hdUnit = $hdUnit->filter(fn ($order) => ! $order['covid_case']);
+            $hdUnitCovid = $hdUnit->filter(fn ($order) => $order['covid_case'])->values();
+            $hdUnit = $hdUnit->filter(fn ($order) => ! $order['covid_case'])->values();
             $ordered = $this->orderInUnitSlot($hdUnit);
 
             $ward = $this->getNotes(dateNote: $dateNote, user: $user, inUnit: false);
             /** Filter COVID cases */
-            $wardCovid = $ward->filter(fn ($order) => $order['covid_case']);
-            $ward = $ward->filter(fn ($order) => ! $order['covid_case']);
+            $wardCovid = $ward->filter(fn ($order) => $order['covid_case'])->values();
+            $ward = $ward->filter(fn ($order) => ! $order['covid_case'])->values();
             $availableCount = ($this->LIMIT_OUT_UNIT_CASES - $ward->count());
             for ($i = 1; $i <= $availableCount; $i++) {
                 $ward[] = ['type' => null];

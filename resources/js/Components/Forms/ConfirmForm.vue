@@ -21,6 +21,7 @@
                             v-model="reason"
                             placeholder="reason"
                             name="reason"
+                            ref="reasonInput"
                         />
                     </template>
                 </div>
@@ -39,7 +40,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import {nextTick, ref} from 'vue';
 import ModalDialog from '../Helpers/ModalDialog.vue';
 import SpinnerButton from '../Controls/SpinnerButton.vue';
 import FormInput from '../Controls/FormInput.vue';
@@ -49,15 +50,20 @@ const heading = ref(null);
 const confirmText = ref(null);
 const requireReason = ref(null);
 const reason = ref(null);
+const reasonInput = ref(null);
 
 const modal = ref(null);
-let confirmedEvent =null;
+let confirmedEvent = null;
 const open = (options) => {
     heading.value = options.heading ?? 'Please confirm';
     confirmText.value = options.confirmText ?? 'Please confirm action or close to cancel';
     confirmedEvent = options.confirmedEvent ?? '';
     requireReason.value = options.requireReason ?? false;
     modal.value.open();
+
+    if (requireReason.value) {
+        nextTick(() => reasonInput.value.focus());
+    }
 };
 
 const confirmed = () => {

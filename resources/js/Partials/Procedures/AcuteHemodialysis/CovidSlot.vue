@@ -9,10 +9,12 @@
         >
             <TransitionGroup
                 name="flip-list"
-                class="mt-2 lg:mt-0 mb-2 md:mb-4 grid grid-cols-1 gap-2"
                 tag="div"
             >
-                <div v-if="slots[unit].length">
+                <div
+                    class="mt-2 lg:mt-0 mb-2 md:mb-4 grid grid-cols-1 gap-2"
+                    v-if="slots[unit].length"
+                >
                     <label class="mt-2 md:mt-4 form-label">{{ unit === 'in' ? 'Acute Dialysis Unit' : 'Ward' }}</label>
                     <div
                         class="w-full p-2 md:p-4 rounded shadow"

@@ -84,9 +84,9 @@ class OrderSwapAction extends AcuteHemodialysisAction
             $orderSlot = $this->slotCount($order->meta['dialysis_type']);
             $swapSlot = $this->slotCount($swap->meta['dialysis_type']);
             if ($orderSlot !== $swapSlot) {
-                $orderDateSlots = $this->getNotes($order->date_note->format('Y-m-d'));
+                $orderDateSlots = $this->getNotes($order->date_note->format('Y-m-d'), $user);
                 $orderDateAvailableSlots = $this->LIMIT_IN_UNIT_SLOTS - $orderDateSlots->sum('slot_count') + $orderSlot;
-                $swapDateSlots = $this->getNotes($swap->date_note->format('Y-m-d'));
+                $swapDateSlots = $this->getNotes($swap->date_note->format('Y-m-d'), $user);
                 $swapDateAvailableSlots = $this->LIMIT_IN_UNIT_SLOTS - $swapDateSlots->sum('slot_count') + $swapSlot;
 
                 if ($orderSlot > $swapDateAvailableSlots || $swapSlot > $orderDateAvailableSlots) {

@@ -20,11 +20,11 @@ class TodaySlotRequestAction extends AcuteHemodialysisAction
             abort(403);
         }
 
-        $ensureSlotAvailable = (new SlotAvailableAction)([
+        $ensureSlotAvailable = (new SlotAvailableAction)(data: [
             'date_note' => $this->TODAY,
             'dialysis_type' => $note->meta['dialysis_type'],
             'dialysis_at' => $note->place_name,
-        ]);
+        ], user: $user);
         if (! $ensureSlotAvailable['available']) {
             return [
                 'type' => 'danger',
