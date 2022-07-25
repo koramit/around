@@ -214,8 +214,10 @@ class OrderStoreAction extends AcuteHemodialysisAction
             'attending_staff' => ['required', 'string', 'max:255', new NameExistsInPeople($cacheKeyPrefix)],
             'case_record_hashed_key' => ['required', new HashedKeyExistsInCaseRecords($cacheKeyPrefix, 'App\Models\Registries\AcuteHemodialysisCaseRecord')],
             'date_note' => ['required', 'date', Rule::in(collect($this->getPossibleDates())->transform(fn ($d) => $d->format('Y-m-d')))],
-            'covid_case' => ['required', 'bool'],
+            'covid_case' => ['nullable', 'bool'],
         ])->validate();
+
+        $validated['covid_case'] = $validated['covid_case'] ?? false;
 
         $caseRecord = cache()->pull($cacheKeyPrefix.'-validatedCaseRecord');
         if (! $this->isDialysisReservable($caseRecord)) {
@@ -226,7 +228,7 @@ class OrderStoreAction extends AcuteHemodialysisAction
         $reserveToday = $validated['date_note'] === $this->TODAY;
 
         if (! $validated['covid_case']) { // Covid case has no limit
-            $ensureSlotAvailable = (new SlotAvailableAction)($validated);
+            $ensureSlotAvailable = (new SlotAvailableAction)(data: $validated, user: $user);
             if (! $ensureSlotAvailable['available']) {
                 if ($reserveToday) {
                     $extraSlot = true;

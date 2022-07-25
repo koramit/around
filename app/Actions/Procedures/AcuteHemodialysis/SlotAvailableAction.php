@@ -2,6 +2,7 @@
 
 namespace App\Actions\Procedures\AcuteHemodialysis;
 
+use App\Models\User;
 use App\Rules\NameExistsInWards;
 use App\Traits\AcuteHemodialysis\OrderShareValidatable;
 use App\Traits\AcuteHemodialysis\SlotCountable;
@@ -12,10 +13,12 @@ class SlotAvailableAction extends AcuteHemodialysisAction
 {
     use OrderShareValidatable, SlotCountable;
 
+    protected User $user;
+
     /**
      * @todo complete out unit slot
      */
-    public function __invoke(array $data): array
+    public function __invoke(array $data, User $user): array
     {
         // validate
         $validated = Validator::make($data, [
@@ -23,6 +26,8 @@ class SlotAvailableAction extends AcuteHemodialysisAction
             'dialysis_at' => ['required', 'string', 'max:255', new NameExistsInWards],
             'dialysis_type' => ['required', 'string', Rule::in($this->getAllDialysisType())],
         ])->validate();
+
+        $this->user = $user;
         /*
          * - ไตเทียม ตาม slot 8*4 ไม่ทำ sledd
          * - tpe ทำที่ไตเทียมเท่านั้น ** เปลี่ยนเป็นทำที่วอร์ดด้วย 2022/06/29 **
@@ -41,7 +46,7 @@ class SlotAvailableAction extends AcuteHemodialysisAction
 
     protected function outUnitSlots(string $dateNote, string $dialysisType): array
     {
-        $notes = $this->getNotes(dateNote: $dateNote, inUnit: false);
+        $notes = $this->getNotes(dateNote: $dateNote, user: $this->user, inUnit: false);
 
         $hemoCount = $notes->count()
                         ? $notes->filter(fn ($n) => (str_contains($n['type'], 'HD')) || (str_contains($n['type'], 'HF')))->count()
@@ -78,7 +83,7 @@ class SlotAvailableAction extends AcuteHemodialysisAction
 
     protected function inUnitSlots(string $dateNote, string $dialysisType): array
     {
-        $notes = $this->getNotes($dateNote);
+        $notes = $this->getNotes(dateNote: $dateNote, user: $this->user);
 
         $requestSlot = $this->slotCount($dialysisType);
         $available = true;
