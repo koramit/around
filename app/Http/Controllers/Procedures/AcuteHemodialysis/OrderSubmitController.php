@@ -10,10 +10,10 @@ class OrderSubmitController extends Controller
 {
     public function __invoke($hashedKey, Request $request)
     {
-        $note = (new OrderSubmitAction)(data: $request->all(), hashedKey: $hashedKey, user: $request->user());
+        $data = (new OrderSubmitAction)(data: $request->all(), hashedKey: $hashedKey, user: $request->user());
 
-        // if want json return $data
+        // if request want json return $data
 
-        return redirect()->route('procedures.acute-hemodialysis.edit', $note->caseRecord->hashed_key);
+        return redirect()->route('procedures.acute-hemodialysis.edit', $data['note']->caseRecord->hashed_key)->with('message', $data['message']);
     }
 }

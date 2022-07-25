@@ -10,10 +10,6 @@ class SlotAvailableController extends Controller
 {
     public function __invoke(Request $request)
     {
-        $data = (new SlotAvailableAction)($request->all());
-
-        // if request want json return $data
-
-        return $data;
+        return (new SlotAvailableAction)(data: $request->all(), user: $request->user());
     }
 }

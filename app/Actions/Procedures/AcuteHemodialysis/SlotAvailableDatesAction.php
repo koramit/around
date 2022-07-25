@@ -27,7 +27,7 @@ class SlotAvailableDatesAction extends AcuteHemodialysisAction
         // possible dates
         $dates = $this->getPossibleDates();
 
-        return collect($dates)->transform(function ($d) use ($validated) {
+        return collect($dates)->transform(function ($d) use ($validated, $user) {
             $data = [...$validated];
             $data['date_note'] = $d->format('Y-m-d');
             $label = $d->format('d M').' | ';
@@ -37,7 +37,7 @@ class SlotAvailableDatesAction extends AcuteHemodialysisAction
                 return ['value' => $d->format('Y-m-d'), 'label' => $label.'Approval needed'];
             }
 
-            $slot = (new SlotAvailableAction)($data);
+            $slot = (new SlotAvailableAction)(data: $data, user: $user);
 
             if ($data['date_note'] === $this->TODAY && (! $slot['available'] || $d->is($this->UNIT_DAY_OFF))) {
                 return ['value' => $d->format('Y-m-d'), 'label' => $label.'Approval and extra slot needed'];

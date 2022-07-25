@@ -24,6 +24,11 @@ class OrderEditAction extends AcuteHemodialysisAction
             abort(403);
         }
 
+        $can = [
+            'update' => $user->can('update', $note),
+            'reschedule' => $user->can('reschedule', $note),
+        ];
+
         $flash = [
             'page-title' => 'Acute '.$note->meta['dialysis_type'].' '.$note->patient->profile['first_name'].' @ '.$note->date_note->format('d M Y'),
             'hn' => $note->patient->hn,
@@ -43,6 +48,14 @@ class OrderEditAction extends AcuteHemodialysisAction
                 ['label' => 'Case Record', 'route' => route('procedures.acute-hemodialysis.edit', app(Hashids::class)->encode($note->case_record_id))],
             ]),
         ];
+
+        if (!$can['update']) {
+            $flash['message'] = [
+                'type' => 'warning',
+                'title' => 'Autosave disabled.',
+                'message' => 'Please submit to save changes.',
+            ];
+        }
 
         return [
             'orderForm' => $note->form,
@@ -65,10 +78,7 @@ class OrderEditAction extends AcuteHemodialysisAction
                 'reserve_available_dates' => $this->reserveAvailableDates(),
                 'date_note' => $note->date_note->format('Y-m-d'),
                 'swap_code' => $note->meta['swap_code'],
-                'can' => [
-                    'update' => $user->can('update', $note),
-                    'reschedule' => $user->can('reschedule', $note),
-                ],
+                'can' => $can,
             ],
         ];
     }

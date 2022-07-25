@@ -13,7 +13,7 @@ class OrderSubmitAction extends AcuteHemodialysisAction
 {
     use OrderFormConfigsShareable;
 
-    public function __invoke(array $data, string $hashedKey, User $user): AcuteHemodialysisOrderNote
+    public function __invoke(array $data, string $hashedKey, User $user): array
     {
         if (config('auth.guards.web.provider') === 'avatar') {
             return []; // call api
@@ -363,10 +363,17 @@ class OrderSubmitAction extends AcuteHemodialysisAction
         }
         $note->save();
         $note->actionLogs()->create([
-            'action' => 'submit',
+            'action' => $note->status === 'submitted' || ($note->meta['submitted'] ?? false) ? 'resubmit' : 'submit',
             'actor_id' => $user->id,
         ]);
 
-        return $note;
+        return [
+            'note' => $note,
+            'message' => [
+                'type' => 'success',
+                'title' => 'Submit successful.',
+                'message' => '',
+            ],
+        ];
     }
 }

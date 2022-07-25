@@ -19,7 +19,7 @@ class ScheduleIndexAction extends AcuteHemodialysisAction
 
         $validated = Validator::make($data, [
             'ref_date' => 'nullable|date',
-            'full_week' => 'nullable|in:on'
+            'full_week' => 'nullable|in:on',
         ])->validate();
 
         $refDate = $validated['ref_date'] ?? $this->TODAY;
@@ -29,7 +29,7 @@ class ScheduleIndexAction extends AcuteHemodialysisAction
             ? [
                 $refDate->clone()->addDays(-3),
                 $refDate->clone()->addDays(-2),
-                $refDate->clone()->addDays(-1)
+                $refDate->clone()->addDays(-1),
             ]
             : [];
 
