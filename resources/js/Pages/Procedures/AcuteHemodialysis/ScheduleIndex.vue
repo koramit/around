@@ -2,6 +2,7 @@
     <SlotReservationForm
         class="border-b-2 border-dashed pb-2 mb-2 md:pb-4 md:mb-4"
         :configs="configs"
+        v-if="configs.can.create_order"
     />
 
     <div class="md:flex items-end md:space-x-4">
@@ -78,7 +79,7 @@
 import FormDatetime from '../../../Components/Controls/FormDatetime.vue';
 import DialysisSlot from '../../../Partials/Procedures/AcuteHemodialysis/DialysisSlot.vue';
 import WardSlot from '../../../Partials/Procedures/AcuteHemodialysis/WardSlot.vue';
-import {nextTick, onMounted, reactive, ref, watch} from 'vue';
+import {reactive, watch} from 'vue';
 import { Inertia } from '@inertiajs/inertia';
 import SlotReservationForm from '../../../Partials/Procedures/AcuteHemodialysis/SlotReservationForm.vue';
 import CovidSlot from '../../../Partials/Procedures/AcuteHemodialysis/CovidSlot.vue';
@@ -94,10 +95,6 @@ const queryParams = reactive({
     ref_date: props.query.ref_date ?? null,
     full_week: (props.query.full_week ?? false) === 'on'
 });
-
-const mounted = ref(false);
-
-onMounted(() => nextTick(() => mounted.value = true));
 
 watch(
     () => queryParams,

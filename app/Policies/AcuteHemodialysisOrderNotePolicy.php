@@ -49,6 +49,12 @@ class AcuteHemodialysisOrderNotePolicy
             && ! $this->status->getScheduleNotAllowStatuses()->contains($note->status);
     }
 
+    public function view(User $user, AcuteHemodialysisOrderNote $note): bool
+    {
+        return $user->can('view_acute_hemodialysis_order')
+            && ! $this->status->getEditNotAllowStatuses()->contains($note->status);
+    }
+
     public function destroy(User $user, AcuteHemodialysisOrderNote $note): bool
     {
         return $user->id === $note->author_id

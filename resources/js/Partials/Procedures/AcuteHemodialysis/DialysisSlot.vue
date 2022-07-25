@@ -27,7 +27,13 @@
                 <template v-if="!slot.available">
                     <div class="w-1/3">
                         <Link :href="slot.order_route">
-                            <span class="p-1 md:p-2 bg-primary rounded-full text-xs text-accent font-semibold underline">{{ slot.type }}</span>
+                            <span
+                                class="p-1 md:p-2 rounded-full text-xs font-semibold underline"
+                                :class="{
+                                    'bg-primary text-accent': slot.status !== 'submitted',
+                                    'bg-indigo-400 text-white': slot.status === 'submitted'
+                                }"
+                            >{{ slot.type }}</span>
                         </Link>
                     </div>
                     <div class="w-2/3 mt-1 md:mt-0">

@@ -85,6 +85,9 @@ class ScheduleIndexAction extends AcuteHemodialysisAction
             'slots' => $slots,
             'query' => $validated,
             'configs' => [
+                'can' => [
+                    'create_order' => $user->can('create_acute_hemodialysis_order'),
+                ],
                 'routes' => [
                     'idle_cases' => route('procedures.acute-hemodialysis.idle-cases'),
                     'resources_api_wards' => route('resources.api.wards'),
@@ -97,8 +100,8 @@ class ScheduleIndexAction extends AcuteHemodialysisAction
                 'out_unit_dialysis_types' => $this->OUT_UNIT,
                 'patient_types' => $this->PATIENT_TYPES,
                 'covid' => [
-                    'route_lab' => fn () => route('resources.api.covid-lab'),
-                    'route_vaccine' => fn () => route('resources.api.covid-vaccine'),
+                    'route_lab' => route('resources.api.covid-lab'),
+                    'route_vaccine' => route('resources.api.covid-vaccine'),
                 ],
             ],
         ];

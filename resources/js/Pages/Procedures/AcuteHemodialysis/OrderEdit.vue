@@ -316,6 +316,13 @@
     />
     <FormCheckbox
         class="mt-2 md:mt-4 xl:mt-8"
+        name="postdialysis_bw"
+        v-model="form.postdialysis_bw"
+        label="Postdialysis BW"
+        :toggler="true"
+    />
+    <FormCheckbox
+        class="mt-2 md:mt-4 xl:mt-8"
         name="postdialysis_esa"
         v-model="form.postdialysis_esa"
         label="Postdialysis ESA"

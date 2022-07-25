@@ -44,12 +44,11 @@ class OrderEditAction extends AcuteHemodialysisAction
                 ['icon' => 'paper-plain', 'action' => 'submit', 'label' => 'Submit'],
             ],
             'breadcrumbs' => $this->getBreadcrumbs([
-                ['label' => 'Acute HD', 'route' => route('procedures.acute-hemodialysis.index')],
                 ['label' => 'Case Record', 'route' => route('procedures.acute-hemodialysis.edit', app(Hashids::class)->encode($note->case_record_id))],
             ]),
         ];
 
-        if (!$can['update']) {
+        if (! $can['update']) {
             $flash['message'] = [
                 'type' => 'warning',
                 'title' => 'Autosave disabled.',

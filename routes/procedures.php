@@ -29,9 +29,10 @@ Route::prefix('acute-hemodialysis')
            ->name('store');
         Route::get('/{hashedKey}/edit', [AcuteHemodialysisCaseController::class, 'edit'])
             ->middleware(['page-transition'])
-           ->can('edit_acute_hemodialysis_case')
+           ->can('view_any_acute_hemodialysis_cases')
            ->name('edit');
         Route::patch('/{hashedKey}', [AcuteHemodialysisCaseController::class, 'update'])
+            ->can('edit_acute_hemodialysis_case')
            ->name('update');
         Route::post('/orders', [AcuteHemodialysisOrderController::class, 'store'])
            ->can('create_acute_hemodialysis_order')

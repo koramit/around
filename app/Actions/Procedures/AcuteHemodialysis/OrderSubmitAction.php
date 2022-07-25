@@ -112,7 +112,6 @@ class OrderSubmitAction extends AcuteHemodialysisAction
                 'hd.albumin_20_percent_prime' => ['nullable', Rule::in($this->FORM_CONFIGS['albumin_20_percent_primes'])],
                 'hd.nutrition_iv_type' => 'nullable|string|max:255',
                 'hd.nutrition_iv_volume' => 'nullable|integer',
-                'hd.post_dialysis_bw' => 'required|boolean',
                 'hd.prc_volume' => 'nullable|numeric',
                 'hd.ffp_volume' => 'nullable|integer',
                 'hd.platelet_volume' => 'nullable|numeric',
@@ -306,7 +305,6 @@ class OrderSubmitAction extends AcuteHemodialysisAction
                 'sledd.albumin_20_percent_prime' => ['nullable', Rule::in($this->FORM_CONFIGS['albumin_20_percent_primes'])],
                 'sledd.nutrition_iv_type' => 'nullable|string|max:255',
                 'sledd.nutrition_iv_volume' => 'nullable|integer',
-                'sledd.post_dialysis_bw' => 'required|boolean',
                 'sledd.prc_volume' => 'nullable|numeric',
                 'sledd.ffp_volume' => 'nullable|integer',
                 'sledd.platelet_volume' => 'nullable|numeric',
@@ -348,6 +346,7 @@ class OrderSubmitAction extends AcuteHemodialysisAction
             'monitor.other' => 'prohibited_if:monitor.standard,true|nullable|string|max:255',
 
             'predialysis_labs_request' => 'required|boolean',
+            'postdialysis_bw' => 'required|boolean',
             'postdialysis_esa' => 'required|boolean',
             'postdialysis_iron_iv' => 'required|boolean',
             'treatments_request' => 'nullable|string|max:255',

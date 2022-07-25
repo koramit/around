@@ -68,7 +68,6 @@ class OrderUpdateAction extends AcuteHemodialysisAction
                 'hd.albumin_20_percent_prime' => 'nullable|integer',
                 'hd.nutrition_iv_type' => 'nullable|string|max:255',
                 'hd.nutrition_iv_volume' => 'nullable|integer',
-                'hd.post_dialysis_bw' => 'boolean',
                 'hd.prc_volume' => 'nullable|numeric',
                 'hd.ffp_volume' => 'nullable|integer',
                 'hd.platelet_volume' => 'nullable|numeric',
@@ -163,7 +162,6 @@ class OrderUpdateAction extends AcuteHemodialysisAction
                 'sledd.albumin_20_percent_prime' => 'nullable|integer',
                 'sledd.nutrition_iv_type' => 'nullable|string|max:255',
                 'sledd.nutrition_iv_volume' => 'nullable|integer',
-                'sledd.post_dialysis_bw' => 'boolean',
                 'sledd.prc_volume' => 'nullable|numeric',
                 'sledd.ffp_volume' => 'nullable|integer',
                 'sledd.platelet_volume' => 'nullable|numeric',
@@ -205,6 +203,7 @@ class OrderUpdateAction extends AcuteHemodialysisAction
             'monitor.other' => 'nullable|string|max:255',
 
             'predialysis_labs_request' => 'boolean',
+            'postdialysis_bw' => 'boolean',
             'postdialysis_esa' => 'boolean',
             'postdialysis_iron_iv' => 'boolean',
             'treatments_request' => 'nullable|string|max:255',

@@ -83,12 +83,8 @@
         </div>
         <div class="md:w-1/2">
             <Transition mode="out-in">
-                <Suspense
-                    v-if="covid.hn"
-                >
-                    <CovidInfo
-                        :configs="covid"
-                    />
+                <Suspense v-if="covid.hn">
+                    <CovidInfo :configs="covid" />
                     <template #fallback>
                         <FallbackSpinner />
                     </template>

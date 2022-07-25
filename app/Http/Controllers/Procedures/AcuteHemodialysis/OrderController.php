@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Procedures\AcuteHemodialysis;
 
 use App\Actions\Procedures\AcuteHemodialysis\OrderDestroyAction;
 use App\Actions\Procedures\AcuteHemodialysis\OrderEditAction;
+use App\Actions\Procedures\AcuteHemodialysis\OrderShowAction;
 use App\Actions\Procedures\AcuteHemodialysis\OrderStoreAction;
 use App\Actions\Procedures\AcuteHemodialysis\OrderUpdateAction;
 use App\Http\Controllers\Controller;
@@ -39,11 +40,9 @@ class OrderController extends Controller
         // if request want json return $data
 
         $this->setFlash($data['flash']);
+        unset($data['flash']);
 
-        return Inertia::render('Procedures/AcuteHemodialysis/OrderEdit', [
-            'orderForm' => $data['orderForm'],
-            'formConfigs' => $data['formConfigs'],
-        ]);
+        return Inertia::render('Procedures/AcuteHemodialysis/OrderEdit', [...$data]);
     }
 
     public function update(string $hashedKey, Request $request)
@@ -64,8 +63,15 @@ class OrderController extends Controller
         return back()->with('message', $reply);
     }
 
-    public function show(string $hashedKey)
+    public function show(string $hashedKey, Request $request)
     {
-        return 'hello - show - '.$hashedKey;
+        $data = (new OrderShowAction)(hashedKey: $hashedKey, user: $request->user());
+
+        // if request want json return $data
+
+        $this->setFlash($data['flash']);
+        unset($data['flash']);
+
+        return Inertia::render('Procedures/AcuteHemodialysis/OrderShow', [...$data]);
     }
 }

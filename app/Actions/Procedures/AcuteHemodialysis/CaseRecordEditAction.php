@@ -138,15 +138,13 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
             'main-menu-links' => [
                 ['icon' => 'slack-hash', 'label' => 'Case Record', 'type' => '#', 'route' => '#case-record', 'can' => true],
                 ['icon' => 'slack-hash', 'label' => 'Orders', 'type' => '#', 'route' => '#orders', 'can' => true],
-                ['icon' => 'slack-hash', 'label' => 'Reservation', 'type' => '#', 'route' => '#reservation', 'can' => true],
+                //                ['icon' => 'slack-hash', 'label' => 'Reservation', 'type' => '#', 'route' => '#reservation', 'can' => true],
                 ['icon' => 'patient', 'label' => 'Patients', 'route' => route('patients'), 'can' => true],
                 ['icon' => 'clinic', 'label' => 'Clinics', 'route' => route('clinics'), 'can' => true],
                 ['icon' => 'procedure', 'label' => 'Procedures', 'route' => route('procedures.index'), 'can' => true],
             ],
             'action-menu' => [],
-            'breadcrumbs' => $this->getBreadcrumbs([
-                ['label' => 'Acute HD', 'route' => route('procedures.acute-hemodialysis.index')],
-            ]),
+            'breadcrumbs' => $this->BREADCRUMBS,
         ];
 
         return [

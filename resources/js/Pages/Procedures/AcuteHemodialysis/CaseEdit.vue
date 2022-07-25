@@ -1,13 +1,15 @@
 <template>
-    <Suspense>
-        <CovidInfo
-            :configs="configs.covid"
-            class="mb-4"
-        />
-        <template #fallback>
-            <FallbackSpinner />
-        </template>
-    </Suspense>
+    <Transition mode="out-in">
+        <Suspense v-if="configs.covid.hn">
+            <CovidInfo
+                class="mb-4"
+                :configs="configs.covid"
+            />
+            <template #fallback>
+                <FallbackSpinner />
+            </template>
+        </Suspense>
+    </Transition>
     <!-- summary  -->
     <h2
         class="form-label text-lg italic text-complement scroll-mt-16 md:scroll-mt-8"

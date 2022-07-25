@@ -48,6 +48,7 @@ class AcuteHemodialysisAction
         $this->BREADCRUMBS = [
             ['label' => 'Home', 'route' => route('home')],
             ['label' => 'Procedures', 'route' => route('procedures.index')],
+            ['label' => 'Acute HD', 'route' => route('procedures.acute-hemodialysis.index')],
         ];
         $this->TODAY = now()->tz($this->TIMEZONE)->format('Y-m-d');
     }
