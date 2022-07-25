@@ -8,12 +8,19 @@
         <FormDatetime
             label="reference date"
             name="ref_date"
-            v-model="ref_date"
+            v-model="queryParams.ref_date"
         />
         <button class="mt-4 md:mt-0 w-full btn btn-complement h-10">
             Export excel
         </button>
     </div>
+
+    <FormCheckbox
+        class="mt-6 md:mt-12 xl:mt-24"
+        :toggler="true"
+        v-model="queryParams.full_week"
+        label="Full week"
+    />
 
     <h2 class="mt-6 md:mt-12 xl:mt-24 form-label italic text-xl text-complement">
         Acute dialysis unit
@@ -68,22 +75,33 @@
 import FormDatetime from '../../../Components/Controls/FormDatetime.vue';
 import DialysisSlot from '../../../Partials/Procedures/AcuteHemodialysis/DialysisSlot.vue';
 import WardSlot from '../../../Partials/Procedures/AcuteHemodialysis/WardSlot.vue';
-import { ref, watch } from 'vue';
+import {reactive, watch} from 'vue';
 import { Inertia } from '@inertiajs/inertia';
 import SlotReservationForm from '../../../Partials/Procedures/AcuteHemodialysis/SlotReservationForm.vue';
 import CovidSlot from '../../../Partials/Procedures/AcuteHemodialysis/CovidSlot.vue';
+import FormCheckbox from '../../../Components/Controls/FormCheckbox.vue';
+import pickBy from 'lodash/pickBy.js';
 const props = defineProps({
+    query: { type: Object, required: true },
     slots: { type: Array, required: true },
     configs: { type: Object, required: true },
 });
 
-const ref_date = ref(props.slots[3]?.date_note);
+const queryParams = reactive({
+    ref_date: props.query.ref_date ?? null,
+    full_week: (props.query.full_week ?? false) === 'on'
+});
+
 watch(
-    () => ref_date.value,
+    () => queryParams,
     (val) => {
-        /** @type {object} data */
-        let data = {ref_date: val};
-        Inertia.get(location.pathname, data, { preserveState: true, preserveScroll: true });
-    }
+        let query = pickBy(val);
+        query = Object.keys(query).length ? query : { remember: 'forget' };
+        if (query.full_week !== undefined) {
+            query.full_week = 'on';
+        }
+        Inertia.get(location.pathname, query, { preserveState: true, preserveScroll: true });
+    },
+    {deep: true}
 );
 </script>

@@ -14,9 +14,7 @@ class ScheduleController extends Controller
 
     public function __invoke(Request $request)
     {
-        $validated = $request->validate(['ref_date' => 'nullable|date']);
-
-        $data = (new ScheduleIndexAction)(refDate: $validated['ref_date'] ?? null, user: $request->user());
+        $data = (new ScheduleIndexAction)(data: $request->all(), user: $request->user());
 
         // if request want json return $data
 

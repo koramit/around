@@ -5,32 +5,40 @@ namespace App\Actions\Procedures\AcuteHemodialysis;
 use App\Models\User;
 use App\Traits\AcuteHemodialysis\OrderShareValidatable;
 use App\Traits\AcuteHemodialysis\SlotCountable;
+use Illuminate\Support\Facades\Validator;
 
 class ScheduleIndexAction extends AcuteHemodialysisAction
 {
     use SlotCountable, OrderShareValidatable;
 
-    public function __invoke(mixed $refDate, User $user): array
+    public function __invoke(array $data, User $user): array
     {
         if (config('auth.guards.web.provider') === 'avatar') {
             return []; // call api + query params
         }
 
-        if (! $refDate) {
-            $refDate = $this->TODAY;
-        }
+        $validated = Validator::make($data, [
+            'ref_date' => 'nullable|date',
+            'full_week' => 'nullable|in:on'
+        ])->validate();
 
+        $refDate = $validated['ref_date'] ?? $this->TODAY;
+        $fullWeek = $validated['full_week'] ?? false;
         $refDate = now()->create($refDate)->tz($this->TIMEZONE);
+        $slots = $fullWeek
+            ? [
+                $refDate->clone()->addDays(-3),
+                $refDate->clone()->addDays(-2),
+                $refDate->clone()->addDays(-1)
+            ]
+            : [];
 
-        $slots = collect([
-            $refDate->clone()->addDays(-3),
-            $refDate->clone()->addDays(-2),
-            $refDate->clone()->addDays(-1),
-            $refDate,
-            $refDate->clone()->addDay(),
-            $refDate->clone()->addDays(2),
-            $refDate->clone()->addDays(3),
-        ])->transform(function ($date) use ($user) {
+        $slots[] = $refDate;
+        $slots[] = $refDate->clone()->addDay();
+        $slots[] = $refDate->clone()->addDays(2);
+        $slots[] = $refDate->clone()->addDays(3);
+
+        $slots = collect($slots)->transform(function ($date) use ($user) {
             $dateNote = $date->format('Y-m-d');
             $hdUnit = $this->getNotes(dateNote: $dateNote, user: $user);
             /** Filter COVID cases */
@@ -75,6 +83,7 @@ class ScheduleIndexAction extends AcuteHemodialysisAction
                 'action-menu' => [],
             ],
             'slots' => $slots,
+            'query' => $validated,
             'configs' => [
                 'routes' => [
                     'idle_cases' => route('procedures.acute-hemodialysis.idle-cases'),
