@@ -3,6 +3,7 @@
 use App\Http\Controllers\Procedures\AcuteHemodialysis\CaseRecordController as AcuteHemodialysisCaseController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\CreateOrderShortcutController as AcuteHemodialysisCreateOrderShortcutController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\IdleCaseController as AcuteHemodialysisIdleCase;
+use App\Http\Controllers\Procedures\AcuteHemodialysis\LastIndexSectionController as AcuteHemodialysisLastIndexSectionController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\OrderController as AcuteHemodialysisOrderController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\OrderRescheduleController as AcuteHemodialysisOrderRescheduleController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\OrderSubmitController as AcuteHemodialysisOrderSubmitController;
@@ -47,8 +48,8 @@ Route::prefix('acute-hemodialysis')
            ->name('orders.reschedule');
         Route::patch('/orders/{hashedKey}/swap', AcuteHemodialysisOrderSwapController::class)
               ->name('orders.swap');
-        Route::patch('/orders/{hashedKey}/today-slot-request', AcuteHemodialysisTodaySlotRequestController::class)
-           ->name('orders.today-slot-request');
+//        Route::patch('/orders/{hashedKey}/today-slot-request', AcuteHemodialysisTodaySlotRequestController::class)
+//           ->name('orders.today-slot-request');
         Route::get('/orders/{hashedKey}/create-shortcut', AcuteHemodialysisCreateOrderShortcutController::class)
             ->can('create_acute_hemodialysis_order')
             ->name('orders.create-shortcut');
@@ -89,4 +90,8 @@ Route::prefix('acute-hemodialysis')
         Route::post('/slot-available-dates', AcuteHemodialysisSlotAvailableDatesController::class)
             ->can('create_acute_hemodialysis_order')
             ->name('slot-available-dates');
+
+        Route::get('/last-index-section', AcuteHemodialysisLastIndexSectionController::class)
+            ->can('view_any_acute_hemodialysis_cases')
+            ->name('last-index-section');
     });

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Procedures\AcuteHemodialysis;
 
-use App\Actions\Procedures\AcuteHemodialysis\ExtraSlotRequestStoreAction;
 use App\Actions\Procedures\AcuteHemodialysis\SlotRequestDestroyAction;
 use App\Actions\Procedures\AcuteHemodialysis\SlotRequestIndexAction;
 use App\Actions\Procedures\AcuteHemodialysis\SlotRequestUpdateAction;
@@ -24,13 +23,9 @@ class SlotRequestController extends Controller
         $this->setFlash($data['flash']);
         unset($data['flash']);
 
-        return Inertia::render('Procedures/AcuteHemodialysis/SlotRequestIndex', [...$data]);
-    }
+        session()->put('acute-hemodialysis-last-index-section-route', $request->route()->getName());
 
-    public function store(Request $request)
-    {
-        return $request->all();
-        $data = (new ExtraSlotRequestStoreAction)($request->all());
+        return Inertia::render('Procedures/AcuteHemodialysis/SlotRequestIndex', [...$data]);
     }
 
     public function update(string $hashedKey, Request $request)

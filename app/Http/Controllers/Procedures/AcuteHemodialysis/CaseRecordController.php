@@ -24,6 +24,8 @@ class CaseRecordController extends Controller
         $this->setFlash($data['flash']);
         unset($data['flash']);
 
+        session()->put('acute-hemodialysis-last-index-section-route', $request->route()->getName());
+
         return Inertia::render('Procedures/AcuteHemodialysis/CaseIndex', [...$data]);
     }
 
