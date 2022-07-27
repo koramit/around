@@ -143,7 +143,7 @@
     <Transition name="slide-fade">
         <div
             class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8 2xl:grid-cols-4 my-2 md:my-4 xl:my-8"
-            v-if="form.anticoagulant == 'none'"
+            v-if="form.anticoagulant === 'none'"
         >
             <FormCheckbox
                 label="anticoagulant drip via peripheral IV"
@@ -156,7 +156,7 @@
                 v-model="form.anticoagulant_none_nss_200ml_flush_q_hour"
             />
         </div>
-        <div v-else-if="form.anticoagulant == 'heparin'">
+        <div v-else-if="form.anticoagulant === 'heparin'">
             <div class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8 2xl:grid-cols-4 my-2 md:my-4 xl:my-8">
                 <FormInput
                     label="loading dose (iu)"
@@ -186,7 +186,7 @@
         </div>
         <div
             class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8 2xl:grid-cols-4 my-2 md:my-4 xl:my-8"
-            v-else-if="form.anticoagulant == 'enoxaparin'"
+            v-else-if="form.anticoagulant === 'enoxaparin'"
         >
             <FormInput
                 label="dose (ml)"
@@ -200,7 +200,7 @@
         </div>
         <div
             class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8 2xl:grid-cols-4 my-2 md:my-4 xl:my-8"
-            v-else-if="form.anticoagulant == 'fondaparinux'"
+            v-else-if="form.anticoagulant === 'fondaparinux'"
         >
             <FormSelect
                 label="bolus dose (iu)"
@@ -212,7 +212,7 @@
         </div>
         <div
             class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8 2xl:grid-cols-4 my-2 md:my-4 xl:my-8"
-            v-else-if="form.anticoagulant == 'tinzaparin'"
+            v-else-if="form.anticoagulant === 'tinzaparin'"
         >
             <FormInput
                 label="dose (iu)"
@@ -304,13 +304,13 @@
             :error="$page.props.errors['sledd.nutrition_iv_volume']"
         />
     </div>
-    <hr class="border border-dashed my-2 md:my-4 xl:my-8">
+    <!--    <hr class="border border-dashed my-2 md:my-4 xl:my-8">
     <FormCheckbox
         label="Post Dialysis BW"
         name="post_dialysis_bw"
         v-model="form.post_dialysis_bw"
         :toggler="true"
-    />
+    />-->
 
     <hr class="border border-dashed my-2 md:my-4 xl:my-8">
     <label class="form-label">transfusion :</label>
@@ -359,15 +359,15 @@
 </template>
 
 <script setup>
-import FormCheckbox from '@/Components/Controls/FormCheckbox.vue';
-import FormInput from '@/Components/Controls/FormInput.vue';
-import FormTextarea from '@/Components/Controls/FormTextarea.vue';
-import FormSelect from '@/Components/Controls/FormSelect.vue';
-import FormRadio from '@/Components/Controls/FormRadio.vue';
-import AlertMessage from '@/Components/Helpers/AlertMessage.vue';
-import FormSelectOther from '@/Components/Controls/FormSelectOther.vue';
+import FormCheckbox from '../../../Components/Controls/FormCheckbox.vue';
+import FormInput from '../../../Components/Controls/FormInput.vue';
+import FormTextarea from '../../../Components/Controls/FormTextarea.vue';
+import FormSelect from '../../../Components/Controls/FormSelect.vue';
+import FormRadio from '../../../Components/Controls/FormRadio.vue';
+import AlertMessage from '../../../Components/Helpers/AlertMessage.vue';
+import FormSelectOther from '../../../Components/Controls/FormSelectOther.vue';
 import { watch, reactive, ref } from 'vue';
-import { useSelectOther } from '@/functions/useSelectOther.js';
+import { useSelectOther } from '../../../functions/useSelectOther.js';
 
 const props = defineProps({
     modelValue: { type: Object, required: true },
@@ -420,7 +420,7 @@ watch (
 
 const configs = reactive({...props.formConfigs});
 
-if (form.anticoagulant && configs.anticoagulants.findIndex(item => item.value == form.anticoagulant) === -1) {
+if (form.anticoagulant && configs.anticoagulants.findIndex(item => item.value === form.anticoagulant) === -1) {
     configs.anticoagulants.push({ value: form.anticoagulant, label: form.anticoagulant });
 }
 const anticoagulantInput = ref(null);
@@ -446,14 +446,14 @@ const errors = reactive({
     tinzaparin_dose: null,
     ultrafiltration: null,
 });
-const validate = (fieldname) => {
-    let validator = configs.validators[fieldname];
-    const value = validator.type == 'integer' ? parseInt(form[fieldname]) :  parseFloat(form[fieldname]);
+const validate = (fieldName) => {
+    let validator = configs.validators[fieldName];
+    const value = validator.type === 'integer' ? parseInt(form[fieldName]) :  parseFloat(form[fieldName]);
     if (value < validator.min || value > validator.max) {
-        errors[fieldname] = `${form[fieldname]} could not be saved. Accept range [${validator.min}, ${validator.max}].`;
-        form[fieldname] = null;
+        errors[fieldName] = `${form[fieldName]} could not be saved. Accept range [${validator.min}, ${validator.max}].`;
+        form[fieldName] = null;
     } else {
-        errors[fieldname] = '';
+        errors[fieldName] = '';
     }
 };
 </script>

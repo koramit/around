@@ -202,6 +202,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Note whereReport($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Note whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Note whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Note withAttendingName()
  * @method static \Illuminate\Database\Eloquent\Builder|Note withAuthorUsername()
  * @method static \Illuminate\Database\Eloquent\Builder|Note withPlaceName($className)
  */
@@ -255,6 +256,7 @@ namespace App\Models\Notes{
  * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisOrderNote whereReport($value)
  * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisOrderNote whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisOrderNote whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Note withAttendingName()
  * @method static \Illuminate\Database\Eloquent\Builder|Note withAuthorUsername()
  * @method static \Illuminate\Database\Eloquent\Builder|Note withPlaceName($className)
  */

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Procedures\AcuteHemodialysis\CaseRecordController as AcuteHemodialysisCaseController;
+use App\Http\Controllers\Procedures\AcuteHemodialysis\CreateOrderShortcutController as AcuteHemodialysisCreateOrderShortcutController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\IdleCaseController as AcuteHemodialysisIdleCase;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\OrderController as AcuteHemodialysisOrderController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\OrderRescheduleController as AcuteHemodialysisOrderRescheduleController;
@@ -48,6 +49,9 @@ Route::prefix('acute-hemodialysis')
               ->name('orders.swap');
         Route::patch('/orders/{hashedKey}/today-slot-request', AcuteHemodialysisTodaySlotRequestController::class)
            ->name('orders.today-slot-request');
+        Route::get('/orders/{hashedKey}/create-shortcut', AcuteHemodialysisCreateOrderShortcutController::class)
+            ->can('create_acute_hemodialysis_order')
+            ->name('orders.create-shortcut');
         Route::patch('/orders/{hashedKey}', [AcuteHemodialysisOrderController::class, 'update'])
            ->name('orders.update');
         Route::delete('/orders/{hashedKey}', [AcuteHemodialysisOrderController::class, 'destroy'])

@@ -143,7 +143,14 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
                 ['icon' => 'clinic', 'label' => 'Clinics', 'route' => route('clinics'), 'can' => true],
                 ['icon' => 'procedure', 'label' => 'Procedures', 'route' => route('procedures.index'), 'can' => true],
             ],
-            'action-menu' => [],
+            'action-menu' => [
+                [
+                    'icon' => 'calendar-plus',
+                    'label' => 'New order',
+                    'route' => route('procedures.acute-hemodialysis.orders.create-shortcut', $caseRecord->hashed_key),
+                    'can' => $configs['dialysis_reservable'] && $user->can('create_acute_hemodialysis_order'),
+                ],
+            ],
             'breadcrumbs' => $this->BREADCRUMBS,
         ];
 

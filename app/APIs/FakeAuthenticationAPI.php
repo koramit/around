@@ -14,6 +14,7 @@ class FakeAuthenticationAPI implements AuthenticationAPI
             return [
                 'ok' => true,
                 'found' => false,
+                'message' => 'not found',
             ];
         }
 
@@ -34,7 +35,13 @@ class FakeAuthenticationAPI implements AuthenticationAPI
         ];
     }
 
-    public function getUserById(string $id): array
+    public function getUserById(int $id): array
+    {
+        // TODO: Implement getUserById() method.
+        return [];
+    }
+
+    public function checkUserById(int $orgId): array
     {
         // TODO: Implement getUserById() method.
         return [];

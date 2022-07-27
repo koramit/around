@@ -31,7 +31,7 @@
     >
         <div
             v-for="slot in slots"
-            class="w-72 md:w-[22rem]"
+            class="w-[21rem] sm:w-[22-rem] md:w-[24rem]"
             :key="slot.date_note"
         >
             <label class="font-medium text-complement italic">{{ slot.date_label }}</label>
@@ -48,7 +48,7 @@
     <div class="grid grid-flow-col grid-rows-1 gap-4 xl:gap-8 overflow-x-scroll pb-2 md:pb-4 border-b-2 border-dashed border-complement">
         <div
             v-for="slot in slots"
-            class="w-72 md:w-[22rem]"
+            class="w-[21rem] sm:w-[22-rem] md:w-[24rem]"
             :key="slot.date_note"
         >
             <label class="font-medium text-complement italic">{{ slot.date_label }}</label>
@@ -64,7 +64,7 @@
     <div class="grid grid-flow-col grid-rows-1 gap-4 xl:gap-8 overflow-x-scroll">
         <div
             v-for="slot in slots"
-            class="w-72 md:w-[22rem]"
+            class="w-[21rem] sm:w-[22-rem] md:w-[24rem]"
             :key="slot.date_note"
         >
             <label class="font-medium text-complement italic">{{ slot.date_label }}</label>

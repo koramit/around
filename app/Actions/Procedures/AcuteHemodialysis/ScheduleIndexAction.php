@@ -2,6 +2,7 @@
 
 namespace App\Actions\Procedures\AcuteHemodialysis;
 
+use App\Models\Registries\AcuteHemodialysisCaseRecord;
 use App\Models\User;
 use App\Traits\AcuteHemodialysis\OrderShareValidatable;
 use App\Traits\AcuteHemodialysis\SlotCountable;
@@ -75,6 +76,17 @@ class ScheduleIndexAction extends AcuteHemodialysisAction
             ];
         });
 
+        $caseConfig = false;
+        if ($shortCut = cache()->pull("acute-hemodialysis-create-order-shortcut-session-$user->id")) {
+            $case = AcuteHemodialysisCaseRecord::findByUnhashKey($shortCut)->firstOrFail();
+            if ($this->isDialysisReservable($case)) {
+                $caseConfig = [
+                    'value' => implode('|', [$shortCut, $case->patient->hn, $case->patient->profile['document_id']]),
+                    'label' => "HN {$case->patient->hn} {$case->patient->first_name}",
+                ];
+            }
+        }
+
         return [
             'flash' => [
                 'page-title' => 'Acute Hemodialysis - Schedule',
@@ -103,6 +115,7 @@ class ScheduleIndexAction extends AcuteHemodialysisAction
                     'route_lab' => route('resources.api.covid-lab'),
                     'route_vaccine' => route('resources.api.covid-vaccine'),
                 ],
+                'case' => $caseConfig,
             ],
         ];
     }

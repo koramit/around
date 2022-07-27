@@ -101,7 +101,7 @@ import FormAutocomplete from '../../../Components/Controls/FormAutocomplete.vue'
 import FormSelect from '../../../Components/Controls/FormSelect.vue';
 import FormRadio from '../../../Components/Controls/FormRadio.vue';
 import SpinnerButton from '../../../Components/Controls/SpinnerButton.vue';
-import {computed, reactive, ref, watch} from 'vue';
+import {computed, onMounted, reactive, ref, watch} from 'vue';
 import FormCheckbox from '../../../Components/Controls/FormCheckbox.vue';
 import CovidInfo from '../../../Components/Helpers/CovidInfo.vue';
 import FallbackSpinner from '../../../Components/Helpers/FallbackSpinner.vue';
@@ -136,8 +136,15 @@ watch(
         let data = val.split('|');
         covid.cid = data[2];
         covid.hn = data[1];
+        console.log(covid);
     }
 );
+onMounted(() => {
+    if (props.configs.case) {
+        form.case_key = props.configs.case.value;
+        form.case_label = props.configs.case.label;
+    }
+});
 watch(
     [() => form.dialysis_type, () => form.dialysis_at, () => form.covid_case],
     () => {

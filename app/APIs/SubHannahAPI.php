@@ -3,13 +3,14 @@
 namespace App\APIs;
 
 use App\Contracts\AuthenticationAPI;
+use App\Contracts\CovidInfoAPI;
 use App\Contracts\PatientAPI;
 use Exception;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
-class SubHannahAPI implements PatientAPI, AuthenticationAPI
+class SubHannahAPI implements PatientAPI, AuthenticationAPI, CovidInfoAPI
 {
     public function authenticate(string $login, string $password): array
     {
@@ -46,7 +47,7 @@ class SubHannahAPI implements PatientAPI, AuthenticationAPI
         ];
     }
 
-    public function getUserById(string $id): array
+    public function getUserById(int $id): array
     {
         $data = $this->makePost(route: 'user-by-id', form: ['org_id' => $id]);
 
@@ -149,7 +150,7 @@ class SubHannahAPI implements PatientAPI, AuthenticationAPI
         return $data;
     }
 
-    public function checkUserById($orgId): array
+    public function checkUserById(int $orgId): array
     {
         $data = $this->makePost('user-status-by-id', ['org_id' => $orgId]);
 
@@ -163,12 +164,12 @@ class SubHannahAPI implements PatientAPI, AuthenticationAPI
         return $data;
     }
 
-    public function checkCovidLab($hn): array
+    public function checkCovidLab(int $hn): array
     {
         return $this->makePost('npcr-covid', ['hn' => $hn]);
     }
 
-    public function checkCovidVaccine($cid, $raw = false): array
+    public function checkCovidVaccine(string $cid, $raw = false): array
     {
         return $this->makePost(route: 'vaccine-covid', form: ['cid' => $cid, 'raw' => $raw], timeout: 62);
     }

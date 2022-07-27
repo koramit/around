@@ -339,13 +339,13 @@
             :error="$page.props.errors['hd.nutrition_iv_volume']"
         />
     </div>
-    <hr class="border border-dashed my-2 md:my-4 xl:my-8">
+    <!--    <hr class="border border-dashed my-2 md:my-4 xl:my-8">
     <FormCheckbox
         label="Post Dialysis BW"
         name="post_dialysis_bw"
         v-model="form.post_dialysis_bw"
         :toggler="true"
-    />
+    />-->
 
     <hr class="border border-dashed my-2 md:my-4 xl:my-8">
     <label class="form-label">transfusion :</label>

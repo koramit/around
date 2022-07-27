@@ -4,7 +4,7 @@
         class="mb-4"
     >
         <template
-            v-for="(link, key) in $page.props.flash.mainMenuLinks"
+            v-for="(link, key) in $page.props.flash.mainMenuLinks.filter(l => l.can)"
             :key="key"
         >
             <a
@@ -42,7 +42,7 @@
                     {{ link.label }}
                 </div>
             </a>
-            <Link
+            <InertiaLink
                 class="flex items-center group py-2 outline-none truncate"
                 :href="link.route"
                 v-else
@@ -59,15 +59,15 @@
                 >
                     {{ link.label }}
                 </div>
-            </Link>
+            </InertiaLink>
         </template>
     </nav>
 </template>
 
 <script setup>
-import { Link } from '@inertiajs/inertia-vue3';
-import IconVector from '@/Components/Helpers/IconVector.vue';
-import { useInPageLinkHelpers } from '@/functions/useInPageLinkHelpers.js';
+import { InertiaLink } from '@inertiajs/inertia-vue3';
+import IconVector from '../../Components/Helpers/IconVector.vue';
+import { useInPageLinkHelpers } from '../../functions/useInPageLinkHelpers.js';
 defineProps({
     zenMode: { type: Boolean }
 });
