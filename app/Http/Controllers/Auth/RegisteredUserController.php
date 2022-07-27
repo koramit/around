@@ -60,7 +60,6 @@ class RegisteredUserController extends Controller
         $data = Request::all();
 
         $profile = [
-            'full_name' => $data['full_name'],
             'tel_no' => $data['tel_no'],
             'org_id' => $data['org_id'],
             'division' => $data['division'],
@@ -73,6 +72,7 @@ class RegisteredUserController extends Controller
 
         $user->login = $data['login'];
         $user->name = $data['name'];
+        $user->full_name = $data['full_name'];
         $user->password = Hash::make(Str::random(64));
         $user->profile = $profile;
         $user->save();

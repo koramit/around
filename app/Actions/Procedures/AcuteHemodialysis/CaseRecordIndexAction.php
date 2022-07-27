@@ -20,7 +20,7 @@ class CaseRecordIndexAction extends AcuteHemodialysisAction
         $ilike = config('database.ilike');
 
         $cases = CaseRecord::query()
-            ->with(['patient', 'orders' => fn ($q) => $q->with('author')->activeStatuses()])
+            ->with(['patient', 'orders' => fn ($q) => $q->withAuthorName()->activeStatuses()])
             ->when($filters['search'] ?? null, function ($query, $search) use ($ilike) {
                 $query->where('meta->name', $ilike, $search.'%')
                     ->orWhere('meta->hn', $ilike, $search.'%');
@@ -39,7 +39,7 @@ class CaseRecordIndexAction extends AcuteHemodialysisAction
                 'dialysis_type' => $case->orders->first()?->meta['dialysis_type'],
                 'dialysis_at' => $case->orders->first() ? ($case->orders->first()->meta['in_unit'] ? 'in' : 'out') : null,
                 'status' => $this->styleStatusBadge($case->orders->first()?->status),
-                'md' => $case->orders->first()?->author->first_name,
+                'md' => $this->getFirstName($case->orders->first()?->author_name),
                 'can' => [
                     'edit_order' => $case->orders->first() && $user->can('edit', $case->orders->first()),
                     'create_order' => ! $case->orders->first() && $user->can('create_acute_hemodialysis_order'),

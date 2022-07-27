@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
  *
  * @property-read string $hashed_key
  * @property-read string $change_request_text
+ * @property-read string $requester_name
  */
 class DocumentChangeRequest extends Model
 {
@@ -59,6 +60,16 @@ class DocumentChangeRequest extends Model
     public function actionLogs(): MorphMany
     {
         return $this->morphMany(ResourceActionLog::class, 'loggable');
+    }
+
+    public function scopeWithRequesterName($query)
+    {
+        $query->addSelect([
+            'requester_name' => User::select('full_name')
+                ->whereColumn('id', 'document_change_requests.requester_id')
+                ->limit(1)
+                ->latest(),
+        ]);
     }
 
     protected function status(): Attribute

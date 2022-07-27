@@ -55,7 +55,7 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
 
         // HD orders
         $orders = AcuteHemodialysisOrderNote::query()
-            ->with(['author:id,profile'])
+            ->withAuthorName()
             ->withPlaceName(Ward::class)
             ->where('case_record_id', $caseRecord->id)
             ->orderBy('status')
@@ -89,7 +89,7 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
                     'ward_name' => $order->place_name,
                     'dialysis_type' => $order->meta['dialysis_type'],
                     'date_note' => $order->date_note->format('d M'),
-                    'md' => $order->author->first_name,
+                    'md' => $this->getFirstName($order->author_name),
                     'status' => $order->status,
                     'actions' => $actions,
                 ];

@@ -2,8 +2,12 @@
 
 namespace App\Actions\Procedures\AcuteHemodialysis;
 
+use App\Traits\FirstNameAware;
+
 class AcuteHemodialysisAction
 {
+    use FirstNameAware;
+
     protected int $REGISTRY_ID;
 
     protected int $ACUTE_HD_ORDER_NOTE_TYPE_ID;

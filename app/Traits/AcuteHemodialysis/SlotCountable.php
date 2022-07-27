@@ -4,10 +4,13 @@ namespace App\Traits\AcuteHemodialysis;
 
 use App\Models\Notes\AcuteHemodialysisOrderNote;
 use App\Models\User;
+use App\Traits\FirstNameAware;
 use Illuminate\Support\Collection;
 
 trait SlotCountable
 {
+    use FirstNameAware;
+
     protected int $LIMIT_IN_UNIT_SLOTS = 32;
 
     protected int $LIMIT_TPE_SLOTS = 3;
@@ -18,7 +21,10 @@ trait SlotCountable
     {
         return AcuteHemodialysisOrderNote::query()
             ->select(['id', 'date_note', 'status', 'meta', 'author_id', 'attending_staff_id', 'case_record_id'])
-            ->with(['author:id,profile', 'attendingStaff:id,name,position', 'caseRecord:id,meta'])
+            ->withAuthorName()
+            ->withAttendingName()
+//            ->with(['author:id,profile', 'attendingStaff:id,name,position', 'caseRecord:id,meta'])
+            ->with(['caseRecord:id,meta'])
             ->where('date_note', $dateNote)
             ->where('meta->in_unit', $inUnit)
             ->slotOccupiedStatuses()
@@ -27,11 +33,11 @@ trait SlotCountable
                 $trans = [
                     'case_record_route' => route('procedures.acute-hemodialysis.edit', $note->caseRecord->hashed_key),
                     'patient_name' => $note->caseRecord->meta['name'],
-                    'author' => 'พ.'.$note->author->first_name,
+                    'author' => 'พ.'.$this->getFirstName($note->author_name),
                     'type' => explode(' ', $note->meta['dialysis_type'])[0],
                     'status' => $note->status,
                     'extra_slot' => $note->meta['extra_slot'],
-                    'attending' => $note->attendingStaff->first_name,
+                    'attending' => 'อ.'.$this->getFirstName($note->attending_name),
                     'covid_case' => $note->meta['covid_case'] ?? false,
                     'order_route' => $user->can('edit', $note)
                         ? route('procedures.acute-hemodialysis.orders.edit', $note->hashed_key)

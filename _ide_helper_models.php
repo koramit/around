@@ -101,6 +101,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|DocumentChangeRequest whereRequesterId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|DocumentChangeRequest whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|DocumentChangeRequest whereSubmittedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|DocumentChangeRequest withRequesterName()
  */
 	class DocumentChangeRequest extends \Eloquent {}
 }
@@ -133,6 +134,7 @@ namespace App\Models\DocumentChangeRequests{
  * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisSlotRequest whereRequesterId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisSlotRequest whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisSlotRequest whereSubmittedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|DocumentChangeRequest withRequesterName()
  */
 	class AcuteHemodialysisSlotRequest extends \Eloquent {}
 }
@@ -162,6 +164,8 @@ namespace App\Models{
  *
  * @property-read string $hashed_key
  * @property-read string $place_name
+ * @property-read string $attending_name
+ * @property-read string $author_name
  * @property int $id
  * @property int $case_record_id
  * @property int $note_type_id
@@ -203,6 +207,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Note whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Note whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Note withAttendingName()
+ * @method static \Illuminate\Database\Eloquent\Builder|Note withAuthorName()
  * @method static \Illuminate\Database\Eloquent\Builder|Note withAuthorUsername()
  * @method static \Illuminate\Database\Eloquent\Builder|Note withPlaceName($className)
  */
@@ -257,6 +262,7 @@ namespace App\Models\Notes{
  * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisOrderNote whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisOrderNote whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Note withAttendingName()
+ * @method static \Illuminate\Database\Eloquent\Builder|Note withAuthorName()
  * @method static \Illuminate\Database\Eloquent\Builder|Note withAuthorUsername()
  * @method static \Illuminate\Database\Eloquent\Builder|Note withPlaceName($className)
  */
@@ -559,6 +565,7 @@ namespace App\Models{
  * @property int $id
  * @property string $name
  * @property string $login
+ * @property string $full_name
  * @property string $password
  * @property mixed $profile
  * @property int $division_id
@@ -579,6 +586,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|User whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereDivisionId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereFullName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereLogin($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereName($value)

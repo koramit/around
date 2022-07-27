@@ -6,6 +6,7 @@ use App\Models\Notes\AcuteHemodialysisOrderNote;
 use App\Models\User;
 use ArrayObject;
 use Hashids\Hashids;
+
 class OrderShowAction extends AcuteHemodialysisAction
 {
     public function __invoke(string $hashedKey, User $user): array
@@ -15,6 +16,7 @@ class OrderShowAction extends AcuteHemodialysisAction
         }
 
         $order = AcuteHemodialysisOrderNote::query()
+                    ->withAuthorName()
                     ->withPlaceName('App\Models\Resources\Ward')
                     ->withAttendingName()
                     ->findByUnhashKey($hashedKey)
@@ -57,7 +59,7 @@ class OrderShowAction extends AcuteHemodialysisAction
                 'an' => $order->meta['an'] ?? 'No active AN',
                 'dialysis at' => $order->place_name,
                 'dialysis type' => $order->meta['dialysis_type'],
-                'md' => $order->author->name,
+                'md' => $order->author_name,
                 'attending' => $order->attending_name,
             ],
             'form' => $order->form,
@@ -88,13 +90,14 @@ class OrderShowAction extends AcuteHemodialysisAction
     protected function getSpecialRequest(ArrayObject $form): array
     {
         $requests = collect([
-                ['label' => 'Predialysis labs', 'name' => 'predialysis_labs_request'],
-                ['label' => 'Postdialysis BW', 'name' => 'postdialysis_bw'],
-                ['label' => 'Postdialysis ESA', 'name' => 'postdialysis_esa'],
-                ['label' => 'Postdialysis Iron IV', 'name' => 'postdialysis_iron_iv'],
-            ])->filter(fn ($f) => $form[$f['name']] ?? null)
+            ['label' => 'Predialysis labs', 'name' => 'predialysis_labs_request'],
+            ['label' => 'Postdialysis BW', 'name' => 'postdialysis_bw'],
+            ['label' => 'Postdialysis ESA', 'name' => 'postdialysis_esa'],
+            ['label' => 'Postdialysis Iron IV', 'name' => 'postdialysis_iron_iv'],
+        ])->filter(fn ($f) => $form[$f['name']] ?? null)
             ->values()
             ->transform(fn ($f) => "<p>{$f['label']}</p>")->join('');
+
         return [
             ['label' => 'treatments', 'data' => $form['treatments_request'] ? collect(explode("\n", $form['treatments_request']))->transform(fn ($p) => "<p>$p</p>")->join('') : null],
             ['label' => 'requests', 'data' => $requests],
@@ -119,7 +122,7 @@ class OrderShowAction extends AcuteHemodialysisAction
                 ])->filter(fn ($f) => $form['hemodynamic'][$f['name']])
                     ->values()
                     ->transform(fn ($f) => "<p class='text-red-400'>{$f['label']}</p>")
-                    ->join('')
+                    ->join(''),
             ];
         }
 
@@ -134,7 +137,7 @@ class OrderShowAction extends AcuteHemodialysisAction
                 ])->filter(fn ($f) => $form['respiration'][$f['name']])
                     ->values()
                     ->transform(fn ($f) => "<p class='text-red-400'>{$f['label']}</p>")
-                    ->join('')
+                    ->join(''),
             ];
         }
 
@@ -153,7 +156,7 @@ class OrderShowAction extends AcuteHemodialysisAction
                 ])->filter(fn ($f) => $form['neurological'][$f['name']])
                     ->values()
                     ->transform(fn ($f) => "<p class='text-red-400'>{$f['label']}</p>")
-                    ->join('')
+                    ->join(''),
             ];
         }
 
@@ -172,12 +175,12 @@ class OrderShowAction extends AcuteHemodialysisAction
                 ])->filter(fn ($f) => $form['life_threatening_condition'][$f['name']])
                     ->values()
                     ->transform(fn ($f) => "<p class='text-red-400'>{$f['label']}</p>")
-                    ->join('')
+                    ->join(''),
             ];
         }
 
         if ($form['monitor']['standard']) {
-            $content[] = ['label' => 'monitor', 'data' => "<p>Standard</p>"];
+            $content[] = ['label' => 'monitor', 'data' => '<p>Standard</p>'];
         } else {
             $data = collect([
                 ['label' => 'EKG', 'name' => 'ekg'],
@@ -201,39 +204,38 @@ class OrderShowAction extends AcuteHemodialysisAction
     protected function getPrescription(array $form): array
     {
         $content = collect([
-                // SLEDD
-                ['label' => 'duration', 'name' => 'duration'],
+            // SLEDD
+            ['label' => 'duration', 'name' => 'duration'],
 
-                // common
-                ['label' => 'access type', 'name' => 'access_type'],
-                ['label' => 'access site coagulant', 'name' => 'access_site_coagulant'],
-                ['label' => 'dialyzer', 'name' => 'dialyzer'],
+            // common
+            ['label' => 'access type', 'name' => 'access_type'],
+            ['label' => 'access site coagulant', 'name' => 'access_site_coagulant'],
+            ['label' => 'dialyzer', 'name' => 'dialyzer'],
 
-                // TPE
-                // ['label' => 'replacement_fluid_albumin', 'name' => 'replacement_fluid_albumin'],
-                ['label' => 'albumin concentrated (%)', 'name' => 'replacement_fluid_albumin_concentrated'],
-                ['label' => 'albumin volume (ml)', 'name' => 'replacement_fluid_albumin_volume'],
-                // ['label' => 'replacement_fluid_ffp', 'name' => 'replacement_fluid_ffp'],
-                ['label' => 'ffp volume (ml)', 'name' => 'replacement_fluid_ffp_volume'],
-                ['label' => 'blood pump (ml/min)', 'name' => 'blood_pump'],
-                ['label' => 'filtration pump (%)', 'name' => 'filtration_pump'],
-                ['label' => 'replacement pump (%)', 'name' => 'replacement_pump'],
-                ['label' => 'drain pump (%)', 'name' => 'drain_pump'],
-                ['label' => '10% calcium gluconate volume (ml)', 'name' => 'calcium_gluconate_10_percent_volume'],
-                ['label' => '10%  calcium gluconate timing (at hour)', 'name' => 'calcium_gluconate_10_percent_timing'],
+            // TPE
+            // ['label' => 'replacement_fluid_albumin', 'name' => 'replacement_fluid_albumin'],
+            ['label' => 'albumin concentrated (%)', 'name' => 'replacement_fluid_albumin_concentrated'],
+            ['label' => 'albumin volume (ml)', 'name' => 'replacement_fluid_albumin_volume'],
+            // ['label' => 'replacement_fluid_ffp', 'name' => 'replacement_fluid_ffp'],
+            ['label' => 'ffp volume (ml)', 'name' => 'replacement_fluid_ffp_volume'],
+            ['label' => 'blood pump (ml/min)', 'name' => 'blood_pump'],
+            ['label' => 'filtration pump (%)', 'name' => 'filtration_pump'],
+            ['label' => 'replacement pump (%)', 'name' => 'replacement_pump'],
+            ['label' => 'drain pump (%)', 'name' => 'drain_pump'],
+            ['label' => '10% calcium gluconate volume (ml)', 'name' => 'calcium_gluconate_10_percent_volume'],
+            ['label' => '10%  calcium gluconate timing (at hour)', 'name' => 'calcium_gluconate_10_percent_timing'],
 
-                // common
-                ['label' => 'dialysate', 'name' => 'dialysate'],
-                ['label' => 'dialysate flow rate (ml/min)', 'name' => 'dialysate_flow_rate'],
-                ['label' => 'blood flow rate (ml/min)', 'name' => 'blood_flow_rate'],
-                ['label' => 'dialysate temperature (℃)', 'name' => 'dialysate_temperature'],
-                ['label' => 'bicarbonate', 'name' => 'bicarbonate'],
-                ['label' => 'sodium', 'name' => 'sodium'],
-            ])->filter(fn ($f) => $form[$f['name']] ?? null)
+            // common
+            ['label' => 'dialysate', 'name' => 'dialysate'],
+            ['label' => 'dialysate flow rate (ml/min)', 'name' => 'dialysate_flow_rate'],
+            ['label' => 'blood flow rate (ml/min)', 'name' => 'blood_flow_rate'],
+            ['label' => 'dialysate temperature (℃)', 'name' => 'dialysate_temperature'],
+            ['label' => 'bicarbonate', 'name' => 'bicarbonate'],
+            ['label' => 'sodium', 'name' => 'sodium'],
+        ])->filter(fn ($f) => $form[$f['name']] ?? null)
             ->values()
             ->transform(fn ($f) => ['label' => $f['label'], 'data' => $form[$f['name']]])
-            ->all() ;
-
+            ->all();
 
         if ($form['reverse_dialysate_flow'] ?? false) {
             if ($index = array_search('dialysate flow rate (ml/min)', array_column($content, 'label'))) {
@@ -244,7 +246,7 @@ class OrderShowAction extends AcuteHemodialysisAction
         if ($form['sodium_profile'] ?? false) {
             $content[] = [
                 'label' => 'sodium profile',
-                'data' => "<p>Start : {$form['sodium_profile_start']}</p><p>End : {$form['sodium_profile_end']}</p>"
+                'data' => "<p>Start : {$form['sodium_profile_start']}</p><p>End : {$form['sodium_profile_end']}</p>",
             ];
         }
 
@@ -257,8 +259,8 @@ class OrderShowAction extends AcuteHemodialysisAction
 
         if ($form['ultrafiltration_min'] ?? false) {
             $content[] = [
-              'label' => 'uf (ml)',
-              'data' =>   "{$form['ultrafiltration_min']} - {$form['ultrafiltration_min']}"
+                'label' => 'uf (ml)',
+                'data' => "{$form['ultrafiltration_min']} - {$form['ultrafiltration_min']}",
             ];
         }
 
@@ -283,7 +285,7 @@ class OrderShowAction extends AcuteHemodialysisAction
                 'label' => 'other transfusion',
                 'data' => collect(explode("\n", $form['transfusion_other']))
                     ->transform(fn ($m) => "<p>$m</p>")
-                    ->join('')
+                    ->join(''),
             ];
         }
 
@@ -304,7 +306,7 @@ class OrderShowAction extends AcuteHemodialysisAction
                 'label' => 'Note',
                 'data' => collect(explode("\n", $form['remark']))
                     ->transform(fn ($m) => "<p>$m</p>")
-                    ->join('')
+                    ->join(''),
             ];
         }
 
@@ -359,6 +361,4 @@ class OrderShowAction extends AcuteHemodialysisAction
             return $form['anticoagulant'];
         }
     }
-
-
 }

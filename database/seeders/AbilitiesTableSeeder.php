@@ -117,8 +117,8 @@ class AbilitiesTableSeeder extends Seeder
             'name' => 'around',
             'login' => 'around.app',
             'division_id' => 1,
+            'full_name' => 'Around System',
             'profile' => [
-                'full_name' => 'Around System',
                 'tel_no' => 'HELPDESK',
                 'org_id' => 1,
                 'division' => 'system',

@@ -17,8 +17,9 @@ return new class extends Migration
             $table->increments('id');
             $table->string('name')->unique();
             $table->string('login')->unique();
+            $table->string('full_name')->unique();
             $table->string('password');
-            $table->json('profile');
+            $table->jsonb('profile');
             $table->unsignedSmallInteger('division_id')->default(1);
             $table->rememberToken();
             $table->softDeletes();

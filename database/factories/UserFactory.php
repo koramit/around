@@ -25,8 +25,8 @@ class UserFactory extends Factory
         return [
             'name' => strtolower($firstName).'.'.strtolower(substr($lastname, 0, 3)),
             'division_id' => 5,
+            'full_name' => implode(' ', [fake()->title($gender), $firstName, $lastname]),
             'profile' => [
-                'full_name' => implode(' ', [fake()->title($gender), $firstName, $lastname]),
                 'tel_no' => fake()->e164PhoneNumber(),
                 'org_id' => fake()->numberBetween(10020001, 10049999),
                 'division' => 'nephrology',

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\FirstNameAware;
 use Illuminate\Database\Eloquent\Casts\AsArrayObject;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -18,7 +19,7 @@ use Laravel\Sanctum\HasApiTokens;
  */
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, FirstNameAware;
 
     /**
      * The attributes that are mass assignable.
@@ -77,11 +78,7 @@ class User extends Authenticatable
     protected function firstName(): Attribute
     {
         return Attribute::make(
-            get: function () {
-                $names = explode(' ', $this->profile['full_name']);
-
-                return (count($names) > 2) ? $names[1] : $names[0];
-            },
+            get: fn () => $this->getFirstName($this->full_name),
         );
     }
 

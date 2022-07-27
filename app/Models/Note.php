@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
  * @property-read string $hashed_key
  * @property-read string $place_name
  * @property-read string $attending_name
+ * @property-read string $author_name
  */
 class Note extends Model
 {
@@ -147,6 +148,16 @@ class Note extends Model
                     ->whereColumn('id', 'notes.author_id')
                     ->limit(1)
                     ->latest(),
+        ]);
+    }
+
+    public function scopeWithAuthorName($query)
+    {
+        $query->addSelect([
+            'author_name' => User::select('full_name')
+                ->whereColumn('id', 'notes.author_id')
+                ->limit(1)
+                ->latest(),
         ]);
     }
 

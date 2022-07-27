@@ -78,7 +78,7 @@ class ScheduleIndexAction extends AcuteHemodialysisAction
 
         $caseConfig = false;
         if ($shortCut = cache()->pull("acute-hemodialysis-create-order-shortcut-session-$user->id")) {
-            $case = AcuteHemodialysisCaseRecord::findByUnhashKey($shortCut)->firstOrFail();
+            $case = AcuteHemodialysisCaseRecord::query()->findByUnhashKey($shortCut)->firstOrFail();
             if ($this->isDialysisReservable($case)) {
                 $caseConfig = [
                     'value' => implode('|', [$shortCut, $case->patient->hn, $case->patient->profile['document_id']]),
