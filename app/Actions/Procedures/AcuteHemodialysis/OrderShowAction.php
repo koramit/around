@@ -28,9 +28,9 @@ class OrderShowAction extends AcuteHemodialysisAction
             'page-title' => 'Acute '.$order->meta['dialysis_type'].' '.$order->patient->profile['first_name'].' @ '.$order->date_note->format('d M Y'),
             'hn' => $order->patient->hn,
             'main-menu-links' => [
-                ['icon' => 'slack-hash', 'label' => 'Prescription', 'type' => '#', 'route' => '#prescription', 'can' => true],
+                ['icon' => 'slack-hash', 'label' => 'Special requests', 'type' => '#', 'route' => '#special-requests', 'can' => true],
                 ['icon' => 'slack-hash', 'label' => 'Predialysis', 'type' => '#', 'route' => '#predialysis-evaluation', 'can' => true],
-                ['icon' => 'slack-hash', 'label' => 'Monitoring', 'type' => '#', 'route' => '#monitoring', 'can' => true],
+                ['icon' => 'slack-hash', 'label' => 'Prescription', 'type' => '#', 'route' => '#prescription', 'can' => true],
                 ['icon' => 'patient', 'label' => 'Patients', 'route' => route('patients'), 'can' => true],
                 ['icon' => 'clinic', 'label' => 'Clinics', 'route' => route('clinics'), 'can' => true],
                 ['icon' => 'procedure', 'label' => 'Procedures', 'route' => route('procedures.index'), 'can' => true],

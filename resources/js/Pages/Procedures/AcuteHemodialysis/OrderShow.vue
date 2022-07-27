@@ -24,7 +24,10 @@
         />
     </div>
     <!--special requests-->
-    <h2 class="mt-6 md:mt-12 xl:mt-24 form-label italic text-xl text-complement">
+    <h2
+        class="mt-6 md:mt-12 xl:mt-24 form-label italic text-xl text-complement scroll-mt-16 md:scroll-mt-8"
+        id="special-requests"
+    >
         Special Requests
     </h2>
     <hr class="my-4 border-b border-accent">
@@ -37,7 +40,10 @@
         />
     </div>
     <!--Predialysis Evaluation-->
-    <h2 class="mt-6 md:mt-12 xl:mt-24 form-label italic text-xl text-complement">
+    <h2
+        class="mt-6 md:mt-12 xl:mt-24 form-label italic text-xl text-complement scroll-mt-16 md:scroll-mt-8"
+        id="predialysis-evaluation"
+    >
         Predialysis Evaluation
     </h2>
     <hr class="my-4 border-b border-accent">
@@ -51,7 +57,10 @@
     </div>
     <!--HD prescription-->
     <template v-if="content.hd !== undefined">
-        <h2 class="mt-6 md:mt-12 xl:mt-24 form-label italic text-xl text-complement">
+        <h2
+            class="mt-6 md:mt-12 xl:mt-24 form-label italic text-xl text-complement scroll-mt-16 md:scroll-mt-8"
+            id="prescription"
+        >
             HD Prescription
         </h2>
         <hr class="my-4 border-b border-accent">
@@ -66,7 +75,10 @@
     </template>
     <!--HF prescription-->
     <template v-if="content.hf !== undefined">
-        <h2 class="mt-6 md:mt-12 xl:mt-24 form-label italic text-xl text-complement">
+        <h2
+            class="mt-6 md:mt-12 xl:mt-24 form-label italic text-xl text-complement scroll-mt-16 md:scroll-mt-8"
+            id="prescription"
+        >
             HF Prescription
         </h2>
         <hr class="my-4 border-b border-accent">
@@ -81,7 +93,10 @@
     </template>
     <!--TPE prescription-->
     <template v-if="content.tpe !== undefined">
-        <h2 class="mt-6 md:mt-12 xl:mt-24 form-label italic text-xl text-complement">
+        <h2
+            class="mt-6 md:mt-12 xl:mt-24 form-label italic text-xl text-complement scroll-mt-16 md:scroll-mt-8"
+            id="prescription"
+        >
             TPE Prescription
         </h2>
         <hr class="my-4 border-b border-accent">
