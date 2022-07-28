@@ -133,7 +133,10 @@
                     </div>
                     <hr class="my-4">
                     <MainMenu @click="mobileMenuVisible = false" />
-                    <ActionMenu @action-clicked="actionClicked" />
+                    <ActionMenu
+                        @action-clicked="actionClicked"
+                        @link-clicked="mobileMenuVisible = false"
+                    />
                 </div>
             </div>
         </header>

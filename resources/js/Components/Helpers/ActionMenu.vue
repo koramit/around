@@ -14,10 +14,10 @@
             >
                 <IconVector
                     :name="action.icon"
-                    class="w-4 h-4 mr-2 group-hover:text-accent transition-colors duration-200 ease-in-out"
+                    class="w-4 h-4 group-hover:text-accent transition-colors duration-200 ease-in-out"
                 />
                 <span
-                    class="group-hover:text-accent transition-colors duration-200 ease-in-out"
+                    class="ml-2 group-hover:text-accent transition-colors duration-200 ease-in-out"
                     v-if="!zenMode"
                 >
                     {{ action.label }}
@@ -27,13 +27,14 @@
                 class="flex items-center group py-2 outline-none truncate text-primary"
                 :href="action.route"
                 v-else-if="action.route !== undefined"
+                @click="$emit('link-clicked')"
             >
                 <IconVector
                     :name="action.icon"
-                    class="w-4 h-4 mr-2 group-hover:text-accent transition-colors duration-200 ease-in-out"
+                    class="w-4 h-4 group-hover:text-accent transition-colors duration-200 ease-in-out"
                 />
                 <div
-                    class="group-hover:text-accent transition-colors duration-200 ease-in-out"
+                    class="ml-2 group-hover:text-accent transition-colors duration-200 ease-in-out"
                     v-if="!zenMode"
                 >
                     {{ action.label }}
@@ -45,7 +46,7 @@
 <script setup>
 import { InertiaLink } from '@inertiajs/inertia-vue3';
 import IconVector from './IconVector.vue';
-defineEmits(['action-clicked']);
+defineEmits(['action-clicked', 'link-clicked']);
 defineProps({
     zenMode: { type: Boolean }
 });

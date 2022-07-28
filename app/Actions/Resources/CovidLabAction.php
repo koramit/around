@@ -31,7 +31,7 @@ class CovidLabAction
                 }
                 $data['labs'] = collect($data['labs'])->transform(fn ($v) => [
                     'result' => $v['result'],
-                    'name' => $v['name'],
+                    'name' => $v['name'] ?? '',
                     'date_lab' => now()->create($v['date_lab'])->format('j M Y'),
                 ]);
 

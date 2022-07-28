@@ -48,8 +48,8 @@ Route::prefix('acute-hemodialysis')
            ->name('orders.reschedule');
         Route::patch('/orders/{hashedKey}/swap', AcuteHemodialysisOrderSwapController::class)
               ->name('orders.swap');
-//        Route::patch('/orders/{hashedKey}/today-slot-request', AcuteHemodialysisTodaySlotRequestController::class)
-//           ->name('orders.today-slot-request');
+        Route::patch('/orders/{hashedKey}/today-slot-request', AcuteHemodialysisTodaySlotRequestController::class)
+           ->name('orders.today-slot-request');
         Route::get('/orders/{hashedKey}/create-shortcut', AcuteHemodialysisCreateOrderShortcutController::class)
             ->can('create_acute_hemodialysis_order')
             ->name('orders.create-shortcut');
