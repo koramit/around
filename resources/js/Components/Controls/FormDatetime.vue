@@ -62,10 +62,11 @@ const flatpickrOptions = {
         enableTime: true,
         noCalendar: true,
         dateFormat: 'H:i',
-        minTime: '07:00',
-        maxTime: '21:00',
+        // minTime: '07:00',
+        // maxTime: '21:00',
         time_24hr: true,
-        minuteIncrement: 30,
+        // minuteIncrement: 30,
+        defaultDate: props.modelValue ?? '',
         onChange: onChange,
     }
 };
@@ -80,10 +81,10 @@ onMounted(() => {
     fp = flatpickr(input.value, flatpickrOptions[props.mode]);
 });
 
-const disabled = ref(false);
+// const disabled = ref(false);
 const error = ref(null);
 watch(
-    () => disabled.value,
+    () => props.disabled,
     (val) => {
         fp._input.disabled = val;
     }

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Procedures\AcuteHemodialysis\CaseRecordController as AcuteHemodialysisCaseController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\CreateOrderShortcutController as AcuteHemodialysisCreateOrderShortcutController;
+use App\Http\Controllers\Procedures\AcuteHemodialysis\DialysisSessionController as AcuteHemodialysisDialysisSessionController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\IdleCaseController as AcuteHemodialysisIdleCase;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\LastIndexSectionController as AcuteHemodialysisLastIndexSectionController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\OrderController as AcuteHemodialysisOrderController;
@@ -53,6 +54,12 @@ Route::prefix('acute-hemodialysis')
         Route::get('/orders/{hashedKey}/create-shortcut', AcuteHemodialysisCreateOrderShortcutController::class)
             ->can('create_acute_hemodialysis_order')
             ->name('orders.create-shortcut');
+        Route::post('/orders/{hashedKey}/session', [AcuteHemodialysisDialysisSessionController::class, 'store'])
+            ->name('orders.start-session');
+        Route::patch('/orders/{hashedKey}/session', [AcuteHemodialysisDialysisSessionController::class, 'update'])
+            ->name('orders.update-session');
+        Route::delete('/orders/{hashedKey}/session', [AcuteHemodialysisDialysisSessionController::class, 'destroy'])
+            ->name('orders.finish-session');
         Route::patch('/orders/{hashedKey}', [AcuteHemodialysisOrderController::class, 'update'])
            ->name('orders.update');
         Route::delete('/orders/{hashedKey}', [AcuteHemodialysisOrderController::class, 'destroy'])

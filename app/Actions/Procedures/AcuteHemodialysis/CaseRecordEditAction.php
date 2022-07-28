@@ -42,11 +42,9 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
         'serology_results' => ['positive', 'intermediate', 'negative'],
     ];
 
-    /**
-     * @todo authorize
-     */
     public function __invoke(string $hashed, User $user): array
     {
+        /** @TODO view draft & finished note */
         if (config('auth.guards.web.provider') === 'avatar') {
             return []; // call api
         }
@@ -96,6 +94,7 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
             });
 
         // form
+        // @TODO add admitted/discharged dates
         $form = $caseRecord->form;
         $form['admission'] = ($form['an'] ?? false)
                         ? (new AdmissionManager)->manage($caseRecord->form['an'])['admission']

@@ -7,11 +7,10 @@ use Illuminate\Support\Facades\Storage;
 
 class UploadController extends Controller
 {
-    /**
-     * @todo make it support avatar
-     */
     public function store(Request $request)
     {
+        // @todo make it support avatar
+
         $request->validate([
             'file' => 'required|file',
             'name' => 'required|string',

@@ -194,9 +194,6 @@ class OrderStoreAction extends AcuteHemodialysisAction
 
     /**
      * @throws Exception
-     *
-     * @todo authorize action
-     * @todo recheck date_note+dialysis_type+dialysis_at against available slots
      */
     public function __invoke(array $data, User $user): array
     {

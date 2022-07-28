@@ -36,7 +36,9 @@ class ResourceActionLog extends Model
         'request_change',
         'approve', // NOTE & REQUEST
         'disapprove', // NOTE & REQUEST
-        'perform', // NOTE ONLY
+        'start', // NOTE ONLY
+        'finish', // NOTE ONLY
+        'change', // changing by authority, no request required
         'dismiss', // CRF ONLY
         'archive', // CRF ONLY
     ];
@@ -61,6 +63,16 @@ class ResourceActionLog extends Model
     public function actor(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function scopeWithActorUsername($query)
+    {
+        $query->addSelect([
+            'actor_username' => User::select('name')
+                ->whereColumn('id', 'resource_action_logs.actor_id')
+                ->limit(1)
+                ->latest(),
+        ]);
     }
 
     protected function action(): Attribute

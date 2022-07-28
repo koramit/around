@@ -7,12 +7,10 @@ use App\Models\User;
 
 class CaseRecordUpdateAction extends AcuteHemodialysisAction
 {
-    /**
-     * @todo authorize
-     * @todo validate form before update
-     */
     public function __invoke(array $data, string $hashedKey, User $user)
     {
+        // @TODO validate form before update
+
         if (config('auth.guards.web.provider') === 'avatar') {
             return []; // call api
         }

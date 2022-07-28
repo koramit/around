@@ -2,6 +2,7 @@
 
 namespace App\Actions\Procedures\AcuteHemodialysis;
 
+use App\Models\Note;
 use App\Traits\FirstNameAware;
 
 class AcuteHemodialysisAction
@@ -95,5 +96,10 @@ class AcuteHemodialysisAction
     public function getUnitDayOff(): string
     {
         return $this->UNIT_DAY_OFF;
+    }
+
+    public function dateNoteToday(Note $note): bool
+    {
+        return $note->date_note?->format('Y-m-d') === $this->TODAY;
     }
 }

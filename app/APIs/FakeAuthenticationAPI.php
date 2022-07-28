@@ -9,7 +9,6 @@ class FakeAuthenticationAPI implements AuthenticationAPI
 {
     public function authenticate(string $login, string $password): array
     {
-        // TODO: Implement authenticate() method.
         if (config('app.env') === 'production' || ! $fakeUser = User::query()->where('login', $login)->first()) {
             return [
                 'ok' => true,

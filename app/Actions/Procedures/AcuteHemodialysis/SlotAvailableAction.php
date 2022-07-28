@@ -83,13 +83,17 @@ class SlotAvailableAction extends AcuteHemodialysisAction
 
     protected function inUnitSlots(string $dateNote, string $dialysisType): array
     {
-        $notes = $this->getNotes(dateNote: $dateNote, user: $this->user);
+        $orders = $this->getNotes(dateNote: $dateNote, user: $this->user);
+        $chronic = $orders->filter(fn ($o) => $o['dialysis_at_chronic_unit'])->values();
+        if ($chronic->count() !== 0) {
+            $orders = $orders->filter(fn ($o) => ! $o['dialysis_at_chronic_unit'])->values();
+        }
 
         $requestSlot = $this->slotCount($dialysisType);
         $available = true;
         $reply = 'ok';
 
-        if (($this->LIMIT_IN_UNIT_SLOTS - $notes->sum('slot_count')) < $requestSlot) {
+        if (($this->LIMIT_IN_UNIT_SLOTS - $orders->sum('slot_count')) < $requestSlot) {
             $available = false;
             $reply = 'not enough slots';
         } elseif (str_contains(strtolower($dialysisType), 'tpe') && $this->tpeCaseCount($dateNote) === $this->LIMIT_TPE_SLOTS) {
@@ -97,10 +101,11 @@ class SlotAvailableAction extends AcuteHemodialysisAction
             $reply = 'TPE limit has been reached';
         }
 
-        $ordered = $this->orderInUnitSlot($notes);
+        $sorted = $this->orderInUnitSlot($orders);
 
         return [
-            'slots' => $ordered->reverse()->values(),
+            'slots' => $sorted->reverse()->values(),
+            'chronic' => $chronic,
             'available' => $available,
             'reply' => $reply,
         ];

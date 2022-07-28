@@ -45,7 +45,7 @@ class OrderShowAction extends AcuteHemodialysisAction
             ]),
         ];
 
-        if ($order->status !== 'submitted') {
+        if ($order->status === 'draft' || $order->status === 'scheduling') {
             $flash['message'] = [
                 'type' => 'warning',
                 'title' => 'The order is INCOMPLETE',
@@ -62,7 +62,6 @@ class OrderShowAction extends AcuteHemodialysisAction
                 'md' => $order->author_name,
                 'attending' => $order->attending_name,
             ],
-            'form' => $order->form,
             'special_requests' => $this->getSpecialRequest($order->form),
             'predialysis_evaluation' => $this->getPredialysisEvaluation($order->form),
         ];
@@ -71,6 +70,13 @@ class OrderShowAction extends AcuteHemodialysisAction
             if (isset($order->form[$type])) {
                 $content[$type] = $this->getPrescription($order->form[$type]);
             }
+        }
+
+        if (! cache()->pull('no-view-log-uid-'.$user->id)) {
+            $order->actionLogs()->create([
+                'action' => 'view',
+                'actor_id' => $user->id,
+            ]);
         }
 
         return [
@@ -82,6 +88,26 @@ class OrderShowAction extends AcuteHemodialysisAction
                     'cid' => $order->patient->profile['document_id'],
                     'route_lab' => route('resources.api.covid-lab'),
                     'route_vaccine' => route('resources.api.covid-vaccine'),
+                ],
+                'session' => [
+                    'dialysis_at_chronic_unit' => $order->meta['dialysis_at_chronic_unit'] ?? false,
+                    'extra_slot' => $order->meta['extra_slot'] ?? false,
+                    'started_at' => $order->meta['started_at'] ?? null,
+                    'finished_at' => $order->meta['finished_at'] ?? null,
+                    'status' => $order->status,
+                    'hashed_key' => $order->hashed_key,
+                ],
+                'can' => [
+                    'start_session' => $this->dateNoteToday($order) && $order->status === 'submitted' && $user->can('perform_acute_hemodialysis_order'),
+                    'finish_session' => $order->status === 'started' && $user->can('perform_acute_hemodialysis_order'),
+                    'edit_timestamp' => $order->status === 'finished' && $user->can('perform_acute_hemodialysis_order'),
+                    'check_dialysis_at_chronic_unit' => $order->meta['in_unit'] && $user->can('perform_acute_hemodialysis_order'),
+                    'change_session_data' => $user->can('perform_acute_hemodialysis_order'),
+                ],
+                'routes' => [
+                    'start_session' => route('procedures.acute-hemodialysis.orders.start-session', $order->hashed_key),
+                    'update_session' => route('procedures.acute-hemodialysis.orders.update-session', $order->hashed_key),
+                    'finish_session' => route('procedures.acute-hemodialysis.orders.finish-session', $order->hashed_key),
                 ],
             ],
         ];
@@ -260,7 +286,7 @@ class OrderShowAction extends AcuteHemodialysisAction
         if ($form['ultrafiltration_min'] ?? false) {
             $content[] = [
                 'label' => 'uf (ml)',
-                'data' => "{$form['ultrafiltration_min']} - {$form['ultrafiltration_min']}",
+                'data' => "{$form['ultrafiltration_min']} - {$form['ultrafiltration_max']}",
             ];
         }
 

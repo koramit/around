@@ -12,15 +12,10 @@ class OrderUpdateAction extends AcuteHemodialysisAction
 {
     use OrderFormConfigsShareable;
 
-    /**
-     * Should validate by dialysis type.
-     *
-     * @todo  validate form before update
-     */
-    public function __invoke(array $data, string $hashedKey, User $user)
+    public function __invoke(array $data, string $hashedKey, User $user): bool
     {
         if (config('auth.guards.web.provider') === 'avatar') {
-            return []; // call api
+            return true; // call api
         }
 
         $note = AcuteHemodialysisOrderNote::query()->findByUnhashKey($hashedKey)->firstOrFail();

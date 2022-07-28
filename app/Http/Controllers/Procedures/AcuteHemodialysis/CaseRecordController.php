@@ -15,6 +15,7 @@ class CaseRecordController extends Controller
 {
     use AppLayoutSessionFlashable;
 
+    // @TODO policy
     public function index(Request $request)
     {
         $data = (new CaseRecordIndexAction)(filters: $request->all(), user: $request->user());

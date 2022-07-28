@@ -42,6 +42,10 @@ class ScheduleIndexAction extends AcuteHemodialysisAction
         $slots = collect($slots)->transform(function ($date) use ($user) {
             $dateNote = $date->format('Y-m-d');
             $hdUnit = $this->getNotes(dateNote: $dateNote, user: $user);
+            /** Filter Chronic unit cases */
+            $hdChronicUnit = $hdUnit->filter(fn ($order) => $order['dialysis_at_chronic_unit'])->values();
+            $hdUnit = $hdUnit->filter(fn ($order) => ! $order['dialysis_at_chronic_unit'])->values();
+
             /** Filter COVID cases */
             $hdUnitCovid = $hdUnit->filter(fn ($order) => $order['covid_case'])->values();
             $hdUnit = $hdUnit->filter(fn ($order) => ! $order['covid_case'])->values();
@@ -65,7 +69,10 @@ class ScheduleIndexAction extends AcuteHemodialysisAction
             }
 
             return [
-                'hd_unit' => $ordered,
+                'hd_unit' => [
+                    'acute' => $ordered,
+                    'chronic' => $hdChronicUnit,
+                ],
                 'ward' => $ward,
                 'date_note' => $dateNote,
                 'date_label' => $label,

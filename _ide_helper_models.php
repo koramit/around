@@ -77,6 +77,7 @@ namespace App\Models{
  *
  * @property-read string $hashed_key
  * @property-read string $change_request_text
+ * @property-read string $requester_name
  * @property int $id
  * @property string $changeable_type
  * @property int $changeable_id
@@ -329,6 +330,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|ResourceActionLog whereLoggableType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|ResourceActionLog wherePayload($value)
  * @method static \Illuminate\Database\Eloquent\Builder|ResourceActionLog wherePerformedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ResourceActionLog withActorUsername()
  */
 	class ResourceActionLog extends \Eloquent {}
 }

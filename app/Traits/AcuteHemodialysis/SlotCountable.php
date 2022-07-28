@@ -23,7 +23,6 @@ trait SlotCountable
             ->select(['id', 'date_note', 'status', 'meta', 'author_id', 'attending_staff_id', 'case_record_id'])
             ->withAuthorName()
             ->withAttendingName()
-//            ->with(['author:id,profile', 'attendingStaff:id,name,position', 'caseRecord:id,meta'])
             ->with(['caseRecord:id,meta'])
             ->where('date_note', $dateNote)
             ->where('meta->in_unit', $inUnit)
@@ -41,11 +40,14 @@ trait SlotCountable
                     'covid_case' => $note->meta['covid_case'] ?? false,
                     'order_route' => $user->can('edit', $note)
                         ? route('procedures.acute-hemodialysis.orders.edit', $note->hashed_key)
-                        : route('procedures.acute-hemodialysis.orders.show', $note->hashed_key),
+                        : ($user->can('view', $note)
+                            ? route('procedures.acute-hemodialysis.orders.show', $note->hashed_key)
+                            : route('procedures.acute-hemodialysis.last-index-section')),
                 ];
                 if ($inUnit) {
                     $trans['slot_count'] = $this->slotCount($note->meta['dialysis_type']);
                     $trans['available'] = false;
+                    $trans['dialysis_at_chronic_unit'] = $note->meta['dialysis_at_chronic_unit'] ?? false;
                 }
 
                 return $trans;

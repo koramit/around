@@ -8,17 +8,19 @@ use Illuminate\Support\Collection;
 
 class AcuteHemodialysisOrderStatus implements CastsAttributes, NoteStatusCast
 {
-    protected array $statuses = ['', 'draft', 'submitted', 'scheduling', 'canceled', 'performed', 'expired', 'disapproved'];
+    protected array $statuses = ['', 'draft', 'submitted', 'scheduling', 'canceled', 'started', 'finished', 'expired', 'disapproved'];
 
     protected array $activeStatusCodes = [1, 2, 3]; // 'draft', 'submitted', 'scheduling'
 
-    protected array $slotOccupiedStatusCodes = [1, 2, 3, 5]; // 'draft', 'submitted', 'scheduling', 'performed'
+    protected array $slotOccupiedStatusCodes = [1, 2, 3, 5, 6]; // 'draft', 'submitted', 'scheduling', 'started', 'finished
 
-    protected array $editNotAllowStatuses = ['canceled', 'performed', 'expired', 'disapproved'];
+    protected array $editNotAllowStatuses = ['canceled', 'started', 'finished', 'expired', 'disapproved'];
 
-    protected array $updateNotAllowStatuses = ['submitted', 'canceled', 'performed', 'expired', 'disapproved'];
+    protected array $updateNotAllowStatuses = ['submitted', 'canceled', 'started', 'finished', 'expired', 'disapproved'];
 
-    protected array $scheduleNotAllowStatuses = ['scheduling', 'canceled', 'performed', 'expired', 'disapproved'];
+    protected array $scheduleNotAllowStatuses = ['scheduling', 'canceled', 'started', 'finished', 'expired', 'disapproved'];
+
+    protected array $viewNotAllowStatuses = ['canceled', 'expired', 'disapproved'];
 
     public function get($model, $key, $value, $attributes): ?string
     {
@@ -68,5 +70,10 @@ class AcuteHemodialysisOrderStatus implements CastsAttributes, NoteStatusCast
     public function getScheduleNotAllowStatuses(): Collection
     {
         return collect($this->scheduleNotAllowStatuses);
+    }
+
+    public function getViewNotAllowStatuses(): Collection
+    {
+        return collect($this->viewNotAllowStatuses);
     }
 }

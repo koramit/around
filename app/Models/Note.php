@@ -77,13 +77,13 @@ class Note extends Model
     {
         return Attribute::make(
             get: fn () => $this->actionLogs()
-                    ->with('actor:id,name')
+                    ->withActorUsername()
                     ->oldest('performed_at')
                 ->get()
                 ->transform(fn ($log) => [
                     'request_id' => $log->payload['request_id'] ?? null,
                     'action' => $log->action,
-                    'actor' => $log->actor->name,
+                    'actor' => $log->actor_username,
                     'at' => $log->performed_at->format('M j H:i'),
                 ])
         );

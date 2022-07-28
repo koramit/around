@@ -21,6 +21,8 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, FirstNameAware;
 
+    // @TODO implement items_per_page property
+
     /**
      * The attributes that are mass assignable.
      *

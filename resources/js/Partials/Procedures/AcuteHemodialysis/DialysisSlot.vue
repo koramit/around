@@ -17,16 +17,16 @@
                     'flex items-center': !slot.available,
                     'text-primary bg-green-400 p-8': slot.available,
                     'text-complement-darker bg-amber-400': slot.status !== undefined && slot.status === 'scheduling',
-                    'text-primary bg-complement': slot.status !== undefined && slot.status === 'performed',
-                    'text-primary bg-red-400': slot.status !== undefined && slot.status !== 'scheduling' && slot.status !== 'performed',
+                    'text-primary bg-complement': slot.status !== undefined && (slot.status === 'started' || slot.status === 'finished'),
+                    'text-primary bg-red-400': slot.status !== undefined && slot.status !== 'scheduling' && slot.status !== 'started' && slot.status !== 'finished',
                     'border-4 border-white border-dashed': slot.extra_slot
                 }"
-                v-for="(slot, key) in slots"
+                v-for="(slot, key) in slots.acute"
                 :key="key"
             >
                 <template v-if="!slot.available">
                     <div class="w-1/3">
-                        <Link :href="slot.order_route">
+                        <InertiaLink :href="slot.order_route">
                             <span
                                 class="p-1 md:p-2 rounded-full text-xs font-semibold underline"
                                 :class="{
@@ -34,10 +34,10 @@
                                     'bg-indigo-400 text-white': slot.status === 'submitted'
                                 }"
                             >{{ slot.type }}</span>
-                        </Link>
+                        </InertiaLink>
                     </div>
                     <div class="w-2/3 mt-1 md:mt-0">
-                        <Link
+                        <InertiaLink
                             class="font-semibold text-xs flex items-center"
                             :href="slot.case_record_route"
                         >
@@ -45,7 +45,7 @@
                                 class="h-3 w-3 mr-1 text-white"
                             />
                             <span class="block py-1 italic truncate underline">{{ slot.patient_name }}</span>
-                        </Link>
+                        </InertiaLink>
                         <p class="font-semibold text-xs flex items-center">
                             <IconUserMd
                                 class="h-3 w-3 mr-1 text-white"
@@ -62,14 +62,22 @@
                 </template>
             </div>
         </TransitionGroup>
+        <div v-if="slots.chronic.length">
+            <label class="form-label my-2 md:my-4">Dialysis at Chronic unit</label>
+            <WardSlot
+                :slots="slots.chronic.map(s => ({...s}))"
+            />
+        </div>
     </div>
 </template>
 
 <script setup>
 import IconPatient from '../../../Components/Helpers/Icons/IconPatient.vue';
 import IconUserMd from '../../../Components/Helpers/Icons/IconUserMd.vue';
-import { Link } from '@inertiajs/inertia-vue3';
+import { InertiaLink } from '@inertiajs/inertia-vue3';
+import WardSlot from './WardSlot.vue';
+
 defineProps({
-    slots: { type: Array, required: true }
+    slots: { type: Object, required: true }
 });
 </script>

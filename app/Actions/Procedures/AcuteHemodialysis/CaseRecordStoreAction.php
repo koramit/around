@@ -62,9 +62,6 @@ class CaseRecordStoreAction extends AcuteHemodialysisAction
         'cause_of_dead' => null,
     ];
 
-    /**
-     * @todo authorize
-     */
     public function __invoke(array $data, User $user): CaseRecord
     {
         if (config('auth.guards.web.provider') === 'avatar') {
@@ -76,6 +73,8 @@ class CaseRecordStoreAction extends AcuteHemodialysisAction
             'an' => ['digits:8', new AnExists],
         ])->validate();
 
+        // @TODO check duplicate CRF by HN
+        // @TODO check first admit ward
         $caseRecord = new CaseRecord();
         $patient = Patient::query()->findByHashedKey($validated['hn'])->first();
         $caseRecord->patient_id = $patient->id;
