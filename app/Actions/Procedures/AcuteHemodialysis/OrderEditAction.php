@@ -6,11 +6,12 @@ use App\Models\Notes\AcuteHemodialysisOrderNote;
 use App\Models\Resources\Ward;
 use App\Models\User;
 use App\Traits\AcuteHemodialysis\OrderFormConfigsShareable;
+use App\Traits\Subscribable;
 use Hashids\Hashids;
 
 class OrderEditAction extends AcuteHemodialysisAction
 {
-    use OrderFormConfigsShareable;
+    use OrderFormConfigsShareable, Subscribable;
 
     public function __invoke(string $hashedKey, User $user): array
     {
@@ -36,12 +37,14 @@ class OrderEditAction extends AcuteHemodialysisAction
                 ['icon' => 'slack-hash', 'label' => 'Prescription', 'type' => '#', 'route' => '#prescription', 'can' => true],
                 ['icon' => 'slack-hash', 'label' => 'Predialysis', 'type' => '#', 'route' => '#predialysis-evaluation', 'can' => true],
                 ['icon' => 'slack-hash', 'label' => 'Monitoring', 'type' => '#', 'route' => '#monitoring', 'can' => true],
+                ['icon' => 'slack-hash', 'label' => 'Discussion', 'type' => '#', 'route' => '#discussion', 'can' => true],
                 ['icon' => 'patient', 'label' => 'Patients', 'route' => route('patients'), 'can' => true],
                 ['icon' => 'clinic', 'label' => 'Clinics', 'route' => route('clinics'), 'can' => true],
                 ['icon' => 'procedure', 'label' => 'Procedures', 'route' => route('procedures.index'), 'can' => true],
             ],
             'action-menu' => [
                 ['icon' => 'paper-plain', 'action' => 'submit', 'label' => 'Submit', 'can' => $user->can('submit', $note)],
+                $this->getSubscriptionActionMenu($note, $user),
             ],
             'breadcrumbs' => $this->getBreadcrumbs([
                 ['label' => 'Case Record', 'route' => route('procedures.acute-hemodialysis.edit', app(Hashids::class)->encode($note->case_record_id))],
@@ -78,6 +81,14 @@ class OrderEditAction extends AcuteHemodialysisAction
                 'date_note' => $note->date_note->format('Y-m-d'),
                 'swap_code' => $note->meta['swap_code'],
                 'can' => $can,
+                'comment' => [
+                    'commentable_type' => $note::class,
+                    'commentable_id' => $note->hashed_key,
+                    'routes' => [
+                        'store' => route('comments.store'),
+                        'index' => route('comments.index'),
+                    ],
+                ],
             ],
         ];
     }

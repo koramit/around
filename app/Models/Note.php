@@ -72,6 +72,11 @@ class Note extends Model
         return $this->morphMany(ResourceActionLog::class, 'loggable');
     }
 
+    public function comments(): MorphMany
+    {
+        return $this->morphMany(Comment::class, 'commentable');
+    }
+
     /** @alias $log_list */
     protected function logList(): Attribute
     {

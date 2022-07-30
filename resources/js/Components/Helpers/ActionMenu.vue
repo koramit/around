@@ -10,7 +10,7 @@
             <button
                 v-if="action.action !== undefined"
                 class="flex items-center group py-2 text-primary"
-                @click="$emit('action-clicked', action.action)"
+                @click="$emit(action.type ?? 'action-clicked', action.action)"
             >
                 <IconVector
                     :name="action.icon"
@@ -46,7 +46,7 @@
 <script setup>
 import { InertiaLink } from '@inertiajs/inertia-vue3';
 import IconVector from './IconVector.vue';
-defineEmits(['action-clicked', 'link-clicked']);
+defineEmits(['action-clicked', 'link-clicked', 'subscribe-clicked', 'home-clicked', 'bookmark-clicked']);
 defineProps({
     zenMode: { type: Boolean }
 });

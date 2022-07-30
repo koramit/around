@@ -123,7 +123,11 @@
             <SpinnerButton
                 class="mt-2 md:mt-4 btn btn-complement w-full"
                 :spin="form.processing"
-                @click="form.patch(configs.routes.update_session, {preserveScroll: false, preserveState: true, onFinish: () => {form.processing = false;}})"
+                @click="form.patch(configs.routes.update_session, {
+                    preserveScroll: false,
+                    preserveState: true,
+                    onFinish: () => {form.processing = false;}
+                })"
                 v-if="configs.can.change_session_data"
             >
                 UPDATE
@@ -138,7 +142,7 @@
                 v-if="configs.can.start_session"
                 @click="$inertia.post(configs.routes.start_session, {}, {
                     preserveScroll: true,
-                    preserveState: false,
+                    preserveState: true,
                     onProgress: () => {form.processing = true;},
                     onFinish: () => {form.processing = false;}
                 })"
@@ -151,7 +155,7 @@
                 v-else-if="configs.can.finish_session"
                 @click="$inertia.post(configs.routes.finish_session, {_method: 'delete'}, {
                     preserveScroll: true,
-                    preserveState: false,
+                    preserveState: true,
                     onProgress: () => {form.processing = true;},
                     onFinish: () => {form.processing = false;}
                 })"
@@ -161,6 +165,17 @@
             </SpinnerButton>
         </div>
     </div>
+    <!--discussion-->
+    <h2
+        class="mt-6 md:mt-12 xl:mt-24 form-label italic text-xl text-complement scroll-mt-16 md:scroll-mt-8"
+        id="discussion"
+    >
+        discussion
+    </h2>
+    <hr class="my-4 border-b border-accent">
+    <CommentSection
+        :configs="configs.comment"
+    />
 </template>
 
 <script setup>
@@ -171,6 +186,7 @@ import SpinnerButton from '../../../Components/Controls/SpinnerButton.vue';
 import FormCheckbox from '../../../Components/Controls/FormCheckbox.vue';
 import FormDatetime from '../../../Components/Controls/FormDatetime.vue';
 import {useForm} from '@inertiajs/inertia-vue3';
+import CommentSection from '../../../Components/Forms/CommentSection.vue';
 
 const props = defineProps({
     configs: {type: Object, required: true},

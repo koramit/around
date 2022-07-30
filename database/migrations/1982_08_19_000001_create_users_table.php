@@ -43,16 +43,16 @@ return new class extends Migration
         });
 
         Schema::create('ability_role', function (Blueprint $table) {
-            $table->primary(['role_id', 'ability_id']);
-            $table->unsignedSmallInteger('role_id')->constrained('roles')->onDelete('cascade');
-            $table->unsignedSmallInteger('ability_id')->constrained('abilities')->onDelete('cascade');
+            $table->primary(['ability_id', 'role_id']);
+            $table->unsignedSmallInteger('ability_id');
+            $table->unsignedSmallInteger('role_id');
             $table->timestamps();
         });
 
         Schema::create('role_user', function (Blueprint $table) {
             $table->primary(['user_id', 'role_id']);
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->unsignedSmallInteger('role_id')->constrained('roles')->onDelete('cascade');
+            $table->unsignedInteger('user_id');
+            $table->unsignedSmallInteger('role_id');
             $table->timestamps();
         });
     }

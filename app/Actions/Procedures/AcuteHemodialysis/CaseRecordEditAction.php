@@ -8,10 +8,11 @@ use App\Models\Registries\AcuteHemodialysisCaseRecord as CaseRecord;
 use App\Models\Resources\Ward;
 use App\Models\User;
 use App\Traits\AcuteHemodialysis\OrderShareValidatable;
+use App\Traits\Subscribable;
 
 class CaseRecordEditAction extends AcuteHemodialysisAction
 {
-    use OrderShareValidatable;
+    use OrderShareValidatable, Subscribable;
 
     protected array $FORM_CONFIGS = [
         'renal_diagnosis' => ['AKI', 'AKI on top CKD', 'ESRD', 'Post KT'],
@@ -129,6 +130,14 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
                 'route_lab' => fn () => route('resources.api.covid-lab'),
                 'route_vaccine' => fn () => route('resources.api.covid-vaccine'),
             ],
+            'comment' => [
+                'commentable_type' => $caseRecord::class,
+                'commentable_id' => $caseRecord->hashed_key,
+                'routes' => [
+                    'store' => route('comments.store'),
+                    'index' => route('comments.index'),
+                ],
+            ],
         ];
 
         $flash = [
@@ -137,7 +146,7 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
             'main-menu-links' => [
                 ['icon' => 'slack-hash', 'label' => 'Case Record', 'type' => '#', 'route' => '#case-record', 'can' => true],
                 ['icon' => 'slack-hash', 'label' => 'Orders', 'type' => '#', 'route' => '#orders', 'can' => true],
-                //                ['icon' => 'slack-hash', 'label' => 'Reservation', 'type' => '#', 'route' => '#reservation', 'can' => true],
+                ['icon' => 'slack-hash', 'label' => 'Discussion', 'type' => '#', 'route' => '#discussion', 'can' => true],
                 ['icon' => 'patient', 'label' => 'Patients', 'route' => route('patients'), 'can' => true],
                 ['icon' => 'clinic', 'label' => 'Clinics', 'route' => route('clinics'), 'can' => true],
                 ['icon' => 'procedure', 'label' => 'Procedures', 'route' => route('procedures.index'), 'can' => true],
@@ -149,6 +158,7 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
                     'route' => route('procedures.acute-hemodialysis.orders.create-shortcut', $caseRecord->hashed_key),
                     'can' => $configs['dialysis_reservable'] && $user->can('create_acute_hemodialysis_order'),
                 ],
+                $this->getSubscriptionActionMenu($caseRecord, $user),
             ],
             'breadcrumbs' => $this->BREADCRUMBS,
         ];

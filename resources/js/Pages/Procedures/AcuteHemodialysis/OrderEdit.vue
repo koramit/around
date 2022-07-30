@@ -350,6 +350,18 @@
     >
         SUBMIT
     </SpinnerButton>
+
+    <!--discussion-->
+    <h2
+        class="mt-6 md:mt-12 xl:mt-24 form-label italic text-xl text-complement scroll-mt-16 md:scroll-mt-8"
+        id="discussion"
+    >
+        discussion
+    </h2>
+    <hr class="my-4 border-b border-accent">
+    <CommentSection
+        :configs="configs.comment"
+    />
 </template>
 
 <script setup>
@@ -365,6 +377,7 @@ import AlertMessage from '../../../Components/Helpers/AlertMessage.vue';
 import FormDatetime from '../../../Components/Controls/FormDatetime.vue';
 import CopyToClipboardButton from '../../../Components/Controls/CopyToClipboardButton.vue';
 import IconRotate from '../../../Components/Helpers/Icons/IconRotate.vue';
+import CommentSection from '../../../Components/Forms/CommentSection.vue';
 const HDForm = defineAsyncComponent(() => import('../../../Partials/Procedures/AcuteHemodialysis/HDForm.vue'));
 const HFForm = defineAsyncComponent(() => import('../../../Partials/Procedures/AcuteHemodialysis/HFForm.vue'));
 const SLEDDForm = defineAsyncComponent(() => import('../../../Partials/Procedures/AcuteHemodialysis/SLEDDForm.vue'));

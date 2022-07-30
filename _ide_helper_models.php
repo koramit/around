@@ -51,6 +51,8 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ResourceActionLog[] $actionLogs
  * @property-read int|null $action_logs_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Comment[] $comments
+ * @property-read int|null $comments_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Note[] $notes
  * @property-read int|null $notes_count
  * @property-read \App\Models\Resources\Patient $patient
@@ -69,6 +71,39 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|CaseRecord whereUpdatedAt($value)
  */
 	class CaseRecord extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\Comment
+ *
+ * @property int $id
+ * @property string $commentable_type
+ * @property int $commentable_id
+ * @property string $body
+ * @property int $commentator_id
+ * @property int|null $parent_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $commentable
+ * @property-read \App\Models\User|null $commentator
+ * @property-read \Illuminate\Database\Eloquent\Collection|Comment[] $replies
+ * @property-read int|null $replies_count
+ * @method static \Illuminate\Database\Eloquent\Builder|Comment newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Comment newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Comment query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Comment whereBody($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Comment whereCommentableId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Comment whereCommentableType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Comment whereCommentatorId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Comment whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Comment whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Comment whereParentId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Comment whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Comment withCommentatorName()
+ * @method static \Illuminate\Database\Eloquent\Builder|Comment withCommentatorUsername()
+ */
+	class Comment extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -188,6 +223,8 @@ namespace App\Models{
  * @property-read \App\Models\CaseRecord $caseRecord
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\DocumentChangeRequest[] $changeRequests
  * @property-read int|null $change_requests_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Comment[] $comments
+ * @property-read int|null $comments_count
  * @property-read \App\Models\Resources\Patient|null $patient
  * @method static \Illuminate\Database\Eloquent\Builder|Note findByUnhashKey(string $hashed)
  * @method static \Illuminate\Database\Eloquent\Builder|Note newModelQuery()
@@ -241,6 +278,8 @@ namespace App\Models\Notes{
  * @property-read \App\Models\CaseRecord $caseRecord
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\DocumentChangeRequests\AcuteHemodialysisSlotRequest[] $changeRequests
  * @property-read int|null $change_requests_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Comment[] $comments
+ * @property-read int|null $comments_count
  * @property-read \App\Models\Resources\Patient|null $patient
  * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisOrderNote activeStatuses()
  * @method static \Illuminate\Database\Eloquent\Builder|Note findByUnhashKey(string $hashed)
@@ -285,6 +324,8 @@ namespace App\Models\Registries{
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ResourceActionLog[] $actionLogs
  * @property-read int|null $action_logs_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Comment[] $comments
+ * @property-read int|null $comments_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Note[] $notes
  * @property-read int|null $notes_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Notes\AcuteHemodialysisOrderNote[] $orders
@@ -560,6 +601,32 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * App\Models\Subscription
+ *
+ * @property-read string $hashed_key
+ * @property int $id
+ * @property string $subscribable_type
+ * @property int $subscribable_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $subscribable
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\User[] $subscribers
+ * @property-read int|null $subscribers_count
+ * @method static \Illuminate\Database\Eloquent\Builder|Subscription findByUnhashKey(string $hashed)
+ * @method static \Illuminate\Database\Eloquent\Builder|Subscription newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Subscription newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Subscription query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Subscription whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Subscription whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Subscription whereSubscribableId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Subscription whereSubscribableType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Subscription whereUpdatedAt($value)
+ */
+	class Subscription extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * App\Modes\User
  *
  * @property-read string $first_name
@@ -579,6 +646,8 @@ namespace App\Models{
  * @property-read int|null $notifications_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Role[] $roles
  * @property-read int|null $roles_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Subscription[] $subscriptions
+ * @property-read int|null $subscriptions_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\Laravel\Sanctum\PersonalAccessToken[] $tokens
  * @property-read int|null $tokens_count
  * @method static \Database\Factories\UserFactory factory(...$parameters)

@@ -43,6 +43,7 @@ Route::middleware(['auth', 'can:get_shared_api_resources'])
     });
 
 // uploads
+/* @TODO ability to upload */
 Route::post('uploads', [UploadController::class, 'store'])
      ->middleware(['auth', 'can:upload_files'])
      ->name('uploads.store');
@@ -51,6 +52,7 @@ Route::get('uploads/{path}/{filename}', [UploadController::class, 'show'])
      ->name('uploads.show');
 
 // feedback
+/* @TODO ability to feedback */
 Route::get('feedback', [FeedbackController::class, 'index'])
      ->middleware(['auth'])
      ->name('feedback');
@@ -63,4 +65,23 @@ Route::middleware(['auth'])
     ->name('procedures.')
     ->group(function () {
         require __DIR__.'/procedures.php';
+    });
+
+/* @TODO ability to comments */
+Route::middleware(['auth'])
+    ->prefix('comments')
+    ->name('comments.')
+    ->group(function () {
+        Route::post('/fetch', [\App\Http\Controllers\CommentController::class, 'index'])
+            ->name('index');
+        Route::post('', [\App\Http\Controllers\CommentController::class, 'store'])
+            ->name('store');
+    });
+
+Route::middleware(['auth'])
+    ->prefix('subscriptions')
+    ->name('subscriptions.')
+    ->group(function () {
+        Route::post('', [\App\Http\Controllers\SubscriptionController::class, 'store'])
+            ->name('store');
     });

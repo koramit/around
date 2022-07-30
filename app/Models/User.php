@@ -59,6 +59,11 @@ class User extends Authenticatable
         return $this->belongsToMany(Role::class)->withTimestamps();
     }
 
+    public function subscriptions(): BelongsToMany
+    {
+        return $this->belongsToMany(Subscription::class, 'subscription_user', 'subscriber_id', 'subscription_id');
+    }
+
     protected function avatarToken(): Attribute
     {
         return Attribute::make(

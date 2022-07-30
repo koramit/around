@@ -46,6 +46,11 @@ class CaseRecord extends Model
         return $this->morphMany(ResourceActionLog::class, 'loggable');
     }
 
+    public function comments(): MorphMany
+    {
+        return $this->morphMany(Comment::class, 'commentable');
+    }
+
     protected function status(): Attribute
     {
         return Attribute::make(

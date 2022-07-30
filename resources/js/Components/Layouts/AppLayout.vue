@@ -136,6 +136,7 @@
                     <ActionMenu
                         @action-clicked="actionClicked"
                         @link-clicked="mobileMenuVisible = false"
+                        @subscribe-clicked="subscribeClicked"
                     />
                 </div>
             </div>
@@ -154,6 +155,7 @@
                 <ActionMenu
                     :zen-mode="zenMode"
                     @action-clicked="actionClicked"
+                    @subscribe-clicked="subscribeClicked"
                 />
             </aside>
             <!-- this is main page -->
@@ -292,6 +294,20 @@ const actionClicked = (action) => {
             usePage().props.value.event.fire = + new Date();
         }, 300); // equal to animate duration
     });
+};
+
+const subscribeClicked = (resource) => {
+    if (mobileMenuVisible.value) {
+        mobileMenuVisible.value = false;
+    }
+    window.axios
+        .post(resource.route, resource)
+        .then(res => {
+            let index = usePage().props.value.flash.actionMenu.findIndex(action => action.type === 'subscribe-clicked');
+            usePage().props.value.flash.actionMenu[index].label = res.data.label;
+            usePage().props.value.flash.actionMenu[index].icon = res.data.icon;
+            usePage().props.value.flash.actionMenu[index].action.subscribed = !usePage().props.value.flash.actionMenu[index].action.subscribed;
+        });
 };
 
 let fontScaleIndex = 3;

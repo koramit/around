@@ -447,6 +447,17 @@
         type="warning"
         message="One active order at a time"
     />-->
+    <!--discussion-->
+    <h2
+        class="mt-6 md:mt-12 xl:mt-24 form-label italic text-xl text-complement scroll-mt-16 md:scroll-mt-8"
+        id="discussion"
+    >
+        discussion
+    </h2>
+    <hr class="my-4 border-b border-accent">
+    <CommentSection
+        :configs="configs.comment"
+    />
 
     <FormSelectOther
         :placeholder="selectOther.placeholder"
@@ -473,6 +484,7 @@ import OrderIndex from '../../../Partials/Procedures/AcuteHemodialysis/OrderInde
 import {useInPageLinkHelpers} from '../../../functions/useInPageLinkHelpers';
 import CovidInfo from '../../../Components/Helpers/CovidInfo.vue';
 import FallbackSpinner from '../../../Components/Helpers/FallbackSpinner.vue';
+import CommentSection from '../../../Components/Forms/CommentSection.vue';
 
 const DialysisSlot = defineAsyncComponent(() => import('../../../Partials/Procedures/AcuteHemodialysis/DialysisSlot.vue'));
 const WardSlot = defineAsyncComponent(() => import('../../../Partials/Procedures/AcuteHemodialysis/WardSlot.vue'));

@@ -2,15 +2,20 @@
 
 namespace App\Actions\Procedures\AcuteHemodialysis;
 
+use App\Managers\Resources\AdmissionManager;
 use App\Models\Notes\AcuteHemodialysisOrderNote;
 use App\Models\User;
+use App\Traits\Subscribable;
 use ArrayObject;
 use Hashids\Hashids;
 
 class OrderShowAction extends AcuteHemodialysisAction
 {
+    use Subscribable;
+
     public function __invoke(string $hashedKey, User $user): array
     {
+        /* @TODO check if AN is null then try to get active one or แพทย์เวร */
         if (config('auth.guards.web.provider') === 'avatar') {
             return []; // call api
         }
@@ -33,12 +38,13 @@ class OrderShowAction extends AcuteHemodialysisAction
                 ['icon' => 'slack-hash', 'label' => 'Special requests', 'type' => '#', 'route' => '#special-requests', 'can' => true],
                 ['icon' => 'slack-hash', 'label' => 'Predialysis', 'type' => '#', 'route' => '#predialysis-evaluation', 'can' => true],
                 ['icon' => 'slack-hash', 'label' => 'Prescription', 'type' => '#', 'route' => '#prescription', 'can' => true],
+                ['icon' => 'slack-hash', 'label' => 'Discussion', 'type' => '#', 'route' => '#discussion', 'can' => true],
                 ['icon' => 'patient', 'label' => 'Patients', 'route' => route('patients'), 'can' => true],
                 ['icon' => 'clinic', 'label' => 'Clinics', 'route' => route('clinics'), 'can' => true],
                 ['icon' => 'procedure', 'label' => 'Procedures', 'route' => route('procedures.index'), 'can' => true],
             ],
             'action-menu' => [
-                //                ['icon' => 'paper-plain', 'action' => 'submit', 'label' => 'Submit'],
+                $this->getSubscriptionActionMenu($order, $user),
             ],
             'breadcrumbs' => $this->getBreadcrumbs([
                 ['label' => 'Case Record', 'route' => route('procedures.acute-hemodialysis.edit', app(Hashids::class)->encode($order->case_record_id))],
@@ -57,6 +63,7 @@ class OrderShowAction extends AcuteHemodialysisAction
             'reservation' => [
                 'hn' => $order->meta['hn'],
                 'an' => $order->meta['an'] ?? 'No active AN',
+                'patient location' => $this->getPatientLocation($order->meta['an'] ?? null),
                 'dialysis at' => $order->place_name,
                 'dialysis type' => $order->meta['dialysis_type'],
                 'md' => $order->author_name,
@@ -108,6 +115,15 @@ class OrderShowAction extends AcuteHemodialysisAction
                     'start_session' => route('procedures.acute-hemodialysis.orders.start-session', $order->hashed_key),
                     'update_session' => route('procedures.acute-hemodialysis.orders.update-session', $order->hashed_key),
                     'finish_session' => route('procedures.acute-hemodialysis.orders.finish-session', $order->hashed_key),
+                    'comments_store' => route('comments.store'),
+                ],
+                'comment' => [
+                    'commentable_type' => $order::class,
+                    'commentable_id' => $order->hashed_key,
+                    'routes' => [
+                        'store' => route('comments.store'),
+                        'index' => route('comments.index'),
+                    ],
                 ],
             ],
         ];
@@ -386,5 +402,21 @@ class OrderShowAction extends AcuteHemodialysisAction
         } else {
             return $form['anticoagulant'];
         }
+    }
+
+    protected function getPatientLocation(mixed $an): string
+    {
+        if (! $an) {
+            return 'ER ?';
+        }
+
+        return cache()->remember('current-admit-location-'.$an, now()->addHour(), function () use ($an) {
+            $admission = (new AdmissionManager)->manage($an);
+            if (! $admission['found']) {
+                return 'ER ?';
+            }
+
+            return $admission['admission']->place->name;
+        });
     }
 }
