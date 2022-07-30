@@ -627,10 +627,19 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * App\Models\SupportTicket
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder|SupportTicket newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|SupportTicket newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|SupportTicket query()
+ */
+	class SupportTicket extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * App\Modes\User
  *
- * @property-read string $first_name
- * @property-read string $home_page
  * @property int $id
  * @property string $name
  * @property string $login

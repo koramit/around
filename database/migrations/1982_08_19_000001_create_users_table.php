@@ -6,18 +6,13 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
+    public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name')->unique();
             $table->string('login')->unique();
-            $table->string('full_name')->unique();
+            $table->string('full_name')->unique()->collation(config('database.th_collation'));
             $table->string('password');
             $table->jsonb('profile');
             $table->unsignedSmallInteger('division_id')->default(1);
@@ -57,13 +52,7 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
+    public function down(): void
     {
-        // Schema::dropIfExists('users');
     }
 };

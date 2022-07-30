@@ -16,7 +16,7 @@ class SlotRequestController extends Controller
 
     public function index(Request $request)
     {
-        $data = (new SlotRequestIndexAction)(user: $request->user());
+        $data = (new SlotRequestIndexAction)(user: $request->user(), routeName: $request->route()->getName());
 
         // if request want json return $data
 

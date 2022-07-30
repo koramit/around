@@ -3,12 +3,16 @@
 namespace App\Http\Controllers\Procedures;
 
 use App\Http\Controllers\Controller;
+use App\Traits\HomePageSelectable;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 
 class ProcedureController extends Controller
 {
-    public function __invoke()
+    use HomePageSelectable;
+
+    public function __invoke(Request $request)
     {
         Session::flash('page-title', 'Procedures');
         Session::flash('main-menu-links', [
@@ -17,6 +21,9 @@ class ProcedureController extends Controller
             ['icon' => 'procedure', 'label' => 'Procedures', 'route' => route('procedures.index'), 'can' => true],
             ['icon' => 'comment-alt', 'label' => 'Feedback', 'route' => route('feedback'), 'can' => true],
             // ['icon' => 'graduation-cap', 'label' => 'Kidney club', 'route' => route('kidney-club'), 'can' => true],
+        ]);
+        Session::flash('action-menu', [
+            $this->getSetHomePageActionMenu($request->route()->getname(), $request->user()),
         ]);
 
         // check if there is one then redirect

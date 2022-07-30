@@ -14,7 +14,7 @@ class ScheduleController extends Controller
 
     public function __invoke(Request $request)
     {
-        $data = (new ScheduleIndexAction)(data: $request->all(), user: $request->user());
+        $data = (new ScheduleIndexAction)(data: $request->all(), user: $request->user(), routeName: $request->route()->getName());
 
         // if request want json return $data
 

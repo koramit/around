@@ -6,16 +6,13 @@ use App\Models\DocumentChangeRequests\AcuteHemodialysisSlotRequest;
 use App\Models\Notes\AcuteHemodialysisOrderNote;
 use App\Models\User;
 use App\Traits\AcuteHemodialysis\OrderShareValidatable;
+use App\Traits\HomePageSelectable;
 
 class SlotRequestIndexAction extends AcuteHemodialysisAction
 {
-    use OrderShareValidatable;
+    use OrderShareValidatable, HomePageSelectable;
 
-    /**
-     * @param  User  $user
-     * @return array
-     */
-    public function __invoke(User $user): array
+    public function __invoke(User $user, string $routeName): array
     {
 //        $slot = (new ScheduleIndexAction)(dateNote: null, user: $user)['slot'];
         $requests = AcuteHemodialysisSlotRequest::query()
@@ -78,7 +75,9 @@ class SlotRequestIndexAction extends AcuteHemodialysisAction
                 'page-title' => 'Acute Hemodialysis - Slot Request',
                 'main-menu-links' => $this->MENU,
                 'navs' => $this->NAVS,
-                'action-menu' => [],
+                'action-menu' => [
+                    $this->getSetHomePageActionMenu($routeName, $user),
+                ],
             ],
             'endpoints' => [
                 'resources_api_wards' => route('resources.api.wards'),

@@ -12,48 +12,24 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
 /**
- * App\Modes\User
- *
- * @property-read string $first_name
- * @property-read string $home_page
+ * @property int $items_per_page
+ * @property string $home_page
  */
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, FirstNameAware;
 
-    // @TODO implement items_per_page property
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $guarded = [];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
     protected $casts = [
         'profile' => AsArrayObject::class,
     ];
 
-    /**
-     * A user may be assigned many roles.
-     *
-     * @return BelongsToMany
-     */
     public function roles(): BelongsToMany
     {
         return $this->belongsToMany(Role::class)->withTimestamps();
@@ -64,6 +40,7 @@ class User extends Authenticatable
         return $this->belongsToMany(Subscription::class, 'subscription_user', 'subscriber_id', 'subscription_id');
     }
 
+    /** @alias string $avatar_token*/
     protected function avatarToken(): Attribute
     {
         return Attribute::make(
@@ -75,10 +52,21 @@ class User extends Authenticatable
         );
     }
 
+    /** @alias string $home_page*/
     protected function homePage(): Attribute
     {
         return Attribute::make(
             get: fn () => $this->profile['home_page'] ?? 'home',
+            set: fn ($value) => $this->update(['profile->home_page' => $value])
+        );
+    }
+
+    /** @alias string $items_per_page*/
+    protected function itemsPerPage(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->profile['items_per_page'] ?? 15,
+            set: fn ($value) => $this->update(['profile->items_per_page' => $value])
         );
     }
 
@@ -96,6 +84,7 @@ class User extends Authenticatable
         );
     }
 
+    /** @alias string $role_names*/
     protected function roleNames(): Attribute
     {
         return Attribute::make(
@@ -107,11 +96,6 @@ class User extends Authenticatable
         );
     }
 
-    /**
-     * Assign a new role to the user.
-     *
-     * @param  mixed  $role
-     */
     public function assignRole(mixed $role): void
     {
         if (is_string($role)) {

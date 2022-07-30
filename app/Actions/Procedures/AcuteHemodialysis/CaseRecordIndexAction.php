@@ -5,13 +5,16 @@ namespace App\Actions\Procedures\AcuteHemodialysis;
 use App\Models\Notes\AcuteHemodialysisOrderNote;
 use App\Models\Registries\AcuteHemodialysisCaseRecord as CaseRecord;
 use App\Models\User;
+use App\Traits\HomePageSelectable;
 
 class CaseRecordIndexAction extends AcuteHemodialysisAction
 {
+    use HomePageSelectable;
+
     /**
      * @todo Optimize search on meta
      */
-    public function __invoke(array $filters, User $user): array
+    public function __invoke(array $filters, User $user, string $routeName = 'home'): array
     {
         if (config('auth.guards.web.provider' === 'avatar')) {
             return []; // call api + query params
@@ -55,7 +58,9 @@ class CaseRecordIndexAction extends AcuteHemodialysisAction
             'page-title' => 'Acute Hemodialysis - Cases',
             'main-menu-links' => $this->MENU,
             'navs' => $this->NAVS,
-            'action-menu' => [],
+            'action-menu' => [
+                $this->getSetHomePageActionMenu($routeName, $user),
+            ],
         ];
 
         return [

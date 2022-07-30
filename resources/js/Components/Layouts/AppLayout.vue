@@ -86,7 +86,15 @@
                         <div class="mt-2 py-0 overflow-hidden shadow-xl bg-complement text-white cursor-pointer rounded text-sm">
                             <InertiaLink
                                 class="block w-full text-left px-6 py-2 hover:bg-complement-darker hover:text-primary transition-colors duration-200 ease-out"
+                                :href="$page.props.routeHome"
+                                v-if="!isUrl($page.props.routeHome)"
+                            >
+                                {{ __('My Desk') }}
+                            </InertiaLink>
+                            <InertiaLink
+                                class="block w-full text-left px-6 py-2 hover:bg-complement-darker hover:text-primary transition-colors duration-200 ease-out"
                                 :href="$page.props.routePreferences"
+                                v-if="!isUrl($page.props.routePreferences)"
                             >
                                 {{ __('Preferences') }}
                             </InertiaLink>
@@ -117,7 +125,15 @@
                         <span class="inline-block py-1 text-white">{{ $page.props.user.name }}</span>
                         <InertiaLink
                             class="block py-1"
+                            :href="$page.props.routeHome"
+                            v-if="!isUrl($page.props.routeHome)"
+                        >
+                            {{ __('My Desk') }}
+                        </InertiaLink>
+                        <InertiaLink
+                            class="block py-1"
                             :href="$page.props.routePreferences"
+                            v-if="!isUrl($page.props.routePreferences)"
                         >
                             {{ __('Preferences') }}
                         </InertiaLink>
@@ -137,6 +153,7 @@
                         @action-clicked="actionClicked"
                         @link-clicked="mobileMenuVisible = false"
                         @subscribe-clicked="subscribeClicked"
+                        @set-home-page-clicked="setHomePageClicked"
                     />
                 </div>
             </div>
@@ -156,6 +173,7 @@
                     :zen-mode="zenMode"
                     @action-clicked="actionClicked"
                     @subscribe-clicked="subscribeClicked"
+                    @set-home-page-clicked="setHomePageClicked"
                 />
             </aside>
             <!-- this is main page -->
@@ -297,9 +315,6 @@ const actionClicked = (action) => {
 };
 
 const subscribeClicked = (resource) => {
-    if (mobileMenuVisible.value) {
-        mobileMenuVisible.value = false;
-    }
     window.axios
         .post(resource.route, resource)
         .then(res => {
@@ -307,6 +322,15 @@ const subscribeClicked = (resource) => {
             usePage().props.value.flash.actionMenu[index].label = res.data.label;
             usePage().props.value.flash.actionMenu[index].icon = res.data.icon;
             usePage().props.value.flash.actionMenu[index].action.subscribed = !usePage().props.value.flash.actionMenu[index].action.subscribed;
+        });
+};
+
+const setHomePageClicked = (resource) => {
+    window.axios
+        .patch(resource.route, {home_page: resource.name})
+        .then(() => {
+            let index = usePage().props.value.flash.actionMenu.findIndex(action => action.type === 'set-home-page-clicked');
+            usePage().props.value.flash.actionMenu[index].label = 'Already set as Home page';
         });
 };
 

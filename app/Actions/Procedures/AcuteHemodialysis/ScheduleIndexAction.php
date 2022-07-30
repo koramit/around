@@ -6,13 +6,14 @@ use App\Models\Registries\AcuteHemodialysisCaseRecord;
 use App\Models\User;
 use App\Traits\AcuteHemodialysis\OrderShareValidatable;
 use App\Traits\AcuteHemodialysis\SlotCountable;
+use App\Traits\HomePageSelectable;
 use Illuminate\Support\Facades\Validator;
 
 class ScheduleIndexAction extends AcuteHemodialysisAction
 {
-    use SlotCountable, OrderShareValidatable;
+    use SlotCountable, OrderShareValidatable, HomePageSelectable;
 
-    public function __invoke(array $data, User $user): array
+    public function __invoke(array $data, User $user, string $routeName): array
     {
         if (config('auth.guards.web.provider') === 'avatar') {
             return []; // call api + query params
@@ -99,7 +100,9 @@ class ScheduleIndexAction extends AcuteHemodialysisAction
                 'page-title' => 'Acute Hemodialysis - Schedule',
                 'main-menu-links' => $this->MENU,
                 'navs' => $this->NAVS,
-                'action-menu' => [],
+                'action-menu' => [
+                    $this->getSetHomePageActionMenu($routeName, $user),
+                ],
             ],
             'slots' => $slots,
             'query' => $validated,

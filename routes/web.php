@@ -24,6 +24,7 @@ Route::post('/translations', [LocalizationController::class, 'show']);
 Route::middleware(['auth'])->group(function () {
     Route::get('/', HomeController::class)->name('home');
     Route::get('/preferences', [PreferenceController::class, 'show'])->name('preferences');
+    Route::patch('/preferences', [PreferenceController::class, 'update'])->name('preferences.update');
 
     //
     Route::get('/clinics', function () {

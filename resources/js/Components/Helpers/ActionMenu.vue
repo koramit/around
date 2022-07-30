@@ -46,7 +46,7 @@
 <script setup>
 import { InertiaLink } from '@inertiajs/inertia-vue3';
 import IconVector from './IconVector.vue';
-defineEmits(['action-clicked', 'link-clicked', 'subscribe-clicked', 'home-clicked', 'bookmark-clicked']);
+defineEmits(['action-clicked', 'link-clicked', 'subscribe-clicked', 'set-home-page-clicked', 'bookmark-clicked']);
 defineProps({
     zenMode: { type: Boolean }
 });

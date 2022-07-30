@@ -18,7 +18,7 @@ class CaseRecordController extends Controller
     // @TODO policy
     public function index(Request $request)
     {
-        $data = (new CaseRecordIndexAction)(filters: $request->all(), user: $request->user());
+        $data = (new CaseRecordIndexAction)(filters: $request->all(), user: $request->user(), routeName: $request->route()->getName());
 
         // if request want json then return $data
 

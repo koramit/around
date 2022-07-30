@@ -1,6 +1,6 @@
 export function useInPageLinkHelpers() {
     const isUrl = (url) => {
-        return (location.origin + location.pathname) === url;
+        return (location.origin + (location.pathname === '/' ? '' : location.pathname)) === url;
     };
     const smoothScroll = (href) => {
         if (href.startsWith('#')) {
