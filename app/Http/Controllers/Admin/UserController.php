@@ -12,6 +12,13 @@ class UserController extends Controller
 {
     public function index(Request $request)
     {
+        session()->flash('page-title', __('Manage User'));
+        session()->flash('main-menu-links', collect([
+            ['icon' => 'patient', 'label' => 'Patients', 'route' => route('patients'), 'can' => $request->user()->can('view_any_patients')],
+            ['icon' => 'clinic', 'label' => 'Clinics', 'route' => route('clinics'), 'can' => $request->user()->can('view_any_patients')],
+            ['icon' => 'procedure', 'label' => 'Procedures', 'route' => route('procedures.index'), 'can' => $request->user()->can('view_any_patients')],
+        ])->filter(fn ($link) => $link['can'])->values());
+        session()->flash('action-menu', []);
         $users = User::query()
             ->select(['id', 'full_name'])
             ->whereNotIn('id', [1, $request->user()->id])
