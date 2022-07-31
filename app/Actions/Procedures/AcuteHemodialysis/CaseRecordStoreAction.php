@@ -73,8 +73,10 @@ class CaseRecordStoreAction extends AcuteHemodialysisAction
             'an' => ['digits:8', new AnExists],
         ])->validate();
 
-        // @TODO check duplicate CRF by HN
-        // @TODO check first admit ward
+        /* @TODO check first admit ward */
+        if ($caseRecord = CaseRecord::query()->where('status', 1)->where('meta->hn', $validated['hn'])->first()) {
+            return $caseRecord;
+        }
         $caseRecord = new CaseRecord();
         $patient = Patient::query()->findByHashedKey($validated['hn'])->first();
         $caseRecord->patient_id = $patient->id;
