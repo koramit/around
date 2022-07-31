@@ -8,7 +8,7 @@ use Inertia\Inertia;
 
 class PreferenceController extends Controller
 {
-    public function show()
+    public function show(Request $request)
     {
         session()->flash('page-title', __('Preferences'));
         session()->flash('main-menu-links', collect([
