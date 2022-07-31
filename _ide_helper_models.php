@@ -415,8 +415,8 @@ namespace App\Models\Resources{
  *
  * @property int $id
  * @property string $name
- * @property string $name_eng
- * @property string $name_eng_short
+ * @property string $name_en
+ * @property string $name_en_short
  * @property string $department
  * @property bool $active
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -429,8 +429,8 @@ namespace App\Models\Resources{
  * @method static \Illuminate\Database\Eloquent\Builder|Division whereDepartment($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Division whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Division whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Division whereNameEng($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Division whereNameEngShort($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Division whereNameEn($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Division whereNameEnShort($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Division whereUpdatedAt($value)
  */
 	class Division extends \Eloquent {}

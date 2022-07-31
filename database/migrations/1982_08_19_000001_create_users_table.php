@@ -21,7 +21,7 @@ return new class extends Migration
                 'zen_mode' => false,
                 'font_scale_index' => 3,
             ]));
-            $table->unsignedSmallInteger('division_id')->default(1);
+            $table->unsignedSmallInteger('division_id')->default(2);
             $table->rememberToken();
             $table->softDeletes();
             $table->timestamps();

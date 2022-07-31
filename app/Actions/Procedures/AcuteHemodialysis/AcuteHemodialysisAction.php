@@ -31,7 +31,7 @@ class AcuteHemodialysisAction
 
     protected int $APPROVE_ACUTE_HEMODIALYSIS_SLOT_REQUEST_ABILITY_ID = 28;
 
-    protected string $STAFF_SCOPE_PARAMS = '&position=8&division_id=5';
+    protected string $STAFF_SCOPE_PARAMS = '&position=8&division_id=6';
 
     protected string $UNIT_DAY_OFF = 'Sunday';
 

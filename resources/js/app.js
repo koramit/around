@@ -29,7 +29,7 @@ createInertiaApp({
                 // if (page.props?.layout === null) {
                 //     page.default.layout = PageLayout;
                 // }
-                page.default.layout = name.startsWith('Auth/') ? PageLayout : AppLayout;
+                page.default.layout = (name.startsWith('Auth/') || name.startsWith('Terms') ) ? PageLayout : AppLayout;
 
 
                 return page;

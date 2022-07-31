@@ -16,8 +16,8 @@ return new class extends Migration
         Schema::create('divisions', function (Blueprint $table) {
             $table->smallIncrements('id');
             $table->string('name')->unique()->collation(config('database.th_collation'));
-            $table->string('name_eng');
-            $table->string('name_eng_short', 60)->index();
+            $table->string('name_en');
+            $table->string('name_en_short', 60)->index();
             $table->string('department', 60);
             $table->boolean('active')->default(true)->index();
             $table->timestamps();

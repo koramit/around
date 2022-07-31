@@ -329,7 +329,7 @@ const ConfirmForm  = defineAsyncComponent(() => import('../Forms/ConfirmForm.vue
 
 pageRoutines();
 const mobileMenuVisible = ref(false);
-const zenMode = ref(Boolean(usePage().props.value.user.preferences.appearance.zenMode ?? false));
+const zenMode = ref(Boolean(usePage().props.value.user?.preferences.appearance.zenMode ?? false));
 
 const actionClicked = (action) => {
     mobileMenuVisible.value = false;
@@ -362,7 +362,7 @@ const setHomePageClicked = (resource) => {
         });
 };
 
-let fontScaleIndex = usePage().props.value.user.preferences.appearance.fontScaleIndex;
+let fontScaleIndex = usePage().props.value.user?.preferences.appearance.fontScaleIndex ?? 3;
 let fontScales = [67, 80, 90, 100];
 const scaleFont = (mode) => {
     fontScaleIndex = mode === 'up' ? (fontScaleIndex+1) : (fontScaleIndex-1);

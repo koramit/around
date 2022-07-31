@@ -7,16 +7,11 @@ use Illuminate\Database\Seeder;
 
 class NoteTypesTableSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
-    public function run()
+    public function run(): void
     {
         $datetime = now();
 
-        NoteType::insert([
+        NoteType::query()->insert([
             [
                 'name' => 'acute_hd_order',
                 'label' => 'Acute Hemodialysis Order',

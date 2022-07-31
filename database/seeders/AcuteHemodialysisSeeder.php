@@ -45,7 +45,7 @@ class AcuteHemodialysisSeeder extends Seeder
         $users = User::query()->whereIn('login', ['fellow1.ahd', 'fellow2.ahd', 'fellow3.ahd', 'fellow4.ahd'])->get();
         $staff = Person::query()
             ->select(['name'])
-            ->where('division_id', 5)
+            ->where('division_id', 6)
             ->where('position', 8)
             ->get();
 

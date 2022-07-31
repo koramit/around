@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Actions\Auth\InitUserRoleAction;
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
@@ -77,7 +76,7 @@ class RegisteredUserController extends Controller
         $user->profile = $profile;
         $user->save();
 
-        Event::dispatch(new Registered($user));
+        (new InitUserRoleAction)($user);
 
         Auth::login($user);
         Session::forget('profile');

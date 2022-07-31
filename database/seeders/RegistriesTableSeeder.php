@@ -8,22 +8,17 @@ use Illuminate\Database\Seeder;
 
 class RegistriesTableSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
-    public function run()
+    public function run(): void
     {
         $datetime = now();
 
-        Registry::insert([
+        Registry::query()->insert([
             [
                 'name' => 'acute_hd',
                 'label' => 'Acute Hemodialysis',
                 'label_eng' => 'Acute Hemodialysis',
                 'route' => 'procedures.acute-hemodialysis.',
-                'division_id' => Division::where('name_eng_short', 'nephrology')->first()->id,
+                'division_id' => Division::query()->where('name_en_short', 'nephrology')->first()->id,
                 'created_at' => $datetime,
                 'updated_at' => $datetime,
             ],

@@ -41,7 +41,7 @@ class HandleInertiaRequests extends Middleware
     {
         return array_merge(parent::share($request), [
             'routeMyDesk' => fn () => route('home'),
-            'routeHome' => fn () => route($request->user()->home_page),
+            'routeHome' => fn () => route(($request->user()?->home_page) ?? 'home'),
             'routePreferences' => fn () => route('preferences'),
             'routeManageUser' => fn () => route('users.index'),
             'routeLogout' => fn () => route('logout'),
