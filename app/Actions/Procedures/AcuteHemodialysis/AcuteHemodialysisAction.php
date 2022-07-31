@@ -29,7 +29,7 @@ class AcuteHemodialysisAction
 
     protected string $TODAY;
 
-    protected int $APPROVE_ACUTE_HEMODIALYSIS_TODAY_SLOT_REQUEST_ABILITY_ID = 10;
+    protected int $APPROVE_ACUTE_HEMODIALYSIS_SLOT_REQUEST_ABILITY_ID = 28;
 
     protected string $STAFF_SCOPE_PARAMS = '&position=8&division_id=5';
 

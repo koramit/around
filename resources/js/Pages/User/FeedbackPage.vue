@@ -58,7 +58,7 @@
 
 <script setup>
 import { Link, useForm } from '@inertiajs/inertia-vue3';
-import FormTextarea from '../Components/Controls/FormTextarea.vue';
+import FormTextarea from '../../Components/Controls/FormTextarea.vue';
 
 defineProps({
     feedback: { type: Object, required: true },

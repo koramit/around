@@ -4,7 +4,7 @@
         class="mb-4"
     >
         <template
-            v-for="(action, key) in $page.props.flash.actionMenu.filter(a => a.can)"
+            v-for="(action, key) in $page.props.flash.actionMenu.filter(a => a !== null && a.can)"
             :key="key"
         >
             <button
@@ -17,7 +17,7 @@
                     class="w-4 h-4 group-hover:text-accent transition-colors duration-200 ease-in-out"
                 />
                 <span
-                    class="ml-2 group-hover:text-accent transition-colors duration-200 ease-in-out"
+                    class="ml-2 group-hover:text-accent transition-colors duration-200 ease-in-out truncate"
                     v-if="!zenMode"
                 >
                     {{ action.label }}

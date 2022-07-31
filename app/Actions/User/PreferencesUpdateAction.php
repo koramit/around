@@ -6,7 +6,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\ValidationException;
 
-class ProfileUpdateAction
+class PreferencesUpdateAction
 {
     public function __invoke(array $data, User $user): array
     {

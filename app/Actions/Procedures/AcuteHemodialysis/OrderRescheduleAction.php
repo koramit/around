@@ -51,7 +51,7 @@ class OrderRescheduleAction extends AcuteHemodialysisAction
             $request = $order->changeRequests()->create([
                 'requester_id' => $user->id,
                 'changes' => ['date_note' => $validated['date_note']],
-                'authority_ability_id' => $this->APPROVE_ACUTE_HEMODIALYSIS_TODAY_SLOT_REQUEST_ABILITY_ID,
+                'authority_ability_id' => $this->APPROVE_ACUTE_HEMODIALYSIS_SLOT_REQUEST_ABILITY_ID,
             ]);
             $request->actionLogs()->create([
                 'action' => 'create',

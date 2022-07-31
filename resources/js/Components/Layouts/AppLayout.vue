@@ -83,20 +83,34 @@
                         </div>
                     </template>
                     <template #dropdown>
-                        <div class="mt-2 py-0 overflow-hidden shadow-xl bg-complement text-white cursor-pointer rounded text-sm">
+                        <div class="mt-2 py-0 overflow-hidden shadow-xl bg-complement text-white cursor-pointer rounded text-sm whitespace-nowrap">
                             <InertiaLink
                                 class="block w-full text-left px-6 py-2 hover:bg-complement-darker hover:text-primary transition-colors duration-200 ease-out"
                                 :href="$page.props.routeHome"
                                 v-if="!isUrl($page.props.routeHome)"
+                            >
+                                {{ __('Home') }}
+                            </InertiaLink>
+                            <InertiaLink
+                                class="block w-full text-left px-6 py-2 hover:bg-complement-darker hover:text-primary transition-colors duration-200 ease-out"
+                                :href="$page.props.routeMyDesk"
+                                v-if="!isUrl($page.props.routeMyDesk)"
                             >
                                 {{ __('My Desk') }}
                             </InertiaLink>
                             <InertiaLink
                                 class="block w-full text-left px-6 py-2 hover:bg-complement-darker hover:text-primary transition-colors duration-200 ease-out"
                                 :href="$page.props.routePreferences"
-                                v-if="!isUrl($page.props.routePreferences)"
+                                v-if="!isUrl($page.props.routePreferences) && $page.props.user.can.config_preferences"
                             >
                                 {{ __('Preferences') }}
+                            </InertiaLink>
+                            <InertiaLink
+                                class="block w-full text-left px-6 py-2 hover:bg-complement-darker hover:text-primary transition-colors duration-200 ease-out"
+                                :href="$page.props.routeManageUser"
+                                v-if="!isUrl($page.props.routeManageUser) && $page.props.user.can.manage_user"
+                            >
+                                {{ __('Manage User') }}
                             </InertiaLink>
                             <InertiaLink
                                 class="block w-full text-left px-6 py-2 hover:bg-complement-darker hover:text-primary transition-colors duration-200 ease-out"
@@ -128,14 +142,28 @@
                             :href="$page.props.routeHome"
                             v-if="!isUrl($page.props.routeHome)"
                         >
+                            {{ __('Home') }}
+                        </InertiaLink>
+                        <InertiaLink
+                            class="block py-1"
+                            :href="$page.props.routeMyDesk"
+                            v-if="!isUrl($page.props.routeMyDesk)"
+                        >
                             {{ __('My Desk') }}
                         </InertiaLink>
                         <InertiaLink
                             class="block py-1"
                             :href="$page.props.routePreferences"
-                            v-if="!isUrl($page.props.routePreferences)"
+                            v-if="!isUrl($page.props.routePreferences) && $page.props.user.can.config_preferences"
                         >
                             {{ __('Preferences') }}
+                        </InertiaLink>
+                        <InertiaLink
+                            class="block py-1"
+                            :href="$page.props.routeManageUser"
+                            v-if="!isUrl($page.props.routeManageUser) && $page.props.user.can.manage_user"
+                        >
+                            {{ __('Manage user') }}
                         </InertiaLink>
                         <InertiaLink
                             class="block py-1"
@@ -265,7 +293,7 @@
                     class="mb-4 md:mb-8"
                 />
 
-                <slot v-if="$page.props.shouldTransitionPage" />
+                <slot v-if="$page.props.noPageTransition" />
 
                 <Transition
                     v-else
@@ -301,7 +329,7 @@ const ConfirmForm  = defineAsyncComponent(() => import('../Forms/ConfirmForm.vue
 
 pageRoutines();
 const mobileMenuVisible = ref(false);
-const zenMode = ref(Boolean(usePage().props.value.user.configs.appearance?.zenMode ?? false));
+const zenMode = ref(Boolean(usePage().props.value.user.preferences.appearance.zenMode ?? false));
 
 const actionClicked = (action) => {
     mobileMenuVisible.value = false;
@@ -330,11 +358,11 @@ const setHomePageClicked = (resource) => {
         .patch(resource.route, {home_page: resource.name})
         .then(() => {
             let index = usePage().props.value.flash.actionMenu.findIndex(action => action.type === 'set-home-page-clicked');
-            usePage().props.value.flash.actionMenu[index].label = 'Already set as Home page';
+            usePage().props.value.flash.actionMenu.splice(index, 1);
         });
 };
 
-let fontScaleIndex = 3;
+let fontScaleIndex = usePage().props.value.user.preferences.appearance.fontScaleIndex;
 let fontScales = [67, 80, 90, 100];
 const scaleFont = (mode) => {
     fontScaleIndex = mode === 'up' ? (fontScaleIndex+1) : (fontScaleIndex-1);

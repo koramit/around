@@ -35,8 +35,11 @@ class AbilitiesTableSeeder extends Seeder
             ['registry_id' => null, 'name' => 'authorize_user'] + $datetime,
             ['registry_id' => null, 'name' => 'authorize_authority'] + $datetime,
             ['registry_id' => null, 'name' => 'view_any_patients'] + $datetime,
+            ['registry_id' => null, 'name' => 'config_preferences'] + $datetime,
+            ['registry_id' => null, 'name' => 'contact_helpdesk'] + $datetime,
             ['registry_id' => null, 'name' => 'get_shared_api_resources'] + $datetime,
-            ['registry_id' => null, 'name' => 'upload_files'] + $datetime,
+            ['registry_id' => null, 'name' => 'upload_file'] + $datetime,
+            ['registry_id' => null, 'name' => 'comment'] + $datetime,
 
             // acute hd case
             ['registry_id' => 1, 'name' => 'view_any_acute_hemodialysis_cases'] + $datetime, // index
@@ -51,16 +54,10 @@ class AbilitiesTableSeeder extends Seeder
             ['registry_id' => 1, 'name' => 'create_acute_hemodialysis_order'] + $datetime, // create/store
             ['registry_id' => 1, 'name' => 'view_acute_hemodialysis_order'] + $datetime, // show + policy
             ['registry_id' => 1, 'name' => 'perform_acute_hemodialysis_order'] + $datetime, // perform + policy
-            // ['registry_id' => 1, 'name' => 'cancel_acute_hemodialysis_order'] + $datetime, // destroy + policy only!
-            // ['registry_id' => 1, 'name' => 'edit_acute_hemodialysis_order'] + $datetime, // edit/update + policy only!
 
-            // today slot request
+            // slot request
             ['registry_id' => 1, 'name' => 'view_any_acute_hemodialysis_slot_requests'] + $datetime, // index
-            ['registry_id' => 1, 'name' => 'create_acute_hemodialysis_today_slot_request'] + $datetime, // schedule/reschedule/swap with today involve
-            ['registry_id' => 1, 'name' => 'approve_acute_hemodialysis_today_slot_request'] + $datetime, // approve + policy
-            // ['registry_id' => 1, 'name' => 'cancel_acute_hemodialysis_today_slot_request'] + $datetime, // destroy + policy only!
-            // ['registry_id' => 1, 'name' => 'edit_acute_hemodialysis_today_slot_request'] + $datetime, // no edit just destroy
-            // ['registry_id' => 1, 'name' => 'view_acute_hemodialysis_today_slot_request'] + $datetime, // no show just detail in index
+            ['registry_id' => 1, 'name' => 'approve_acute_hemodialysis_slot_request'] + $datetime, // approve + policy
         ]);
 
         Role::query()->insert([
@@ -76,7 +73,14 @@ class AbilitiesTableSeeder extends Seeder
 
         $assignments = [
             'authority' => ['authorize_user'],
-            'participant' => ['view_any_patients', 'get_shared_api_resources'],
+            'participant' => [
+                'view_any_patients',
+                'upload_file',
+                'get_shared_api_resources',
+                'config_preferences',
+                'contact_helpdesk',
+                'comment',
+            ],
             'acute_hemodialysis_nurse' => [
                 'view_any_acute_hemodialysis_cases',
                 'view_acute_hemodialysis_case',
@@ -86,10 +90,9 @@ class AbilitiesTableSeeder extends Seeder
                 'view_any_acute_hemodialysis_slot_requests',
             ],
             'acute_hemodialysis_nurse_manager' => [
-                'approve_acute_hemodialysis_today_slot_request',
+                'approve_acute_hemodialysis_slot_request',
             ],
             'acute_hemodialysis_fellow' => [
-                'upload_files',
                 'view_any_acute_hemodialysis_cases',
                 'create_acute_hemodialysis_case',
                 'edit_acute_hemodialysis_case',
@@ -100,7 +103,6 @@ class AbilitiesTableSeeder extends Seeder
                 'create_acute_hemodialysis_order',
                 'view_acute_hemodialysis_order',
                 'view_any_acute_hemodialysis_slot_requests',
-                'create_acute_hemodialysis_today_slot_request',
             ],
         ];
 

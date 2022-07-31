@@ -37,7 +37,7 @@ class TodaySlotRequestAction extends AcuteHemodialysisAction
         $request = $note->changeRequests()->create([
             'requester_id' => $user->id,
             'changes' => ['date_note' => $this->TODAY],
-            'authority_ability_id' => $this->APPROVE_ACUTE_HEMODIALYSIS_TODAY_SLOT_REQUEST_ABILITY_ID,
+            'authority_ability_id' => $this->APPROVE_ACUTE_HEMODIALYSIS_SLOT_REQUEST_ABILITY_ID,
         ]);
         $request->actionLogs()->create([
             'action' => 'create',

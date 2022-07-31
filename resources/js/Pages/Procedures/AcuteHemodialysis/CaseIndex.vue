@@ -113,9 +113,9 @@
                 </div>
                 <Link
                     :href="caseRecord.routes.edit"
-                    class="bg-primary-darker p-2 rounded-full"
+                    class="action-icon-mobile"
                 >
-                    <IconDoubleRight class="w-4 h-4 text-accent" />
+                    <IconDoubleRight class="w-4 h-4" />
                 </Link>
             </div>
             <div class="my-2 p-2 bg-gray-100 rounded space-y-2">
@@ -174,29 +174,7 @@
     </div>
 
     <!-- pagination -->
-    <div v-if="cases.links.length > 3">
-        <div class="flex flex-wrap -mb-1 mt-4">
-            <template v-for="(link, key) in cases.links">
-                <div
-                    v-if="link.url === null"
-                    :key="key"
-                    class="mr-1 mb-1 px-4 py-3 text-sm leading-4 bg-gray-200 text-gray-400 border rounded cursor-not-allowed"
-                    v-html="link.label"
-                />
-                <Link
-                    v-else
-                    :key="key+'theLink'"
-                    class="mr-1 mb-1 px-4 py-3 text-sm text-complement-darker leading-4 border border-primary-darker rounded hover:bg-white focus:border-complement-darker focus:text-complement-darker transition-colors"
-                    :class="{ 'bg-primary-darker cursor-not-allowed hover:bg-primary-darker': link.active }"
-                    :href="link.url"
-                    :as="'button'"
-                    :disabled="link.active"
-                >
-                    <span v-html="link.label" />
-                </Link>
-            </template>
-        </div>
-    </div>
+    <PaginationNav :links="cases.links" />
 
     <!-- create new case -->
     <SearchAdmission
@@ -215,6 +193,7 @@ import IconDoubleRight from '../../../Components/Helpers/Icons/IconDoubleRight.v
 import IconUserMd from '../../../Components/Helpers/Icons/IconUserMd.vue';
 import IconEdit from '../../../Components/Helpers/Icons/IconEdit.vue';
 import IconCalendarPlus from '../../../Components/Helpers/Icons/IconCalendarPlus.vue';
+import PaginationNav from '../../../Components/Helpers/PaginationNav.vue';
 
 const SearchAdmission = defineAsyncComponent(() => import('../../../Components/Forms/SearchAdmission.vue'));
 const props = defineProps({

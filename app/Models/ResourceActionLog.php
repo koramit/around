@@ -41,6 +41,8 @@ class ResourceActionLog extends Model
         'change', // changing by authority, no request required
         'dismiss', // CRF ONLY
         'archive', // CRF ONLY
+        'grant', // role
+        'revoke', // role
     ];
 
     /**

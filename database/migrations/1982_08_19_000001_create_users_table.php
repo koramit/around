@@ -15,6 +15,12 @@ return new class extends Migration
             $table->string('full_name')->unique()->collation(config('database.th_collation'));
             $table->string('password');
             $table->jsonb('profile');
+            $table->jsonb('preferences')->default(json_encode([
+                'home_page' => 'home',
+                'items_per_page' => 15,
+                'zen_mode' => false,
+                'font_scale_index' => 3,
+            ]));
             $table->unsignedSmallInteger('division_id')->default(1);
             $table->rememberToken();
             $table->softDeletes();

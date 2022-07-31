@@ -42,7 +42,7 @@ class FakeAuthenticationAPI implements AuthenticationAPI
 
     public function checkUserById(int $orgId): array
     {
-        // TODO: Implement getUserById() method.
+        // TODO: Implement checkUserById() method.
         return [];
     }
 }

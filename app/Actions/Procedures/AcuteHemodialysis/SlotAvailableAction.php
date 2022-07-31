@@ -15,9 +15,6 @@ class SlotAvailableAction extends AcuteHemodialysisAction
 
     protected User $user;
 
-    /**
-     * @todo complete out unit slot
-     */
     public function __invoke(array $data, User $user): array
     {
         // validate

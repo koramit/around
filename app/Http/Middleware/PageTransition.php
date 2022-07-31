@@ -18,7 +18,7 @@ class PageTransition
     {
         $previous = app('router')->getRoutes()->match($request->create(url()->previous()))->getName();
         $current = $request->route()->getName();
-        session()->put('should-transition-page', $previous == $current);
+        session()->put('no-page-transition', $previous == $current);
 
         return $next($request);
     }

@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
 
         if (config('app.env') !== 'production') {
             $this->call([
+                AuthorizationSeeder::class,
                 AcuteHemodialysisSeeder::class,
             ]);
         }

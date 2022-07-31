@@ -40,8 +40,10 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request): array
     {
         return array_merge(parent::share($request), [
-            'routeHome' => fn () => route('home'),
+            'routeMyDesk' => fn () => route('home'),
+            'routeHome' => fn () => route($request->user()->home_page),
             'routePreferences' => fn () => route('preferences'),
+            'routeManageUser' => fn () => route('users.index'),
             'routeLogout' => fn () => route('logout'),
             'flash' => [
                 'title' => fn () => $request->session()->pull('page-title', 'MISSING'),
@@ -52,13 +54,21 @@ class HandleInertiaRequests extends Middleware
                 'navs' => fn () => $request->session()->pull('navs', []),
                 'message' => fn () => $request->session()->pull('message'),
             ],
-            'shouldTransitionPage' => fn () => $request->session()->get('should-transition-page'),
+            'noPageTransition' => fn () => $request->session()->get('no-page-transition'),
             'user' => fn () => $request->user()
                 ? [
                     'name' => $request->user()->name,
-                    'configs' => $request->session()->get('configs', [
-                        'appearance' => ['zenMode' => false, 'fontScaleIndex' => 3],
+                    'preferences' => $request->session()->get('preferences', [
+                        'appearance' => [
+                            'zenMode' => $request->user()->preferences['zen_mode'],
+                            'fontScaleIndex' => $request->user()->preferences['font_scale_index'],
+                        ],
                     ]),
+                    'can' => [
+                        'manage_user' => $request->user()->can('authorize_user'),
+                        'config_preferences' => $request->user()->can('config_preferences'),
+                        'contact_helpdesk' => $request->user()->can('contact_helpdesk'),
+                    ],
                 ] : null,
             'event' => [
                 'fire' => null,

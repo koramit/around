@@ -629,28 +629,42 @@ namespace App\Models{
 /**
  * App\Models\SupportTicket
  *
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
  * @method static \Illuminate\Database\Eloquent\Builder|SupportTicket newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|SupportTicket newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|SupportTicket query()
+ * @method static \Illuminate\Database\Eloquent\Builder|SupportTicket whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SupportTicket whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SupportTicket whereUpdatedAt($value)
  */
 	class SupportTicket extends \Eloquent {}
 }
 
 namespace App\Models{
 /**
- * App\Modes\User
+ * App\Models\User
  *
+ * @property int $items_per_page
+ * @property string $home_page
+ * @property string $role_names
+ * @property string $role_labels
+ * @property string $hashed_key
  * @property int $id
  * @property string $name
  * @property string $login
  * @property string $full_name
  * @property string $password
  * @property mixed $profile
+ * @property mixed $preferences
  * @property int $division_id
  * @property string|null $remember_token
  * @property string|null $deleted_at
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ResourceActionLog[] $actionLogs
+ * @property-read int|null $action_logs_count
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
  * @property-read int|null $notifications_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Role[] $roles
@@ -660,6 +674,7 @@ namespace App\Models{
  * @property-read \Illuminate\Database\Eloquent\Collection|\Laravel\Sanctum\PersonalAccessToken[] $tokens
  * @property-read int|null $tokens_count
  * @method static \Database\Factories\UserFactory factory(...$parameters)
+ * @method static \Illuminate\Database\Eloquent\Builder|User findByUnhashKey(string $hashed)
  * @method static \Illuminate\Database\Eloquent\Builder|User newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|User newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|User query()
@@ -671,6 +686,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|User whereLogin($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User wherePassword($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User wherePreferences($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereProfile($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)

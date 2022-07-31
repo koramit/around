@@ -74,7 +74,7 @@ Route::prefix('acute-hemodialysis')
 
         Route::get('/schedule', AcuteHemodialysisScheduleController::class)
            ->middleware(['remember', 'page-transition'])
-           ->can('view_any_acute_hemodialysis_slot_requests')
+           ->can('view_any_acute_hemodialysis_orders')
            ->name('schedule');
 
         Route::get('/slot-requests', [AcuteHemodialysisSlotRequestController::class, 'index'])

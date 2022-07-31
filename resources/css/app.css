@@ -81,6 +81,10 @@
         @apply p-2 rounded-full bg-white text-accent hover:bg-primary transition-colors ease-in-out duration-200
     }
 
+    .action-icon-mobile {
+        @apply bg-primary-darker text-accent p-2 rounded-full
+    }
+
     /* anime */
 
 }

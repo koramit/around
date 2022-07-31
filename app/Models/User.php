@@ -3,10 +3,12 @@
 namespace App\Models;
 
 use App\Traits\FirstNameAware;
+use App\Traits\PKHashable;
 use Illuminate\Database\Eloquent\Casts\AsArrayObject;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -14,10 +16,13 @@ use Laravel\Sanctum\HasApiTokens;
 /**
  * @property int $items_per_page
  * @property string $home_page
+ * @property string $role_names
+ * @property string $role_labels
+ * @property string $hashed_key
  */
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, FirstNameAware;
+    use HasApiTokens, HasFactory, Notifiable, FirstNameAware, PKHashable;
 
     protected $guarded = [];
 
@@ -28,6 +33,7 @@ class User extends Authenticatable
 
     protected $casts = [
         'profile' => AsArrayObject::class,
+        'preferences' => AsArrayObject::class,
     ];
 
     public function roles(): BelongsToMany
@@ -38,6 +44,11 @@ class User extends Authenticatable
     public function subscriptions(): BelongsToMany
     {
         return $this->belongsToMany(Subscription::class, 'subscription_user', 'subscriber_id', 'subscription_id');
+    }
+
+    public function actionLogs(): MorphMany
+    {
+        return $this->morphMany(ResourceActionLog::class, 'loggable');
     }
 
     /** @alias string $avatar_token*/
@@ -56,8 +67,8 @@ class User extends Authenticatable
     protected function homePage(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->profile['home_page'] ?? 'home',
-            set: fn ($value) => $this->update(['profile->home_page' => $value])
+            get: fn () => $this->preferences['home_page'] ?? 'home',
+            set: fn ($value) => $this->update(['preferences->home_page' => $value])
         );
     }
 
@@ -65,8 +76,8 @@ class User extends Authenticatable
     protected function itemsPerPage(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->profile['items_per_page'] ?? 15,
-            set: fn ($value) => $this->update(['profile->items_per_page' => $value])
+            get: fn () => $this->preferences['items_per_page'] ?? 15,
+            set: fn ($value) => $this->update(['preferences->items_per_page' => $value])
         );
     }
 
@@ -89,9 +100,17 @@ class User extends Authenticatable
     {
         return Attribute::make(
             get: fn () => cache()->remember("uid-$this->id-role-names", config('session.lifetime') * 60, function () {
-                unset($this->roles);
+                return $this->roles()->pluck('name');
+            }),
+        );
+    }
 
-                return $this->roles->pluck('name');
+    /** @alias string $role_labels*/
+    protected function roleLabels(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => cache()->remember("uid-$this->id-role-labels", config('session.lifetime') * 60, function () {
+                return $this->roles()->whereNotNull('label')->pluck('label');
             }),
         );
     }
@@ -107,6 +126,7 @@ class User extends Authenticatable
         unset($this->roles); // reload for new role
         cache()->put("uid-$this->id-abilities", $this->roles->map->abilities->flatten()->pluck('name')->unique(), config('session.lifetime') * 60);
         cache()->put("uid-$this->id-role-names", $this->roles->pluck('name'), config('session.lifetime') * 60);
+        cache()->put("uid-$this->id-role-labels", $this->roles->pluck('label'), config('session.lifetime') * 60);
     }
 
     public function hasAbility(string|int $ability): bool
@@ -133,5 +153,13 @@ class User extends Authenticatable
             // flatten() to guarantee output always an array
             return $this->roles->map->abilities->flatten()->pluck($field)->unique()->flatten();
         });
+    }
+
+    public function flushPrivileges()
+    {
+        cache()->forget("uid-$this->id-abilities");
+        cache()->forget("uid-$this->id-role-names");
+        cache()->forget("uid-$this->id-role-labels");
+        cache()->forget("uid-$this->id-abilities-id");
     }
 }
