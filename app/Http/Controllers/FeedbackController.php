@@ -25,7 +25,6 @@ class FeedbackController extends Controller
             ['icon' => 'patient', 'label' => 'Patients', 'route' => route('patients'), 'can' => true],
             ['icon' => 'clinic', 'label' => 'Clinics', 'route' => route('clinics'), 'can' => true],
             ['icon' => 'procedure', 'label' => 'Procedures', 'route' => route('procedures.index'), 'can' => true],
-            ['icon' => 'comment-alt', 'label' => 'Feedback', 'route' => route('feedback'), 'can' => true],
         ])->filter(fn ($link) => $link['can']));
 
         return Inertia::render('FeedbackPage', [
@@ -40,10 +39,10 @@ class FeedbackController extends Controller
     {
         $validated = $request->validate(['feedback' => 'required|string|max:512']);
 
-        Feedback::create(['feedback' => $validated['feedback']]);
+        Feedback::query()->create(['feedback' => $validated['feedback']]);
 
         Log::notice("feedback\n".$validated['feedback']);
 
-        return redirect()->route('feedback');
+        return redirect()->route('feedback.index');
     }
 }

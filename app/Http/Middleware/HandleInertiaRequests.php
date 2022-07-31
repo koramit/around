@@ -44,6 +44,7 @@ class HandleInertiaRequests extends Middleware
             'routeHome' => fn () => route(($request->user()?->home_page) ?? 'home'),
             'routePreferences' => fn () => route('preferences'),
             'routeManageUser' => fn () => route('users.index'),
+            'routeSupport' => fn () => [route('support-tickets.index'), route('feedback.index')],
             'routeLogout' => fn () => route('logout'),
             'flash' => [
                 'title' => fn () => $request->session()->pull('page-title', 'MISSING'),
@@ -67,7 +68,7 @@ class HandleInertiaRequests extends Middleware
                     'can' => [
                         'manage_user' => $request->user()->can('authorize_user'),
                         'config_preferences' => $request->user()->can('config_preferences'),
-                        'contact_helpdesk' => $request->user()->can('contact_helpdesk'),
+                        'get_support' => false, // $request->user()->can('get_support'),
                     ],
                 ] : null,
             'event' => [

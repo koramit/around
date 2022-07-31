@@ -1,5 +1,8 @@
 export function useInPageLinkHelpers() {
     const isUrl = (url) => {
+        if (Array.isArray(url)) {
+            return url.includes(location.origin + (location.pathname === '/' ? '' : location.pathname));
+        }
         return (location.origin + (location.pathname === '/' ? '' : location.pathname)) === url;
     };
     const smoothScroll = (href) => {

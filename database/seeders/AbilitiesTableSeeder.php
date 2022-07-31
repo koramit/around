@@ -36,7 +36,7 @@ class AbilitiesTableSeeder extends Seeder
             ['registry_id' => null, 'name' => 'authorize_authority'] + $datetime,
             ['registry_id' => null, 'name' => 'view_any_patients'] + $datetime,
             ['registry_id' => null, 'name' => 'config_preferences'] + $datetime,
-            ['registry_id' => null, 'name' => 'contact_helpdesk'] + $datetime,
+            ['registry_id' => null, 'name' => 'get_support'] + $datetime,
             ['registry_id' => null, 'name' => 'get_shared_api_resources'] + $datetime,
             ['registry_id' => null, 'name' => 'upload_file'] + $datetime,
             ['registry_id' => null, 'name' => 'comment'] + $datetime,
@@ -78,7 +78,7 @@ class AbilitiesTableSeeder extends Seeder
                 'upload_file',
                 'get_shared_api_resources',
                 'config_preferences',
-                'contact_helpdesk',
+                'get_support',
                 'comment',
             ],
             'acute_hemodialysis_nurse' => [

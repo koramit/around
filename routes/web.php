@@ -9,6 +9,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LocalizationController;
 use App\Http\Controllers\PreferenceController;
 use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\SupportTicketController;
 use App\Http\Controllers\TermsAndPoliciesController;
 use App\Http\Controllers\UploadController;
 use Illuminate\Support\Facades\Route;
@@ -69,13 +70,21 @@ Route::get('uploads/{path}/{filename}', [UploadController::class, 'show'])
      ->middleware(['auth'])
      ->name('uploads.show');
 
-// feedback
-Route::get('feedback', [FeedbackController::class, 'index'])
-     ->middleware(['auth'])
-     ->name('feedback');
-Route::post('feedback', [FeedbackController::class, 'store'])
-     ->middleware(['auth'])
-     ->name('feedback.store');
+// support
+Route::middleware(['auth', 'can:get_support'])->group(function () {
+    Route::get('support-tickets', [SupportTicketController::class, 'index'])
+         ->middleware('page-transition')
+         ->name('support-tickets.index');
+    Route::post('support-tickets', [SupportTicketController::class, 'store'])
+         ->name('support-tickets.store');
+    Route::post('support-tickets', [SupportTicketController::class, 'destroy'])
+        ->name('support-tickets.destroy');
+    Route::get('feedback', [FeedbackController::class, 'index'])
+        ->middleware('page-transition')
+        ->name('feedback.index');
+    Route::post('feedback', [FeedbackController::class, 'store'])
+        ->name('feedback.store');
+});
 
 Route::middleware(['auth'])
     ->prefix('procedures')

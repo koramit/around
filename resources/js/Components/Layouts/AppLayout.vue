@@ -114,6 +114,13 @@
                             </InertiaLink>
                             <InertiaLink
                                 class="block w-full text-left px-6 py-2 hover:bg-complement-darker hover:text-primary transition-colors duration-200 ease-out"
+                                :href="$page.props.routeSupport[0]"
+                                v-if="!isUrl($page.props.routeSupport) && $page.props.user.can.get_support"
+                            >
+                                {{ __('Support') }}
+                            </InertiaLink>
+                            <InertiaLink
+                                class="block w-full text-left px-6 py-2 hover:bg-complement-darker hover:text-primary transition-colors duration-200 ease-out"
                                 :href="$page.props.routeLogout"
                                 method="delete"
                                 as="button"
@@ -164,6 +171,13 @@
                             v-if="!isUrl($page.props.routeManageUser) && $page.props.user.can.manage_user"
                         >
                             {{ __('Manage user') }}
+                        </InertiaLink>
+                        <InertiaLink
+                            class="block py-1"
+                            :href="$page.props.routeSupport[0]"
+                            v-if="!isUrl($page.props.routeSupport) && $page.props.user.can.get_support"
+                        >
+                            {{ __('Support') }}
                         </InertiaLink>
                         <InertiaLink
                             class="block py-1"
