@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Actions\Auth\LoginRecordAction;
+use App\Actions\Auth\LogoutRecordAction;
 use App\Contracts\AuthenticationAPI;
 use App\Http\Controllers\Controller;
 use App\Models\User;
@@ -9,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
+use Jenssegers\Agent\Agent;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -49,6 +52,7 @@ class AuthenticatedSessionController extends Controller
 
         if ($user = User::whereLogin($validated['login'])->first()) {
             Auth::login($user);
+            (new LoginRecordAction)($request->ip(), new Agent(), $user);
 
             return redirect()->intended(route($user->home_page));
         }
@@ -65,6 +69,8 @@ class AuthenticatedSessionController extends Controller
 
     public function destroy(Request $request)
     {
+        (new LogoutRecordAction)($request->user());
+
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();

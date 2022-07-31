@@ -3,15 +3,17 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Actions\Auth\InitUserRoleAction;
+use App\Actions\Auth\LoginRecordAction;
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
+use Jenssegers\Agent\Agent;
 
 class RegisteredUserController extends Controller
 {
@@ -36,9 +38,9 @@ class RegisteredUserController extends Controller
         ]);
     }
 
-    public function store()
+    public function store(Request $request)
     {
-        Request::validate([
+        $data = $request->validate([
             'login' => 'required|string|unique:users',
             'name' => [
                 'required',
@@ -54,9 +56,11 @@ class RegisteredUserController extends Controller
             'pln' => 'exclude_if:is_md,false|required|digits_between:4,6',
             'tel_no' => 'required|digits_between:9,10',
             'agreement_accepted' => 'required',
+            'org_id' => 'required|digits:8',
+            'division' => 'required|string',
+            'position' => 'required|string',
+            'remark' => 'required|string',
         ]);
-
-        $data = Request::all();
 
         $profile = [
             'tel_no' => $data['tel_no'],
@@ -79,6 +83,7 @@ class RegisteredUserController extends Controller
         (new InitUserRoleAction)($user);
 
         Auth::login($user);
+        (new LoginRecordAction)($request->ip(), new Agent(), $user);
         Session::forget('profile');
 
         return Redirect::route('home');
