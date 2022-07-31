@@ -18,7 +18,7 @@ class PatientRecentlyAdmissionController extends Controller
         $stay = $api->stayRecently($hn); // should move to manager
 
         if (! $admission['found']) {
-            if (! $admission['patient']['found']) {
+            if (! ($admission['patient']['found'] ?? false)) {
                 return [
                     'found' => false,
                     'hn' => null,
