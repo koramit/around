@@ -22,11 +22,9 @@ class OrderExportAction
             $dateNote = $dateNote.' 00:00:00';
         }
 
-        $slotOccupiedStatuses = (new AcuteHemodialysisOrderStatus)->getSlotOccupiedStatusCodes();
-
         $ans = AcuteHemodialysisOrderNote::query()
             ->where('date_note', $dateNote)
-            ->whereIn('status', $slotOccupiedStatuses)
+            ->slotOccupiedStatuses()
             ->select('meta')
             ->get()
             ->transform(function ($o) {
@@ -47,10 +45,10 @@ class OrderExportAction
 
         $orders = AcuteHemodialysisOrderNote::query()
             ->with('patient')
+            ->slotOccupiedStatuses()
             ->withPlaceName('App\Models\Resources\Ward')
             ->withAuthorName()
             ->where('date_note', $dateNote)
-            ->whereIn('status', $slotOccupiedStatuses)
             ->get()
             ->transform(fn (AcuteHemodialysisOrderNote $order) => $this->getHdHfSleddRow($order, $admissions));
 

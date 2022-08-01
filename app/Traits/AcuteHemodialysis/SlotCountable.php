@@ -2,7 +2,6 @@
 
 namespace App\Traits\AcuteHemodialysis;
 
-use App\Casts\AcuteHemodialysisOrderStatus;
 use App\Models\Notes\AcuteHemodialysisOrderNote;
 use App\Models\User;
 use App\Traits\FirstNameAware;
@@ -26,12 +25,12 @@ trait SlotCountable
 
         return AcuteHemodialysisOrderNote::query()
             ->select(['id', 'date_note', 'status', 'meta', 'author_id', 'attending_staff_id', 'case_record_id'])
+            ->slotOccupiedStatuses()
             ->withAuthorName()
             ->withAttendingName()
             ->with(['caseRecord:id,meta'])
             ->where('date_note', $dateNote)
             ->where('meta->in_unit', $inUnit)
-            ->slotOccupiedStatuses()
             ->get()
             ->transform(function ($note) use ($user, $inUnit) {
                 $trans = [
