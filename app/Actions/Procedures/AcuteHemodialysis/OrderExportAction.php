@@ -2,7 +2,6 @@
 
 namespace App\Actions\Procedures\AcuteHemodialysis;
 
-use App\Casts\AcuteHemodialysisOrderStatus;
 use App\Models\Notes\AcuteHemodialysisOrderNote;
 use App\Models\Resources\Admission;
 use App\Models\User;
@@ -49,10 +48,13 @@ class OrderExportAction
             ->withPlaceName('App\Models\Resources\Ward')
             ->withAuthorName()
             ->where('date_note', $dateNote)
-            ->get()
-            ->transform(fn (AcuteHemodialysisOrderNote $order) => $this->getHdHfSleddRow($order, $admissions));
+            ->get();
 
-        return [$admissions, $orders];
+        $hdALike = $orders->filter(fn ($o) => !str_contains($o->meta['dialysis_type'], 'TPE'))->values();
+        $hdALike = $hdALike->transform(fn (AcuteHemodialysisOrderNote $order) => $this->getHdHfSleddRow($order, $admissions));
+
+
+        return [$admissions, $hdALike];
     }
 
     private function getHdHfSleddRow(AcuteHemodialysisOrderNote $order, Collection $admissions): array
