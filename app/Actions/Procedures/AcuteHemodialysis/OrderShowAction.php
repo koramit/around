@@ -299,7 +299,7 @@ class OrderShowAction extends AcuteHemodialysisAction
             ];
         }
 
-        if ($form['ultrafiltration_min'] ?? false) {
+        if (isset($form['ultrafiltration_min'])) {
             $content[] = [
                 'label' => 'uf (ml)',
                 'data' => "{$form['ultrafiltration_min']} - {$form['ultrafiltration_max']}",
