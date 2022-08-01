@@ -19,6 +19,10 @@ trait SlotCountable
 
     protected function getNotes(string $dateNote, User $user, bool $inUnit = true): \Illuminate\Database\Eloquent\Collection|array
     {
+        if (config('database.default') === 'sqlite') {
+            $dateNote = $dateNote.' 00:00:00';
+        }
+
         return AcuteHemodialysisOrderNote::query()
             ->select(['id', 'date_note', 'status', 'meta', 'author_id', 'attending_staff_id', 'case_record_id'])
             ->withAuthorName()
@@ -110,6 +114,10 @@ trait SlotCountable
 
     protected function tpeCaseCount(string $dateNote): int
     {
+        if (config('database.default') === 'sqlite') {
+            $dateNote = $dateNote.' 00:00:00';
+        }
+
         return AcuteHemodialysisOrderNote::query()->where('date_note', $dateNote)->where('meta->dialysis_type', config('database.ilike'), '%TPE%')->count();
     }
 }
