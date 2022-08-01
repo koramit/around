@@ -52,14 +52,22 @@ class OrderExportAction
             ->where('date_note', $dateNote)
             ->whereIn('status', $slotOccupiedStatuses)
             ->get()
-            ->transform(fn (AcuteHemodialysisOrderNote $order) => $this->getHdSleddRow($order, $admissions));
+            ->transform(fn (AcuteHemodialysisOrderNote $order) => $this->getHdHfSleddRow($order, $admissions));
 
         return [$admissions, $orders];
     }
 
-    private function getHdSleddRow(AcuteHemodialysisOrderNote $order, Collection $admissions): array
+    private function getHdHfSleddRow(AcuteHemodialysisOrderNote $order, Collection $admissions): array
     {
         $form = $order->form;
+        if (isset($form['hd'])) {
+            $form = $form['hd'];
+        } elseif (isset($form['sledd'])) {
+            $form = $form['sledd'];
+        } elseif (isset($form['hf'])) {
+            $form = $form['hf'];
+        }
+
         $meta = $order->meta;
 
         $data = [];
