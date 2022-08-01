@@ -29,7 +29,7 @@ class CaseRecord extends Model
         'meta' => AsArrayObject::class,
     ];
 
-    protected array $statuses = ['', 'draft', 'submitted', 'canceled', 'dismissed', 'archived'];
+    protected array $statuses = ['', 'draft', 'submitted', 'canceled', 'dismissed', 'archived', 'deleted'];
 
     public function patient(): BelongsTo
     {
