@@ -44,7 +44,7 @@ class UserController extends Controller
         if ($request->user()->can('authorize_authority')) {
             $roles = Role::query()->select('label')->whereNotNull('label')->pluck('label')->map(fn ($r) => ['name' => $r, 'has_role' => $user->role_labels->contains($r)]);
         } else {
-            $roles = $authority->role_labels->map(fn ($r) => ['name' => $r, 'has_role' => $user->role_labels->contains($r)]);
+            $roles = $authority->role_labels->map(fn ($r) => ['name' => $r, 'has_role' => $user->role_labels->contains($r)])->filter(fn ($r) => $r['name'] !== 'authority')->values();
         }
 
         return [
