@@ -41,12 +41,18 @@ class UserController extends Controller
         $user = User::query()->findByUnhashKey($hashedKey)->firstOrFail();
         $authority = $request->user();
 
+        if ($request->user()->can('authorize_authority')) {
+            $roles = Role::query()->select('label')->whereNotNull('label')->pluck('label')->map(fn ($r) => ['name' => $r, 'has_role' => $user->role_labels->contains($r)]);
+        } else {
+            $roles = $authority->role_labels->map(fn ($r) => ['name' => $r, 'has_role' => $user->role_labels->contains($r)]);
+        }
+
         return [
             'name' => $user->full_name,
             'division' => $user->profile['division'],
             'position' => $user->profile['position'],
             'remark' => $user->profile['remark'],
-            'roles' => $authority->role_labels->map(fn ($r) => ['name' => $r, 'has_role' => $user->role_labels->contains($r)]),
+            'roles' => $roles,
             'update_route' => route('users.update', $user->hashed_key),
         ];
     }
