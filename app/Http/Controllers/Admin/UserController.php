@@ -57,6 +57,7 @@ class UserController extends Controller
         ];
     }
 
+    /* @TODO review */
     public function update(string $hashedKey, Request $request)
     {
         // user
