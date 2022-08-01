@@ -25,12 +25,12 @@ trait SlotCountable
 
         return AcuteHemodialysisOrderNote::query()
             ->select(['id', 'date_note', 'status', 'meta', 'author_id', 'attending_staff_id', 'case_record_id'])
+            ->slotOccupiedStatuses()
             ->withAuthorName()
             ->withAttendingName()
             ->with(['caseRecord:id,meta'])
             ->where('date_note', $dateNote)
             ->where('meta->in_unit', $inUnit)
-            ->slotOccupiedStatuses()
             ->get()
             ->transform(function ($note) use ($user, $inUnit) {
                 $trans = [
@@ -118,6 +118,10 @@ trait SlotCountable
             $dateNote = $dateNote.' 00:00:00';
         }
 
-        return AcuteHemodialysisOrderNote::query()->where('date_note', $dateNote)->where('meta->dialysis_type', config('database.ilike'), '%TPE%')->count();
+        return AcuteHemodialysisOrderNote::query()
+            ->where('date_note', $dateNote)
+            ->where('meta->dialysis_type', config('database.ilike'), '%TPE%')
+            ->slotOccupiedStatuses()
+            ->count();
     }
 }

@@ -2,7 +2,6 @@
 
 namespace App\Actions\Procedures\AcuteHemodialysis;
 
-use App\Casts\AcuteHemodialysisOrderStatus;
 use App\Models\Notes\AcuteHemodialysisOrderNote;
 use App\Models\Resources\Admission;
 use App\Models\User;
@@ -22,11 +21,9 @@ class OrderExportAction
             $dateNote = $dateNote.' 00:00:00';
         }
 
-        $slotOccupiedStatuses = (new AcuteHemodialysisOrderStatus)->getSlotOccupiedStatusCodes();
-
         $ans = AcuteHemodialysisOrderNote::query()
             ->where('date_note', $dateNote)
-            ->whereIn('status', $slotOccupiedStatuses)
+            ->slotOccupiedStatuses()
             ->select('meta')
             ->get()
             ->transform(function ($o) {
@@ -47,14 +44,17 @@ class OrderExportAction
 
         $orders = AcuteHemodialysisOrderNote::query()
             ->with('patient')
+            ->slotOccupiedStatuses()
             ->withPlaceName('App\Models\Resources\Ward')
             ->withAuthorName()
             ->where('date_note', $dateNote)
-            ->whereIn('status', $slotOccupiedStatuses)
-            ->get()
-            ->transform(fn (AcuteHemodialysisOrderNote $order) => $this->getHdHfSleddRow($order, $admissions));
+            ->get();
 
-        return [$admissions, $orders];
+        $hdALike = $orders->filter(fn ($o) => !str_contains($o->meta['dialysis_type'], 'TPE'))->values();
+        $hdALike = $hdALike->transform(fn (AcuteHemodialysisOrderNote $order) => $this->getHdHfSleddRow($order, $admissions));
+
+
+        return [$admissions, $hdALike];
     }
 
     private function getHdHfSleddRow(AcuteHemodialysisOrderNote $order, Collection $admissions): array
