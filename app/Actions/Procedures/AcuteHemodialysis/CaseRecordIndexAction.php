@@ -24,6 +24,7 @@ class CaseRecordIndexAction extends AcuteHemodialysisAction
 
         $cases = CaseRecord::query()
             ->with(['patient', 'orders' => fn ($q) => $q->withAuthorName()->activeStatuses()])
+            ->where('status', '<>', 6)
             ->when($filters['search'] ?? null, function ($query, $search) use ($ilike) {
                 $query->where('meta->name', $ilike, $search.'%')
                     ->orWhere('meta->hn', $ilike, $search.'%');
