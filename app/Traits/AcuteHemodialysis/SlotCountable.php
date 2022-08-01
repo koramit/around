@@ -2,6 +2,7 @@
 
 namespace App\Traits\AcuteHemodialysis;
 
+use App\Casts\AcuteHemodialysisOrderStatus;
 use App\Models\Notes\AcuteHemodialysisOrderNote;
 use App\Models\User;
 use App\Traits\FirstNameAware;
@@ -118,6 +119,10 @@ trait SlotCountable
             $dateNote = $dateNote.' 00:00:00';
         }
 
-        return AcuteHemodialysisOrderNote::query()->where('date_note', $dateNote)->where('meta->dialysis_type', config('database.ilike'), '%TPE%')->count();
+        return AcuteHemodialysisOrderNote::query()
+            ->where('date_note', $dateNote)
+            ->where('meta->dialysis_type', config('database.ilike'), '%TPE%')
+            ->slotOccupiedStatuses()
+            ->count();
     }
 }
