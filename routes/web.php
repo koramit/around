@@ -63,12 +63,12 @@ Route::middleware(['auth', 'can:get_shared_api_resources'])
     });
 
 // uploads
-Route::post('uploads', [UploadController::class, 'store'])
-     ->middleware(['auth', 'can:upload_file'])
-     ->name('uploads.store');
-Route::get('uploads/{path}/{filename}', [UploadController::class, 'show'])
-     ->middleware(['auth'])
-     ->name('uploads.show');
+Route::middleware(['auth', 'can:upload_file'])->group(function () {
+    Route::post('uploads', [UploadController::class, 'store'])
+        ->name('uploads.store');
+    Route::get('uploads', [UploadController::class, 'show'])
+        ->name('uploads.show');
+});
 
 // support
 Route::middleware(['auth', 'can:get_support'])->group(function () {

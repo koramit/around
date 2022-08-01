@@ -46,7 +46,7 @@
         <!-- route('uploads.show', {path: name, filename: filename }) -->
         <img
             v-if="modelValue !== undefined && show"
-            :src="`${serviceEndpoints.show}/${pathname}/${filename}`"
+            :src="`${serviceEndpoints.show}?path=${pathname}/${filename}`"
             @loadstart="busy = true"
             @load="$nextTick(() => busy = false)"
             alt=""
@@ -70,12 +70,12 @@
 </template>
 
 <script setup>
-import IconCircleNotch from '@/Components/Helpers/Icons/IconCircleNotch.vue';
-import IconCamera from '@/Components/Helpers/Icons/IconCamera.vue';
-import IconImage from '@/Components/Helpers/Icons/IconImage.vue';
-import IconEyesSlash from '@/Components/Helpers/Icons/IconEyesSlash.vue';
-import IconEyes from '@/Components/Helpers/Icons/IconEyes.vue';
-import { ref } from 'vue';
+import IconCircleNotch from '../Helpers/Icons/IconCircleNotch.vue';
+import IconCamera from '../Helpers/Icons/IconCamera.vue';
+import IconImage from '../Helpers/Icons/IconImage.vue';
+import IconEyesSlash from '../Helpers/Icons/IconEyesSlash.vue';
+import IconEyes from '../Helpers/Icons/IconEyes.vue';
+import {ref} from 'vue';
 const emits = defineEmits(['update:modelValue', 'autosave']);
 const props = defineProps({
     modelValue: { type: String, default: '' },

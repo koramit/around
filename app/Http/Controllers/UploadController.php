@@ -11,17 +11,18 @@ class UploadController extends Controller
     {
         // @todo make it support avatar
 
-        $request->validate([
+        $validated = $request->validate([
             'file' => 'required|file',
-            'name' => 'required|string',
+            'pathname' => 'required|string',
+            'old' => 'nullable|string',
         ]);
 
-        $data = $request->only(['name', 'old']);
-        $path = $request->file('file')->store('uploads/'.$data['name']);
+//        $data = $request->only(['name', 'old']);
+        $path = $request->file('file')->store('uploads/'.$validated['pathname']);
 
-        if ($data['old']) {
-            if (Storage::exists('uploads/'.$data['name'].'/'.$data['old'])) {
-                Storage::delete('uploads/'.$data['name'].'/'.$data['old']);
+        if (($validated['old'])) {
+            if (Storage::exists('uploads/'.$validated['pathname'].'/'.$validated['old'])) {
+                Storage::delete('uploads/'.$validated['pathname'].'/'.$validated['old']);
             }
         }
 
@@ -30,12 +31,14 @@ class UploadController extends Controller
         ];
     }
 
-    public function show($path, $filename)
+    public function show(Request $request)
     {
-        $path = $path.'/'.$filename;
+        $path = $request->input('path');
 
-        if (Storage::exists('uploads/'.$path)) {
-            return Storage::response('uploads/'.$path);
+        if (! Storage::exists('uploads/'.$path)) {
+            abort(404);
         }
+
+        return Storage::response('uploads/'.$path);
     }
 }
