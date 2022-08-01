@@ -52,7 +52,7 @@ class CaseRecordIndexAction extends AcuteHemodialysisAction
                 'routes' => [
                     'edit' => route('procedures.acute-hemodialysis.edit', $case->hashed_key),
                     'edit_order' => $case->orders->first() ? route('procedures.acute-hemodialysis.orders.edit', $case->orders->first()?->hashed_key) : null,
-                    'view_order' => route('procedures.acute-hemodialysis.orders.show', $case->orders->first()?->hashed_key),
+                    'view_order' => $case->orders->first() ? route('procedures.acute-hemodialysis.orders.show', $case->orders->first()?->hashed_key) : null,
                     'create_order' => route('procedures.acute-hemodialysis.orders.create-shortcut', $case->hashed_key),
                 ],
             ]);
