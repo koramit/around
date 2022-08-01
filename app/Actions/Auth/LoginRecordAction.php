@@ -23,6 +23,7 @@ class LoginRecordAction
         } else {
             $type = 0;
         }
+
         return LoginRecord::query()
             ->create([
                 'ip_address' => $ip,

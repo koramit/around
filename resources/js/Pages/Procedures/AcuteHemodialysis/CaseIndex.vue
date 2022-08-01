@@ -67,6 +67,15 @@
                                     <IconEdit class="w-4 h-4" />
                                 </Link>
                             </template>
+                            <template v-else-if="caseRecord.can.view_order">
+                                <span v-html="caseRecord[field]" />
+                                <Link
+                                    :href="caseRecord.routes.view_order"
+                                    class="action-icon"
+                                >
+                                    <IconReadme class="w-4 h-4" />
+                                </Link>
+                            </template>
                             <Link
                                 v-else-if="caseRecord.can.create_order"
                                 :href="caseRecord.routes.create_order"
@@ -165,6 +174,13 @@
                             >
                                 <IconEdit class="w-4 h-4" />
                             </Link>
+                            <Link
+                                v-else-if="caseRecord.can.view_order"
+                                :href="caseRecord.routes.view_order"
+                                class="ml-2 p-2 rounded-full bg-primary-darker text-accent"
+                            >
+                                <IconReadme class="w-4 h-4" />
+                            </Link>
                         </p>
                     </div>
                     <template />
@@ -194,6 +210,7 @@ import IconUserMd from '../../../Components/Helpers/Icons/IconUserMd.vue';
 import IconEdit from '../../../Components/Helpers/Icons/IconEdit.vue';
 import IconCalendarPlus from '../../../Components/Helpers/Icons/IconCalendarPlus.vue';
 import PaginationNav from '../../../Components/Helpers/PaginationNav.vue';
+import IconReadme from '../../../Components/Helpers/Icons/IconReadme.vue';
 
 const SearchAdmission = defineAsyncComponent(() => import('../../../Components/Forms/SearchAdmission.vue'));
 const props = defineProps({

@@ -14,7 +14,7 @@ class SupportTicketController extends Controller
 
         $tickets = SupportTicket::query()
             ->orderByDesc('created_at')
-            ->when(!$user->hasRole('root'), fn ($q) => $q->where('requester_id', $user->id))
+            ->when(! $user->hasRole('root'), fn ($q) => $q->where('requester_id', $user->id))
             ->paginate($user->items_per_page)
             ->withQueryString()
             ->through(fn ($f) => [
@@ -37,6 +37,11 @@ class SupportTicketController extends Controller
         ]);
     }
 
-    public function store(){}
-    public function destroy(){}
+    public function store()
+    {
+    }
+
+    public function destroy()
+    {
+    }
 }

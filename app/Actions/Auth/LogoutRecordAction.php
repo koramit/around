@@ -18,10 +18,8 @@ class LogoutRecordAction
                 ->where('user_id', $user->id)
                 ->latest()
                 ->first()
-        ){
+        ) {
             $login->touch();
         }
-
-
     }
 }
