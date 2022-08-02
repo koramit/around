@@ -117,6 +117,7 @@ class ScheduleIndexAction extends AcuteHemodialysisAction
                     'staffs_scope_params' => $this->STAFF_SCOPE_PARAMS,
                     'slot_available_dates' => route('procedures.acute-hemodialysis.slot-available-dates'),
                     'orders_store' => route('procedures.acute-hemodialysis.orders.store'),
+                    'orders_export' => route('procedures.acute-hemodialysis.orders.export', ['date_note' => $refDate->format('Y-m-d')]),
                 ],
                 'in_unit_dialysis_types' => $this->IN_UNIT,
                 'out_unit_dialysis_types' => $this->OUT_UNIT,

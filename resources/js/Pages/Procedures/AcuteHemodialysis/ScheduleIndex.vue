@@ -11,9 +11,12 @@
             name="ref_date"
             v-model="queryParams.ref_date"
         />
-        <button class="mt-4 md:mt-0 w-full btn btn-complement h-10">
+        <a
+            class="mt-4 md:mt-0 w-full btn btn-complement h-10 text-center"
+            :href="configs.routes.orders_export"
+        >
             Export excel
-        </button>
+        </a>
     </div>
 
     <FormCheckbox
