@@ -21,6 +21,7 @@
                     ref="input"
                     :value="modelValue"
                     :class="{ 'border-red-400 text-red-400': error }"
+                    :disabled="disabled"
                 >
                 <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2">
                     <svg
@@ -77,7 +78,8 @@ const props = defineProps({
     params: { type: String, default: '' },
     name: { type: String, required: true },
     error: { type: String, default: '' },
-    lengthToStart: { type: Number, default: 3}
+    lengthToStart: { type: Number, default: 3},
+    disabled: {type: Boolean}
 });
 
 const items = ref([]);

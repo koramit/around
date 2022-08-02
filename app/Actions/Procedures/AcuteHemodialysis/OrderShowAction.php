@@ -76,14 +76,14 @@ class OrderShowAction extends AcuteHemodialysisAction
         foreach (['hd', 'hf', 'tpe', 'sledd'] as $type) {
             if (isset($order->form[$type])) {
                 $prescription = $order->form[$type];
-                if(!isset($prescription['duration'])) {
-                    if(str_contains($order->meta['dialysis_type'], 6)) {
+                if (! isset($prescription['duration'])) {
+                    if (str_contains($order->meta['dialysis_type'], 6)) {
                         $prescription['duration'] = 6;
-                    } elseif(str_contains($order->meta['dialysis_type'], 4)) {
+                    } elseif (str_contains($order->meta['dialysis_type'], 4)) {
                         $prescription['duration'] = 4;
-                    } elseif(str_contains($order->meta['dialysis_type'], 3)) {
+                    } elseif (str_contains($order->meta['dialysis_type'], 3)) {
                         $prescription['duration'] = 3;
-                    } elseif(str_contains($order->meta['dialysis_type'], 2)) {
+                    } elseif (str_contains($order->meta['dialysis_type'], 2)) {
                         $prescription['duration'] = 2;
                     }
                 }

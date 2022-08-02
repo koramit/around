@@ -83,6 +83,7 @@
                 label="renal outcome"
                 name="renal_outcome"
                 v-model="form.renal_outcome"
+                :allow-reset="true"
                 :options="['Recovery', 'ESRD', 'KT']"
             />
             <Transition name="slide-fade">
@@ -100,6 +101,7 @@
                 label="patient outcome"
                 name="patient_outcome"
                 v-model="form.patient_outcome"
+                :allow-reset="true"
                 :options="['Alive', 'Dead']"
             />
             <Transition name="slide-fade">
@@ -350,103 +352,6 @@
     <hr class="my-4 border-b border-accent">
     <OrderIndex :orders="orders" />
 
-    <!-- reservation -->
-    <!--    <h2
-        class="mt-6 md:mt-12 xl:mt-24 form-label italic text-xl text-complement"
-        id="reservation"
-    >
-        Reservation
-    </h2>
-    <hr class="my-4 border-b border-accent">
-    <template v-if="configs.dialysis_reservable">
-        <div class="grid md:grid-cols-2 gap-2 lg:gap-6">
-            <FormAutocomplete
-                label="dialysis at"
-                name="dialysis_at"
-                v-model="order.dialysis_at"
-                :endpoint="configs.endpoints.resources_api_wards"
-                :error="order.errors.dialysis_at"
-                :length-to-start="1"
-            />
-            <FormAutocomplete
-                label="attending"
-                name="attending_staff"
-                v-model="order.attending_staff"
-                :endpoint="configs.endpoints.resources_api_staffs"
-                :params="configs.staffs_scope_params"
-                :error="order.errors.attending_staff"
-                :length-to-start="1"
-            />
-            <FormSelect
-                label="dialysis type"
-                name="order_dialysis_type"
-                v-model="order.dialysis_type"
-                :options="order.dialysis_at && order.dialysis_at.search('Hemodialysis') !== -1 ? configs.in_unit_dialysis_types : configs.out_unit_dialysis_types"
-                :disabled="!order.dialysis_at"
-            />
-            <div>
-                <label class="form-label">patient type</label>
-                <FormRadio
-                    class="grid grid-cols-2 gap-x-2"
-                    name="patient_type"
-                    v-model="order.patient_type"
-                    :options="configs.patient_types"
-                    ref="patientTypeInput"
-                />
-            </div>
-        </div>
-        <Transition name="slide-fade">
-            <div v-if="order.dialysis_at && order.dialysis_type">
-                <div class="grid xl:grid-cols-2 gap-2 md:gap-4 lg:gap-6">
-                    <FormDatetime
-                        label="required date"
-                        name="date_note"
-                        v-model="order.date_note"
-                        :options="{ enable: configs.reserve_available_dates, onDayCreate: onDayCreate, inline: true }"
-                        ref="dateNoteInput"
-                    />
-                    <div>
-                        <Transition
-                            name="slide-fade"
-                            v-if="order.date_note && order.dialysis_at"
-                        >
-                            <DialysisSlot
-                                :slots="reservedSlots.slots"
-                                v-if="order.dialysis_at.indexOf('Hemo') !== -1"
-                            />
-                            <WardSlot
-                                v-else
-                                :slots="reservedSlots.slots"
-                            />
-                        </Transition>
-                        <AlertMessage
-                            v-if="reservedSlots.reply && !reservedSlots.available"
-                            class="mt-4"
-                            type="warning"
-                            title="Cannot make a reservation"
-                            :message="reservedSlots.reply"
-                        />
-                    </div>
-                </div>
-                <div class="mt-2 lg:mt-0 md:pt-4">
-                    <SpinnerButton
-                        class="block w-full text-center btn btn-accent"
-                        @click="reserve"
-                        :spin="order.processing"
-                        :disabled="reserveButtonDisable"
-                    >
-                        {{ order.date_note !== configs.today ? 'RESERVE' : 'REQUEST RESERVE' }}
-                    </SpinnerButton>
-                </div>
-            </div>
-        </Transition>
-    </template>
-    <AlertMessage
-        v-else
-        title="Cannot make a reservation"
-        type="warning"
-        message="One active order at a time"
-    />-->
     <!--discussion-->
     <h2
         class="mt-6 md:mt-12 xl:mt-24 form-label italic text-xl text-complement scroll-mt-16 md:scroll-mt-8"
@@ -468,7 +373,7 @@
 
 <script setup>
 import {useForm} from '@inertiajs/inertia-vue3';
-import {computed, defineAsyncComponent, nextTick, onMounted, reactive, ref, watch} from 'vue';
+import {nextTick, onMounted, reactive, ref, watch} from 'vue';
 import {useSelectOther} from '../../../functions/useSelectOther.js';
 import debounce from 'lodash/debounce';
 import FormInput from '../../../Components/Controls/FormInput.vue';
@@ -478,17 +383,11 @@ import FormCheckbox from '../../../Components/Controls/FormCheckbox.vue';
 import FormDatetime from '../../../Components/Controls/FormDatetime.vue';
 import ImageUploader from '../../../Components/Controls/ImageUploader.vue';
 import FormSelectOther from '../../../Components/Controls/FormSelectOther.vue';
-import FormSelect from '../../../Components/Controls/FormSelect.vue';
-import SpinnerButton from '../../../Components/Controls/SpinnerButton.vue';
 import OrderIndex from '../../../Partials/Procedures/AcuteHemodialysis/OrderIndex.vue';
 import {useInPageLinkHelpers} from '../../../functions/useInPageLinkHelpers';
 import CovidInfo from '../../../Components/Helpers/CovidInfo.vue';
 import FallbackSpinner from '../../../Components/Helpers/FallbackSpinner.vue';
 import CommentSection from '../../../Components/Forms/CommentSection.vue';
-
-const DialysisSlot = defineAsyncComponent(() => import('../../../Partials/Procedures/AcuteHemodialysis/DialysisSlot.vue'));
-const WardSlot = defineAsyncComponent(() => import('../../../Partials/Procedures/AcuteHemodialysis/WardSlot.vue'));
-const AlertMessage = defineAsyncComponent(() => import('../../../Components/Helpers/AlertMessage.vue'));
 
 const props = defineProps({
     caseRecordForm: { type: Object, required: true },
@@ -584,14 +483,6 @@ const order = useForm({
     case_record_hashed_key: form.record.hashed_key,
 });
 const patientTypeInput = ref(null);
-const onDayCreate = (dObj, dStr, fp, dayElem) => {
-    if (!configs.reserve_disable_dates.length) return;
-    for (let i = 0; i < configs.reserve_disable_dates.length; i++) {
-        if (dayElem.getAttribute('aria-label') === configs.reserve_disable_dates[i]) {
-            dayElem.innerHTML += '<span class="calendar-event busy"></span>';
-        }
-    }
-};
 watch (
     () => order.date_note,
     (val) => {
@@ -641,16 +532,6 @@ const reservedSlots = reactive({
     available: false,
     reply: '',
 });
-const reserveButtonDisable = computed(() => {
-    return !order.dialysis_at || !order.date_note || !order.dialysis_type || !order.patient_type || !order.attending_staff || !reservedSlots.available;
-});
-
-const reserve = () => {
-    order.post(configs.endpoints.orders_store, {
-        onFinish: () => {order.processing = false;},
-        onError: (error) => console.log(error),
-    });
-};
 
 onMounted(() => {
     if (props.gotoSection === null) {

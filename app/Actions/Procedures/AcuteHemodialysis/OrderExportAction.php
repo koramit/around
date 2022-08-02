@@ -44,7 +44,6 @@ class OrderExportAction
             ->get()
             ->transform(fn (Admission $a) => ['an' => $a->an, 'ward' => $a->place_name]);
 
-
         $orders = AcuteHemodialysisOrderNote::query()
             ->with('patient')
             ->slotOccupiedStatuses()
@@ -53,7 +52,7 @@ class OrderExportAction
             ->where('date_note', $dateNote)
             ->get();
 
-        $hdALike = $orders->filter(fn ($o) => !str_contains($o->meta['dialysis_type'], 'TPE'))->values();
+        $hdALike = $orders->filter(fn ($o) => ! str_contains($o->meta['dialysis_type'], 'TPE'))->values();
         $hdALike = $hdALike->transform(fn (AcuteHemodialysisOrderNote $order) => $this->getHdRow($order, $admissions));
         $tpe = $orders->filter(fn ($o) => str_starts_with($o->meta['dialysis_type'], 'TPE'))->values();
         $tpe = $tpe->transform(fn (AcuteHemodialysisOrderNote $order) => $this->getTpeRow($order, $admissions));
@@ -287,7 +286,7 @@ class OrderExportAction
         if (isset($prescription['hf_ultrafiltration_min'])) {
             $data['with_HF_UF'] = "{$prescription['hf_ultrafiltration_min']} - {$prescription['hf_ultrafiltration_max']}";
         }
-        if(isset($prescription['duration'])) {
+        if (isset($prescription['duration'])) {
             $data['duration'] = $prescription['duration'];
         } else {
             $data['duration'] = $this->getDuration($order->meta['dialysis_type']);
@@ -303,7 +302,7 @@ class OrderExportAction
         $data['sodium'] = $prescription['sodium'] ?? null;
         $data['bicarbonate'] = $prescription['bicarbonate'] ?? null;
 
-       $this->getAnticoagulant($data, $prescription);
+        $this->getAnticoagulant($data, $prescription);
 
         if (isset($prescription['ultrafiltration_min'])) {
             $data['uf'] = "{$prescription['ultrafiltration_min']} - {$prescription['ultrafiltration_max']}";
@@ -337,9 +336,9 @@ class OrderExportAction
         $data['dialyzer'] = $prescription['dialyzer'] ?? null;
 
         $data['replacement'] = collect([
-                ['label' => 'albumin', 'name' => 'replacement_fluid_albumin'],
-                ['label' => 'ffp', 'name' => 'replacement_fluid_ffp']
-            ])->filter(fn ($r) => $prescription[$r['name']])
+            ['label' => 'albumin', 'name' => 'replacement_fluid_albumin'],
+            ['label' => 'ffp', 'name' => 'replacement_fluid_ffp'],
+        ])->filter(fn ($r) => $prescription[$r['name']])
             ->transform(fn ($r) => $r['label'])
             ->join(', ');
 
@@ -392,7 +391,7 @@ class OrderExportAction
         }
     }
 
-    private function getDuration(string $type):int
+    private function getDuration(string $type): int
     {
         if (str_contains($type, 2)) {
             return 2;

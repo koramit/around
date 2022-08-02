@@ -126,6 +126,8 @@ class ScheduleIndexAction extends AcuteHemodialysisAction
                     'route_lab' => route('resources.api.covid-lab'),
                     'route_vaccine' => route('resources.api.covid-vaccine'),
                 ],
+                'covid_ward' => 'ICU โควิด อัษฎางค์ 10 เหนือ',
+                'covid_dialysis' => ['HD 2 hrs.', 'HD 3 hrs.', 'HD 4 hrs.'],
                 'case' => $caseConfig,
             ],
         ];

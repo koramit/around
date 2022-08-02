@@ -52,6 +52,8 @@ class OrderEditAction extends AcuteHemodialysisAction
         ];
 
         if (! $can['update']) {
+            /** @TODO override message from another route */
+            /** @TODO allow delete on edit page */
             $flash['message'] = [
                 'type' => 'warning',
                 'title' => 'Autosave disabled.',

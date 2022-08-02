@@ -46,7 +46,7 @@ class SlotAvailableAction extends AcuteHemodialysisAction
         $notes = $this->getNotes(dateNote: $dateNote, user: $this->user, inUnit: false);
 
         // covid not count
-        $notes = $notes->filter(fn ($n) => !$n['covid_case'])->values();
+        $notes = $notes->filter(fn ($n) => ! $n['covid_case'])->values();
 
         $hemoCount = $notes->count()
                         ? $notes->filter(fn ($n) => (str_contains($n['type'], 'HD')) || (str_contains($n['type'], 'HF')))->count()
@@ -86,7 +86,7 @@ class SlotAvailableAction extends AcuteHemodialysisAction
         $orders = $this->getNotes(dateNote: $dateNote, user: $this->user);
 
         // covid not count
-        $orders = $orders->filter(fn ($n) => !$n['covid_case'])->values();
+        $orders = $orders->filter(fn ($n) => ! $n['covid_case'])->values();
 
         $chronic = $orders->filter(fn ($o) => $o['dialysis_at_chronic_unit'])->values();
         if ($chronic->count() !== 0) {
