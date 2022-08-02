@@ -25,6 +25,6 @@ class OrderExportController extends Controller
     {
         $sheets = new SheetCollection((new OrderExportAction)($request->input('date_note'), $request->user()));
 
-        return (new FastExcel($sheets))->download('file.xlsx');
+        return (new FastExcel($sheets))->download("acute_hd_order_{$request->input('date_note')}.xlsx");
     }
 }

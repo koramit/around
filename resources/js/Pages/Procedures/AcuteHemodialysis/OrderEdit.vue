@@ -434,6 +434,7 @@ watch (
     },
     { deep: true }
 );
+
 const autosave = debounce(function () {
     if (!configs.can.update) {
         return;
@@ -445,7 +446,10 @@ const autosave = debounce(function () {
         });
 }, 3000);
 
-const submit = () => form.patch(configs.endpoints.submit);
+const submit = () => form.patch(configs.endpoints.submit, {
+    onStart: () => configs.can.update = false,
+    onError: () => configs.can.update = true,
+});
 watch (
     () => usePage().props.value.event.fire,
     (event) => {

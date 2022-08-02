@@ -42,6 +42,9 @@ class OrderController extends Controller
         $this->setFlash($data['flash']);
         unset($data['flash']);
 
+        $request->session()->put('acute-hd-order-edit-previous-route', app('router')->getRoutes()->match($request->create(url()->previous()))->getName());
+//            app('router')->getRoutes()->match($request->create(url()->previous()))->getName());
+
         return Inertia::render('Procedures/AcuteHemodialysis/OrderEdit', [...$data]);
     }
 

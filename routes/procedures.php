@@ -6,6 +6,7 @@ use App\Http\Controllers\Procedures\AcuteHemodialysis\DialysisSessionController 
 use App\Http\Controllers\Procedures\AcuteHemodialysis\IdleCaseController as AcuteHemodialysisIdleCase;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\LastIndexSectionController as AcuteHemodialysisLastIndexSectionController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\OrderController as AcuteHemodialysisOrderController;
+use App\Http\Controllers\Procedures\AcuteHemodialysis\OrderExportController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\OrderRescheduleController as AcuteHemodialysisOrderRescheduleController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\OrderSubmitController as AcuteHemodialysisOrderSubmitController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\OrderSwapController as AcuteHemodialysisOrderSwapController;
@@ -101,4 +102,8 @@ Route::prefix('acute-hemodialysis')
         Route::get('/last-index-section', AcuteHemodialysisLastIndexSectionController::class)
             ->can('view_any_acute_hemodialysis_cases')
             ->name('last-index-section');
+
+        Route::get('/orders-export', OrderExportController::class)
+            ->can('view_any_acute_hemodialysis_orders')
+            ->name('orders.export');
     });

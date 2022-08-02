@@ -11,7 +11,7 @@
                 :class="{'m-2': actions.length > 1}"
             >
                 <span
-                    class="bg-primary-darker md:bg-white md:group-hover:bg-primary-darker rounded-full transition-colors duration-200 ease-in"
+                    class="bg-primary-darker md:bg-white p-2 md:group-hover:bg-primary-darker rounded-full transition-colors duration-200 ease-in"
                 >
                     <IconVector
                         :name="action.icon"
