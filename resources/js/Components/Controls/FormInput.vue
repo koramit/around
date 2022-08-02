@@ -22,6 +22,7 @@
                 :value="modelValue"
                 class="form-input border-r-0 rounded-r-none form-scroll-mt"
                 :class="{ 'border-red-400': error }"
+                :disabled="disabled"
             >
             <div class="w-auto flex items-center px-2 border-2 border-gray-200 rounded shadow-sm border-l-0 rounded-l-none bg-gray-50">
                 <label class="inline-flex items-center">
@@ -49,6 +50,7 @@
             :value="modelValue"
             class="form-input form-scroll-mt"
             :class="{ 'border-red-400 text-red-400': error }"
+            :disabled="disabled"
         >
         <div
             v-if="error"
@@ -72,7 +74,8 @@ defineProps({
     pattern: { type: String, default: '' },
     readonly: { type: Boolean },
     error: { type: String, default: '' },
-    switchLabel: { type: String, default: '' }
+    switchLabel: { type: String, default: '' },
+    disabled: { type: Boolean },
 });
 
 const input = ref(null);

@@ -23,12 +23,13 @@
                 :endpoint="configs.routes.resources_api_wards"
                 :error="form.errors.dialysis_at"
                 :length-to-start="1"
+                :disabled="wardDisabled"
             />
             <FormSelect
                 label="dialysis type"
                 name="dialysis_type"
                 v-model="form.dialysis_type"
-                :options="form.dialysis_at && form.dialysis_at.search('Hemodialysis') !== -1 ? configs.in_unit_dialysis_types : configs.out_unit_dialysis_types"
+                :options="dialysisTypeOptions"
                 :disabled="!form.dialysis_at"
             />
             <div>
@@ -193,4 +194,25 @@ const checkAvailableDates = () => {
         .catch(error => console.log(error))
         .finally(() => checking.value = false);
 };
+
+const wardDisabled = ref(false);
+watch(
+    () => form.covid_case,
+    (val) => {
+        wardDisabled.value = val;
+        if (val) {
+            form.dialysis_at = props.configs.covid_ward;
+        } else {
+            form.dialysis_at = null;
+        }
+    }
+);
+
+const dialysisTypeOptions = computed(() => {
+    if (form.covid_case) {
+        return props.configs.covid_dialysis;
+    }
+    return form.dialysis_at && form.dialysis_at.search('Hemodialysis') !== -1 ? props.configs.in_unit_dialysis_types : props.configs.out_unit_dialysis_types;
+});
+
 </script>
