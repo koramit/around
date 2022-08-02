@@ -144,7 +144,7 @@ class OrderExportAction
         $data['oxygen_support'] = $form['oxygen_support'];
 
         if ($form['monitor']['standard']) {
-            $data['oxygen_support'] = 'Standard';
+            $data['monitor'] = 'Standard';
         } else {
             $data['monitor'] = collect([
                 ['label' => 'EKG', 'name' => 'ekg'],
