@@ -400,6 +400,8 @@ class OrderExportAction
             return 3;
         } elseif (str_contains($type, 4)) {
             return 4;
+        } elseif (str_contains($type, 6)) {
+            return 6;
         }
 
         return 0;
