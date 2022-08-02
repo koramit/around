@@ -12,7 +12,7 @@
             v-model="queryParams.ref_date"
         />
         <a
-            class="mt-4 md:mt-0 w-full btn btn-complement h-10 text-center"
+            class="block mt-4 md:mt-0 w-full btn btn-complement h-10 text-center"
             :href="configs.routes.orders_export"
         >
             Export excel
