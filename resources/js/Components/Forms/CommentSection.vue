@@ -37,7 +37,7 @@
 import FormTextarea from '../Controls/FormTextarea.vue';
 import {useForm} from '@inertiajs/inertia-vue3';
 import SpinnerButton from '../Controls/SpinnerButton.vue';
-import {defineProps, ref} from 'vue';
+import {ref} from 'vue';
 
 const props = defineProps({
     configs: {type: Object, required: true}
