@@ -108,8 +108,10 @@ class SlotAvailableAction extends AcuteHemodialysisAction
         $sorted = $this->orderInUnitSlot($orders);
 
         return [
-            'slots' => $sorted->reverse()->values(),
-            'chronic' => $chronic,
+            'slots' => [
+                'acute' => $sorted->reverse()->values(),
+                'chronic' => $chronic,
+            ],
             'available' => $available,
             'reply' => $reply,
         ];
