@@ -62,7 +62,7 @@
                 </template>
             </div>
         </TransitionGroup>
-        <div v-if="slots.chronic.length">
+        <div v-if="slots.chronic?.length">
             <label class="form-label my-2 md:my-4">Dialysis at Chronic unit</label>
             <WardSlot
                 :slots="slots.chronic.map(s => ({...s}))"
