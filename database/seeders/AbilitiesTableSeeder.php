@@ -91,6 +91,7 @@ class AbilitiesTableSeeder extends Seeder
             ],
             'acute_hemodialysis_nurse_manager' => [
                 'approve_acute_hemodialysis_slot_request',
+                'create_acute_hemodialysis_case',
             ],
             'acute_hemodialysis_fellow' => [
                 'view_any_acute_hemodialysis_cases',
