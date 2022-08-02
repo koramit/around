@@ -75,7 +75,19 @@ class OrderShowAction extends AcuteHemodialysisAction
 
         foreach (['hd', 'hf', 'tpe', 'sledd'] as $type) {
             if (isset($order->form[$type])) {
-                $content[$type] = $this->getPrescription($order->form[$type]);
+                $prescription = $order->form[$type];
+                if(!isset($prescription['duration'])) {
+                    if(str_contains($order->meta['dialysis_type'], 6)) {
+                        $prescription['duration'] = 6;
+                    } elseif(str_contains($order->meta['dialysis_type'], 4)) {
+                        $prescription['duration'] = 4;
+                    } elseif(str_contains($order->meta['dialysis_type'], 3)) {
+                        $prescription['duration'] = 3;
+                    } elseif(str_contains($order->meta['dialysis_type'], 2)) {
+                        $prescription['duration'] = 2;
+                    }
+                }
+                $content[$type] = $this->getPrescription($prescription);
             }
         }
 
@@ -245,6 +257,8 @@ class OrderShowAction extends AcuteHemodialysisAction
 
     protected function getPrescription(array $form): array
     {
+        // duration
+
         $content = collect([
             // SLEDD
             ['label' => 'duration', 'name' => 'duration'],

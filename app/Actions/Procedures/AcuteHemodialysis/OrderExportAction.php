@@ -78,7 +78,7 @@ class OrderExportAction
             'dialysis_type' => $row['dialysis_type'],
             'with_HF' => $row['with_HF'],
             'with_HF_UF' => $row['with_HF_UF'],
-            'sledd_duration' => $row['sledd_duration'],
+            'duration' => $row['duration'],
             'access' => $row['access'],
             'access_site' => $row['access_site'],
             'dialyzer' => $row['dialyzer'],
@@ -92,15 +92,15 @@ class OrderExportAction
             'heparin_loading' => $row['heparin_loading'],
             'heparin_maintenance' => $row['heparin_maintenance'],
             'detail' => $row['detail'],
-            'uf' => $row['uf'],
+            'UF' => $row['uf'],
             'dry_weight' => $row['dry_weight'],
             'glucose_volume' => $row['glucose_volume'],
             'glucose_hour' => $row['glucose_hour'],
             'albumin' => $row['albumin'],
             'nutrition' => $row['nutrition'],
             'nutrition_volume' => $row['nutrition_volume'],
-            'prc' => $row['prc'],
-            'ffp' => $row['ffp'],
+            'LPB' => $row['prc'],
+            'FFP' => $row['ffp'],
             'platelet' => $row['platelet'],
             'post_dialysis_weight' => $row['post_dialysis_weight'],
             'oxygen_support' => $row['oxygen_support'],
@@ -129,7 +129,7 @@ class OrderExportAction
             'access_site' => $row['access_site'],
             'replacement' => $row['replacement'],
             'albumin' => $row['albumin'],
-            'ffp' => $row['ffp'],
+            'FFP' => $row['ffp'],
             'blood_pump' => $row['blood_pump'],
             'filtration_pump' => $row['filtration_pump'],
             'replacement_pump' => $row['replacement_pump'],
@@ -176,7 +176,7 @@ class OrderExportAction
             'heparin_loading' => $hd['heparin_loading'],
             'heparin_maintenance' => $hd['heparin_maintenance'],
             'detail' => $hd['detail'],
-            'uf' => $hd['uf'],
+            'UF' => $hd['uf'],
             'dry_weight' => $hd['dry_weight'],
 
             'glucose_volume' => $hd['glucose_volume'],
@@ -184,15 +184,15 @@ class OrderExportAction
             'albumin' => $hd['albumin'],
             'nutrition' => $hd['nutrition'],
             'nutrition_volume' => $hd['nutrition_volume'],
-            'prc' => $hd['prc'],
-            'ffp' => $hd['ffp'],
+            'LPB' => $hd['prc'],
+            'FFP' => $hd['ffp'],
             'platelet' => $hd['platelet'],
 
             'tpe_access' => $tpe['access'],
             'tpe_access_site' => $tpe['access_site'],
             'tpe_replacement' => $tpe['replacement'],
             'tpe_albumin' => $tpe['albumin'],
-            'tpe_ffp' => $tpe['ffp'],
+            'tpe_FFP' => $tpe['ffp'],
             'blood_pump' => $tpe['blood_pump'],
             'filtration_pump' => $tpe['filtration_pump'],
             'replacement_pump' => $tpe['replacement_pump'],
@@ -253,16 +253,17 @@ class OrderExportAction
         }
 
         $data['special_order'] = collect([
-            ['label' => 'Predialysis labs', 'name' => 'predialysis_labs_request'],
-            ['label' => 'Postdialysis BW', 'name' => 'postdialysis_bw'],
-            ['label' => 'Postdialysis ESA', 'name' => 'postdialysis_esa'],
-            ['label' => 'Postdialysis Iron IV', 'name' => 'postdialysis_iron_iv'],
+            ['label' => 'Pre HD labs', 'name' => 'predialysis_labs_request'],
+            ['label' => 'Post HD BW', 'name' => 'postdialysis_bw'],
+            ['label' => 'Post HD ESA', 'name' => 'postdialysis_esa'],
+            ['label' => 'Post HD Iron IV', 'name' => 'postdialysis_iron_iv'],
         ])->filter(fn ($f) => $form[$f['name']] ?? null)
             ->values()
             ->transform(fn ($f) => $f['label'])->join(', ');
 
         $data['treatment_request'] = $form['treatments_request'] ? collect(explode("\n", $form['treatments_request']))->join(', ') : null;
         $data['md'] = $this->getFirstName($order->author_name);
+
         return $data;
     }
 
@@ -286,7 +287,11 @@ class OrderExportAction
         if (isset($prescription['hf_ultrafiltration_min'])) {
             $data['with_HF_UF'] = "{$prescription['hf_ultrafiltration_min']} - {$prescription['hf_ultrafiltration_max']}";
         }
-        $data['sledd_duration'] = $prescription['duration'] ?? null;
+        if(isset($prescription['duration'])) {
+            $data['duration'] = $prescription['duration'];
+        } else {
+            $data['duration'] = $this->getDuration($order->meta['dialysis_type']);
+        }
 
         $data['access'] = $prescription['access_type'] ?? null;
         $data['access_site'] = $prescription['access_site_coagulant'] ?? null;
@@ -385,5 +390,20 @@ class OrderExportAction
         } else {
             $data['detail'] = null;
         }
+    }
+
+    private function getDuration(string $type):int
+    {
+        if (str_contains($type, 2)) {
+            return 2;
+        } elseif (str_contains($type, 3)) {
+            return 3;
+        } elseif (str_contains($type, 4)) {
+            return 4;
+        } elseif (str_contains($type, 6)) {
+            return 6;
+        }
+
+        return 0;
     }
 }
