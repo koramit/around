@@ -35,7 +35,7 @@ class OrderRescheduleAction extends AcuteHemodialysisAction
             'date_note' => $validated['date_note'],
             'dialysis_type' => $order->meta['dialysis_type'],
             'dialysis_at' => $order->place_name,
-        ]);
+        ], $user);
 
         if (! $ensureSlotAvailable['available']) {
             return [
