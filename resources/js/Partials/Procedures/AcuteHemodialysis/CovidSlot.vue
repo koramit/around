@@ -23,7 +23,7 @@
                             'flex justify-between items-center': slot.type,
                             'text-complement-darker bg-amber-400': slot.status !== undefined && slot.status === 'scheduling',
                             'text-primary bg-complement': slot.status !== undefined && (slot.status === 'started' || slot.status === 'finished'),
-                            'text-primary bg-red-400': slot.status !== undefined && slot.status !== 'scheduling' && slot.status !== 'performed' && slot.status !== 'finished',
+                            'text-primary bg-red-400': slot.status !== undefined && slot.status !== 'scheduling' && slot.status !== 'started' && slot.status !== 'finished',
                         }"
                         v-for="(slot, key) in slots[unit]"
                         :key="key"
