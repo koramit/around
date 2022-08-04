@@ -536,8 +536,8 @@ const copying = ref(false);
 const showNoPreviousOrder = ref(false);
 const copyPreviousOrder = () => {
     window.axios
+        .patch(configs.endpoints.copy)
         .then(res => {
-            console.log(res.data);
             if (!res.data.found) {
                 showNoPreviousOrder.value = true;
                 setTimeout(() => showNoPreviousOrder.value = false, 2000);
