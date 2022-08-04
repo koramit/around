@@ -166,13 +166,13 @@ watch(
     () => props.modelValue,
     (val) => {
         if (val === 'Remove') {
-            emits('update:modelValue', '');
+            emits('update:modelValue', null);
             emits('autosave');
         }
     }
 );
-const change = () => {
-    emits('update:modelValue', input.value.value);
+const change = (event) => {
+    emits('update:modelValue', event.target.value);
     emits('autosave');
 };
 const check = (event) => {
@@ -181,7 +181,8 @@ const check = (event) => {
 const setOther = (val) => {
     nextTick(() => {
         input.value.value = val;
-        change();
+        emits('update:modelValue', val);
+        emits('autosave');
     });
 };
 defineExpose({ setOther });

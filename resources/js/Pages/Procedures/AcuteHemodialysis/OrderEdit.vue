@@ -216,7 +216,7 @@
             class="mt-2 md:mt-4 xl:mt-8 space-y-2 md:space-y-4 xl:space-y-4"
         >
             <FormCheckbox
-                v-for="symptom in configs.raspiration_options"
+                v-for="symptom in configs.respiration_options"
                 :key="symptom.name"
                 name="hypotension"
                 v-model="form.respiration[symptom.name]"

@@ -4,7 +4,7 @@ namespace App\Traits\AcuteHemodialysis;
 
 trait OrderFormConfigsShareable
 {
-    protected $FORM_CONFIGS = [
+    protected array $FORM_CONFIGS = [
         'access_types' => ['DLC', 'Perm cath', 'AVF', 'AVG', 'pending'],
         'av_access_sites' => ['Rt arm', 'Lt arm', 'Rt leg', 'Lt leg'],
         'non_av_access_sites' => ['Rt IJV', 'Lt IJV', 'Rt Femoral vain', 'Lt Femoral vain', 'Rt SCV', 'Lt SCV'],
@@ -46,13 +46,13 @@ trait OrderFormConfigsShareable
             ['name' => 'inotropic_dependent', 'label' => 'Inotropic dependent'],
             ['name' => 'severe_hypertension', 'label' => 'Severe hypertension (BP > 200/120 mmHg)'],
             ['name' => 'bradycardia', 'label' => 'Bradycardia (HR < 50/min)'],
-            ['name' => 'arrhythmia', 'label' => 'Arrhythmia (Heart block, Tachyarrthmia)'],
+            ['name' => 'arrhythmia', 'label' => 'Arrhythmia (Heart block, Tachyarrhythmia)'],
         ],
-        'raspiration_options' => [
+        'respiration_options' => [
             ['name' => 'hypoxia', 'label' => 'Hypoxia (O₂ sat < 95%, impeding respiration failure)'],
             ['name' => 'high_risk_airway_obstruction', 'label' => 'High risk to airway obstruction'],
         ],
-        'oxygen_options' => ['None', 'Oxygen canula', 'Mask with bag', 'High flow oxygen', 'Ventilator'],
+        'oxygen_options' => ['None', 'Oxygen cannula', 'Mask with bag', 'High flow oxygen', 'Ventilator'],
         'neurological_options' => [
             ['name' => 'gcs_drop', 'label' => 'GCS drop > 2 in the past 24 hours'],
             ['name' => 'drowsiness', 'label' => 'Drowsiness'],
@@ -75,13 +75,13 @@ trait OrderFormConfigsShareable
             'heparin_loading_dose' => ['min' => 250, 'max' => 2000, 'type' => 'integer'],
             'heparin_maintenance_dose' => ['min' => 0, 'max' => 1500, 'type' => 'integer'],
             'enoxaparin_dose' => ['min' => 0.3, 'max' => 0.8, 'type' => 'float'],
-            'tinzaparin_dose' => ['min' => 1500, 'max' => 3500, 'type' => 'interger'],
-            'ultrafiltration_min' => ['min' => 0, 'max' => 5500, 'type' => 'interger'],
-            'ultrafiltration_max' => ['min' => 0, 'max' => 5500, 'type' => 'interger'],
-            'hf_ultrafiltration_min' => ['min' => 0, 'max' => 5500, 'type' => 'interger'],
-            'hf_ultrafiltration_max' => ['min' => 0, 'max' => 5500, 'type' => 'interger'],
-            'ultrafiltration_hf' => ['min' => 0, 'max' => 4000, 'type' => 'interger'],
-            'glucose_50_percent_iv_volume' => ['min' => 50, 'max' => 100, 'type' => 'interger'],
+            'tinzaparin_dose' => ['min' => 1500, 'max' => 3500, 'type' => 'integer'],
+            'ultrafiltration_min' => ['min' => 0, 'max' => 5500, 'type' => 'integer'],
+            'ultrafiltration_max' => ['min' => 0, 'max' => 5500, 'type' => 'integer'],
+            'hf_ultrafiltration_min' => ['min' => 0, 'max' => 5500, 'type' => 'integer'],
+            'hf_ultrafiltration_max' => ['min' => 0, 'max' => 5500, 'type' => 'integer'],
+            'ultrafiltration_hf' => ['min' => 0, 'max' => 4000, 'type' => 'integer'],
+            'glucose_50_percent_iv_volume' => ['min' => 50, 'max' => 100, 'type' => 'integer'],
         ],
         'fondaparinux_bolus_doses' => [500, 750],
         'tpe_dialyzers' => ['Plasmaflo'],
