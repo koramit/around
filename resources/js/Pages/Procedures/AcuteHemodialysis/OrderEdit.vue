@@ -17,10 +17,6 @@
             />
             Reschedule
         </button>
-        <!-- <span
-            v-else
-            class="text-sm text-complement"
-        >Approving</span> -->
     </h2>
     <hr class="my-4 border-b border-accent">
     <div class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8 2xl:grid-cols-4">
@@ -120,33 +116,49 @@
         </div>
     </Transition>
 
-    <HDForm
-        v-if="orderForm.hd !== undefined"
-        v-model="form.hd"
-        :form-configs="formConfigs"
-        @autosave="autosave"
-    />
+    <Transition name="slide-fade">
+        <div v-if="orderForm.hd !== undefined && !copying">
+            <HDForm
+                v-model="form.hd"
+                :form-configs="formConfigs"
+                @autosave="autosave"
+                @copy-previous-order="copyPreviousOrder"
+            />
+        </div>
+    </Transition>
 
-    <HFForm
-        v-if="orderForm.hf !== undefined"
-        v-model="form.hf"
-        :form-configs="formConfigs"
-        @autosave="autosave"
-    />
+    <Transition name="slide-fade">
+        <div v-if="orderForm.hf !== undefined && !copying">
+            <HFForm
+                v-model="form.hf"
+                :form-configs="formConfigs"
+                @autosave="autosave"
+                @copy-previous-order="copyPreviousOrder"
+            />
+        </div>
+    </Transition>
 
-    <SLEDDForm
-        v-if="orderForm.sledd !== undefined"
-        v-model="form.sledd"
-        :form-configs="formConfigs"
-        @autosave="autosave"
-    />
+    <Transition name="slide-fade">
+        <div v-if="orderForm.sledd !== undefined && !copying">
+            <SLEDDForm
+                v-model="form.sledd"
+                :form-configs="formConfigs"
+                @autosave="autosave"
+                @copy-previous-order="copyPreviousOrder"
+            />
+        </div>
+    </Transition>
 
-    <TPEForm
-        v-if="orderForm.tpe !== undefined"
-        v-model="form.tpe"
-        :form-configs="formConfigs"
-        @autosave="autosave"
-    />
+    <Transition name="slide-fade">
+        <div v-if="orderForm.tpe !== undefined && !copying">
+            <TPEForm
+                v-model="form.tpe"
+                :form-configs="formConfigs"
+                @autosave="autosave"
+                @copy-previous-order="copyPreviousOrder"
+            />
+        </div>
+    </Transition>
 
     <!-- predialysis -->
     <h2
@@ -509,5 +521,28 @@ const ensureConfigsRefreshAfterCall = () => {
     configs.dialysis_at = props.formConfigs.dialysis_at;
     configs.swap_code = props.formConfigs.swap_code;
     configs.can = props.formConfigs.can;
+};
+
+const copying = ref(false);
+const copyPreviousOrder = () => {
+    window.axios
+        .patch(configs.endpoints.copy)
+        .then(res => {
+            console.log(res.data);
+            if (!res.data.found) {
+                return; // reply no data
+            }
+
+            copying.value = true;
+
+
+            nextTick(() => {
+                res.data.records.map(data => {
+                    form[data.type] = data.form;
+                });
+            });
+
+            setTimeout(() => copying.value = false, 200);
+        });
 };
 </script>

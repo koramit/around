@@ -35,6 +35,8 @@ class Note extends Model
 
     protected string $defaultChangeRequestClass = '\App\Models\DocumentChangeRequest';
 
+    protected string $caseRecordClass = '\App\Models\CaseRecord';
+
     public function patient(): HasOneThrough
     {
         return $this->hasOneThrough(
@@ -49,7 +51,7 @@ class Note extends Model
 
     public function caseRecord(): BelongsTo
     {
-        return $this->belongsTo(CaseRecord::class);
+        return $this->belongsTo($this->caseRecordClass);
     }
 
     public function author(): BelongsTo

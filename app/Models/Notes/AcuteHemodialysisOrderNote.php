@@ -18,6 +18,8 @@ class AcuteHemodialysisOrderNote extends Note
 
     protected string $defaultChangeRequestClass = '\App\Models\DocumentChangeRequests\AcuteHemodialysisSlotRequest';
 
+    protected string $caseRecordClass = '\App\Models\Registries\AcuteHemodialysisCaseRecord';
+
     /**
      * The "booted" method of the model.
      *

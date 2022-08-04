@@ -3,11 +3,14 @@
         class="mt-6 md:mt-12 xl:mt-24 flex justify-between items-center"
         id="prescription"
     >
-        <span class="form-label mb-0 text-lg italic text-complement">SLEDD Prescription</span>
+        <span class="form-label !mb-0 text-lg italic text-complement">SLEDD Prescription</span>
         <button
-            class="text-sm text-accent"
+            class="flex items-center text-sm text-accent"
+            @click="$emit('copyPreviousOrder')"
+            v-if="formConfigs.can.copy"
         >
-            Copy last order
+            <IconCopy class="w-3 h-3 mr-1" />
+            Copy previous order
         </button>
     </h2>
     <hr class="my-4 border-b border-bitter-theme-light">
@@ -368,12 +371,13 @@ import AlertMessage from '../../../Components/Helpers/AlertMessage.vue';
 import FormSelectOther from '../../../Components/Controls/FormSelectOther.vue';
 import { watch, reactive, ref } from 'vue';
 import { useSelectOther } from '../../../functions/useSelectOther.js';
+import IconCopy from '../../../Components/Helpers/Icons/IconCopy.vue';
 
 const props = defineProps({
     modelValue: { type: Object, required: true },
     formConfigs: { type: Object, required: true },
 });
-const emit = defineEmits(['update:modelValue', 'autosave']);
+const emit = defineEmits(['update:modelValue', 'autosave', 'copyPreviousOrder']);
 
 const form = reactive({...props.modelValue});
 const reset = {

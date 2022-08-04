@@ -6,6 +6,7 @@ use App\Http\Controllers\Procedures\AcuteHemodialysis\DialysisSessionController 
 use App\Http\Controllers\Procedures\AcuteHemodialysis\IdleCaseController as AcuteHemodialysisIdleCase;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\LastIndexSectionController as AcuteHemodialysisLastIndexSectionController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\OrderController as AcuteHemodialysisOrderController;
+use App\Http\Controllers\Procedures\AcuteHemodialysis\OrderCopyController as AcuteHemodialysisOrderCopyController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\OrderExportController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\OrderRescheduleController as AcuteHemodialysisOrderRescheduleController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\OrderSubmitController as AcuteHemodialysisOrderSubmitController;
@@ -55,6 +56,8 @@ Route::prefix('acute-hemodialysis')
         Route::get('/orders/{hashedKey}/create-shortcut', AcuteHemodialysisCreateOrderShortcutController::class)
             ->can('create_acute_hemodialysis_order')
             ->name('orders.create-shortcut');
+        Route::patch('/orders/{hashedKey}/copy', AcuteHemodialysisOrderCopyController::class)
+            ->name('orders.copy');
         Route::post('/orders/{hashedKey}/session', [AcuteHemodialysisDialysisSessionController::class, 'store'])
             ->name('orders.start-session');
         Route::patch('/orders/{hashedKey}/session', [AcuteHemodialysisDialysisSessionController::class, 'update'])

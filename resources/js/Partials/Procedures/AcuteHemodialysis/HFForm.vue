@@ -3,11 +3,14 @@
         class="mt-6 md:mt-12 xl:mt-24 flex justify-between items-center"
         id="prescription"
     >
-        <span class="form-label mb-0 text-lg italic text-complement">HF Prescription</span>
+        <span class="form-label !mb-0 text-lg italic text-complement">HF Prescription</span>
         <button
-            class="text-sm text-accent"
+            class="flex items-center text-sm text-accent"
+            @click="$emit('copyPreviousOrder')"
+            v-if="formConfigs.can.copy"
         >
-            Copy last order
+            <IconCopy class="w-3 h-3 mr-1" />
+            Copy previous order
         </button>
     </h2>
     <hr class="my-4 border-b border-accent">
@@ -56,7 +59,7 @@
     <Transition name="slide-fade">
         <div
             class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8 2xl:grid-cols-4 my-2 md:my-4 xl:my-8"
-            v-if="form.anticoagulant == 'none'"
+            v-if="form.anticoagulant === 'none'"
         >
             <FormCheckbox
                 label="anticoagulant drip via peripheral IV"
@@ -69,7 +72,7 @@
                 v-model="form.anticoagulant_none_nss_200ml_flush_q_hour"
             />
         </div>
-        <div v-else-if="form.anticoagulant == 'heparin'">
+        <div v-else-if="form.anticoagulant === 'heparin'">
             <div class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8 2xl:grid-cols-4 my-2 md:my-4 xl:my-8">
                 <FormInput
                     label="loading dose (iu)"
@@ -99,7 +102,7 @@
         </div>
         <div
             class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8 2xl:grid-cols-4 my-2 md:my-4 xl:my-8"
-            v-else-if="form.anticoagulant == 'enoxaparin'"
+            v-else-if="form.anticoagulant === 'enoxaparin'"
         >
             <FormInput
                 label="dose (ml)"
@@ -113,7 +116,7 @@
         </div>
         <div
             class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8 2xl:grid-cols-4 my-2 md:my-4 xl:my-8"
-            v-else-if="form.anticoagulant == 'fondaparinux'"
+            v-else-if="form.anticoagulant === 'fondaparinux'"
         >
             <FormSelect
                 label="bolus dose (iu)"
@@ -125,7 +128,7 @@
         </div>
         <div
             class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8 2xl:grid-cols-4 my-2 md:my-4 xl:my-8"
-            v-else-if="form.anticoagulant == 'tinzaparin'"
+            v-else-if="form.anticoagulant === 'tinzaparin'"
         >
             <FormInput
                 label="dose (iu)"
@@ -251,21 +254,22 @@
     />
 </template>
 <script setup>
-import FormCheckbox from '@/Components/Controls/FormCheckbox.vue';
-import FormInput from '@/Components/Controls/FormInput.vue';
-import FormSelect from '@/Components/Controls/FormSelect.vue';
-import FormRadio from '@/Components/Controls/FormRadio.vue';
-import FormSelectOther from '@/Components/Controls/FormSelectOther.vue';
-import AlertMessage from '@/Components/Helpers/AlertMessage.vue';
+import FormCheckbox from '../../../Components/Controls/FormCheckbox.vue';
+import FormInput from '../../../Components/Controls/FormInput.vue';
+import FormSelect from '../../../Components/Controls/FormSelect.vue';
+import FormRadio from '../../../Components/Controls/FormRadio.vue';
+import FormSelectOther from '../../../Components/Controls/FormSelectOther.vue';
+import AlertMessage from '../../../Components/Helpers/AlertMessage.vue';
 import { reactive, ref } from 'vue';
 import { watch } from 'vue';
-import { useSelectOther } from '@/functions/useSelectOther.js';
+import { useSelectOther } from '../../../functions/useSelectOther.js';
+import IconCopy from '../../../Components/Helpers/Icons/IconCopy.vue';
 
 const props = defineProps({
     modelValue: { type: Object, required: true },
     formConfigs: { type: Object, required: true },
 });
-const emit = defineEmits(['update:modelValue', 'autosave']);
+const emit = defineEmits(['update:modelValue', 'autosave', 'copyPreviousOrder']);
 
 const form = reactive({...props.modelValue});
 const reset = {
@@ -306,7 +310,7 @@ watch (
 
 const configs = reactive({...props.formConfigs});
 
-if (form.anticoagulant && configs.anticoagulants.findIndex(item => item.value == form.anticoagulant) === -1) {
+if (form.anticoagulant && configs.anticoagulants.findIndex(item => item.value === form.anticoagulant) === -1) {
     configs.anticoagulants.push({ value: form.anticoagulant, label: form.anticoagulant });
 }
 const anticoagulantInput = ref(null);
@@ -332,14 +336,14 @@ const errors = reactive({
     tinzaparin_dose: null,
     ultrafiltration: null,
 });
-const validate = (fieldname) => {
-    let validator = configs.validators[fieldname];
-    const value = validator.type == 'integer' ? parseInt(form[fieldname]) :  parseFloat(form[fieldname]);
+const validate = (fieldName) => {
+    let validator = configs.validators[fieldName];
+    const value = validator.type === 'integer' ? parseInt(form[fieldName]) :  parseFloat(form[fieldName]);
     if (value < validator.min || value > validator.max) {
-        errors[fieldname] = `${form[fieldname]} could not be saved. Accept range [${validator.min}, ${validator.max}].`;
-        form[fieldname] = null;
+        errors[fieldName] = `${form[fieldName]} could not be saved. Accept range [${validator.min}, ${validator.max}].`;
+        form[fieldName] = null;
     } else {
-        errors[fieldname] = '';
+        errors[fieldName] = '';
     }
 };
 </script>
