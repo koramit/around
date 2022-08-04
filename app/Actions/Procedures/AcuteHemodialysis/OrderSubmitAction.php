@@ -360,9 +360,8 @@ class OrderSubmitAction extends AcuteHemodialysisAction
         ]);
 
         $note->form = $validated;
-        if ($note->status === 'scheduling') {
-            $note->meta['submitted'] = true;
-        } else {
+        $note->meta['submitted'] = true;
+        if ($note->status !== 'scheduling') {
             $note->status = 'submitted';
         }
         $note->save();

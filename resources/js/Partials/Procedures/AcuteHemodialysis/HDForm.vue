@@ -1,10 +1,18 @@
 <template>
     <template v-if="form.hf_perform_at !== undefined">
         <h2
-            class="mt-6 md:mt-12 xl:mt-24 form-label italic text-xl text-complement"
+            class="mt-6 md:mt-12 xl:mt-24 flex justify-between items-center"
             id="prescription"
         >
-            HF Prescription
+            <span class="form-label !mb-0 text-lg italic text-complement">HF Prescription</span>
+            <button
+                class="flex items-center text-sm text-accent"
+                @click="$emit('copyPreviousOrder')"
+                v-if="formConfigs.can.copy"
+            >
+                <IconCopy class="w-3 h-3 mr-1" />
+                Copy previous order
+            </button>
         </h2>
         <hr class="my-4 border-b border-accent">
         <div class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8 2xl:grid-cols-4">
@@ -50,11 +58,14 @@
         class="mt-6 md:mt-12 xl:mt-24 flex justify-between items-center"
         id="prescription"
     >
-        <span class="form-label mb-0 text-lg italic text-complement">HD Prescription</span>
+        <span class="form-label !mb-0 text-lg italic text-complement">HD Prescription</span>
         <button
-            class="text-sm text-accent"
+            v-if="form.hf_perform_at === undefined && formConfigs.can.copy"
+            class="flex items-center text-sm text-accent"
+            @click="$emit('copyPreviousOrder')"
         >
-            Copy last order
+            <IconCopy class="w-3 h-3 mr-1" />
+            Copy previous order
         </button>
     </h2>
     <hr class="my-4 border-b border-accent">
@@ -395,12 +406,13 @@ import FormRadio from '../../../Components/Controls/FormRadio.vue';
 import AlertMessage from '../../../Components/Helpers/AlertMessage.vue';
 import { watch, reactive, ref } from 'vue';
 import { useSelectOther } from '../../../functions/useSelectOther.js';
+import IconCopy from '../../../Components/Helpers/Icons/IconCopy.vue';
 
 const props = defineProps({
     modelValue: { type: Object, required: true },
     formConfigs: { type: Object, required: true },
 });
-const emit = defineEmits(['update:modelValue', 'autosave']);
+const emit = defineEmits(['update:modelValue', 'autosave', 'copyPreviousOrder']);
 
 const form = reactive({...props.modelValue});
 const reset = {

@@ -28,6 +28,7 @@ class OrderEditAction extends AcuteHemodialysisAction
         $can = [
             'update' => $user->can('update', $note),
             'reschedule' => $user->can('reschedule', $note),
+            'copy' => ! $note->meta['submitted'],
         ];
 
         $flash = [
@@ -72,6 +73,7 @@ class OrderEditAction extends AcuteHemodialysisAction
                     'today_slot_request' => route('procedures.acute-hemodialysis.orders.today-slot-request', $note->hashed_key),
                     'swap' => route('procedures.acute-hemodialysis.orders.swap', $note->hashed_key),
                     'acute_hemodialysis_slot_available' => route('procedures.acute-hemodialysis.slot-available'),
+                    'copy' => route('procedures.acute-hemodialysis.orders.copy', $note->hashed_key),
                 ],
                 'hn' => $note->meta['hn'],
                 'an' => $note->meta['an'] ?? null,

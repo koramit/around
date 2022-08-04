@@ -179,19 +179,46 @@ namespace App\Models{
 /**
  * App\Models\Feedback
  *
- * @property int $id
- * @property string $feedback
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
  * @method static \Illuminate\Database\Eloquent\Builder|Feedback newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Feedback newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Feedback query()
- * @method static \Illuminate\Database\Eloquent\Builder|Feedback whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Feedback whereFeedback($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Feedback whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Feedback whereUpdatedAt($value)
  */
 	class Feedback extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\LoginRecord
+ *
+ * @property int $id
+ * @property int $user_id
+ * @property string|null $ip_address
+ * @property string $device
+ * @property int $type
+ * @property string $browser
+ * @property string $browser_version
+ * @property string $platform
+ * @property string $platform_version
+ * @property string|null $robot
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder|LoginRecord newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|LoginRecord newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|LoginRecord query()
+ * @method static \Illuminate\Database\Eloquent\Builder|LoginRecord whereBrowser($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|LoginRecord whereBrowserVersion($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|LoginRecord whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|LoginRecord whereDevice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|LoginRecord whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|LoginRecord whereIpAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|LoginRecord wherePlatform($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|LoginRecord wherePlatformVersion($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|LoginRecord whereRobot($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|LoginRecord whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|LoginRecord whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|LoginRecord whereUserId($value)
+ */
+	class LoginRecord extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -210,7 +237,7 @@ namespace App\Models{
  * @property int|null $place_id
  * @property mixed $meta
  * @property mixed $form
- * @property mixed|null $report
+ * @property string|null $report
  * @property int $status
  * @property \Illuminate\Support\Carbon $date_note
  * @property int $author_id
@@ -265,7 +292,7 @@ namespace App\Models\Notes{
  * @property int|null $place_id
  * @property mixed $meta
  * @property mixed $form
- * @property mixed|null $report
+ * @property string|null $report
  * @property string|null $status
  * @property \Illuminate\Support\Carbon $date_note
  * @property int $author_id
@@ -275,7 +302,7 @@ namespace App\Models\Notes{
  * @property-read int|null $action_logs_count
  * @property-read \App\Models\Resources\Person|null $attendingStaff
  * @property-read \App\Models\User|null $author
- * @property-read \App\Models\CaseRecord $caseRecord
+ * @property-read \App\Models\Registries\AcuteHemodialysisCaseRecord $caseRecord
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\DocumentChangeRequests\AcuteHemodialysisSlotRequest[] $changeRequests
  * @property-read int|null $change_requests_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Comment[] $comments
@@ -418,7 +445,7 @@ namespace App\Models\Resources{
  * @property string $name_en
  * @property string $name_en_short
  * @property string $department
- * @property bool $active
+ * @property int $active
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @method static \Illuminate\Database\Eloquent\Builder|Division newModelQuery()
@@ -443,7 +470,7 @@ namespace App\Models\Resources{
  * @property int $id
  * @property string $name
  * @property string $label
- * @property bool $active
+ * @property int $active
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @method static \Illuminate\Database\Eloquent\Builder|NoteType newModelQuery()
@@ -466,10 +493,10 @@ namespace App\Models\Resources{
  * @property-read string $first_name
  * @property int $id
  * @property string $hn
- * @property bool $gender
+ * @property int $gender
  * @property \Illuminate\Support\Carbon|null $dob
  * @property mixed|null $profile
- * @property bool $alive
+ * @property int $alive
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Resources\Admission[] $admissions
@@ -499,7 +526,7 @@ namespace App\Models\Resources{
  * @property string $name
  * @property int $division_id
  * @property int $position
- * @property bool $active
+ * @property int $active
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @method static \Illuminate\Database\Eloquent\Builder|Person newModelQuery()
@@ -526,7 +553,7 @@ namespace App\Models\Resources{
  * @property string $label_eng
  * @property string $route
  * @property int $division_id
- * @property bool $active
+ * @property int $active
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @method static \Illuminate\Database\Eloquent\Builder|Registry newModelQuery()
@@ -554,7 +581,7 @@ namespace App\Models\Resources{
  * @property string|null $name_short
  * @property string $name_ref
  * @property int $division_id
- * @property bool $active
+ * @property int $active
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @method static \Illuminate\Database\Eloquent\Builder|Ward newModelQuery()
@@ -629,15 +656,9 @@ namespace App\Models{
 /**
  * App\Models\SupportTicket
  *
- * @property int $id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
  * @method static \Illuminate\Database\Eloquent\Builder|SupportTicket newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|SupportTicket newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|SupportTicket query()
- * @method static \Illuminate\Database\Eloquent\Builder|SupportTicket whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SupportTicket whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|SupportTicket whereUpdatedAt($value)
  */
 	class SupportTicket extends \Eloquent {}
 }
