@@ -57,9 +57,9 @@ class RegisteredUserController extends Controller
             'tel_no' => 'required|digits_between:9,10',
             'agreement_accepted' => 'required',
             'org_id' => 'required|digits:8',
-            'division' => 'required|string',
-            'position' => 'required|string',
-            'remark' => 'required|string',
+            'division' => 'nullable|string',
+            'position' => 'nullable|string',
+            'remark' => 'nullable|string',
         ]);
 
         $profile = [
