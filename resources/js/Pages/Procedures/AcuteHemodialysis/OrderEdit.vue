@@ -117,6 +117,15 @@
     </Transition>
 
     <Transition name="slide-fade">
+        <AlertMessage
+            v-if="showNoPreviousOrder"
+            class="mt-4 md:mt-8"
+            message="No previous order"
+            title="😅"
+            type="warning"
+        />
+    </Transition>
+    <Transition name="slide-fade">
         <div v-if="orderForm.hd !== undefined && !copying">
             <HDForm
                 v-model="form.hd"
@@ -524,17 +533,18 @@ const ensureConfigsRefreshAfterCall = () => {
 };
 
 const copying = ref(false);
+const showNoPreviousOrder = ref(false);
 const copyPreviousOrder = () => {
     window.axios
-        .patch(configs.endpoints.copy)
         .then(res => {
             console.log(res.data);
             if (!res.data.found) {
+                showNoPreviousOrder.value = true;
+                setTimeout(() => showNoPreviousOrder.value = false, 2000);
                 return; // reply no data
             }
 
             copying.value = true;
-
 
             nextTick(() => {
                 res.data.records.map(data => {
