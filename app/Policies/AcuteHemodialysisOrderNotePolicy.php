@@ -61,6 +61,8 @@ class AcuteHemodialysisOrderNotePolicy
             && ! $this->status->getEditNotAllowStatuses()->contains($note->status);
     }
 
+    /** @TODO add start session policy */
+    /** @TODO add finish session policy */
     public function perform(User $user, AcuteHemodialysisOrderNote $note): bool
     {
         return $user->can('perform_acute_hemodialysis_order')
