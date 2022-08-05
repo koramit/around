@@ -28,7 +28,7 @@
                 </option>
                 <option
                     class="italic text-yellow-500"
-                    :disabled="modelValue"
+                    :disabled="!modelValue"
                 >
                     Remove
                 </option>
@@ -85,7 +85,7 @@
                     </option>
                     <option
                         class="italic text-yellow-500"
-                        :disabled="modelValue"
+                        :disabled="!modelValue"
                     >
                         Remove
                     </option>
@@ -165,6 +165,7 @@ const itemOptions = computed(() => {
 watch(
     () => props.modelValue,
     (val) => {
+        console.log(val);
         if (val === 'Remove') {
             emits('update:modelValue', null);
             emits('autosave');
