@@ -295,6 +295,7 @@ watch (
         // reset access_site_coagulant
         if (
             (val.access_type === 'pending')
+            || (val.access_type === 'Remove')
             || (['DLC', 'Perm cath'].includes(val.access_type) && !['DLC', 'Perm cath'].includes(reset.access_type))
             || (['AVF', 'AVG'].includes(val.access_type) && !['AVF', 'AVG'].includes(reset.access_type))
         ) {
