@@ -166,8 +166,10 @@ watch(
     () => props.modelValue,
     (val) => {
         if (val === 'Remove') {
-            emits('update:modelValue', null);
-            emits('autosave');
+            nextTick(() => {
+                emits('update:modelValue', null);
+                emits('autosave');
+            });
         }
     }
 );
