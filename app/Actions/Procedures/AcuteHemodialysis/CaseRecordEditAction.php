@@ -95,7 +95,8 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
             });
 
         // form
-        // @TODO add admitted/discharged dates
+        /* @TODO add admitted/discharged dates */
+        /* @TODO correct first dialysis and add last dialysis date */
         $form = $caseRecord->form;
         $form['admission'] = ($form['an'] ?? false)
                         ? (new AdmissionManager)->manage($caseRecord->form['an'])['admission']

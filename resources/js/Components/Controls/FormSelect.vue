@@ -172,8 +172,10 @@ watch(
     }
 );
 const change = (event) => {
-    emits('update:modelValue', event.target.value);
-    emits('autosave');
+    nextTick(() => {
+        emits('update:modelValue', event.target.value);
+        emits('autosave');
+    });
 };
 const check = (event) => {
     emits('update:modelCheckbox', event.target.checked);
