@@ -28,7 +28,7 @@
                 </option>
                 <option
                     class="italic text-yellow-500"
-                    v-if="modelValue"
+                    :disabled="modelValue"
                 >
                     Remove
                 </option>
@@ -85,7 +85,7 @@
                     </option>
                     <option
                         class="italic text-yellow-500"
-                        v-if="modelValue"
+                        :disabled="modelValue"
                     >
                         Remove
                     </option>
@@ -166,18 +166,14 @@ watch(
     () => props.modelValue,
     (val) => {
         if (val === 'Remove') {
-            nextTick(() => {
-                emits('update:modelValue', null);
-                emits('autosave');
-            });
+            emits('update:modelValue', null);
+            emits('autosave');
         }
     }
 );
 const change = (event) => {
-    nextTick(() => {
-        emits('update:modelValue', event.target.value);
-        emits('autosave');
-    });
+    emits('update:modelValue', event.target.value);
+    emits('autosave');
 };
 const check = (event) => {
     emits('update:modelCheckbox', event.target.checked);
