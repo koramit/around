@@ -14,13 +14,11 @@ class SlotRequestIndexAction extends AcuteHemodialysisAction
 
     public function __invoke(User $user, string $routeName): array
     {
-//        $slot = (new ScheduleIndexAction)(dateNote: null, user: $user)['slot'];
         $requests = AcuteHemodialysisSlotRequest::query()
             ->with(['changeable:id,date_note,meta'])
             ->withRequesterName()
             ->where('submitted_at', '>=', now()->tz($this->TIMEZONE)->addDays(-7))
-            ->orderBy('status')
-            ->oldest('submitted_at')
+            ->latest('submitted_at')
             ->get()
             ->transform(function ($request) use ($user) {
                 /** @var AcuteHemodialysisOrderNote $changeable */
