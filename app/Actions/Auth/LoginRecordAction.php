@@ -8,10 +8,16 @@ use Jenssegers\Agent\Agent;
 
 class LoginRecordAction
 {
-    public function __invoke(?string $ip, Agent $agent, User $user)
+    public function __invoke(?string $ip, Agent $agent, User $user, string $provider = 'ad', ?int $daysBeforePasswordExpired = null): void
     {
         if (config('auth.guards.web.provider') === 'avatar') {
-            return []; // call api
+            return; // call api
+        }
+
+        if ($daysBeforePasswordExpired) {
+            $user->update([
+                'profile->password_expiration_date' => now()->addDays($daysBeforePasswordExpired + 1),
+            ]);
         }
 
         if ($agent->isMobile()) {
@@ -24,7 +30,8 @@ class LoginRecordAction
             $type = 0;
         }
 
-        return LoginRecord::query()
+        /* @TODO add auth provider before migrate to PGSQL */
+        LoginRecord::query()
             ->create([
                 'ip_address' => $ip,
                 'device' => $agent->device(),
@@ -35,6 +42,7 @@ class LoginRecordAction
                 'platform_version' => $agent->version($agent->platform()),
                 'robot' => $agent->isRobot() ? $agent->robot() : null,
                 'user_id' => $user->id,
+                'provider' => $provider,
             ]);
     }
 }
