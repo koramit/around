@@ -5,6 +5,7 @@ namespace App\Actions\Procedures\AcuteHemodialysis;
 use App\Models\DocumentChangeRequests\AcuteHemodialysisSlotRequest;
 use App\Models\Notes\AcuteHemodialysisOrderNote;
 use App\Models\Resources\Ward;
+use App\Models\Subscription;
 use App\Models\User;
 use App\Rules\HashedKeyExistsInCaseRecords;
 use App\Rules\NameExistsInPeople;
@@ -236,11 +237,6 @@ class OrderStoreAction extends AcuteHemodialysisAction
             }
         }
 
-        /*$ensureSlotAvailable = (new SlotAvailableAction)($validated);
-        if (! $ensureSlotAvailable['available']) {
-            throw ValidationException::withMessages(['status' => 'no slot available']);
-        }*/
-
         $note = new AcuteHemodialysisOrderNote();
         $note->case_record_id = $caseRecord->id;
         $note->attending_staff_id = cache()->pull($cacheKeyPrefix.'-validatedPerson')->id;
@@ -267,6 +263,11 @@ class OrderStoreAction extends AcuteHemodialysisAction
         ];
         $note->author_id = $user->id;
         $note->save();
+
+        $user->subscriptions()->attach(Subscription::query()->create([
+            'subscribable_type' => $note::class,
+            'subscribable_id' => $note->id
+        ])->id);
 
         if (! $reserveToday && ! $validated['covid_case']) {
             $note->actionLogs()->create([

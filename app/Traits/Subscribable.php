@@ -9,10 +9,10 @@ trait Subscribable
 {
     protected function getSubscriptionConfig(mixed $channel, ?User $user = null): array
     {
-        $subscription = Subscription::query()->firstOrCreate(
-            ['subscribable_type' => $channel::class],
-            ['subscribable_id' => $channel->id]
-        );
+        $subscription = Subscription::query()->firstOrCreate([
+            'subscribable_type' => $channel::class,
+            'subscribable_id' => $channel->id
+        ]);
 
         $subscribed = $subscription->subscribers()->where('id', $user?->id)->count() > 0;
 
@@ -23,7 +23,7 @@ trait Subscribable
         ];
     }
 
-    /** @TODO implement can */
+    /* @TODO implement can */
     protected function getSubscriptionActionMenu(mixed $channel, ?User $user = null): array
     {
         $config = $this->getSubscriptionConfig($channel, $user);
