@@ -11,7 +11,7 @@ trait Subscribable
     {
         $subscription = Subscription::query()->firstOrCreate([
             'subscribable_type' => $channel::class,
-            'subscribable_id' => $channel->id
+            'subscribable_id' => $channel->id,
         ]);
 
         $subscribed = $subscription->subscribers()->where('id', $user?->id)->count() > 0;

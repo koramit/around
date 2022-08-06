@@ -52,7 +52,12 @@ class AuthenticatedSessionController extends Controller
 
         if ($user = User::whereLogin($validated['login'])->first()) {
             Auth::login($user);
-            (new LoginRecordAction)($request->ip(), new Agent(), $user);
+            (new LoginRecordAction)(
+                ip: $request->ip(),
+                agent: new Agent(),
+                user: $user,
+                daysBeforePasswordExpired: $data['password_expires_in_days'] ?? 0
+            );
 
             return redirect()->intended(route($user->home_page));
         }

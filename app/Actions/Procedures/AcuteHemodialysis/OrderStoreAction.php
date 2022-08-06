@@ -266,7 +266,7 @@ class OrderStoreAction extends AcuteHemodialysisAction
 
         $user->subscriptions()->attach(Subscription::query()->create([
             'subscribable_type' => $note::class,
-            'subscribable_id' => $note->id
+            'subscribable_id' => $note->id,
         ])->id);
 
         if (! $reserveToday && ! $validated['covid_case']) {
