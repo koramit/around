@@ -34,7 +34,12 @@ class LINELoginAPI implements LoginProvider
 
     public static function redirect(string $mode = 'login'): RedirectResponse
     {
-        $configs = static::getConfigs();
+        if (!$configs = static::getConfigs()) {
+            cache()->forget('line-login-provider');
+            
+            return back()->withErrors(['notice' => 'No LINE login provider.']);
+        }
+
         $url = $configs['auth_url']; //'https://access.line.me/oauth2/v2.1/authorize?response_type=code';
         $url .= '&client_id='.$configs['channel_id']; // config('services.line.client_id');
         $url .= '&redirect_uri='.route("social-$mode.store", 'line');  // config('services.line.redirect');
