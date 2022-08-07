@@ -93,6 +93,7 @@ Route::middleware(['auth'])
         require __DIR__.'/procedures.php';
     });
 
+// comment
 Route::middleware(['auth', 'can:comment'])
     ->prefix('comments')
     ->name('comments.')
@@ -103,6 +104,7 @@ Route::middleware(['auth', 'can:comment'])
             ->name('store');
     });
 
+// subscription
 Route::middleware(['auth'])
     ->prefix('subscriptions')
     ->name('subscriptions.')
@@ -110,3 +112,5 @@ Route::middleware(['auth'])
         Route::post('', [SubscriptionController::class, 'store'])
             ->name('store');
     });
+
+// notification

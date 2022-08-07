@@ -106,6 +106,31 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * App\Models\ChatLog
+ *
+ * @property int $id
+ * @property int $user_id
+ * @property int $chat_bot_id
+ * @property int $mode
+ * @property mixed $payload
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder|ChatLog newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ChatLog newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ChatLog query()
+ * @method static \Illuminate\Database\Eloquent\Builder|ChatLog whereChatBotId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ChatLog whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ChatLog whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ChatLog whereMode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ChatLog wherePayload($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ChatLog whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ChatLog whereUserId($value)
+ */
+	class ChatLog extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * App\Models\Comment
  *
  * @property int $id
@@ -768,11 +793,10 @@ namespace App\Models{
  * @property mixed $profile
  * @property mixed $preferences
  * @property int $division_id
+ * @property int $active
  * @property string|null $remember_token
- * @property string|null $deleted_at
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property int $active
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ResourceActionLog[] $actionLogs
  * @property-read int|null $action_logs_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ChatBot[] $chatBots
@@ -794,7 +818,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|User query()
  * @method static \Illuminate\Database\Eloquent\Builder|User whereActive($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereDivisionId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereFullName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereId($value)
