@@ -25,8 +25,8 @@ class SocialProfile extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function scopeActiveLineLogin($query)
+    public function scopeActiveLoginByProviderId($query, $providerId)
     {
-        return $query->where('social_provider_id', 1)->where('active', true);
+        return $query->where('social_provider_id', $providerId)->where('active', true);
     }
 }
