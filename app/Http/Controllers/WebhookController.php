@@ -27,6 +27,10 @@ class WebhookController extends Controller
                 abort(400);
             }
 
+            if (empty($request->input('events'))) { // LINE verify webhook
+                return ['ok' => true];
+            }
+
             (new LINEMessagingManager($chatBot))->manage($request->all());
         }
 
