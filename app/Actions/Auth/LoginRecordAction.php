@@ -30,7 +30,6 @@ class LoginRecordAction
             $type = 0;
         }
 
-        /* @TODO add auth provider before migrate to PGSQL */
         LoginRecord::query()
             ->create([
                 'ip_address' => $ip,

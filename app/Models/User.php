@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Casts\AsArrayObject;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -43,12 +44,22 @@ class User extends Authenticatable
 
     public function subscriptions(): BelongsToMany
     {
-        return $this->belongsToMany(Subscription::class, 'subscription_user', 'subscriber_id', 'subscription_id');
+        return $this->belongsToMany(Subscription::class, 'subscription_user', 'subscriber_id', 'subscription_id')->withTimestamps();
     }
 
     public function actionLogs(): MorphMany
     {
         return $this->morphMany(ResourceActionLog::class, 'loggable');
+    }
+
+    public function socialProfiles(): HasMany
+    {
+        return $this->hasMany(SocialProfile::class);
+    }
+
+    public function chatBots(): BelongsToMany
+    {
+        return $this->belongsToMany(ChatBot::class)->withTimestamps();
     }
 
     /** @alias string $avatar_token*/

@@ -24,6 +24,6 @@ class Subscription extends Model
 
     public function subscribers(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'subscription_user', 'subscription_id', 'subscriber_id');
+        return $this->belongsToMany(User::class, 'subscription_user', 'subscription_id', 'subscriber_id')->withTimestamps();
     }
 }

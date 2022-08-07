@@ -26,7 +26,8 @@ class AuthenticatedSessionController extends Controller
 
         return Inertia::render('Auth/LoginForm', [
             'links' => [
-                'loginStore' => route('login.store'),
+                'login_store' => route('login.store'),
+                'line_login' => route('social-login.create', 'line'),
             ],
         ]);
     }

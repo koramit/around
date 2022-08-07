@@ -32,6 +32,17 @@
             >
                 {{ __('ENTER') }}
             </SpinnerButton>
+
+            <a
+                class="flex justify-center items-center gap-x-2 btn btn-accent bg-line w-full mt-8"
+                :href="links.line_login"
+            >
+                <IconLine class="w-6 h-6 text-white" />
+                LOGIN
+            </a>
+            <p class="text-sm text-red-400 mt-2">
+                {{ $page.props.errors.notice }}
+            </p>
             <!-- <a href="/locale/en">ENG</a>
             <a href="/locale/th">ไทย</a> -->
         </div>
@@ -41,8 +52,9 @@
 <script setup>
 import { useForm } from '@inertiajs/inertia-vue3';
 import { nextTick, onMounted, ref } from 'vue';
-import FormInput from '@/Components/Controls/FormInput.vue';
-import SpinnerButton from '@/Components/Controls/SpinnerButton.vue';
+import FormInput from '../../Components/Controls/FormInput.vue';
+import SpinnerButton from '../../Components/Controls/SpinnerButton.vue';
+import IconLine from '../../Components/Helpers/Icons/IconLine.vue';
 
 const props = defineProps({
     // eslint-disable-next-line vue/require-default-prop
@@ -67,9 +79,11 @@ const login = () => {
         login: data.login.toLowerCase(),
         password: data.password,
         remember: data.remember ? 'on' : '',
-    })).post(props.links.loginStore, {
+    })).post(props.links.login_store, {
         replace: true,
-        onFinish: () => form.processing = false,
+        onFinish: () => {
+            form.processing = false;
+        },
     });
 };
 </script>

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Actions\User\PreferencesUpdateAction;
+use App\APIs\LINELoginAPI;
+use App\Models\ChatBot;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -18,7 +20,32 @@ class PreferenceController extends Controller
         ])->filter(fn ($link) => $link['can'])->values());
         session()->flash('action-menu', []);
 
-        return Inertia::render('User/PreferencePage');
+        $lineLinked = $request->user()->socialProfiles()->activeLineLogin()->count() > 0;
+        if ($lineLinked) {
+            $lineBotActive = $request->user()->chatBots()->wherePivot('active', true)->count();
+        } else {
+            $lineBotActive = false;
+        }
+
+        if ($lineLinked && ! $lineBotActive) {
+            $bot = ChatBot::query()->minUserCount($request->user()->profile['line_bot_service_provider_id'] ?? 0)->first(); // social_provider_id
+            $addFriendLink = $bot ? $bot->configs['add_friend_base_url'].$bot->configs['basic_id'] : null;
+        } else {
+            $addFriendLink = null;
+        }
+
+        return Inertia::render('User/PreferencePage')->with([
+            'configs' => [
+                'can' => [
+                    'link_line' => ! $lineLinked,
+                    'add_line' => $lineLinked && ! $lineBotActive,
+                ],
+                'routes' => [
+                    'link_line' => LINELoginAPI::getConfigs() ? route('social-link.create', 'line') : null,
+                    'add_line' => $addFriendLink,
+                ],
+            ],
+        ]);
     }
 
     public function update(Request $request)

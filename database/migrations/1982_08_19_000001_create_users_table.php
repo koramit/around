@@ -22,8 +22,8 @@ return new class extends Migration
                 'font_scale_index' => 3,
             ]));
             $table->unsignedSmallInteger('division_id')->default(2);
+            $table->boolean('active')->default(true);
             $table->rememberToken();
-            $table->softDeletes();
             $table->timestamps();
         });
 

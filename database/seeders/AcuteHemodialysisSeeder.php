@@ -128,7 +128,7 @@ class AcuteHemodialysisSeeder extends Seeder
 
         // fake staff
         Person::query()
-            ->where('division_id', 5)
+            ->where('division_id', 6)
             ->where('position', 8)
             ->each(function ($s) {
                 $s->name = 'Prof. '.fake()->firstName().' '.fake()->lastName();
