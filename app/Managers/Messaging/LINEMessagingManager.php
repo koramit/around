@@ -8,6 +8,7 @@ use App\Models\SocialProfile;
 use App\Models\User;
 use App\Services\Messages\LINEMessage;
 use App\Traits\Placeholderable;
+use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -122,6 +123,12 @@ class LINEMessagingManager
     private function message(array $event, User $user): void
     {
         /* @TODO implement message event */
+        $text = Inspiring::quote();
+        $text = str_replace('<options=bold>', '', $text);
+        $text = str_replace('<fg=gray>', '', $text);
+        $text = str_replace('</>', '', $text);
+
+        $this->replyMessage($event['replyToken'], (new LINEMessage())->text($text)->getMessages());
     }
 
     private function unsend(User $user): void
