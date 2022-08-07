@@ -20,7 +20,7 @@ class PreferenceController extends Controller
         ])->filter(fn ($link) => $link['can'])->values());
         session()->flash('action-menu', []);
 
-        $providerId = $request->user()->profile['line_bot_service_provider_id'] ?? 0;
+        $providerId = $request->user()->profile['line_bot_provider_id'] ?? 0;
         $lineLinked = $request->user()->socialProfiles()->activeLineLogin()->count() > 0;
         if ($lineLinked) {
             $lineBotActive = $request->user()->chatBots()->filterByProviderId($providerId)->wherePivot('active', true)->count();

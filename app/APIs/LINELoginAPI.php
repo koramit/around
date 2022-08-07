@@ -34,7 +34,7 @@ class LINELoginAPI implements LoginProvider
 
     public static function redirect(string $mode = 'login'): RedirectResponse
     {
-        if (!$configs = static::getConfigs()) {
+        if (! $configs = static::getConfigs()) {
             cache()->forget('line-login-provider');
 
             return back()->withErrors(['notice' => 'No LINE login provider.']);
