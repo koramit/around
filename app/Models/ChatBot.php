@@ -20,7 +20,12 @@ class ChatBot extends Model
         return $this->belongsToMany(User::class)->withTimestamps();
     }
 
-    public function scopeMinUserCount($query, $socialProviderId)
+    public function scopeFilterByProviderId($query, $socialProviderId)
+    {
+        return $query->where('social_provider_id', $socialProviderId);
+    }
+
+    public function scopeMinUserCountByProviderId($query, $socialProviderId)
     {
         return $query->where('social_provider_id', $socialProviderId)
             ->orderByDesc('user_count')
