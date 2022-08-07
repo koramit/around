@@ -20,16 +20,16 @@ class PreferenceController extends Controller
         ])->filter(fn ($link) => $link['can'])->values());
         session()->flash('action-menu', []);
 
-        $providerId = $request->user()->profile['line_bot_provider_id'] ?? 0;
-        $lineLinked = $request->user()->socialProfiles()->activeLineLogin()->count() > 0;
+        $lineProviderId = cache('line-login-provider')->id;
+        $lineLinked = $request->user()->socialProfiles()->activeLoginByProviderId($lineProviderId)->count() > 0;
         if ($lineLinked) {
-            $lineBotActive = $request->user()->chatBots()->filterByProviderId($providerId)->wherePivot('active', true)->count();
+            $lineBotActive = $request->user()->chatBots()->filterByProviderId($lineProviderId)->wherePivot('active', true)->count() > 0;
         } else {
             $lineBotActive = false;
         }
 
         if ($lineLinked && ! $lineBotActive) {
-            $bot = ChatBot::query()->minUserCountByProviderId($providerId)->first(); // social_provider_id
+            $bot = ChatBot::query()->minUserCountByProviderId($lineProviderId)->first();
             $addFriendLink = $bot ? $bot->configs['add_friend_base_url'].$bot->configs['basic_id'] : null;
         } else {
             $addFriendLink = null;

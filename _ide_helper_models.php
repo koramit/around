@@ -698,7 +698,7 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\SocialProvider|null $socialProvider
  * @property-read \App\Models\User $user
- * @method static \Illuminate\Database\Eloquent\Builder|SocialProfile activeLineLogin()
+ * @method static \Illuminate\Database\Eloquent\Builder|SocialProfile activeLoginByProviderId($providerId)
  * @method static \Illuminate\Database\Eloquent\Builder|SocialProfile newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|SocialProfile newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|SocialProfile query()

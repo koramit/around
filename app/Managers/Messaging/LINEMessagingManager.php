@@ -34,7 +34,7 @@ class LINEMessagingManager
     {
         $profile = SocialProfile::query()
             ->where('profile_id', $payload['events'][0]['source']['userId'])
-            ->where('service_provider_id', cache('line-login-provider')?->id)
+            ->where('social_provider_id', cache('line-login-provider')?->id)
             ->where('active', true)
             ->first();
 
