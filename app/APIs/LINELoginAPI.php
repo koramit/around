@@ -36,7 +36,7 @@ class LINELoginAPI implements LoginProvider
     {
         if (!$configs = static::getConfigs()) {
             cache()->forget('line-login-provider');
-            
+
             return back()->withErrors(['notice' => 'No LINE login provider.']);
         }
 
