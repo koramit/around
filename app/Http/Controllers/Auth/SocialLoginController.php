@@ -37,7 +37,7 @@ class SocialLoginController extends Controller
             return redirect()->route('preferences')->withErrors(['status' => $e->getMessage()]);
         }
 
-        if (! $user = SocialProfile::query()->where('profile_id', $socialUser->getId())->activeLineLogin()->first()?->user) {
+        if (! $user = SocialProfile::query()->where('profile_id', $socialUser->getId())->activeLoginByProviderId(cache('line-login-provider')?->id)->first()?->user) {
             return redirect()->route('login')->withErrors(['notice' => 'Please link LINE in preferences menu first.']);
         }
 
