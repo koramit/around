@@ -40,7 +40,7 @@ return new class extends Migration
         Schema::create('chat_bot_user', function (Blueprint $table) {
             $table->primary(['user_id', 'chat_bot_id']);
             $table->unsignedInteger('user_id');
-            $table->unsignedSmallInteger('chat_bot_id');
+            $table->unsignedInteger('chat_bot_id');
             $table->boolean('active');
             $table->timestamps();
         });
@@ -49,8 +49,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('chat_bot_id');
-            $table->boolean('push')->default(true);
-            $table->index(['user_id', 'chat_bot_id', 'push']);
+            $table->unsignedTinyInteger('mode')->default(1); // ['', 'push', 'read', 'reply']
+            $table->index(['user_id', 'chat_bot_id', 'mode']);
             $table->jsonb('payload');
             $table->timestamps();
         });

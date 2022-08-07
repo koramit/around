@@ -87,7 +87,8 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\User[] $users
  * @property-read int|null $users_count
- * @method static \Illuminate\Database\Eloquent\Builder|ChatBot minUserCount($socialProviderId)
+ * @method static \Illuminate\Database\Eloquent\Builder|ChatBot filterByProviderId($socialProviderId)
+ * @method static \Illuminate\Database\Eloquent\Builder|ChatBot minUserCountByProviderId($socialProviderId)
  * @method static \Illuminate\Database\Eloquent\Builder|ChatBot newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|ChatBot newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|ChatBot query()
