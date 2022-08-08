@@ -6,38 +6,53 @@ use App\Actions\Auth\LoginRecordAction;
 use App\APIs\LINELoginAPI;
 use App\Http\Controllers\Controller;
 use App\Models\SocialProfile;
+use App\Models\SocialProvider;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
 use Jenssegers\Agent\Agent;
 
 class SocialLoginController extends Controller
 {
-    public function create($provider)
+    protected SocialProvider $provider;
+
+    public function __construct()
     {
-        if ($provider === 'line') {
-            return LINELoginAPI::redirect();
+        $provider = SocialProvider::query()->findByUnhashKey(request()->route('provider'))->first();
+        if (! $provider) {
+            throw ValidationException::withMessages(['notice' => 'No LINE login provider.']);
+        }
+
+        $this->provider = $provider;
+    }
+
+    public function create()
+    {
+        if ($this->provider->platform === 'line') {
+            return (new LINELoginAPI($this->provider))->redirect();
         } else {
             return abort(404);
         }
     }
 
-    public function store(Request $request, string $provider)
+    public function store(Request $request)
     {
         try {
-            if ($provider === 'line') {
-                $socialUser = new LINELoginAPI($request->all());
+            if ($this->provider->platform === 'line') {
+                $socialUser = (new LINELoginAPI($this->provider));
+                $socialUser($request->all());
             } else {
                 return abort(404);
             }
         } catch (Exception $e) {
             Log::error($e->getMessage());
 
-            return redirect()->route('preferences')->withErrors(['status' => $e->getMessage()]);
+            return redirect()->route('login')->withErrors(['status' => $e->getMessage()]);
         }
 
-        if (! $user = SocialProfile::query()->where('profile_id', $socialUser->getId())->activeLoginByProviderId(cache('line-login-provider')?->id)->first()?->user) {
+        if (! $user = SocialProfile::query()->where('profile_id', $socialUser->getId())->activeLoginByProviderId($this->provider->id)->first()?->user) {
             return redirect()->route('login')->withErrors(['notice' => 'Please link LINE in preferences menu first.']);
         }
 
@@ -50,7 +65,7 @@ class SocialLoginController extends Controller
             ip: $request->ip(),
             agent: new Agent(),
             user: $user,
-            provider: $provider,
+            provider: $this->provider->platform,
         );
 
         return redirect()->intended(route($user->home_page));

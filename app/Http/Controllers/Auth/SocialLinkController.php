@@ -4,26 +4,41 @@ namespace App\Http\Controllers\Auth;
 
 use App\APIs\LINELoginAPI;
 use App\Http\Controllers\Controller;
+use App\Models\SocialProvider;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
 
 class SocialLinkController extends Controller
 {
-    public function create($provider)
+    protected SocialProvider $provider;
+
+    public function __construct()
     {
-        if ($provider === 'line') {
-            return LINELoginAPI::redirect('link');
+        $provider = SocialProvider::query()->findByUnhashKey(request()->route('provider'))->first();
+        if (! $provider) {
+            throw ValidationException::withMessages(['notice' => 'No LINE login provider.']);
+        }
+
+        $this->provider = $provider;
+    }
+
+    public function create()
+    {
+        if ($this->provider->platform === 'line') {
+            return (new LINELoginAPI($this->provider))->redirect('link');
         } else {
             return abort(404);
         }
     }
 
-    public function store(Request $request, string $provider)
+    public function store(Request $request)
     {
         try {
-            if ($provider === 'line') {
-                $socialUser = new LINELoginAPI($request->all(), 'link');
+            if ($this->provider->platform === 'line') {
+                $socialUser = (new LINELoginAPI($this->provider));
+                $socialUser($request->all(), 'link');
             } else {
                 return abort(404);
             }
@@ -38,7 +53,7 @@ class SocialLinkController extends Controller
         $request->user()->socialProfiles()->firstOrCreate(
             [
                 'profile_id' => $socialUser->getId(),
-                'social_provider_id' => $socialUser->getProvider()->id,
+                'social_provider_id' => $this->provider->id,
             ],
             [
                 'profile' => [
@@ -51,6 +66,6 @@ class SocialLinkController extends Controller
             ]
         );
 
-        return redirect()->route('preferences');
+        return redirect()->route('preferences')->with($this->provider->platform.'-linked', true);
     }
 }

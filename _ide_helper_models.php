@@ -77,6 +77,7 @@ namespace App\Models{
 /**
  * App\Models\ChatBot
  *
+ * @property-read string $hashed_key
  * @property int $id
  * @property string $name
  * @property string $callback_token
@@ -88,6 +89,7 @@ namespace App\Models{
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\User[] $users
  * @property-read int|null $users_count
  * @method static \Illuminate\Database\Eloquent\Builder|ChatBot filterByProviderId($socialProviderId)
+ * @method static \Illuminate\Database\Eloquent\Builder|ChatBot findByUnhashKey(string $hashed)
  * @method static \Illuminate\Database\Eloquent\Builder|ChatBot minUserCountByProviderId($socialProviderId)
  * @method static \Illuminate\Database\Eloquent\Builder|ChatBot newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|ChatBot newQuery()
@@ -718,6 +720,7 @@ namespace App\Models{
 /**
  * App\Models\SocialProvider
  *
+ * @property-read string $hashed_key
  * @property int $id
  * @property int $platform
  * @property string $name
@@ -726,6 +729,7 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\SocialProfile[] $users
  * @property-read int|null $users_count
+ * @method static \Illuminate\Database\Eloquent\Builder|SocialProvider findByUnhashKey(string $hashed)
  * @method static \Illuminate\Database\Eloquent\Builder|SocialProvider newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|SocialProvider newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|SocialProvider query()

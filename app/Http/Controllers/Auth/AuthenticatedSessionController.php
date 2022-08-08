@@ -6,6 +6,7 @@ use App\Actions\Auth\LoginRecordAction;
 use App\Actions\Auth\LogoutRecordAction;
 use App\Contracts\AuthenticationAPI;
 use App\Http\Controllers\Controller;
+use App\Models\SocialProvider;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,11 +24,12 @@ class AuthenticatedSessionController extends Controller
     public function create()
     {
         session()->flash('page-title', __('Please Login'));
+        $lineProvider = SocialProvider::query()->where('platform', 1)->first();
 
         return Inertia::render('Auth/LoginForm', [
             'links' => [
                 'login_store' => route('login.store'),
-                'line_login' => route('social-login.create', 'line'),
+                'line_login' => $lineProvider ? route('social-login.create', $lineProvider->hashed_key) : null,
             ],
         ]);
     }

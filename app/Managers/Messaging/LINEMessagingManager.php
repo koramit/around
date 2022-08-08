@@ -34,15 +34,15 @@ class LINEMessagingManager
     {
         $profile = SocialProfile::query()
             ->where('profile_id', $payload['events'][0]['source']['userId'])
-            ->where('social_provider_id', cache('line-login-provider')?->id)
+            ->where('social_provider_id', $this->bot->social_provider_id)
             ->where('active', true)
             ->first();
 
-        $user = $profile ? $profile->user : User::query()->first();
+        $user = $profile?->user;
 
         ChatLog::query()->create([
             'payload' => $payload,
-            'user_id' => $user->id,
+            'user_id' => $user?->id,
             'chat_bot_id' => $this->bot->id,
             'mode' => 'read',
         ]);
@@ -62,18 +62,18 @@ class LINEMessagingManager
         }
     }
 
-    private function follow(array $event, User $user, ?SocialProfile $profile): void
+    private function follow(array $event, ?User $user, ?SocialProfile $profile): void
     {
         // unauthorized user
-        if ($user->id === 1) {
+        if (! $user) {
             $payload = $this->replyMessage($event['replyToken'], (new LINEMessage())->text('ไม่สามารถให้บริการได้ กรุณาทำการ Link LINE ในเมนู preferences ก่อน')->getMessages());
-            $this->log($user->id, $this->bot->id, $payload, 'reply');
+            $this->log(null, $this->bot->id, $payload, 'reply');
 
             return;
         }
 
         // unauthorized bot service provider
-        if ($user->profile['line_bot_provider_id'] !== $this->bot->social_provider_id) {
+        if ($user->profile['line_bot_id'] !== $this->bot->hashed_key) {
             $payload = $this->replyMessage($event['replyToken'], (new LINEMessage())->text('ไม่สามารถให้บริการได้ กรุณาทำการ Add LINE ที่แสดงในเมนู preferences ของท่านเท่านั้น')->getMessages());
             $this->log($user->id, $this->bot->id, $payload, 'reply');
 
@@ -82,7 +82,7 @@ class LINEMessagingManager
 
         // friended, just scan qrcode or click link add friend again
         if ($user->chatBots()->where('id', $this->bot->id)->wherePivot('active', true)->count()) {
-            $payload = $this->replyMessage($event['replyToken'], (new LINEMessage())->text('กด add บ่อยนะ คิดอะไรหรือเปล่า 😄')->getMessages());
+            $payload = $this->replyMessage($event['replyToken'], (new LINEMessage())->text('add บ่อยนะ คิดอะไรหรือเปล่า 😄')->getMessages());
             $this->log($user->id, $this->bot->id, $payload, 'reply');
 
             return;
@@ -103,24 +103,24 @@ class LINEMessagingManager
                 "สวัสดี :LINE_USER_NAME: 😃\n\n ตั้งค่าการแจ้งเตือนสำเร็จ 🥳\n\nยินดีต้อนรับ!! 🎉",
                 ['LINE_USER_NAME' => $profile->profile['nickname'] ?? $profile->profile['name']]
             );
-            $text .= "\n\n🤙🏻 LINE นี้สำหรับแจ้งเตือนและฝากคำแนะนำการให้บริการเท่านั้น โปรดอย่าพิมพ์ข้อมูลส่วนบุคคลหรือข้อมูลสุขภาพทั้งของท่านและของผู้ป่วยส่งเข้ามา\n\nหากต้องการแจ้งปัญหาการใช้งานโปรดแจ้งทางเมนู Support 👌";
+            $text .= "\n\n🤙🏻 LINE นี้สำหรับแจ้งเตือนและฝากคำแนะนำการให้บริการเท่านั้น โปรดอย่าพิมพ์ข้อมูลส่วนบุคคลหรือข้อมูลสุขภาพทั้งของท่านและของผู้ป่วยส่งเข้ามา\n\nหากต้องการแจ้งปัญหาการใช้งานโปรดแจ้งทางเมนู Consult IT 👌";
             $payload = $this->replyMessage($event['replyToken'], (new LINEMessage())->text($text)->sticker(6359, collect([11069855, 11069867, 11069868, 11069870])->random())->getMessages());
             $this->log($user->id, $this->bot->id, $payload, 'reply');
             $user->chatBots()->attach($this->bot->id, ['active' => true]);
         }
     }
 
-    private function unfollow(User $user): void
+    private function unfollow(?User $user): void
     {
         // unfollow by unauthorized user
-        if ($user->id === 1) {
+        if (! $user) {
             return;
         }
 
         $user->chatBots()->updateExistingPivot($this->bot->id, ['active' => false]);
     }
 
-    private function message(array $event, User $user): void
+    private function message(array $event, ?User $user): void
     {
         /* @TODO implement message event */
         $text = Inspiring::quote();
@@ -128,10 +128,11 @@ class LINEMessagingManager
         $text = str_replace('<fg=gray>', '', $text);
         $text = str_replace('</>', '', $text);
 
-        $this->replyMessage($event['replyToken'], (new LINEMessage())->text($text)->getMessages());
+        $payload = $this->replyMessage($event['replyToken'], (new LINEMessage())->text($text)->getMessages());
+        $this->log($user?->id, $this->bot->id, $payload, 'reply');
     }
 
-    private function unsend(User $user): void
+    private function unsend(?User $user): void
     {
         /* @TODO implement unsend event */
     }
@@ -147,7 +148,7 @@ class LINEMessagingManager
         return $payload;
     }
 
-    private function log(int $userId, int $botId, array $payload, string $mode): void
+    private function log(?int $userId, int $botId, array $payload, string $mode): void
     {
         ChatLog::query()->create([
             'user_id' => $userId,
