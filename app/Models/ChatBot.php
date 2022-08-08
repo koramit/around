@@ -6,6 +6,7 @@ use App\Traits\PKHashable;
 use Illuminate\Database\Eloquent\Casts\AsEncryptedArrayObject;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
@@ -22,6 +23,11 @@ class ChatBot extends Model
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class)->withTimestamps();
+    }
+
+    public function provider(): BelongsTo
+    {
+        return $this->belongsTo(SocialProvider::class, 'social_provider_id', 'id');
     }
 
     public function scopeFilterByProviderId($query, $socialProviderId)

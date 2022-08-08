@@ -9,11 +9,9 @@ use Illuminate\Support\Facades\Log;
 
 class WebhookController extends Controller
 {
-    public function __invoke(Request $request, string $provider, ChatBot $chatBot): array
+    public function __invoke(Request $request, ChatBot $chatBot): array
     {
-        $platform = explode('-', $provider)[0];
-
-        if ($platform === 'line') {
+        if ($chatBot->provider->platform === 'line') {
             // LINE request signature validation
             $hash = hash_hmac('sha256', $request->getContent(), $chatBot->callback_token, true);
             $signature = base64_encode($hash);
