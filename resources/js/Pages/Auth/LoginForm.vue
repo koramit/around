@@ -36,6 +36,7 @@
             <a
                 class="flex justify-center items-center gap-x-2 btn btn-accent bg-line w-full mt-8"
                 :href="links.line_login"
+                v-if="links.line_login"
             >
                 <IconLine class="w-6 h-6 text-white" />
                 LOGIN

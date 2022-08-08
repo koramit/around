@@ -39,7 +39,9 @@
     <a
         class="flex justify-center items-center gap-x-2 btn btn-accent bg-line w-full md:w-1/2 mt-4 md:mt-8"
         :href="configs.routes.add_line"
+        target="_blank"
         v-if="configs.can.add_line && configs.routes.add_line"
+        ref="lineAddButton"
     >
         <IconLine class="w-6 h-6 text-white" />
         ADD FRIEND
@@ -47,11 +49,11 @@
 </template>
 
 <script setup>
+import {onMounted, reactive, ref} from 'vue';
 import FormRadio from '../../Components/Controls/FormRadio.vue';
-import {reactive} from 'vue';
 import IconLine from '../../Components/Helpers/Icons/IconLine.vue';
 
-defineProps({
+const props = defineProps({
     configs: {type: Object, required: true}
 });
 
@@ -64,6 +66,14 @@ const formConfigs = reactive({
         {value: 'accepted', label: 'Yes please'},
         {value: 'declined', label: 'NO, I\'m good'},
     ]
+});
+
+const lineAddButton = ref(null);
+
+onMounted(() => {
+    if (props.configs.can.add_line && props.configs.routes.add_line && props.configs.mounted_actions.line_add_friend) {
+        lineAddButton.value.click();
+    }
 });
 </script>
 

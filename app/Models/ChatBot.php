@@ -2,14 +2,18 @@
 
 namespace App\Models;
 
+use App\Traits\PKHashable;
 use Illuminate\Database\Eloquent\Casts\AsEncryptedArrayObject;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
+/**
+ * @property-read string $hashed_key
+ */
 class ChatBot extends Model
 {
-    use HasFactory;
+    use HasFactory, PKHashable;
 
     protected $guarded = [];
 

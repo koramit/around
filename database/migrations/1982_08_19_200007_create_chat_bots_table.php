@@ -47,7 +47,7 @@ return new class extends Migration
 
         Schema::create('chat_logs', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('user_id');
+            $table->unsignedInteger('user_id')->nullable();
             $table->unsignedInteger('chat_bot_id');
             $table->unsignedTinyInteger('mode')->default(1); // ['', 'push', 'read', 'reply']
             $table->index(['user_id', 'chat_bot_id', 'mode']);

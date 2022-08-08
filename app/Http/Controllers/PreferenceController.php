@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Actions\User\PreferencesUpdateAction;
-use App\APIs\LINELoginAPI;
 use App\Models\ChatBot;
+use App\Models\SocialProvider;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -20,30 +20,40 @@ class PreferenceController extends Controller
         ])->filter(fn ($link) => $link['can'])->values());
         session()->flash('action-menu', []);
 
-        $lineProviderId = cache('line-login-provider')?->id ?? 0;
-        $lineLinked = $request->user()->socialProfiles()->activeLoginByProviderId($lineProviderId)->count() > 0;
-        if ($lineLinked) {
-            $lineBotActive = $request->user()->chatBots()->filterByProviderId($lineProviderId)->wherePivot('active', true)->count() > 0;
-        } else {
-            $lineBotActive = false;
-        }
+        $user = $request->user();
 
-        if ($lineLinked && ! $lineBotActive) {
-            $bot = ChatBot::query()->minUserCountByProviderId($lineProviderId)->first();
+        // LINE config
+        // for now all user share the same LINE provider
+        $lineProvider = SocialProvider::query()->where('platform', 1)->first();
+        $lineProviderId = $lineProvider?->id ?? 0;
+        $lineLinked = $user->socialProfiles()->activeLoginByProviderId($lineProviderId)->count() > 0;
+        $bot = null;
+        $addFriendLink = null;
+        if ($lineLinked) {
+            if (isset($user->profile['line_bot_id'])) {
+                $lineBotActive = $user->chatBots()->filterByProviderId($lineProviderId)->wherePivot('active', true)->count() > 0;
+                if (! $lineBotActive) {
+                    $bot = ChatBot::query()->findByUnhashKey($user->profile['line_bot_id'])->first();
+                }
+            } else {
+                $bot = ChatBot::query()->minUserCountByProviderId($lineProviderId)->first();
+                $user->update(['profile->line_bot_id' => $bot->hashed_key]);
+            }
             $addFriendLink = $bot ? $bot->configs['add_friend_base_url'].$bot->configs['basic_id'] : null;
-        } else {
-            $addFriendLink = null;
         }
 
         return Inertia::render('User/PreferencePage')->with([
             'configs' => [
                 'can' => [
                     'link_line' => ! $lineLinked,
-                    'add_line' => $lineLinked && ! $lineBotActive,
+                    'add_line' => $addFriendLink !== null,
                 ],
                 'routes' => [
-                    'link_line' => LINELoginAPI::getConfigs() ? route('social-link.create', 'line') : null,
+                    'link_line' => $lineProvider ? route('social-link.create', $lineProvider->hashed_key) : null,
                     'add_line' => $addFriendLink,
+                ],
+                'mounted_actions' => [
+                    'line_add_friend' => session('line-linked', false),
                 ],
             ],
         ]);

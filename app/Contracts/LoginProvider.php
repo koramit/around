@@ -6,11 +6,9 @@ use Illuminate\Http\RedirectResponse;
 
 interface LoginProvider
 {
-    public static function redirect(string $mode): RedirectResponse;
+    public function __invoke(array $data, string $mode);
 
-    public static function getConfigs();
-
-    public function __construct(array $data, string $mode);
+    public function redirect(string $mode): RedirectResponse;
 
     public function getId(): ?string;
 
