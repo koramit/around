@@ -29,6 +29,7 @@ class PreferenceController extends Controller
         $lineLinked = $user->socialProfiles()->activeLoginByProviderId($lineProviderId)->count() > 0;
         $bot = null;
         $addFriendLink = null;
+        $lineBotActive = false;
         if ($lineLinked) {
             if (isset($user->profile['line_bot_id'])) {
                 $lineBotActive = $user->chatBots()->filterByProviderId($lineProviderId)->wherePivot('active', true)->count() > 0;
@@ -52,9 +53,9 @@ class PreferenceController extends Controller
                     'link_line' => $lineProvider ? route('social-link.create', $lineProvider->hashed_key) : null,
                     'add_line' => $addFriendLink,
                 ],
-                'mounted_actions' => [
-                    'line_add_friend' => session('line-linked', false),
-                ],
+                'friends' => [
+                    'line' => $lineBotActive,
+                ]
             ],
         ]);
     }
