@@ -46,6 +46,10 @@
         <IconLine class="w-6 h-6 text-white" />
         ADD FRIEND
     </a>
+    <span
+        v-else-if="configs.friends.line"
+        class="px-2 py-1 md:px-4 md:py-2 bg-accent text-white rounded-3xl italic"
+    >FRIENDED</span>
 </template>
 
 <script setup>
@@ -69,12 +73,6 @@ const formConfigs = reactive({
 });
 
 const lineAddButton = ref(null);
-
-onMounted(() => {
-    if (props.configs.can.add_line && props.configs.routes.add_line && props.configs.mounted_actions.line_add_friend) {
-        lineAddButton.value.click();
-    }
-});
 </script>
 
 <style scoped>

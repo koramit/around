@@ -66,6 +66,6 @@ class SocialLinkController extends Controller
             ]
         );
 
-        return redirect()->route('preferences')->with($this->provider->platform.'-linked', true);
+        return redirect()->route('preferences');
     }
 }
