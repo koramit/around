@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * App\Models\Resources
  *
  * @property-read string $first_name
+ * @property-read string $full_name
  * */
 class Patient extends Model
 {

@@ -24,7 +24,7 @@ class IdleCaseAction
             )->get()
             ->transform(fn ($c) => [
                 'key' => implode('|', [$c->hashed_key, $c->patient->hn, $c->patient->profile['document_id']]),
-                'value' => "HN {$c->meta['hn']} {$c->meta['name']}",
+                'value' => "HN {$c->meta['hn']} {$c->patient->full_name}",
             ]);
     }
 }
