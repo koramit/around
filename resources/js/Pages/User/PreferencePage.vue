@@ -48,16 +48,16 @@
     </a>
     <span
         v-else-if="configs.friends.line"
-        class="px-2 py-1 md:px-4 md:py-2 bg-accent text-white rounded-3xl italic"
+        class="ml-2 md:ml-4 px-2 py-1 md:px-4 md:py-2 bg-accent text-white rounded-3xl italic"
     >FRIENDED</span>
 </template>
 
 <script setup>
-import {onMounted, reactive, ref} from 'vue';
+import {reactive, ref} from 'vue';
 import FormRadio from '../../Components/Controls/FormRadio.vue';
 import IconLine from '../../Components/Helpers/Icons/IconLine.vue';
 
-const props = defineProps({
+defineProps({
     configs: {type: Object, required: true}
 });
 
