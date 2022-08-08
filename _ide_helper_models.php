@@ -86,6 +86,7 @@ namespace App\Models{
  * @property mixed $configs
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\SocialProvider|null $provider
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\User[] $users
  * @property-read int|null $users_count
  * @method static \Illuminate\Database\Eloquent\Builder|ChatBot filterByProviderId($socialProviderId)
@@ -551,6 +552,7 @@ namespace App\Models\Resources{
  * App\Models\Resources
  *
  * @property-read string $first_name
+ * @property-read string $full_name
  * @property int $id
  * @property string $hn
  * @property int $gender
