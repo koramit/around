@@ -33,7 +33,7 @@
         </a>
     </template>
     <span
-        v-else-if="configs.routes.link_line"
+        v-else-if="configs.routes.link_line && ! configs.friends.line"
         class="px-2 py-1 md:px-4 md:py-2 bg-accent text-white rounded-3xl italic"
     >LINKED</span>
     <a
@@ -48,7 +48,7 @@
     </a>
     <span
         v-else-if="configs.friends.line"
-        class="ml-2 md:ml-4 px-2 py-1 md:px-4 md:py-2 bg-accent text-white rounded-3xl italic"
+        class="px-2 py-1 md:px-4 md:py-2 bg-accent text-white rounded-3xl italic"
     >FRIENDED</span>
 </template>
 
