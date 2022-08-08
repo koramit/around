@@ -32,7 +32,7 @@ class PreferenceController extends Controller
         $lineBotActive = false;
         if ($lineLinked) {
             if (isset($user->profile['line_bot_id'])) { // bot was assigned
-                $lineBotActive = $user->chatBots()->filterByProviderId($lineProviderId)->wherePivot('active', true)->count() > 0;
+                $lineBotActive = $user->chatBots()->where('social_provider_id', $lineProviderId)->wherePivot('active', true)->count() > 0;
                 if (! $lineBotActive) { // unfollowed
                      $bot = ChatBot::query()->findByUnhashKey($user->profile['line_bot_id'])->first();
                 }
@@ -46,6 +46,9 @@ class PreferenceController extends Controller
             $addFriendLink = $bot ? $bot->configs['add_friend_base_url'].$bot->configs['basic_id'] : null;
         }
 
+        /* @TODO bots not available for now */
+        $addFriendLink = null;
+        
         return Inertia::render('User/PreferencePage')->with([
             'configs' => [
                 'can' => [

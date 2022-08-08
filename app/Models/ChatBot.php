@@ -30,11 +30,6 @@ class ChatBot extends Model
         return $this->belongsTo(SocialProvider::class, 'social_provider_id', 'id');
     }
 
-    public function scopeFilterByProviderId($query, $socialProviderId)
-    {
-        return $query->where('social_provider_id', $socialProviderId);
-    }
-
     public function scopeMinUserCountByProviderId($query, $socialProviderId)
     {
         return $query->where('social_provider_id', $socialProviderId)
