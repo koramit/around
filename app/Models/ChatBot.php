@@ -39,7 +39,7 @@ class ChatBot extends Model
     public function scopeMinUserCountByProviderId($query, $socialProviderId)
     {
         return $query->where('social_provider_id', $socialProviderId)
-            ->orderByDesc('user_count')
+            ->orderBy('user_count')
             ->limit(1);
     }
 }
