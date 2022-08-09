@@ -46,9 +46,6 @@ class PreferenceController extends Controller
             $addFriendLink = $bot ? $bot->configs['add_friend_base_url'].$bot->configs['basic_id'] : null;
         }
 
-        /* @TODO bots not available for now */
-        $addFriendLink = null;
-
         return Inertia::render('User/PreferencePage')->with([
             'configs' => [
                 'can' => [
