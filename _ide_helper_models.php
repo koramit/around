@@ -86,10 +86,11 @@ namespace App\Models{
  * @property mixed $configs
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ResourceActionLog[] $actionLogs
+ * @property-read int|null $action_logs_count
  * @property-read \App\Models\SocialProvider|null $provider
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\User[] $users
  * @property-read int|null $users_count
- * @method static \Illuminate\Database\Eloquent\Builder|ChatBot filterByProviderId($socialProviderId)
  * @method static \Illuminate\Database\Eloquent\Builder|ChatBot findByUnhashKey(string $hashed)
  * @method static \Illuminate\Database\Eloquent\Builder|ChatBot minUserCountByProviderId($socialProviderId)
  * @method static \Illuminate\Database\Eloquent\Builder|ChatBot newModelQuery()
@@ -729,6 +730,10 @@ namespace App\Models{
  * @property mixed $configs
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ResourceActionLog[] $actionLogs
+ * @property-read int|null $action_logs_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ChatBot[] $chatBots
+ * @property-read int|null $chat_bots_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\SocialProfile[] $users
  * @property-read int|null $users_count
  * @method static \Illuminate\Database\Eloquent\Builder|SocialProvider findByUnhashKey(string $hashed)

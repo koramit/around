@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 /**
  * @property-read string $hashed_key
@@ -25,6 +26,16 @@ class SocialProvider extends Model
     public function users(): HasMany
     {
         return $this->hasMany(SocialProfile::class, 'social_provider_id', 'id');
+    }
+
+    public function chatBots(): HasMany
+    {
+        return $this->hasMany(ChatBot::class);
+    }
+
+    public function actionLogs(): MorphMany
+    {
+        return $this->morphMany(ResourceActionLog::class, 'loggable');
     }
 
     protected function platform(): Attribute
