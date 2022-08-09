@@ -22,6 +22,9 @@ module.exports = {
                 'accent-darker': '#907326', // '#AD9C68', // bitter-theme-light; for hi contrast #907326 < #735406
                 'complement': '#586E75', // thick-theme-light
                 'complement-darker': '#465C62', // dark-theme-light
+
+                'line-app': '#00b900',
+                'telegram-app': '#54a9eb',
             }
         },
     },

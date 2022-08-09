@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Ability;
+use App\Models\Role;
 use Illuminate\Database\Seeder;
 
 class NotificationFeatureSeeder extends Seeder
@@ -12,7 +13,7 @@ class NotificationFeatureSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
         $datetime = ['created_at' => now(), 'updated_at' => now()];
 
@@ -25,9 +26,12 @@ class NotificationFeatureSeeder extends Seeder
             ['registry_id' => null, 'name' => 'create_chat_bot'] + $datetime,
             ['registry_id' => null, 'name' => 'edit_chat_bot'] + $datetime,
 
-            ['registry_id' => null, 'name' => 'view_user_full_profile'] + $datetime, // helpdesk
-            ['registry_id' => null, 'name' => 'edit_user_config'] + $datetime, // division + line bot provider
-            ['registry_id' => null, 'name' => 'disable_user'] + $datetime,
+            //            ['registry_id' => null, 'name' => 'view_user_full_profile'] + $datetime, // helpdesk
+            //            ['registry_id' => null, 'name' => 'edit_user_config'] + $datetime, // division + line bot provider
+            //            ['registry_id' => null, 'name' => 'disable_user'] + $datetime,
         ]);
+
+        $root = Role::query()->where('name', 'root')->first();
+        $root->abilities()->sync(Ability::query()->select('id')->pluck('id'));
     }
 }

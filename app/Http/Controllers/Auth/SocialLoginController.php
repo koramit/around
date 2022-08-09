@@ -18,18 +18,10 @@ class SocialLoginController extends Controller
 {
     protected SocialProvider $provider;
 
-    public function __construct()
-    {
-        $provider = SocialProvider::query()->findByUnhashKey(request()->route('provider'))->first();
-        if (! $provider) {
-            throw ValidationException::withMessages(['notice' => 'No LINE login provider.']);
-        }
-
-        $this->provider = $provider;
-    }
-
     public function create()
     {
+        $this->setProvider();
+
         if ($this->provider->platform === 'line') {
             return (new LINELoginAPI($this->provider))->redirect();
         } else {
@@ -39,6 +31,8 @@ class SocialLoginController extends Controller
 
     public function store(Request $request)
     {
+        $this->setProvider();
+
         try {
             if ($this->provider->platform === 'line') {
                 $socialUser = (new LINELoginAPI($this->provider));
@@ -69,5 +63,15 @@ class SocialLoginController extends Controller
         );
 
         return redirect()->intended(route($user->home_page));
+    }
+
+    protected function setProvider()
+    {
+        $provider = SocialProvider::query()->findByUnhashKey(request()->route('provider'))->first();
+        if (! $provider) {
+            throw ValidationException::withMessages(['notice' => 'No LINE login provider.']);
+        }
+
+        $this->provider = $provider;
     }
 }

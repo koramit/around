@@ -59,18 +59,6 @@ class AbilitiesTableSeeder extends Seeder
             // slot request
             ['registry_id' => 1, 'name' => 'view_any_acute_hemodialysis_slot_requests'] + $datetime, // index
             ['registry_id' => 1, 'name' => 'approve_acute_hemodialysis_slot_request'] + $datetime, // approve + policy
-
-            ['registry_id' => null, 'name' => 'view_any_social_providers'] + $datetime,
-            ['registry_id' => null, 'name' => 'create_social_provider'] + $datetime,
-            ['registry_id' => null, 'name' => 'edit_social_provider'] + $datetime,
-
-            ['registry_id' => null, 'name' => 'view_any_chat_bots'] + $datetime,
-            ['registry_id' => null, 'name' => 'create_chat_bot'] + $datetime,
-            ['registry_id' => null, 'name' => 'edit_chat_bot'] + $datetime,
-
-            ['registry_id' => null, 'name' => 'view_user_full_profile'] + $datetime, // helpdesk
-            ['registry_id' => null, 'name' => 'edit_user_config'] + $datetime, // division + line bot provider
-            ['registry_id' => null, 'name' => 'disable_user'] + $datetime,
         ]);
 
         Role::query()->insert([
