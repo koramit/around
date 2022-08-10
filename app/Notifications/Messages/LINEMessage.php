@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Messages;
+namespace App\Notifications\Messages;
 
 class LINEMessage
 {
