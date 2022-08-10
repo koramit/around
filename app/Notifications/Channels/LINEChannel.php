@@ -5,12 +5,12 @@ namespace App\Notifications\Channels;
 use App\Notifications\Messages\LINEMessage;
 use App\Traits\LINECallable;
 use Illuminate\Notifications\Notification;
+
 class LINEChannel
 {
     use LINECallable;
 
     /** @TODO optimize query count */
-
     public function send(mixed $notifiable, Notification $notification): void
     {
         if (! $bot = $notifiable->chatBots()->wherePivot('active', true)->first()) {
