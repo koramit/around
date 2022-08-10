@@ -11,11 +11,12 @@ class OnDemandText extends Notification
 {
     public function __construct(
         protected string $message,
-    ) {}
+    ) {
+    }
 
     public function via(mixed $notifiable): array|string
     {
-        if ( ! $notifiable instanceof User) {
+        if (! $notifiable instanceof User) {
             return [];
         }
 
