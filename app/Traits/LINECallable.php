@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Http;
 
 trait LINECallable
 {
+    /** Reply tokens can only be used once. */
+    /** Reply tokens must be used within one minute after receiving the webhook */
     private function replyMessage(ChatBot $bot, string $replyToken, array $messages): array
     {
         $payload = [
