@@ -23,7 +23,7 @@ class LINEChannel
 
         $chatLog = $notifiable->chatLogs()
             ->where('mode', 2) // read
-            ->where('created_at', '<=', now()->addDays(-1))
+            ->where('created_at', '>=', now()->addDays(-1))
             ->first();
 
         if ($chatLog && isset($chatLog->payload['events'][0]['replyToken'])) {
