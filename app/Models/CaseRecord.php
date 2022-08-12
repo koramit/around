@@ -12,12 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
-/**
- * App\Models\CaseRecord
- *
- * @property-read string $hashed_key
- *
- * */
+/** @property-read string $hashed_key */
 class CaseRecord extends Model
 {
     use HasFactory, PKHashable;

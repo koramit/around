@@ -178,4 +178,27 @@ class User extends Authenticatable
         cache()->forget("uid-$this->id-role-labels");
         cache()->forget("uid-$this->id-abilities-id");
     }
+
+    public function subscribe(int $subscriptionId)
+    {
+        $this->subscriptions()->attach($subscriptionId);
+    }
+
+    public function unsubscribe(int $subscriptionId)
+    {
+        $this->subscriptions()->detach($subscriptionId);
+    }
+
+    public function activeLINEProfile(): ?SocialProfile
+    {
+        /** @TODO make provider id dynamic */
+        return $this->socialProfiles()->activeLoginByProviderId(1)->first();
+    }
+
+    public function activeLINEBot(SocialProfile $profile): ?ChatBot
+    {
+        return $this->chatBots()->where('social_provider_id', $profile->social_provider_id)
+            ->wherePivot('active', true)
+            ->first();
+    }
 }

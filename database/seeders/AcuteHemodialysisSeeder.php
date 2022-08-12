@@ -95,10 +95,10 @@ class AcuteHemodialysisSeeder extends Seeder
         }
 
         // approve today request
-        $manager = User::query()->where('login', 'manager.ahd')->first();
+        $managers = User::query()->whereIn('login', ['manager.ahd1', 'manager2.ahd'])->get();
         AcuteHemodialysisSlotRequest::query()
-            ->each(function ($r) use ($manager) {
-                (new SlotRequestUpdateAction())($r->hashed_key, ['approve' => true], $manager);
+            ->each(function ($r) use ($managers) {
+                (new SlotRequestUpdateAction())($r->hashed_key, ['approve' => true], $managers->random());
             });
 
         // fake patient name
