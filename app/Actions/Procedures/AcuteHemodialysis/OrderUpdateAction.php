@@ -110,7 +110,7 @@ class OrderUpdateAction extends AcuteHemodialysisAction
                 'tpe.replacement_fluid_ffp_volume' => 'nullable|integer',
                 'tpe.blood_pump' => ['nullable', Rule::in($this->FORM_CONFIGS['blood_pump'])],
                 'tpe.filtration_pump' => ['nullable', Rule::in($this->FORM_CONFIGS['tpe_filtration_pump_options'])],
-                'tpe.replacement_pump' => ['nullable', Rule::in($this->FORM_CONFIGS['tpe_filtration_pump_options'])],
+                'tpe.replacement_pump' => ['nullable', Rule::in($this->FORM_CONFIGS['tpe_replacement_pump_options'])],
                 'tpe.drain_pump' => 'nullable|integer',
                 'tpe.calcium_gluconate_10_percent_volume' => ['nullable', Rule::in($this->FORM_CONFIGS['calcium_gluconate_10_percent_volumes'])],
                 'tpe.calcium_gluconate_10_percent_timing' => ['nullable', Rule::in($this->FORM_CONFIGS['calcium_gluconate_10_percent_timings'])],
