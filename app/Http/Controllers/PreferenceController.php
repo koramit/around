@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Actions\User\PreferencesUpdateAction;
 use App\Models\ChatBot;
-use App\Models\SocialProfile;
+use App\Models\EventBasedNotification;
 use App\Models\SocialProvider;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -58,6 +59,8 @@ class PreferenceController extends Controller
                 'friends' => [
                     'line' => $lineBotActive,
                 ],
+                // 'event_based_notifications' => $this->getEventBasedNotifications($user),
+                // 'subscribed_channels' => $this->getChannelBasedNotifications($user),
             ],
         ]);
     }
@@ -68,10 +71,35 @@ class PreferenceController extends Controller
     }
 
     // event based notification
-    protected function getEventBasedNotification()
+    protected function getEventBasedNotifications(User $user)
     {
-        $notifications = [
+        $subscribedEvents = $user->subscriptions()
+            ->where('subscribable_type', EventBasedNotification::class)
+            ->pluck('id');
 
-        ];
+        return EventBasedNotification::query()
+            ->select(['id', 'name', 'locale', 'registry_id'])
+            ->with('subscription:id,subscribable_type,subscribable_id')
+            ->withRegistryName()
+            ->whereIn('ability_id', $user->abilities_id)
+            ->get()
+            ->transform(fn ($e) => [
+                'id' => $e->subscription->hashed_key,
+                'label' => $e->locale['en']['label'],
+                'subscribed' => $subscribedEvents->contains($e->id),
+                'registry' => $e->registry_name,
+            ]);
+    }
+
+    protected function getChannelBasedNotifications(User $user)
+    {
+        return $user->subscriptions()
+            ->with('subscribable:id,meta')
+            ->where('subscribable_type', '<>', EventBasedNotification::class)
+            ->get()
+            ->transform(fn ($s) => [
+                'id' => $s->hashed_key,
+                'label' => $s->subscribable->title,
+            ]);
     }
 }

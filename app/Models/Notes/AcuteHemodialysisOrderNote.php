@@ -44,6 +44,21 @@ class AcuteHemodialysisOrderNote extends Note
         return array_merge(parent::getCasts(), ['status' => AcuteHemodialysisOrderStatus::class]);
     }
 
+    protected function title(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                if (isset($this->meta['title'])) {
+                    return $this->meta['title'];
+                }
+                $title = "Acute Hemodialysis Order : HN {$this->meta['hn']} {$this->meta['name']} {$this->date_note->format('M j y')}";
+                $this->update(['meta->title' => $title]);
+
+                return $title;
+            }
+        );
+    }
+
     /** @alias $cancel_confirm_text */
     protected function cancelConfirmText(): Attribute
     {

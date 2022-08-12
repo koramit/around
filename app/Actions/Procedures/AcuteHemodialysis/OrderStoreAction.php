@@ -140,7 +140,7 @@ class OrderStoreAction extends AcuteHemodialysisAction
         'replacement_fluid_ffp_volume' => null,
         'blood_pump' => 150,
         'filtration_pump' => 30,
-        'replacement_pump' => 30,
+        'replacement_pump' => 100,
         'drain_pump' => null,
         'calcium_gluconate_10_percent_volume' => null,
         'calcium_gluconate_10_percent_timing' => null,

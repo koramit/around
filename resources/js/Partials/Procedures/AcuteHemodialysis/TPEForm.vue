@@ -115,7 +115,7 @@
             name="tpe.replacement_pump"
             :error="$page.props.errors['tpe.replacement_pump']"
             label="replacement pump (%)"
-            :options="configs.tpe_filtration_pump_options"
+            :options="configs.tpe_replacement_pump_options"
         />
         <FormInput
             v-model="form.drain_pump"
