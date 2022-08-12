@@ -17,6 +17,7 @@ class OrderRescheduleAction extends AcuteHemodialysisAction
 
         $validated = Validator::make($data, ['date_note' => 'required|date'])->validate();
 
+        /** @var AcuteHemodialysisOrderNote $order */
         $order = AcuteHemodialysisOrderNote::query()->withPlaceName('App\Models\Resources\Ward')->findByUnhashKey($hashedKey)->firstOrFail();
 
         if ($user->cannot('reschedule', $order)) {
@@ -70,7 +71,7 @@ class OrderRescheduleAction extends AcuteHemodialysisAction
             return [
                 'type' => 'warning',
                 'title' => 'Request pending for approval.',
-                'message' => 'Form '.$order->date_note->format('M j').' to '.now()->create($validated['date_note'])->format('M j').'.',
+                'message' => 'From '.$order->date_note->format('M j').' to '.now()->create($validated['date_note'])->format('M j').'.',
             ];
         }
 
@@ -84,7 +85,10 @@ class OrderRescheduleAction extends AcuteHemodialysisAction
             'action' => 'reschedule',
             'payload' => ['from' => $order->date_note->format('Y-m-d'), 'to' => $validated['date_note']],
         ]);
-        $order->update(['date_note' => $validated['date_note']]);
+        $order->update([
+            'date_note' => $validated['date_note'],
+            'meta->title' => $order->genTitle($validated['date_note']),
+        ]);
 
         return $message;
     }

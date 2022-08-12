@@ -27,8 +27,9 @@ class SlotRequestUpdateAction
         if ($validated['approve']) {
             if (! isset($request->changes['swap'])) {
                 $order->update([
-                    'status' => ($order->meta['submitted'] ?? false) ? 'submitted' : 'draft',
                     'date_note' => $request->changes['date_note'],
+                    'status' => ($order->meta['submitted'] ?? false) ? 'submitted' : 'draft',
+                    'meta->title' => $order->genTitle($request->changes['date_note']),
                 ]);
             } else {
                 $swap = AcuteHemodialysisOrderNote::query()->find($request->changes['swap']);
@@ -36,10 +37,12 @@ class SlotRequestUpdateAction
                 $order->update([
                     'date_note' => $swap->date_note,
                     'status' => ($order->meta['submitted'] ?? false) ? 'submitted' : 'draft',
+                    'meta->title' => $order->genTitle($swap->date_note->format('Y-m-d')),
                 ]);
                 $swap->update([
                     'date_note' => $dateSwap,
                     'status' => ($swap->meta['submitted'] ?? false) ? 'submitted' : 'draft',
+                    'meta->title' => $swap->genTitle($dateSwap->format('Y-m-d')),
                 ]);
             }
 

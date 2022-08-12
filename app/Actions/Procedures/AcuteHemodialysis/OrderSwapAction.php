@@ -164,8 +164,16 @@ class OrderSwapAction extends AcuteHemodialysisAction
             ],
         ]);
         $dateSwap = $order->date_note;
-        $order->update(['date_note' => $swap->date_note, 'meta->swap_code' => $this->genSwapCode()]);
-        $swap->update(['date_note' => $dateSwap, 'meta->swap_code' => $this->genSwapCode()]);
+        $order->update([
+            'date_note' => $swap->date_note,
+            'meta->swap_code' => $this->genSwapCode(),
+            'meta->title' => $order->genTitle($swap->date_note->format('Y-m-d')),
+        ]);
+        $swap->update([
+            'date_note' => $dateSwap,
+            'meta->swap_code' => $this->genSwapCode(),
+            'meta->title' => $swap->genTitle($dateSwap->format('Y-m-d')),
+        ]);
 
         return [
             'type' => 'info',
