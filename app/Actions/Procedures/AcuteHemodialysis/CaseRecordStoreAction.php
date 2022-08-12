@@ -12,9 +12,9 @@ use Illuminate\Support\Facades\Validator;
 
 class CaseRecordStoreAction extends AcuteHemodialysisAction
 {
-    protected $CRF_VERSION = 1.0;
+    protected float $CRF_VERSION = 1.0;
 
-    protected $FORM_TEMPLATE = [
+    protected array $FORM_TEMPLATE = [
         'an' => null,
         'ward_admit' => null,
         'ward_discharge' => null,
@@ -88,10 +88,12 @@ class CaseRecordStoreAction extends AcuteHemodialysisAction
             }
         }
         $caseRecord->form = $form;
+        $now = now()->format('M j y');
         $caseRecord->meta = [
+            'version' => $this->CRF_VERSION,
             'hn' => $patient->hn,
             'name' => $patient->first_name,
-            'version' => $this->CRF_VERSION,
+            'title' => "Acute Hemodialysis Case : HN $patient->hn $patient->first_name : $now",
         ];
         $caseRecord->save();
 

@@ -53,4 +53,11 @@ class CaseRecord extends Model
             set: fn ($value) => array_search($value, $this->statuses) ?? null,
         );
     }
+
+    protected function title(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->meta['title'] ?? 'placeholder',
+        );
+    }
 }

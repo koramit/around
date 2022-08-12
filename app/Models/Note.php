@@ -82,7 +82,7 @@ class Note extends Model
     protected function title(): Attribute
     {
         return Attribute::make(
-            get: fn () => 'not implement yet'
+            get: fn () => $this->meta['title'] ?? 'placeholder',
         );
     }
 
