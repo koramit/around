@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Actions\User\PreferencesUpdateAction;
 use App\Models\ChatBot;
+use App\Models\SocialProfile;
+use App\Models\SocialProvider;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -23,6 +25,7 @@ class PreferenceController extends Controller
 
         // LINE config
         // for now all user share the same LINE provider
+        $lineProvider = SocialProvider::query()->where('platform', 1)->first();
         $lineProfile = $user->activeLINEProfile();
         $lineLinked = (bool) $lineProfile;
         $addFriendLink = null;
@@ -49,7 +52,7 @@ class PreferenceController extends Controller
                     'add_line' => $addFriendLink !== null,
                 ],
                 'routes' => [
-                    'link_line' => $lineLinked ? route('social-link.create', $lineProfile->socialProvider->hashed_key) : null,
+                    'link_line' => ! $lineLinked ? route('social-link.create', $lineProvider->hashed_key) : null,
                     'add_line' => $addFriendLink,
                 ],
                 'friends' => [
