@@ -165,7 +165,6 @@ const itemOptions = computed(() => {
 watch(
     () => props.modelValue,
     (val) => {
-        console.log(val);
         if (val === 'Remove') {
             emits('update:modelValue', null);
             emits('autosave');

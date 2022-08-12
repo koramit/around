@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Actions\User\PreferencesUpdateAction;
 use App\Models\ChatBot;
-use App\Models\SocialProvider;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -24,24 +23,21 @@ class PreferenceController extends Controller
 
         // LINE config
         // for now all user share the same LINE provider
-        $lineProvider = SocialProvider::query()->where('platform', 1)->first();
-        $lineProviderId = $lineProvider?->id ?? 0;
-        $lineLinked = $user->socialProfiles()->activeLoginByProviderId($lineProviderId)->count() > 0;
-        $bot = null;
+        $lineProfile = $user->activeLINEProfile();
+        $lineLinked = (bool) $lineProfile;
         $addFriendLink = null;
         $lineBotActive = false;
         if ($lineLinked) {
             if (isset($user->profile['line_bot_id'])) { // bot was assigned
-                $lineBotActive = $user->chatBots()->where('social_provider_id', $lineProviderId)->wherePivot('active', true)->count() > 0;
-                if (! $lineBotActive) { // unfollowed
-                    $bot = ChatBot::query()->findByUnhashKey($user->profile['line_bot_id'])->first();
+                // get active
+                $bot = ChatBot::query()->findByUnhashKey($user->profile['line_bot_id'])->first();
+                $lineBotActive = (bool) $user->activeLINEBot($lineProfile); // unfollowed
+            } else { // rotate and assign bot to user
+                $bot = ChatBot::query()->minUserCountByProviderId($lineProfile->social_provider_id)->first();
+                if ($bot) { // make sure there is bot available
+                    $bot->update(['user_count' => $bot->user_count + 1]);
+                    $user->update(['profile->line_bot_id' => $bot->hashed_key]);
                 }
-            } else {
-                $bot = ChatBot::query()->minUserCountByProviderId($lineProviderId)->first(); // rotate bot
-                 if ($bot) { // make sure there is bot available
-                     $bot->update(['user_count' => $bot->user_count + 1]);
-                     $user->update(['profile->line_bot_id' => $bot->hashed_key]);
-                 }
             }
             $addFriendLink = $bot ? $bot->configs['add_friend_base_url'].$bot->configs['basic_id'] : null;
         }
@@ -53,7 +49,7 @@ class PreferenceController extends Controller
                     'add_line' => $addFriendLink !== null,
                 ],
                 'routes' => [
-                    'link_line' => $lineProvider ? route('social-link.create', $lineProvider->hashed_key) : null,
+                    'link_line' => $lineLinked ? route('social-link.create', $lineProfile->socialProvider->hashed_key) : null,
                     'add_line' => $addFriendLink,
                 ],
                 'friends' => [
@@ -66,5 +62,13 @@ class PreferenceController extends Controller
     public function update(Request $request)
     {
         return (new PreferencesUpdateAction)($request->all(), $request->user());
+    }
+
+    // event based notification
+    protected function getEventBasedNotification()
+    {
+        $notifications = [
+
+        ];
     }
 }

@@ -7,7 +7,7 @@ use App\Notifications\Channels\LINEChannel;
 use App\Notifications\Messages\LINEMessage;
 use Illuminate\Notifications\Notification;
 
-class OnDemandText extends Notification
+class MessagingApp extends Notification
 {
     public function __construct(
         protected string $message,

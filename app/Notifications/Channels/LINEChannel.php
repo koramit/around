@@ -2,7 +2,6 @@
 
 namespace App\Notifications\Channels;
 
-use App\Notifications\Messages\LINEMessage;
 use App\Traits\LINECallable;
 use Illuminate\Notifications\Notification;
 
@@ -13,20 +12,16 @@ class LINEChannel
     /** @TODO optimize query count */
     public function send(mixed $notifiable, Notification $notification): void
     {
-        if (! $bot = $notifiable->chatBots()->wherePivot('active', true)->first()) {
+        if (! $profile = $notifiable->activeLINEProfile()) { // get user social profile id
+            return;
+        }
+
+        if (! $bot = $notifiable->activeLINEBot($profile)) { // get bot token
             return;
         }
 
         /** @noinspection PhpPossiblePolymorphicInvocationInspection */
-        /** @var LINEMessage $message */
         $message = $notification->toLINE($notifiable);
-
-        if (! $profile = $notifiable->socialProfiles()
-            ->activeLoginByProviderId(1)
-            ->first()) {
-            return;
-        }
-        
         $payload = $this->pushMessage($bot, $profile->profile_id, $message->getMessages());
         $this->log($notifiable->id, $bot->id, $payload, 'push');
     }

@@ -20,13 +20,8 @@ class DatabaseSeeder extends Seeder
             NoteTypesTableSeeder::class,
             RegistriesTableSeeder::class,
             AbilitiesTableSeeder::class,
+            NotificationFeatureSeeder::class,
+            AcuteHemodialysisNotificationSeeder::class,
         ]);
-
-        if (config('app.env') !== 'production') {
-            $this->call([
-                AuthorizationSeeder::class,
-                AcuteHemodialysisSeeder::class,
-            ]);
-        }
     }
 }
