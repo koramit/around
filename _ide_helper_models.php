@@ -247,6 +247,7 @@ namespace App\Models{
  * @property int $ability_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder|EventBasedNotification findByUnhashKey(string $hashed)
  * @method static \Illuminate\Database\Eloquent\Builder|EventBasedNotification newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|EventBasedNotification newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|EventBasedNotification query()

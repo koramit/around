@@ -111,6 +111,13 @@ class User extends Authenticatable
         );
     }
 
+    protected function abilitiesId(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->cacheAbilities("uid-$this->id-abilities-id", 'id'),
+        );
+    }
+
     /** @alias string $role_names*/
     protected function roleNames(): Attribute
     {

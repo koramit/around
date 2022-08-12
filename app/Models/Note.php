@@ -79,6 +79,13 @@ class Note extends Model
         return $this->morphMany(Comment::class, 'commentable');
     }
 
+    protected function title(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => 'not implement yet'
+        );
+    }
+
     /** @alias $log_list */
     protected function logList(): Attribute
     {

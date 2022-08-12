@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('registries', function (Blueprint $table) {
             $table->smallIncrements('id');
-            $table->string('name')->unique();
+            $table->string('name')->unique(); // label should get from trans function
             $table->string('label')->index()->collation(config('database.th_collation'));
             $table->string('label_eng');
             $table->string('route');
