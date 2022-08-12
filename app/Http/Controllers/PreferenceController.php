@@ -59,8 +59,8 @@ class PreferenceController extends Controller
                 'friends' => [
                     'line' => $lineBotActive,
                 ],
-                'event_based_notifications' => $this->getEventBasedNotifications($user),
-                'subscribed_channels' => $this->getChannelBasedNotifications($user),
+                // 'event_based_notifications' => $this->getEventBasedNotifications($user),
+                // 'subscribed_channels' => $this->getChannelBasedNotifications($user),
             ],
         ]);
     }
