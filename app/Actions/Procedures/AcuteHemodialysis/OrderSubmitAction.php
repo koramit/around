@@ -411,8 +411,9 @@ class OrderSubmitAction extends AcuteHemodialysisAction
             ->all();
 
         $events = cache()->pull('notification-queue', []);
+        $className = $sub->notification_class_name;
         $events[] = [
-            'notification' => new $sub->notification_class_name($resource),
+            'notification' => new $className($resource),
             'subscribers' => $subscribers,
         ];
         cache()->put('notification-queue', $events);
