@@ -72,7 +72,7 @@ class PreferenceController extends Controller
             'configs' => [
                 'can' => [
                     'link_line' => ! $lineLinked,
-                    'add_line' => $addFriendLink !== null,
+                    'add_line' => $addFriendLink !== null && ! $lineBotActive,
                 ],
                 'routes' => [
                     'link_line' => (! $lineLinked && $lineProvider) ? route('social-link.create', $lineProvider->hashed_key) : null,
