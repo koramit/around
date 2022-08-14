@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Traits\InAppBrowsingAware;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class InAppBrowsingRedirectController extends Controller
 {
@@ -12,7 +13,7 @@ class InAppBrowsingRedirectController extends Controller
     public function __invoke($token, Request $request)
     {
         if ($this->inAppBrowsing($request)) {
-            return 'please open this link in web browser';
+            return Inertia::render('Guest/NoBotAllow');
         }
 
         $to = cache()->pull("in-app-browsing-redirect-token-$token");

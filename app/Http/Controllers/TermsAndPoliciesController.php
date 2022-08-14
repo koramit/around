@@ -11,6 +11,6 @@ class TermsAndPoliciesController extends Controller
     {
         Session::flash('page-title', __('Privacy Policies and Terms'));
 
-        return Inertia::render('TermsAndPolicies');
+        return Inertia::render('Guest/TermsAndPolicies');
     }
 }

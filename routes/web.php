@@ -159,3 +159,7 @@ Route::get('in-app-browsing-redirect/{token}', InAppBrowsingRedirectController::
 Route::get('magic-link', MagicLinkController::class)
     ->middleware(['no-in-app-allow', 'signed'])
     ->name('magic-link');
+
+Route::get('test-no-bot', function () {
+    return \Inertia\Inertia::render('Guest/NoBotAllow');
+});
