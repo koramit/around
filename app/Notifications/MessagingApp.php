@@ -13,7 +13,7 @@ class MessagingApp extends Notification
 {
     protected string $message;
 
-    protected string $magicLink;
+    protected ?string $magicLink;
 
     public function via(mixed $notifiable): array|string
     {
@@ -38,6 +38,6 @@ class MessagingApp extends Notification
                         'token' => $token
                     ]);
 
-        return (new LINEMessage())->text($this->message."\nlink หมดอายุภายใน 15 นาที\n".$signedUrl);
+        return (new LINEMessage())->text($this->message."\n\nlink หมดอายุภายใน 15 นาที\n\n".$signedUrl);
     }
 }

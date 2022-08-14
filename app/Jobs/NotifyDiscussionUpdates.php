@@ -81,9 +81,9 @@ class NotifyDiscussionUpdates implements ShouldQueue
                             'token' => $token
                         ]);
 
-                        return $messages[0]."\nlink หมดอายุภายใน 15 นาที\n".$signedUrl;
+                        return $messages[0]."\n\nlink หมดอายุภายใน 15 นาที\n\n".$signedUrl;
                     })
-                    ->join("\n\n");
+                    ->join("\n\n\n");
                 $u->notify(new DiscussionUpdate($merged));
             });
     }
