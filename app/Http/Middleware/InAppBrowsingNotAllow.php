@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use App\Traits\InAppBrowsingAware;
 use Closure;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -13,7 +14,7 @@ class InAppBrowsingNotAllow
 {
     use InAppBrowsingAware;
 
-    public function handle(Request $request, Closure $next): Response|RedirectResponse
+    public function handle(Request $request, Closure $next): Response|RedirectResponse|JsonResponse
     {
         if (! $this->inAppBrowsing($request)) {
             return $next($request);
