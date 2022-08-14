@@ -9,6 +9,7 @@ use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InAppBrowsingRedirectController;
 use App\Http\Controllers\LocalizationController;
+use App\Http\Controllers\MagicLinkController;
 use App\Http\Controllers\PreferenceController;
 use App\Http\Controllers\SocialProviderController;
 use App\Http\Controllers\SubscriptionController;
@@ -154,3 +155,7 @@ Route::middleware(['auth'])
 // in app browsing redirect
 Route::get('in-app-browsing-redirect/{token}', InAppBrowsingRedirectController::class)
     ->name('in-app-browsing-redirect');
+
+Route::get('magic-link', MagicLinkController::class)
+    ->middleware(['no-in-app-allow', 'signed'])
+    ->name('magic-link');

@@ -6,10 +6,14 @@ use App\Models\User;
 use App\Notifications\Channels\LINEChannel;
 use App\Notifications\Messages\LINEMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Str;
 
 class MessagingApp extends Notification
 {
     protected string $message;
+
+    protected string $magicLink;
 
     public function via(mixed $notifiable): array|string
     {
@@ -20,9 +24,20 @@ class MessagingApp extends Notification
         return [LINEChannel::class];
     }
 
-    /** @noinspection PhpUnusedParameterInspection */
     public function toLINE(mixed $notifiable): LINEMessage
     {
-        return (new LINEMessage())->text($this->message);
+        if (! $this->magicLink) {
+            return (new LINEMessage())->text($this->message);
+        }
+
+        $token = Str::random(32);
+        $until = now()->addMinutes(5);
+        cache()->put('magic-link-token-'.$token, $this->magicLink, $until);
+        $signedUrl = URL::temporarySignedRoute('magic-link', $until, [
+                        'user' => $notifiable->hashed_key,
+                        'token' => $token
+                    ]);
+
+        return (new LINEMessage())->text($this->message."\n\n".$signedUrl);
     }
 }
