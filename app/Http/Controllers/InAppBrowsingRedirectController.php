@@ -15,7 +15,7 @@ class InAppBrowsingRedirectController extends Controller
             return 'please open this link in web browser';
         }
 
-        $to = cache()->pull("in-app-browsing-redirect-app-browsing-redirect-$token");
+        $to = cache()->pull("in-app-browsing-redirect-token-$token");
         if (! $to) {
             abort(404);
         }
