@@ -71,5 +71,6 @@ class Kernel extends HttpKernel
         'remember' => \App\Http\Middleware\RememberQueryStrings::class,
         'page-transition' => \App\Http\Middleware\PageTransition::class,
         'locale' => \App\Http\Middleware\LocalizationMiddleware::class,
+        'no-in-app-allow' => \App\Http\Middleware\InAppBrowsingNotAllow::class,
     ];
 }

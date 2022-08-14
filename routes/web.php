@@ -7,6 +7,7 @@ use App\Http\Controllers\ChatBotController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\InAppBrowsingRedirectController;
 use App\Http\Controllers\LocalizationController;
 use App\Http\Controllers\PreferenceController;
 use App\Http\Controllers\SocialProviderController;
@@ -20,7 +21,7 @@ require __DIR__.'/auth.php';
 
 // pages
 Route::get('terms-and-policies', TermsAndPoliciesController::class)
-    ->middleware(['locale'])
+    ->middleware(['locale', 'no-in-app-allow'])
      ->name('terms');
 
 // locales
@@ -30,10 +31,10 @@ Route::post('/translations', [LocalizationController::class, 'show']);
 // common
 Route::middleware(['auth'])->group(function () {
     Route::get('/', HomeController::class)
-        ->middleware(['page-transition', 'locale'])
+        ->middleware(['page-transition', 'locale', 'no-in-app-allow'])
         ->name('home');
     Route::get('/preferences', [PreferenceController::class, 'show'])
-        ->middleware(['can:config_preferences', 'page-transition', 'locale'])
+        ->middleware(['can:config_preferences', 'page-transition', 'locale', 'no-in-app-allow'])
         ->name('preferences');
     Route::patch('/preferences', [PreferenceController::class, 'update'])->name('preferences.update');
 
@@ -49,7 +50,7 @@ Route::middleware(['auth'])->group(function () {
 // administrative
 Route::middleware(['auth', 'can:authorize_user'])->group(function () {
     Route::get('/users', [UserController::class, 'index'])
-        ->middleware(['page-transition', 'locale'])
+        ->middleware(['page-transition', 'locale', 'no-in-app-allow'])
         ->name('users.index');
     Route::get('/users/{hashedKey}', [UserController::class, 'show'])
         ->name('users.show');
@@ -76,14 +77,14 @@ Route::middleware(['auth', 'can:upload_file'])->group(function () {
 // support
 Route::middleware(['auth', 'can:get_support'])->group(function () {
     Route::get('support-tickets', [SupportTicketController::class, 'index'])
-         ->middleware(['page-transition', 'locale'])
+         ->middleware(['page-transition', 'locale', 'no-in-app-allow'])
          ->name('support-tickets.index');
     Route::post('support-tickets', [SupportTicketController::class, 'store'])
          ->name('support-tickets.store');
     Route::post('support-tickets', [SupportTicketController::class, 'destroy'])
         ->name('support-tickets.destroy');
     Route::get('feedback', [FeedbackController::class, 'index'])
-        ->middleware(['page-transition', 'locale'])
+        ->middleware(['page-transition', 'locale', 'no-in-app-allow'])
         ->name('feedback.index');
     Route::post('feedback', [FeedbackController::class, 'store'])
         ->name('feedback.store');
@@ -149,3 +150,7 @@ Route::middleware(['auth'])
             ->middleware(['can:edit_chat_bot'])
             ->name('bots.update');
     });
+
+// in app browsing redirect
+Route::get('in-app-browsing-redirect/{token}', InAppBrowsingRedirectController::class)
+    ->name('in-app-browsing-redirect');

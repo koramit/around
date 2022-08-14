@@ -20,7 +20,7 @@ use App\Http\Controllers\Procedures\ProcedureController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', ProcedureController::class)
-    ->middleware(['page-transition'])
+    ->middleware(['page-transition', 'locale', 'no-in-app-allow'])
     ->name('index');
 
 // Acute HD
@@ -28,14 +28,14 @@ Route::prefix('acute-hemodialysis')
     ->name('acute-hemodialysis.')
     ->group(function () {
         Route::get('/', [AcuteHemodialysisCaseController::class, 'index'])
-            ->middleware(['remember', 'page-transition', 'locale'])
+            ->middleware(['remember', 'page-transition', 'locale', 'no-in-app-allow'])
             ->can('view_any_acute_hemodialysis_cases')
             ->name('index');
         Route::post('/', [AcuteHemodialysisCaseController::class, 'store'])
            ->can('create_acute_hemodialysis_case')
            ->name('store');
         Route::get('/{hashedKey}/edit', [AcuteHemodialysisCaseController::class, 'edit'])
-            ->middleware(['page-transition', 'locale'])
+            ->middleware(['page-transition', 'locale', 'no-in-app-allow'])
            ->can('view_any_acute_hemodialysis_cases')
            ->name('edit');
         Route::patch('/{hashedKey}', [AcuteHemodialysisCaseController::class, 'update'])
@@ -45,7 +45,7 @@ Route::prefix('acute-hemodialysis')
            ->can('create_acute_hemodialysis_order')
            ->name('orders.store');
         Route::get('/orders/{hashedKey}/edit', [AcuteHemodialysisOrderController::class, 'edit'])
-            ->middleware(['page-transition', 'locale'])
+            ->middleware(['page-transition', 'locale', 'no-in-app-allow'])
            ->name('orders.edit');
         Route::patch('/orders/{hashedKey}/submit', AcuteHemodialysisOrderSubmitController::class)
            ->name('orders.submit');
@@ -71,7 +71,7 @@ Route::prefix('acute-hemodialysis')
         Route::delete('/orders/{hashedKey}', [AcuteHemodialysisOrderController::class, 'destroy'])
            ->name('orders.destroy');
         Route::get('/orders/{hashedKey}', [AcuteHemodialysisOrderController::class, 'show'])
-            ->middleware(['page-transition', 'locale'])
+            ->middleware(['page-transition', 'locale', 'no-in-app-allow'])
             ->name('orders.show');
 
         Route::post('/slot-available', AcuteHemodialysisSlotAvailableController::class)
@@ -79,12 +79,12 @@ Route::prefix('acute-hemodialysis')
            ->name('slot-available');
 
         Route::get('/schedule', AcuteHemodialysisScheduleController::class)
-           ->middleware(['remember', 'page-transition', 'locale'])
+           ->middleware(['remember', 'page-transition', 'locale', 'no-in-app-allow'])
            ->can('view_any_acute_hemodialysis_orders')
            ->name('schedule');
 
         Route::get('/slot-requests', [AcuteHemodialysisSlotRequestController::class, 'index'])
-            ->middleware(['page-transition', 'locale'])
+            ->middleware(['page-transition', 'locale', 'no-in-app-allow'])
            ->can('view_any_acute_hemodialysis_slot_requests')
            ->name('slot-requests');
         Route::patch('/slot-requests/{hashedKey}', [AcuteHemodialysisSlotRequestController::class, 'update'])
