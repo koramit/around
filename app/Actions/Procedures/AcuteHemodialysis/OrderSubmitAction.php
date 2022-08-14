@@ -407,11 +407,10 @@ class OrderSubmitAction extends AcuteHemodialysisAction
         }
 
         $subscribers = $sub->subscribers()
-            ->where('preferences->mute', '<>', false)
+            ->where('preferences->mute', false)
             ->pluck('id')
             ->all();
 
-        \Log::notice('subscriber count : ' . count($subscribers));
         $events = cache()->pull('notification-queue', []);
         /** @var EventBasedNotification $subscribable */
         $subscribable = $sub->subscribable;
