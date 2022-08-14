@@ -16,7 +16,6 @@ class ProcessNotificationQueue implements ShouldQueue
     public function handle(): void
     {
         $events = collect(cache()->pull('notification-queue', []));
-        \Log::notice('notification count : ' . $events->count());
         if ($events->count() === 0) {
             return;
         }
