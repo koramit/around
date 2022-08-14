@@ -9,10 +9,7 @@ use Illuminate\Notifications\Notification;
 
 class MessagingApp extends Notification
 {
-    public function __construct(
-        protected string $message,
-    ) {
-    }
+    protected string $message;
 
     public function via(mixed $notifiable): array|string
     {

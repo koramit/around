@@ -261,15 +261,19 @@ class OrderStoreAction extends AcuteHemodialysisAction
             'extra_slot' => $extraSlot,
             'covid_case' => $validated['covid_case'],
             'submitted' => false,
-            'title' => "Acute Hemodialysis Order : HN $patient->hn $patient->first_name : {$validated['dialysis_type']} {$dateNote->format('M j y')}"
+            'title' => "Acute Hemodialysis Order : HN $patient->hn $patient->first_name : {$validated['dialysis_type']} {$dateNote->format('M j y')}",
         ];
         $note->author_id = $user->id;
         $note->save();
 
-        $user->subscriptions()->attach(Subscription::query()->create([
+        $sub = Subscription::query()->create([
             'subscribable_type' => $note::class,
             'subscribable_id' => $note->id,
-        ])->id);
+        ]);
+
+        if ($user->auto_subscribe_to_channel) {
+            $user->subscriptions()->attach($sub->id);
+        }
 
         if (! $reserveToday && ! $validated['covid_case']) {
             $note->actionLogs()->create([

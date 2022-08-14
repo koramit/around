@@ -20,6 +20,7 @@ namespace App\Models{
  * @property int|null $registry_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Resources\Registry|null $registry
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Role[] $roles
  * @property-read int|null $roles_count
  * @method static \Illuminate\Database\Eloquent\Builder|Ability newModelQuery()
@@ -241,24 +242,26 @@ namespace App\Models{
  *
  * @property int $id
  * @property string $name
- * @property string $class_name
- * @property mixed $locale
+ * @property string $notification_class_name
  * @property int $registry_id
  * @property int $ability_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property mixed $locale
+ * @property-read \App\Models\Resources\Registry $registry
+ * @property-read \App\Models\Subscription|null $subscription
  * @method static \Illuminate\Database\Eloquent\Builder|EventBasedNotification findByUnhashKey(string $hashed)
  * @method static \Illuminate\Database\Eloquent\Builder|EventBasedNotification newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|EventBasedNotification newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|EventBasedNotification query()
  * @method static \Illuminate\Database\Eloquent\Builder|EventBasedNotification whereAbilityId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|EventBasedNotification whereClassName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|EventBasedNotification whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|EventBasedNotification whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|EventBasedNotification whereLocale($value)
  * @method static \Illuminate\Database\Eloquent\Builder|EventBasedNotification whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|EventBasedNotification whereNotificationClassName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|EventBasedNotification whereRegistryId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|EventBasedNotification whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|EventBasedNotification withRegistryName()
  */
 	class EventBasedNotification extends \Eloquent {}
 }
@@ -592,6 +595,8 @@ namespace App\Models\Resources{
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Resources\Admission[] $admissions
  * @property-read int|null $admissions_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Resources\Registry[] $registries
+ * @property-read int|null $registries_count
  * @method static \Illuminate\Database\Eloquent\Builder|Patient findByHashedKey(string $plain)
  * @method static \Illuminate\Database\Eloquent\Builder|Patient newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Patient newQuery()
@@ -640,13 +645,15 @@ namespace App\Models\Resources{
  *
  * @property int $id
  * @property string $name
- * @property string $label
- * @property string $label_eng
  * @property string $route
  * @property int $division_id
  * @property bool $active
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Resources\Patient[] $patients
+ * @property-read int|null $patients_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\User[] $users
+ * @property-read int|null $users_count
  * @method static \Illuminate\Database\Eloquent\Builder|Registry newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Registry newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Registry query()
@@ -654,8 +661,6 @@ namespace App\Models\Resources{
  * @method static \Illuminate\Database\Eloquent\Builder|Registry whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Registry whereDivisionId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Registry whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Registry whereLabel($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Registry whereLabelEng($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Registry whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Registry whereRoute($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Registry whereUpdatedAt($value)
@@ -821,9 +826,13 @@ namespace App\Models{
  *
  * @property int $items_per_page
  * @property string $home_page
- * @property string $role_names
- * @property string $role_labels
+ * @property Collection $role_names
+ * @property Collection $role_labels
  * @property string $hashed_key
+ * @property Collection $abilities
+ * @property Collection $abilities_id
+ * @property bool $auto_subscribe_to_channel
+ * @property bool $mute_notification
  * @property int $id
  * @property string $name
  * @property string $login
@@ -838,12 +847,15 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ResourceActionLog[] $actionLogs
  * @property-read int|null $action_logs_count
+ * @property-read \App\Models\SocialProfile|null $activeLINEProfile
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ChatBot[] $chatBots
  * @property-read int|null $chat_bots_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ChatLog[] $chatLogs
  * @property-read int|null $chat_logs_count
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
  * @property-read int|null $notifications_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Resources\Registry[] $registries
+ * @property-read int|null $registries_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Role[] $roles
  * @property-read int|null $roles_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\SocialProfile[] $socialProfiles
@@ -869,6 +881,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|User whereProfile($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User withActiveChatBots()
  */
 	class User extends \Eloquent {}
 }

@@ -5,7 +5,6 @@ namespace App\Actions\Procedures\AcuteHemodialysis;
 use App\Models\Notes\AcuteHemodialysisOrderNote;
 use App\Models\Subscription;
 use App\Models\User;
-use App\Notifications\Procedures\AcuteHemodialysis\AlertOrderResubmit;
 use App\Rules\AcceptedIfOthersFalsy;
 use App\Traits\AcuteHemodialysis\OrderFormConfigsShareable;
 use Illuminate\Support\Facades\Validator;
@@ -15,9 +14,7 @@ class OrderSubmitAction extends AcuteHemodialysisAction
 {
     use OrderFormConfigsShareable;
 
-    protected string $EVENT_BASED_NOTIFICATION_CLASS_NAME = 'App\Models\EventBasedNotification';
-
-    protected int $EVENT_BASED_NOTIFICATION_CLASS_ID = 1;
+    protected int $EVENT_ID = 1;
 
     public function __invoke(array $data, string $hashedKey, User $user): array
     {
@@ -393,18 +390,15 @@ class OrderSubmitAction extends AcuteHemodialysisAction
             return;
         }
 
-        // notification
-        $dayLabel = $note->date_note->format('Y-m-d') === $this->TODAY
-            ? 'วันนี้'
-            : 'พรุ่งนี้';
-        $message = 'เคส acute '.$note->meta['name'].' '.$dayLabel." มีการเปลี่ยน order\n";
-        $message .= route('procedures.acute-hemodialysis.orders.show', $note->hashed_key);
+        $this->processNotification($this->EVENT_ID, $note);
+    }
 
+    private function processNotification(int $eventId, mixed $resource): void
+    {
         // subscribers
-        // from event based
         if (! $sub = Subscription::query()
-            ->where('subscribable_type', $this->EVENT_BASED_NOTIFICATION_CLASS_NAME)
-            ->where('subscribable_id', $this->EVENT_BASED_NOTIFICATION_CLASS_ID)
+            ->where('subscribable_type', 'App\Models\EventBasedNotification')
+            ->where('subscribable_id', $eventId)
             ->whereHas('subscribers')
             ->first()
         ) {
@@ -412,14 +406,15 @@ class OrderSubmitAction extends AcuteHemodialysisAction
         }
 
         $subscribers = $sub->subscribers()
+            ->where('preferences->mute', '<>', false)
             ->pluck('id')
             ->all();
 
-        $queue = cache('notification-queue', []);
-        $queue[] = [
-            'notification' => new AlertOrderResubmit($message),
+        $events = cache()->pull('notification-queue', []);
+        $events[] = [
+            'notification' => new $sub->notification_class_name($resource),
             'subscribers' => $subscribers,
         ];
-        cache()->put('notification-queue', $queue);
+        cache()->put('notification-queue', $events);
     }
 }

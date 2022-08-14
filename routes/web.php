@@ -20,6 +20,7 @@ require __DIR__.'/auth.php';
 
 // pages
 Route::get('terms-and-policies', TermsAndPoliciesController::class)
+    ->middleware(['locale'])
      ->name('terms');
 
 // locales
@@ -29,10 +30,10 @@ Route::post('/translations', [LocalizationController::class, 'show']);
 // common
 Route::middleware(['auth'])->group(function () {
     Route::get('/', HomeController::class)
-        ->middleware('page-transition')
+        ->middleware(['page-transition', 'locale'])
         ->name('home');
     Route::get('/preferences', [PreferenceController::class, 'show'])
-        ->middleware(['can:config_preferences', 'page-transition'])
+        ->middleware(['can:config_preferences', 'page-transition', 'locale'])
         ->name('preferences');
     Route::patch('/preferences', [PreferenceController::class, 'update'])->name('preferences.update');
 
@@ -48,7 +49,7 @@ Route::middleware(['auth'])->group(function () {
 // administrative
 Route::middleware(['auth', 'can:authorize_user'])->group(function () {
     Route::get('/users', [UserController::class, 'index'])
-        ->middleware('page-transition')
+        ->middleware(['page-transition', 'locale'])
         ->name('users.index');
     Route::get('/users/{hashedKey}', [UserController::class, 'show'])
         ->name('users.show');
@@ -75,14 +76,14 @@ Route::middleware(['auth', 'can:upload_file'])->group(function () {
 // support
 Route::middleware(['auth', 'can:get_support'])->group(function () {
     Route::get('support-tickets', [SupportTicketController::class, 'index'])
-         ->middleware('page-transition')
+         ->middleware(['page-transition', 'locale'])
          ->name('support-tickets.index');
     Route::post('support-tickets', [SupportTicketController::class, 'store'])
          ->name('support-tickets.store');
     Route::post('support-tickets', [SupportTicketController::class, 'destroy'])
         ->name('support-tickets.destroy');
     Route::get('feedback', [FeedbackController::class, 'index'])
-        ->middleware('page-transition')
+        ->middleware(['page-transition', 'locale'])
         ->name('feedback.index');
     Route::post('feedback', [FeedbackController::class, 'store'])
         ->name('feedback.store');

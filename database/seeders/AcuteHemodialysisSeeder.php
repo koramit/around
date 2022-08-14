@@ -10,6 +10,7 @@ use App\Managers\Resources\AdmissionManager;
 use App\Models\CaseRecord;
 use App\Models\DocumentChangeRequests\AcuteHemodialysisSlotRequest;
 use App\Models\Note;
+use App\Models\Notes\AcuteHemodialysisOrderNote;
 use App\Models\Resources\Admission;
 use App\Models\Resources\Patient;
 use App\Models\Resources\Person;
@@ -115,14 +116,16 @@ class AcuteHemodialysisSeeder extends Seeder
             });
 
         // update meta
-        Note::query()
+        AcuteHemodialysisOrderNote::query()
             ->with(['caseRecord' => fn ($q) => $q->with('patient')])
             ->each(function ($n) {
                 $c = $n->caseRecord;
                 $p = $c->patient;
                 $c->meta['name'] = $p->first_name;
+                $c->meta['title'] = $c->genTitle();
                 $c->save();
                 $n->meta['name'] = $p->first_name;
+                $n->meta['title'] = $n->genTitle();
                 $n->save();
             });
 

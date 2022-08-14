@@ -5,6 +5,7 @@ namespace App\Actions\Procedures\AcuteHemodialysis;
 use App\Models\Registries\AcuteHemodialysisCaseRecord as CaseRecord;
 use App\Models\Resources\Admission;
 use App\Models\Resources\Patient;
+use App\Models\Subscription;
 use App\Models\User;
 use App\Rules\AnExists;
 use App\Rules\HnExists;
@@ -73,7 +74,10 @@ class CaseRecordStoreAction extends AcuteHemodialysisAction
             'an' => ['digits:8', new AnExists],
         ])->validate();
 
-        /* @TODO check first admit ward */
+        /**
+         * @TODO check first admit ward
+         * @TODO attach patient to registry
+         */
         if ($caseRecord = CaseRecord::query()->where('status', 1)->where('meta->hn', $validated['hn'])->first()) {
             return $caseRecord;
         }
@@ -101,6 +105,19 @@ class CaseRecordStoreAction extends AcuteHemodialysisAction
             'actor_id' => $user->id,
             'action' => 'create',
         ]);
+
+        if ($patient->registries()->where('registry_id', $this->REGISTRY_ID)->count() === 0) {
+            $patient->registries()->attach($this->REGISTRY_ID);
+        }
+
+        $sub = Subscription::query()->create([
+            'subscribable_type' => $caseRecord::class,
+            'subscribable_id' => $caseRecord->id,
+        ]);
+
+        if ($user->auto_subscribe_to_channel) {
+            $user->subscriptions()->attach($sub->id);
+        }
 
         return $caseRecord;
     }

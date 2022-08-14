@@ -37,4 +37,11 @@ class AcuteHemodialysisCaseRecord extends CaseRecord
     {
         return "Acute Hemodialysis Case : HN {$this->meta['hn']} {$this->meta['name']} : {$this->created_at->format('M j y')}";
     }
+
+    protected function discussionRoute(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => route('procedures.acute-hemodialysis.edit', $this->hashed_key).'#discussion',
+        );
+    }
 }

@@ -17,6 +17,7 @@ class CommentController extends Controller
             'commentable_type' => 'required|string|starts_with:App\Models',
             'commentable_id' => 'required|string',
             'body' => 'required|string|max:1024',
+            'notify_op' => 'required|bool',
             'parent_id' => 'exists:comments,id',
         ]);
 

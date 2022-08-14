@@ -194,4 +194,9 @@ class Note extends Model
                 ->latest(),
         ]);
     }
+
+    public function genTitle(?string $dateNote = null): string
+    {
+        return 'placeholder';
+    }
 }

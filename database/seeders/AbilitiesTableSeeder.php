@@ -63,7 +63,7 @@ class AbilitiesTableSeeder extends Seeder
 
         Role::query()->insert([
             ['registry_id' => null, 'name' => 'root', 'label' => null] + $datetime,
-            ['registry_id' => null, 'name' => 'authority', 'label' => null] + $datetime, // authorize role to user
+            ['registry_id' => null, 'name' => 'authority', 'label' => 'Authority'] + $datetime, // authorize role to user
             ['registry_id' => null, 'name' => 'participant', 'label' => null] + $datetime,
 
             ['registry_id' => 1, 'name' => 'acute_hemodialysis_nurse', 'label' => 'Acute HD nurse'] + $datetime,
