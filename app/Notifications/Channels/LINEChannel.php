@@ -16,7 +16,7 @@ class LINEChannel
             return;
         }
 
-        $bot = $notifiable->relationsLoaded('chatBots')
+        $bot = $notifiable->relationLoaded('chatBots')
             ? $notifiable->chatBots->where('social_provider_id', $profile->social_provider_id)->first()
             : $notifiable->activeLINEBot($profile);
 
