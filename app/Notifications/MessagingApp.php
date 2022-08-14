@@ -31,13 +31,13 @@ class MessagingApp extends Notification
         }
 
         $token = Str::random(32);
-        $until = now()->addMinutes(5);
+        $until = now()->addMinutes(15);
         cache()->put('magic-link-token-'.$token, $this->magicLink, $until);
         $signedUrl = URL::temporarySignedRoute('magic-link', $until, [
                         'user' => $notifiable->hashed_key,
                         'token' => $token
                     ]);
 
-        return (new LINEMessage())->text($this->message."\n\n".$signedUrl);
+        return (new LINEMessage())->text($this->message."\nlink หมดอายุภายใน 15 นาที\n".$signedUrl);
     }
 }

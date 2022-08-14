@@ -11,6 +11,8 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Str;
 
 class NotifyDiscussionUpdates implements ShouldQueue
 {
@@ -37,7 +39,7 @@ class NotifyDiscussionUpdates implements ShouldQueue
                 $channel = $sub->subscribable;
 
                 $message = ! empty($channel->meta)
-                    ? "มีข้อความใหม่ใน discussion เคส {$channel->meta['name']}\n$channel->discussion_route"
+                    ? "มีข้อความใหม่ใน discussion เคส {$channel->meta['name']}{link}$channel->discussion_route"
                     : 'มีข้อความใหม่ใน discussion เคส error 😅';
 
                 return [
@@ -62,7 +64,26 @@ class NotifyDiscussionUpdates implements ShouldQueue
             ->whereIn('id', $allUserIds)
             ->get()
             ->each(function ($u) use ($messageUser) {
-                $merged = collect($messageUser[$u->id])->unique()->values()->join("\n\n");
+                $merged = collect($messageUser[$u->id])
+                    ->unique()
+                    ->values()
+                    ->map(function ($text) use($u) {
+                        if (! str_contains($text, '{link}')) {
+                            return $text;
+                        }
+
+                        $token = Str::random(32);
+                        $until = now()->addMinutes(15);
+                        $messages = explode('{link}', $text);
+                        cache()->put('magic-link-token-'.$token, $messages[1], $until);
+                        $signedUrl = URL::temporarySignedRoute('magic-link', $until, [
+                            'user' => $u->hashed_key,
+                            'token' => $token
+                        ]);
+
+                        return $messages[0]."\nlink หมดอายุภายใน 15 นาที\n".$signedUrl;
+                    })
+                    ->join("\n\n");
                 $u->notify(new DiscussionUpdate($merged));
             });
     }
