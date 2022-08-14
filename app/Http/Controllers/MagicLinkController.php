@@ -18,15 +18,11 @@ class MagicLinkController extends Controller
             abort(404);
         }
 
-        // cache intend link with token
-        // send token with signed url
-        // user hti magic link - validate
-        // login user and redirect to cache url
-
         if ($request->user()) {
             return redirect($to);
         }
 
+        /** @TODO check password expires */
         $user = User::query()->findByUnhashKey($request->input('user'))->firstOrFail();
 
         Auth::login($user);
