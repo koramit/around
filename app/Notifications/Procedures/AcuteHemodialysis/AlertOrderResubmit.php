@@ -13,8 +13,7 @@ class AlertOrderResubmit extends MessagingApp
         $dayLabel = $order->date_note->format('Y-m-d') === $today
             ? 'วันนี้'
             : 'พรุ่งนี้';
-        $message = 'เคส acute '.$order->meta['name'].' '.$dayLabel." มีการเปลี่ยน order\n";
-        $message .= route('procedures.acute-hemodialysis.orders.show', $order->hashed_key);
-        $this->message = $message;
+        $this->message = 'เคส acute '.$order->meta['name'].' '.$dayLabel." มีการเปลี่ยน order";
+        $this->magicLink =route('procedures.acute-hemodialysis.orders.show', $order->hashed_key);
     }
 }
