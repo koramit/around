@@ -2,6 +2,7 @@
 
 namespace App\Actions\Procedures\AcuteHemodialysis;
 
+use App\Models\EventBasedNotification;
 use App\Models\Notes\AcuteHemodialysisOrderNote;
 use App\Models\Subscription;
 use App\Models\User;
@@ -397,7 +398,7 @@ class OrderSubmitAction extends AcuteHemodialysisAction
     {
         // subscribers
         if (! $sub = Subscription::query()
-            ->where('subscribable_type', 'App\Models\EventBasedNotification')
+            ->where('subscribable_type', EventBasedNotification::class)
             ->where('subscribable_id', $eventId)
             ->whereHas('subscribers')
             ->first()
@@ -410,8 +411,9 @@ class OrderSubmitAction extends AcuteHemodialysisAction
             ->pluck('id')
             ->all();
 
+        \Log::notice('subscriber count : ' . count($subscribers));
         $events = cache()->pull('notification-queue', []);
-        /** @var \App\Models\EventBasedNotification $subscribable */
+        /** @var EventBasedNotification $subscribable */
         $subscribable = $sub->subscribable;
         $events[] = [
             'notification' => new $subscribable->notification_class_name($resource),
