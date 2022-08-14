@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Resources\Registry;
 use App\Traits\FirstNameAware;
 use App\Traits\PKHashable;
 use Illuminate\Database\Eloquent\Casts\AsArrayObject;
@@ -9,17 +10,23 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Collection;
 use Laravel\Sanctum\HasApiTokens;
 
 /**
  * @property int $items_per_page
  * @property string $home_page
- * @property string $role_names
- * @property string $role_labels
+ * @property Collection $role_names
+ * @property Collection $role_labels
  * @property string $hashed_key
+ * @property Collection $abilities
+ * @property Collection $abilities_id
+ * @property bool $auto_subscribe_to_channel
+ * @property bool $mute_notification
  */
 class User extends Authenticatable
 {
@@ -36,6 +43,11 @@ class User extends Authenticatable
         'profile' => AsArrayObject::class,
         'preferences' => AsArrayObject::class,
     ];
+
+    public function registries(): BelongsToMany
+    {
+        return $this->belongsToMany(Registry::class);
+    }
 
     public function roles(): BelongsToMany
     {
@@ -65,6 +77,24 @@ class User extends Authenticatable
     public function chatLogs(): HasMany
     {
         return $this->hasMany(ChatLog::class);
+    }
+
+    public function activeLINEProfile(): HasOne
+    {
+        /** @TODO make provider id dynamic */
+        return $this->hasOne(SocialProfile::class)->ofMany([
+            'updated_at' => 'max',
+        ], function ($query) {
+            $query->where('social_provider_id', 1)
+                ->where('active', true);
+        });
+    }
+
+    public function scopeWithActiveChatBots($query)
+    {
+        $query->with(['chatBots' => function ($q) {
+            $q->wherePivot('active', true);
+        }]);
     }
 
     /** @alias string $avatar_token*/
@@ -104,6 +134,7 @@ class User extends Authenticatable
         );
     }
 
+    /** @alias $abilities */
     protected function abilities(): Attribute
     {
         return Attribute::make(
@@ -111,6 +142,7 @@ class User extends Authenticatable
         );
     }
 
+    /** @alias $abilities_id */
     protected function abilitiesId(): Attribute
     {
         return Attribute::make(
@@ -118,7 +150,7 @@ class User extends Authenticatable
         );
     }
 
-    /** @alias string $role_names*/
+    /** @alias $role_names*/
     protected function roleNames(): Attribute
     {
         return Attribute::make(
@@ -135,6 +167,22 @@ class User extends Authenticatable
             get: fn () => cache()->remember("uid-$this->id-role-labels", config('session.lifetime') * 60, function () {
                 return $this->roles()->whereNotNull('label')->pluck('label');
             }),
+        );
+    }
+
+    /** @alias $auto_subscribe_to_channel */
+    protected function autoSubscribeToChannel(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->preferences['auto_subscribe_to_channel'] ?? false,
+        );
+    }
+
+    /** @alias $mute_notification */
+    protected function muteNotification(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->preferences['mute'] ?? false,
         );
     }
 
@@ -194,12 +242,6 @@ class User extends Authenticatable
     public function unsubscribe(int $subscriptionId)
     {
         $this->subscriptions()->detach($subscriptionId);
-    }
-
-    public function activeLINEProfile(): ?SocialProfile
-    {
-        /** @TODO make provider id dynamic */
-        return $this->socialProfiles()->activeLoginByProviderId(1)->first();
     }
 
     public function activeLINEBot(SocialProfile $profile): ?ChatBot

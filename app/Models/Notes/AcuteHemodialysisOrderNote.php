@@ -70,4 +70,11 @@ class AcuteHemodialysisOrderNote extends Note
 
         return "Acute Hemodialysis Order : HN {$this->meta['hn']} {$this->meta['name']} : {$this->meta['dialysis_type']} {$dateNote->format('M j y')}";
     }
+
+    protected function discussionRoute(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => route('procedures.acute-hemodialysis.orders.show', $this->hashed_key).'#discussion',
+        );
+    }
 }

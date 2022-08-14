@@ -60,4 +60,9 @@ class CaseRecord extends Model
             get: fn () => $this->meta['title'] ?? 'placeholder',
         );
     }
+
+    public function genTitle(): string
+    {
+        return 'placeholder';
+    }
 }

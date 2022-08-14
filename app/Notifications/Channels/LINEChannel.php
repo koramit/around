@@ -12,11 +12,15 @@ class LINEChannel
     /** @TODO optimize query count */
     public function send(mixed $notifiable, Notification $notification): void
     {
-        if (! $profile = $notifiable->activeLINEProfile()) { // get user social profile id
+        if (! $profile = $notifiable->activeLINEProfile) { // get user social profile id
             return;
         }
 
-        if (! $bot = $notifiable->activeLINEBot($profile)) { // get bot token
+        $bot = $notifiable->relationsLoaded('chatBots')
+            ? $notifiable->chatBots->where('social_provider_id', $profile->social_provider_id)->first()
+            : $notifiable->activeLINEBot($profile);
+
+        if (! $bot) { // get bot token
             return;
         }
 

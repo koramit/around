@@ -27,7 +27,7 @@ class PreferenceController extends Controller
         // LINE config
         // for now all user share the same LINE provider
         $lineProvider = SocialProvider::query()->where('platform', 1)->first();
-        $lineProfile = $user->activeLINEProfile();
+        $lineProfile = $user->activeLINEProfile;
         $lineLinked = (bool) $lineProfile;
         $addFriendLink = null;
         $lineBotActive = false;
@@ -46,21 +46,44 @@ class PreferenceController extends Controller
             $addFriendLink = $bot ? $bot->configs['add_friend_base_url'].$bot->configs['basic_id'] : null;
         }
 
+        if (! isset($user->preferences['mute'])) {
+            $user->preferences['mute'] = false;
+            $user->preferences['auto_subscribe_to_channel'] = false;
+            $user->preferences['auto_unsubscribe_to_channel'] = false;
+            $user->save();
+        }
+
+        $preferences = [
+            'appearance' => [
+                'zen_mode' => $user->preferences['zen_mode'],
+                'home_page' => $user->preferences['home_page'],
+                'items_per_page' => $user->preferences['items_per_page'],
+                'font_scale_index' => $user->preferences['font_scale_index'],
+            ],
+            'notification' => [
+                'mute' => $user->preferences['mute'],
+                'auto_subscribe_to_channel' => $user->preferences['auto_subscribe_to_channel'],
+                'auto_unsubscribe_to_channel' => $user->preferences['auto_unsubscribe_to_channel'],
+            ],
+        ];
+
         return Inertia::render('User/PreferencePage')->with([
+            'preferences' => $preferences,
             'configs' => [
                 'can' => [
                     'link_line' => ! $lineLinked,
                     'add_line' => $addFriendLink !== null,
                 ],
                 'routes' => [
-                    'link_line' => ! $lineLinked ? route('social-link.create', $lineProvider->hashed_key) : null,
+                    'link_line' => (! $lineLinked && $lineProvider) ? route('social-link.create', $lineProvider->hashed_key) : null,
                     'add_line' => $addFriendLink,
+                    'update' => route('preferences.update'),
                 ],
                 'friends' => [
                     'line' => $lineBotActive,
                 ],
-                // 'event_based_notifications' => $this->getEventBasedNotifications($user),
-                // 'subscribed_channels' => $this->getChannelBasedNotifications($user),
+                'event_based_notifications' => $this->getEventBasedNotifications($user),
+                'subscribed_channels' => $this->getChannelBasedNotifications($user),
             ],
         ]);
     }
@@ -78,17 +101,17 @@ class PreferenceController extends Controller
             ->pluck('id');
 
         return EventBasedNotification::query()
-            ->select(['id', 'name', 'locale', 'registry_id'])
+            ->select(['id', 'name', 'registry_id'])
             ->with('subscription:id,subscribable_type,subscribable_id')
             ->withRegistryName()
             ->whereIn('ability_id', $user->abilities_id)
             ->get()
             ->transform(fn ($e) => [
                 'id' => $e->subscription->hashed_key,
-                'label' => $e->locale['en']['label'],
+                'label' => __($e->name),
                 'subscribed' => $subscribedEvents->contains($e->id),
-                'registry' => $e->registry_name,
-            ]);
+                'registry' => __($e->registry_name),
+            ])->groupBy('registry');
     }
 
     protected function getChannelBasedNotifications(User $user)
@@ -97,9 +120,17 @@ class PreferenceController extends Controller
             ->with('subscribable:id,meta')
             ->where('subscribable_type', '<>', EventBasedNotification::class)
             ->get()
-            ->transform(fn ($s) => [
-                'id' => $s->hashed_key,
-                'label' => $s->subscribable->title,
-            ]);
+            ->transform(function ($s) {
+                $data = explode(' : ', $s->subscribable->title);
+
+                return [
+                    'id' => $s->hashed_key,
+                    'label' => "$data[1] $data[2]",
+                    'type' => ($data[0]),
+                    'subscribed' => true,
+                ];
+            })
+            ->sortBy('type')
+            ->groupBy('type');
     }
 }

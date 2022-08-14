@@ -18,6 +18,12 @@
             name="body"
             v-model="form.body"
         />
+        <FormCheckbox
+            :toggler="true"
+            label="Notify OP"
+            v-model="form.notify_op"
+            class="my-2 md:mt-4"
+        />
         <SpinnerButton
             :spin="form.processing"
             class="btn btn-accent mt-4 w-full"
@@ -38,6 +44,7 @@ import FormTextarea from '../Controls/FormTextarea.vue';
 import {useForm} from '@inertiajs/inertia-vue3';
 import SpinnerButton from '../Controls/SpinnerButton.vue';
 import {ref} from 'vue';
+import FormCheckbox from '../Controls/FormCheckbox.vue';
 
 const props = defineProps({
     configs: {type: Object, required: true}
@@ -56,5 +63,6 @@ const form = useForm({
     commentable_type: props.configs.commentable_type,
     commentable_id: props.configs.commentable_id,
     body: null,
+    notify_op: false,
 });
 </script>

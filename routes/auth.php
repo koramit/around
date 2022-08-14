@@ -8,10 +8,12 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
     Route::get('login', [AuthenticatedSessionController::class, 'create'])
+        ->middleware(['locale'])
         ->name('login');
     Route::post('login', [AuthenticatedSessionController::class, 'store'])
         ->name('login.store');
     Route::get('register', [RegisteredUserController::class, 'create'])
+        ->middleware(['locale'])
         ->name('register');
     Route::post('register', [RegisteredUserController::class, 'store'])
         ->name('register.store');

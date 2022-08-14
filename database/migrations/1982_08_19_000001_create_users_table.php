@@ -20,6 +20,9 @@ return new class extends Migration
                 'items_per_page' => 15,
                 'zen_mode' => false,
                 'font_scale_index' => 3,
+                'mute' => false,
+                'auto_subscribe_to_channel' => false,
+                'auto_unsubscribe_to_channel' => false,
             ]));
             $table->unsignedSmallInteger('division_id')->default(2);
             $table->boolean('active')->default(true);

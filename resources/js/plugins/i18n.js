@@ -5,7 +5,7 @@ export default {
         app.config.globalProperties.__ = (key, replace = {}) => {
             let translation = _get(window.translations, key);
 
-            for (var placeholder in replace) {
+            for (let placeholder in replace) {
                 translation = translation.replace(`:${placeholder}`, replace[placeholder]);
             }
 

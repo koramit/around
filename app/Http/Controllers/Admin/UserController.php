@@ -5,11 +5,14 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Role;
 use App\Models\User;
+use App\Traits\RegistryUserAttachable;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class UserController extends Controller
 {
+    use RegistryUserAttachable;
+
     public function index(Request $request)
     {
         session()->flash('page-title', __('Manage User'));
@@ -41,10 +44,18 @@ class UserController extends Controller
         $user = User::query()->findByUnhashKey($hashedKey)->firstOrFail();
         $authority = $request->user();
 
-        if ($request->user()->can('authorize_authority')) {
-            $roles = Role::query()->select('label')->whereNotNull('label')->pluck('label')->map(fn ($r) => ['name' => $r, 'has_role' => $user->role_labels->contains($r)]);
+        if ($authority->can('authorize_authority')) {
+            $roles = Role::query()
+                ->select('label')
+                ->whereNotNull('label') // null label roles are higher level role
+                ->orderBy('id')
+                ->pluck('label')
+                ->map(fn ($r) => ['name' => $r, 'has_role' => $user->role_labels->contains($r)]);
         } else {
-            $roles = $authority->role_labels->map(fn ($r) => ['name' => $r, 'has_role' => $user->role_labels->contains($r)])->filter(fn ($r) => $r['name'] !== 'authority')->values();
+            $roles = $authority->role_labels
+                ->map(fn ($r) => ['name' => $r, 'has_role' => $user->role_labels->contains($r)])
+                ->filter(fn ($r) => strtolower($r['name']) !== 'authority')
+                ->values();
         }
 
         return [
@@ -57,7 +68,6 @@ class UserController extends Controller
         ];
     }
 
-    /* @TODO review */
     public function update(string $hashedKey, Request $request)
     {
         // user
@@ -65,39 +75,44 @@ class UserController extends Controller
         $authority = $request->user();
 
         // granted roles
-        $rolesToAdd = collect($request->input('roles'))->filter(fn ($r) => $r['has_role'])->values()->pluck('name');
-        if ($rolesToAdd->count()) {
+        $checked = collect($request->input('roles'))->filter(fn ($r) => $r['has_role'])
+            ->values()
+            ->pluck('name')
+            ->filter(fn ($name) => ! $user->role_labels->contains($name))
+            ->values();
+        if ($checked->count()) {
             $user->actionLogs()->create([
                 'action' => 'grant',
                 'actor_id' => $authority->id,
-                'payload' => ['roles' => $rolesToAdd],
+                'payload' => ['roles' => $checked->all()],
             ]);
         }
-
-        // revoked roles
-        $revokedRoles = collect($request->input('roles'))->filter(fn ($r) => ! $r['has_role'])->values()->pluck('name');
-        $rolesToRemove = $user->role_labels->filter(fn ($r) => $revokedRoles->contains($r));
-        if ($rolesToRemove->count()) {
-            $user->actionLogs()->create([
-                'action' => 'revoke',
-                'actor_id' => $authority->id,
-                'payload' => ['roles' => $rolesToRemove],
-            ]);
-        }
-
-        // toggle roles
-        $toggledRoles = array_merge($rolesToAdd->all(), $rolesToRemove->all());
-        $ids = Role::query()->whereIn('label', $toggledRoles)->pluck('id');
-
+        $ids = Role::query()->whereIn('label', $checked)->pluck('id');
         if ($user->role_labels->count() === 0) {
             $ids[] = 3; // participant
         }
-        $user->roles()->toggle($ids);
+        $user->roles()->attach($ids);
 
-        if ($user->roles()->count() === 1) { // participant
+        // revoked roles
+        $notChecked = collect($request->input('roles'))->filter(fn ($r) => ! $r['has_role'])
+            ->values()
+            ->pluck('name')
+            ->filter(fn ($name) => $user->role_labels->contains($name))
+            ->values();
+        if ($notChecked->count()) {
+            $user->actionLogs()->create([
+                'action' => 'grant',
+                'actor_id' => $authority->id,
+                'payload' => ['roles' => $notChecked->all()],
+            ]);
+        }
+        $user->roles()->detach(Role::query()->whereIn('label', $notChecked)->pluck('id'));
+        if ($user->roles()->count() === 1) {
             $user->roles()->detach();
         }
         $user->flushPrivileges();
+
+        $this->toggleRegistryUser($user);
 
         return ['ok' => true];
     }

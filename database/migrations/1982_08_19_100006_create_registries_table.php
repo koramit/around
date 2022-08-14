@@ -11,13 +11,11 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('registries', function (Blueprint $table) {
             $table->smallIncrements('id');
-            $table->string('name')->unique(); // label should get from trans function
-            $table->string('label')->index()->collation(config('database.th_collation'));
-            $table->string('label_eng');
+            $table->string('name')->unique();
             $table->string('route');
             $table->unsignedSmallInteger('division_id')->default(1);
             $table->foreign('division_id')->references('id')->on('divisions')->constrained();
@@ -49,7 +47,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
     }
 };

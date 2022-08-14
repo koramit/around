@@ -15,16 +15,16 @@ class ProcessNotificationQueue implements ShouldQueue
 
     public function handle(): void
     {
-        $notifications = collect(cache()->pull('notification-queue', []));
-        if ($notifications->count() === 0) {
+        $events = collect(cache()->pull('notification-queue', []));
+        if ($events->count() === 0) {
             return;
         }
 
-        $notifications->each(function ($n) {
+        $events->each(function ($event) {
             User::query()
-                ->whereIn('id', $n['subscribers'])
+                ->whereIn('id', $event['subscribers'])
                 ->get()
-                ->each(fn ($u) => $u->notify($n['notification']));
+                ->each(fn ($user) => $user->notify($event['notification']));
         });
     }
 }

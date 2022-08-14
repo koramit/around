@@ -6,11 +6,13 @@ use App\Models\Resources\Division;
 use App\Models\Role;
 use App\Models\User;
 use App\Traits\CSVLoader;
+use App\Traits\RegistryUserAttachable;
 
 class InitUserRoleAction
 {
-    use CSVLoader;
+    use CSVLoader, RegistryUserAttachable;
 
+    /** @TODO attach registry */
     public function __invoke(User $user): bool
     {
         $list = $this->loadCSV(storage_path('app/seeders/users.csv'));
@@ -23,6 +25,9 @@ class InitUserRoleAction
 
         $roles = explode('|', $list[$index]['roles']);
         $user->roles()->attach(Role::query()->select('id')->whereIn('name', $roles)->pluck('id'));
+
+        // attach registry
+        $this->toggleRegistryUser($user);
 
         return $user->update([
             'division_id' => Division::query()->select('id')->where('name_en_short', $list[$index]['division'])->first()->id,
