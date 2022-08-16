@@ -32,9 +32,18 @@ class PreferencesUpdateAction
         }
 
         if (isset($data['notification'])) {
-            $user->preferences['mute'] = $data['notification']['mute'] ?? false;
-            $user->preferences['auto_subscribe_to_channel'] = $data['notification']['auto_subscribe_to_channel'] ?? false;
-            $user->preferences['auto_unsubscribe_to_channel'] = $data['notification']['auto_unsubscribe_to_channel'] ?? false;
+            if (isset($data['notification']['mute'])) {
+                $user->preferences['mute'] = $data['notification']['mute'];
+            }
+            if (isset($data['notification']['notify_approval_result'])) {
+                $user->preferences['notify_approval_result'] = $data['notification']['notify_approval_result'];
+            }
+            if (isset($data['notification']['auto_subscribe_to_channel'])) {
+                $user->preferences['auto_subscribe_to_channel'] = $data['notification']['auto_subscribe_to_channel'];
+            }
+            if (isset($data['notification']['auto_unsubscribe_to_channel'])) {
+                $user->preferences['auto_unsubscribe_to_channel'] = $data['notification']['auto_unsubscribe_to_channel'];
+            }
             $user->save();
 
             return ['ok' => true];

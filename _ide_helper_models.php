@@ -377,6 +377,8 @@ namespace App\Models\Notes{
  * App\Models\Notes\AcuteHemodialysisOrderNote
  *
  * @property-read string $cancel_confirm_text
+ * @property-read string $view_route
+ * @property-read string $discussion_route
  * @property int $id
  * @property int $case_record_id
  * @property int $note_type_id
@@ -829,10 +831,12 @@ namespace App\Models{
  * @property Collection $role_names
  * @property Collection $role_labels
  * @property string $hashed_key
+ * @property string $first_name
  * @property Collection $abilities
  * @property Collection $abilities_id
  * @property bool $auto_subscribe_to_channel
  * @property bool $mute_notification
+ * @property bool $notify_approval_result
  * @property int $id
  * @property string $name
  * @property string $login

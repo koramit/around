@@ -62,6 +62,7 @@ class PreferenceController extends Controller
             ],
             'notification' => [
                 'mute' => $user->preferences['mute'],
+                'notify_approval_result' => $user->preferences['notify_approval_result'],
                 'auto_subscribe_to_channel' => $user->preferences['auto_subscribe_to_channel'],
                 'auto_unsubscribe_to_channel' => $user->preferences['auto_unsubscribe_to_channel'],
             ],

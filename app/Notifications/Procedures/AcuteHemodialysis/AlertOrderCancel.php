@@ -2,8 +2,22 @@
 
 namespace App\Notifications\Procedures\AcuteHemodialysis;
 
-use App\Notifications\MessagingApp;
+use App\Contracts\MessagingApp;
+use App\Models\Notes\AcuteHemodialysisOrderNote;
+use App\Traits\SocialAppMessagable;
+use Illuminate\Notifications\Notification;
 
-class AlertOrderCancel extends MessagingApp
+class AlertOrderCancel extends Notification implements MessagingApp
 {
+    use SocialAppMessagable;
+
+    public function __construct(AcuteHemodialysisOrderNote $order)
+    {
+        $today = now()->tz(7)->format('Y-m-d');
+        $dayLabel = $order->date_note->format('Y-m-d') === $today
+            ? 'วันนี้'
+            : 'พรุ่งนี้';
+        $this->message = 'เคส acute '.$order->meta['name'].' '.$dayLabel.' ถูกยกเลิกแล้ว';
+        $this->magicLink = route('procedures.acute-hemodialysis.orders.show', $order->hashed_key);
+    }
 }

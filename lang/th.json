@@ -22,8 +22,9 @@
     "_comment_acute_hd_label": "",
     "acute_hd": "Acute Hemodialysis",
     "alert_order_resubmit": "Order ถูกแก้ไข",
-    "alert_order_cancel": "Order ถูกยกเลิก",
+    "alert_order_canceled": "Order ถูกยกเลิก",
     "alert_slot_request": "มีคำร้องขอใช้งาน slot",
+    "alert_session_updates": "Order เริ่ม/จบ session",
     "alert_order_resubmit_detail": "เมื่อ order ของวันพรุ่งนี้ถูกแก้ไขหลัง 20:00 น. ของวันนี้เป็นต้นไป",
     "alert_order_cancel_detail": "เมื่อ order ของวันพรุ่งนี้ถูกยกเลิกหลัง 20:00 น. ของวันนี้เป็นต้นไป"
 }

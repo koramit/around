@@ -2,8 +2,9 @@
     "_comment_acute_hd_label": "",
     "acute_hd": "Acute Hemodialysis",
     "alert_order_resubmit": "Order changes",
-    "alert_order_cancel": "Order was canceled",
+    "alert_order_canceled": "Order was canceled",
     "alert_slot_request": "New slot request",
+    "alert_session_updates": "Dialysis session started/finished",
     "alert_order_resubmit_detail": "When tomorrow's order changes after 8 PM today",
     "alert_order_cancel_detail": "When, tomorrow's order is canceled after 8 PM today"
 }

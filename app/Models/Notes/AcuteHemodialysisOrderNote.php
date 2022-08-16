@@ -11,6 +11,8 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
  * App\Models\Notes\AcuteHemodialysisOrderNote
  *
  * @property-read string $cancel_confirm_text
+ * @property-read string $view_route
+ * @property-read string $discussion_route
  * */
 class AcuteHemodialysisOrderNote extends Note
 {
@@ -71,6 +73,15 @@ class AcuteHemodialysisOrderNote extends Note
         return "Acute Hemodialysis Order : HN {$this->meta['hn']} {$this->meta['name']} : {$this->meta['dialysis_type']} {$dateNote->format('M j y')}";
     }
 
+    /** @alias $view_route */
+    protected function viewRoute(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => route('procedures.acute-hemodialysis.orders.show', $this->hashed_key),
+        );
+    }
+
+    /** @alias $discussion_route */
     protected function discussionRoute(): Attribute
     {
         return Attribute::make(

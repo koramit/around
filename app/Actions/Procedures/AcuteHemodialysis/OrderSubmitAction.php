@@ -2,9 +2,8 @@
 
 namespace App\Actions\Procedures\AcuteHemodialysis;
 
-use App\Models\EventBasedNotification;
+use App\Jobs\Procedures\AcuteHemodialysis\NotifyOrderResubmitToSubscribers;
 use App\Models\Notes\AcuteHemodialysisOrderNote;
-use App\Models\Subscription;
 use App\Models\User;
 use App\Rules\AcceptedIfOthersFalsy;
 use App\Traits\AcuteHemodialysis\OrderFormConfigsShareable;
@@ -14,8 +13,6 @@ use Illuminate\Validation\Rule;
 class OrderSubmitAction extends AcuteHemodialysisAction
 {
     use OrderFormConfigsShareable;
-
-    protected int $EVENT_ID = 1;
 
     public function __invoke(array $data, string $hashedKey, User $user): array
     {
@@ -385,39 +382,12 @@ class OrderSubmitAction extends AcuteHemodialysisAction
     private function shouldNotifyResubmit(AcuteHemodialysisOrderNote $note): void
     {
         // the day before @ 20:00 local time
-        $ref = $note->date_note->addDays(-1)->format('Y-m-d').' 13:00:00';
+        $ref = $note->date_note->addDays(-1)->format('Y-m-d').' '.$this->LAST_HOUR_UTC;
         $ref = now()->create($ref);
         if (now()->lessThan($ref)) {
             return;
         }
 
-        $this->processNotification($this->EVENT_ID, $note);
-    }
-
-    private function processNotification(int $eventId, mixed $resource): void
-    {
-        // subscribers
-        if (! $sub = Subscription::query()
-            ->where('subscribable_type', EventBasedNotification::class)
-            ->where('subscribable_id', $eventId)
-            ->whereHas('subscribers')
-            ->first()
-        ) {
-            return;
-        }
-
-        $subscribers = $sub->subscribers()
-            ->where('preferences->mute', false)
-            ->pluck('id')
-            ->all();
-
-        $events = cache()->pull('notification-queue', []);
-        /** @var EventBasedNotification $subscribable */
-        $subscribable = $sub->subscribable;
-        $events[] = [
-            'notification' => new $subscribable->notification_class_name($resource),
-            'subscribers' => $subscribers,
-        ];
-        cache()->put('notification-queue', $events);
+        NotifyOrderResubmitToSubscribers::dispatchAfterResponse($note);
     }
 }

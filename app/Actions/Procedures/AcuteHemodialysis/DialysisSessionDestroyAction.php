@@ -2,6 +2,7 @@
 
 namespace App\Actions\Procedures\AcuteHemodialysis;
 
+use App\Jobs\Procedures\AcuteHemodialysis\NotifyDialysisStatusToAuthor;
 use App\Models\Notes\AcuteHemodialysisOrderNote;
 use App\Models\User;
 
@@ -30,6 +31,8 @@ class DialysisSessionDestroyAction extends AcuteHemodialysisAction
             'status' => 'finished',
             'meta->finished_at' => now()->tz($this->TIMEZONE)->format('H:i'),
         ]);
+
+        NotifyDialysisStatusToAuthor::dispatchAfterResponse($order);
 
         return [
             'type' => 'success',

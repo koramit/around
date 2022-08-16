@@ -24,7 +24,7 @@ class LINEChannel
             return;
         }
 
-        /** @noinspection PhpPossiblePolymorphicInvocationInspection */
+        /** @noinspection PhpUndefinedMethodInspection */
         $message = $notification->toLINE($notifiable);
         $payload = $this->pushMessage($bot, $profile->profile_id, $message->getMessages());
         $this->log($notifiable->id, $bot->id, $payload, 'push');

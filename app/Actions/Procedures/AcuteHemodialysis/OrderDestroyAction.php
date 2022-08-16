@@ -2,6 +2,7 @@
 
 namespace App\Actions\Procedures\AcuteHemodialysis;
 
+use App\Jobs\Procedures\AcuteHemodialysis\NotifyOrderCanceledToSubscribers;
 use App\Models\Notes\AcuteHemodialysisOrderNote;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
@@ -10,8 +11,6 @@ class OrderDestroyAction extends AcuteHemodialysisAction
 {
     public function __invoke(array $data, string $hashedKey, User $user): array
     {
-        // @TODO IF status == scheduling then also expire corresponding request
-
         if (config('auth.guards.web.provider') === 'avatar') {
             return []; // call api
         }
@@ -25,7 +24,7 @@ class OrderDestroyAction extends AcuteHemodialysisAction
             abort(403);
         }
 
-        // IF status == scheduling then also expire corresponding request
+        // @TODO IF status == scheduling then also expire corresponding request
         if ($order->status === 'scheduling') {
             return [
                 'type' => 'warning',
@@ -41,11 +40,24 @@ class OrderDestroyAction extends AcuteHemodialysisAction
             'action' => 'cancel',
             'payload' => ['reason' => $validated['reason']],
         ]);
+        $this->shouldNotifyCancel($order);
 
         return [
             'type' => 'info',
             'title' => 'Order canceled successfully.',
             'message' => 'Order '.$order->meta['dialysis_type'].' on '.$order->date_note->format('M j').' canceled',
         ];
+    }
+
+    private function shouldNotifyCancel(AcuteHemodialysisOrderNote $order): void
+    {
+        // the day before @ 20:00 local time
+        $ref = $order->date_note->addDays(-1)->format('Y-m-d').' '.$this->LAST_HOUR_UTC;
+        $ref = now()->create($ref);
+        if (now()->lessThan($ref)) {
+            return;
+        }
+
+        NotifyOrderCanceledToSubscribers::dispatchAfterResponse($order);
     }
 }

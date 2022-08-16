@@ -5,7 +5,7 @@ namespace App\Jobs;
 use App\Models\Comment;
 use App\Models\Subscription;
 use App\Models\User;
-use App\Notifications\DiscussionUpdate;
+use App\Notifications\MessagingApp;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -67,7 +67,7 @@ class NotifyDiscussionUpdates implements ShouldQueue
                 $merged = collect($messageUser[$u->id])
                     ->unique()
                     ->values()
-                    ->map(function ($text) use($u) {
+                    ->map(function ($text) use ($u) {
                         if (! str_contains($text, '{link}')) {
                             return $text;
                         }
@@ -78,13 +78,13 @@ class NotifyDiscussionUpdates implements ShouldQueue
                         cache()->put('magic-link-token-'.$token, $messages[1], $until);
                         $signedUrl = URL::temporarySignedRoute('magic-link', $until, [
                             'user' => $u->hashed_key,
-                            'token' => $token
+                            'token' => $token,
                         ]);
 
                         return $messages[0]."\n\nlink หมดอายุภายใน 15 นาที\n\n".$signedUrl;
                     })
                     ->join("\n\n\n");
-                $u->notify(new DiscussionUpdate($merged));
+                $u->notify(new MessagingApp($merged));
             });
     }
 }

@@ -418,7 +418,7 @@ class OrderShowAction extends AcuteHemodialysisAction
         }
     }
 
-    protected function getPatientLocation(mixed $an): string
+    protected function getPatientLocation(?string $an): string
     {
         if (! $an) {
             return 'ER ?';

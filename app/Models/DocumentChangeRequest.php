@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Events\DocumentChangeRequestCreated;
+use App\Events\DocumentChangeRequestUpdating;
 use App\Traits\PKHashable;
 use Illuminate\Database\Eloquent\Casts\AsArrayObject;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -32,6 +34,11 @@ class DocumentChangeRequest extends Model
     ];
 
     protected array $statuses = ['', 'pending', 'approved', 'disapproved', 'canceled', 'expired'];
+
+    protected $dispatchesEvents = [
+        'created' => DocumentChangeRequestCreated::class,
+        'updating' => DocumentChangeRequestUpdating::class,
+    ];
 
     public $timestamps = false;
 
