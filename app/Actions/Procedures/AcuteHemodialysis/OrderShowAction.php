@@ -127,16 +127,8 @@ class OrderShowAction extends AcuteHemodialysisAction
                     'start_session' => route('procedures.acute-hemodialysis.orders.start-session', $order->hashed_key),
                     'update_session' => route('procedures.acute-hemodialysis.orders.update-session', $order->hashed_key),
                     'finish_session' => route('procedures.acute-hemodialysis.orders.finish-session', $order->hashed_key),
-                    'comments_store' => route('comments.store'),
                 ],
-                'comment' => [
-                    'commentable_type' => $order::class,
-                    'commentable_id' => $order->hashed_key,
-                    'routes' => [
-                        'store' => route('comments.store'),
-                        'index' => route('comments.index'),
-                    ],
-                ],
+                'comment' => $this->getCommentRoutes($order),
             ],
         ];
     }
@@ -418,7 +410,7 @@ class OrderShowAction extends AcuteHemodialysisAction
         }
     }
 
-    protected function getPatientLocation(mixed $an): string
+    protected function getPatientLocation(?string $an): string
     {
         if (! $an) {
             return 'ER ?';

@@ -29,11 +29,14 @@ class AcuteHemodialysisAction
 
     protected string $TODAY;
 
-    protected int $APPROVE_ACUTE_HEMODIALYSIS_SLOT_REQUEST_ABILITY_ID = 28;
+    // @TODO approve_acute_hemodialysis_slot_request instead of id hardcode
+    protected int $APPROVE_ACUTE_HEMODIALYSIS_SLOT_REQUEST_ABILITY_ID = 29;
 
     protected string $STAFF_SCOPE_PARAMS = '&position=8&division_id=6';
 
     protected string $UNIT_DAY_OFF = 'Sunday';
+
+    protected string $LAST_HOUR_UTC = '13:00:00';
 
     public function __construct()
     {

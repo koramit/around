@@ -1,68 +1,47 @@
 <template>
     <div>
-        <div
-            v-for="comment in comments"
-            :key="comment.id"
-            class="mb-4 md:mb-8"
-        >
-            <div
-                class="p-2 pb-4 md:p-4 md:pb-8 bg-primary-darker text-complement rounded"
-                v-html="comment.body"
-            />
-            <div class="flex justify-end text-sm">
-                <span class="italic text-complement">{{ comment.at }} by</span>
-                <span class="ml-1 text-accent">{{ comment.commentator }}</span>
-            </div>
+        <div class="text-xs md:text-sm text-accent">
+            <IconAdjustments class="mr-1 w-3 h-4 inline" />
+            <button
+                v-if="mode === 'reply'"
+                @click="mode = 'timeline'"
+            >
+                Timeline oriented
+            </button>
+            <button
+                v-else-if="mode === 'timeline'"
+                @click="mode = 'reply'"
+            >
+                Reply oriented
+            </button>
         </div>
-        <FormTextarea
-            name="body"
-            v-model="form.body"
-        />
-        <FormCheckbox
-            :toggler="true"
-            label="Notify OP"
-            v-model="form.notify_op"
-            class="my-2 md:mt-4"
-        />
-        <SpinnerButton
-            :spin="form.processing"
-            class="btn btn-accent mt-4 w-full"
-            @click="form.post(configs.routes.store, {
-                preserveScroll: true,
-                preserveState: false,
-                onFinish: () => {form.processing = false;}
-            })"
-            :disabled="!form.body"
+
+        <transition
+            name="slide-fade"
+            mode="in-out"
         >
-            POST
-        </SpinnerButton>
+            <CommentReplyOriented
+                v-if="mode === 'reply'"
+                :configs="configs"
+            />
+            <CommentTimelineOriented
+                v-else-if="mode === 'timeline'"
+                :configs="configs"
+            />
+        </transition>
     </div>
 </template>
 
 <script setup>
-import FormTextarea from '../Controls/FormTextarea.vue';
-import {useForm} from '@inertiajs/inertia-vue3';
-import SpinnerButton from '../Controls/SpinnerButton.vue';
+import {usePage} from '@inertiajs/inertia-vue3';
 import {ref} from 'vue';
-import FormCheckbox from '../Controls/FormCheckbox.vue';
+import CommentReplyOriented from './CommentReplyOriented.vue';
+import CommentTimelineOriented from './CommentTimelineOriented.vue';
+import IconAdjustments from '../Helpers/Icons/IconAdjustments.vue';
 
-const props = defineProps({
+defineProps({
     configs: {type: Object, required: true}
 });
 
-const comments = ref([]);
-
-window.axios
-    .post(props.configs.routes.index, {
-        commentable_type: props.configs.commentable_type,
-        commentable_id: props.configs.commentable_id,
-    }).then(res => comments.value = res.data)
-    .catch(error => console.log(error));
-
-const form = useForm({
-    commentable_type: props.configs.commentable_type,
-    commentable_id: props.configs.commentable_id,
-    body: null,
-    notify_op: false,
-});
+const mode = ref(usePage().props.value.user.preferences.discussion_mode);
 </script>

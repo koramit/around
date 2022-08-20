@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\PKHashable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -9,9 +10,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
+/**
+ * @property-read string $hashed_key
+ * @property-read string $body_html
+ * @property-read string $commentator_name
+ */
 class Comment extends Model
 {
-    use HasFactory;
+    use HasFactory, PKHashable;
 
     protected $guarded = [];
 
@@ -25,9 +31,14 @@ class Comment extends Model
         return $this->morphTo('commentable');
     }
 
+    public function parent(): BelongsTo
+    {
+        return $this->belongsTo(Comment::class);
+    }
+
     public function replies(): HasMany
     {
-        return $this->hasMany(Comment::class, 'parent_id');
+        return $this->hasMany(Comment::class, 'parent_id'); // ->with('replies');
     }
 
     public function scopeWithCommentatorUsername($query)
@@ -50,6 +61,7 @@ class Comment extends Model
         ]);
     }
 
+    /** @alias $body_html */
     protected function bodyHtml(): Attribute
     {
         return Attribute::make(

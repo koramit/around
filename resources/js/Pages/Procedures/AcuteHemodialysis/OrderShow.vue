@@ -173,9 +173,7 @@
         discussion
     </h2>
     <hr class="my-4 border-b border-accent">
-    <CommentSection
-        :configs="configs.comment"
-    />
+    <CommentSection :configs="configs.comment" />
 </template>
 
 <script setup>

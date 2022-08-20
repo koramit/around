@@ -85,14 +85,7 @@ class OrderEditAction extends AcuteHemodialysisAction
                 'date_note' => $note->date_note->format('Y-m-d'),
                 'swap_code' => $note->meta['swap_code'],
                 'can' => $can,
-                'comment' => [
-                    'commentable_type' => $note::class,
-                    'commentable_id' => $note->hashed_key,
-                    'routes' => [
-                        'store' => route('comments.store'),
-                        'index' => route('comments.index'),
-                    ],
-                ],
+                'comment' => $this->getCommentRoutes($note),
             ],
         ];
     }

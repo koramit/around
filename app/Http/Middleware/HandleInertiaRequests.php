@@ -64,6 +64,7 @@ class HandleInertiaRequests extends Middleware
                             'zenMode' => $request->user()->preferences['zen_mode'],
                             'fontScaleIndex' => $request->user()->preferences['font_scale_index'],
                         ],
+                        'discussion_mode' => 'timeline',
                     ]),
                     'can' => [
                         'manage_user' => $request->user()->can('authorize_user'),

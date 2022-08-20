@@ -2,6 +2,7 @@
 
 namespace App\Actions\Procedures\AcuteHemodialysis;
 
+use App\Jobs\Procedures\AcuteHemodialysis\NotifyDialysisStatusToAuthor;
 use App\Models\Notes\AcuteHemodialysisOrderNote;
 use App\Models\User;
 
@@ -13,6 +14,7 @@ class DialysisSessionStoreAction extends AcuteHemodialysisAction
             return []; // call api
         }
 
+        /** @var AcuteHemodialysisOrderNote $order */
         $order = AcuteHemodialysisOrderNote::query()->findByUnhashKey($hashedKey)->firstOrFail();
 
         if ($user->cannot('perform', $order)) {
@@ -31,7 +33,7 @@ class DialysisSessionStoreAction extends AcuteHemodialysisAction
             'meta->started_at' => now()->tz($this->TIMEZONE)->format('H:i'),
         ]);
 
-        // @TODO notify author
+        NotifyDialysisStatusToAuthor::dispatchAfterResponse($order);
 
         return [
             'type' => 'success',

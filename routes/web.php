@@ -1,10 +1,11 @@
 <?php
 
-Barryvdh\Debugbar\Facades\Debugbar::disable();
+// Barryvdh\Debugbar\Facades\Debugbar::disable();
 
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\ChatBotController;
-use App\Http\Controllers\CommentController;
+use App\Http\Controllers\CommentReplyController;
+use App\Http\Controllers\CommentTimelineController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InAppBrowsingRedirectController;
@@ -103,10 +104,22 @@ Route::middleware(['auth', 'can:comment'])
     ->prefix('comments')
     ->name('comments.')
     ->group(function () {
-        Route::post('/fetch', [CommentController::class, 'index'])
-            ->name('index');
-        Route::post('', [CommentController::class, 'store'])
-            ->name('store');
+        // Route::post('', CommentController::class)
+        //     ->name('store');
+
+        Route::get('/reply-oriented', [CommentReplyController::class, 'index'])
+            ->name('reply-oriented.index');
+        Route::post('/reply-oriented', [CommentReplyController::class, 'store'])
+            ->name('reply-oriented.store');
+        Route::get('/reply-oriented/{hashedKey}', [CommentReplyController::class, 'show'])
+            ->name('reply-oriented.show');
+        Route::post('/reply-oriented/{hashedKey}', [CommentReplyController::class, 'reply'])
+            ->name('reply-oriented.reply');
+
+        Route::get('/timeline-oriented', [CommentTimelineController::class, 'index'])
+            ->name('timeline-oriented.index');
+        Route::post('/timeline-oriented', [CommentTimelineController::class, 'store'])
+            ->name('timeline-oriented.store');
     });
 
 // subscription

@@ -1,4 +1,3 @@
-
 <template>
     <!-- reservation -->
     <h2
@@ -9,7 +8,7 @@
         <button
             v-if="configs.can.reschedule"
             class="flex items-center text-sm text-accent"
-            @click="showReschedule = !showReschedule"
+            @click="showReschedule.value = !showReschedule"
         >
             <IconRotate
                 class="w-3 h-3 mr-1 transition-all transform duration-200 ease-out"
@@ -356,6 +355,7 @@
         label="Postdialysis Iron IV"
         :toggler="true"
     />
+    <!--suppress JSValidateTypes -->
     <FormTextarea
         class="mt-2 md:mt-4 xl:mt-8"
         label="treatments request"
@@ -380,15 +380,13 @@
         discussion
     </h2>
     <hr class="my-4 border-b border-accent">
-    <CommentSection
-        :configs="configs.comment"
-    />
+    <CommentSection :configs="configs.comment" />
 </template>
 
 <script setup>
 import { useForm, usePage } from '@inertiajs/inertia-vue3';
-import debounce from 'lodash/debounce';
 import { nextTick, reactive, watch, ref, onMounted, defineAsyncComponent } from 'vue';
+import debounce from 'lodash/debounce';
 import FormInput from '../../../Components/Controls/FormInput.vue';
 import FormCheckbox from '../../../Components/Controls/FormCheckbox.vue';
 import FormSelect from '../../../Components/Controls/FormSelect.vue';

@@ -23,10 +23,12 @@ use Laravel\Sanctum\HasApiTokens;
  * @property Collection $role_names
  * @property Collection $role_labels
  * @property string $hashed_key
+ * @property string $first_name
  * @property Collection $abilities
  * @property Collection $abilities_id
  * @property bool $auto_subscribe_to_channel
  * @property bool $mute_notification
+ * @property bool $notify_approval_result
  */
 class User extends Authenticatable
 {
@@ -183,6 +185,14 @@ class User extends Authenticatable
     {
         return Attribute::make(
             get: fn () => $this->preferences['mute'] ?? false,
+        );
+    }
+
+    /** @alias $notify_approval_result */
+    protected function notifyApprovalResult(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->preferences['notify_approval_result'] ?? false,
         );
     }
 

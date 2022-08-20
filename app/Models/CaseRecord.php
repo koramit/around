@@ -61,6 +61,13 @@ class CaseRecord extends Model
         );
     }
 
+    protected function creator(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->actionLogs()->where('action', 1)->first()?->actor,
+        );
+    }
+
     public function genTitle(): string
     {
         return 'placeholder';

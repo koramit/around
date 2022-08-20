@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Session;
 
 class TranslationGenerator
 {
-    public static function getTranslationsIfNeeded(): mixed
+    public static function getTranslationsIfNeeded(): Collection|bool
     {
         $locale = Session::get('locale', config('app.locale'));
         if (Session::get('locale-loaded') === $locale) {

@@ -41,7 +41,12 @@
                             class="font-semibold text-xs flex items-center"
                             :href="slot.case_record_route"
                         >
+                            <IconVentilator
+                                v-if="slot.on_ventilator"
+                                class="h-3 w-3 mr-1 text-green-400"
+                            />
                             <IconPatient
+                                v-else
                                 class="h-3 w-3 mr-1 text-white"
                             />
                             <span class="block py-1 italic truncate underline">{{ slot.patient_name }}</span>
@@ -76,6 +81,7 @@ import IconPatient from '../../../Components/Helpers/Icons/IconPatient.vue';
 import IconUserMd from '../../../Components/Helpers/Icons/IconUserMd.vue';
 import { InertiaLink } from '@inertiajs/inertia-vue3';
 import WardSlot from './WardSlot.vue';
+import IconVentilator from '../../../Components/Helpers/Icons/IconVentilator.vue';
 
 defineProps({
     slots: { type: Object, required: true }

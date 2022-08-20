@@ -48,7 +48,7 @@
     </a>
     <span
         v-else-if="configs.friends.line"
-        class="px-2 py-1 md:px-4 md:py-2 bg-accent text-white rounded-3xl italic"
+        class="px-2 py-1 md:px-4 md:py-2 bg-line-app text-white rounded-3xl italic"
     >FRIENDED</span>
 
     <hr class="my-4 border-b border-dashed">
@@ -73,6 +73,13 @@
             <h3 class="mt-4 mb-2 md:mt-8 md:mb-4 font-medium text-complement">
                 Events
             </h3>
+            <FormCheckbox
+                class="my-2 md:my-4"
+                label="Request approval updates"
+                name="notify_approval_result"
+                v-model="notification.notify_approval_result"
+                :toggler="true"
+            />
             <section class="p-2 md:p-4 border-l-2 border-accent space-y-2 md:space-y-4">
                 <div
                     v-for="group in Object.keys(eventBasedNotifications)"
@@ -94,14 +101,14 @@
             </h3>
             <FormCheckbox
                 class="my-2 md:my-4"
-                label="Auto subscribe when I create channel"
+                label="Auto subscribe to channel I create"
                 name="auto_subscribe_to_channel"
                 v-model="notification.auto_subscribe_to_channel"
                 :toggler="true"
             />
             <FormCheckbox
                 class="my-2 md:my-4"
-                label="Auto unsubscribe when channel inactive"
+                label="Auto unsubscribe from an inactive channel"
                 name="auto_unsubscribe_to_channel"
                 v-model="notification.auto_unsubscribe_to_channel"
                 :toggler="true"
