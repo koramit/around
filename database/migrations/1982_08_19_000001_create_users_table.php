@@ -21,6 +21,7 @@ return new class extends Migration
                 'zen_mode' => false,
                 'font_scale_index' => 3,
                 'mute' => false,
+                'notify_approval_result' => true,
                 'auto_subscribe_to_channel' => false,
                 'auto_unsubscribe_to_channel' => false,
             ]));
