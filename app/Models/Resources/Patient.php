@@ -2,6 +2,8 @@
 
 namespace App\Models\Resources;
 
+use App\Models\CaseRecord;
+use App\Models\Note;
 use App\Traits\CKHashable;
 use Hashids\Hashids;
 use Illuminate\Database\Eloquent\Casts\AsEncryptedArrayObject;
@@ -10,6 +12,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 /**
  * App\Models\Resources
@@ -36,6 +39,11 @@ class Patient extends Model
     public function registries(): BelongsToMany
     {
         return $this->belongsToMany(Registry::class);
+    }
+
+    public function notes(): HasManyThrough
+    {
+        return $this->hasManyThrough(Note::class, CaseRecord::class);
     }
 
     protected function hn(): Attribute
