@@ -80,10 +80,10 @@ class AcuteHemodialysisNotificationSeeder extends Seeder
         User::query()->update(['preferences->auto_unsubscribe_to_channel' => true]);
 
         /** additional */
-        // order approved/disapproved CHECK
+        // order approved/disapproved CHECKED
         // tomorrow order not complete 20:00/20:30
-        // order started
-        // order finished
+        // order started CHECKED
+        // order finished CHECKED
         // case d/c
         // case not complete after d/c or idle for two weeks
     }

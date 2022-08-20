@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
  * @property-read string $cancel_confirm_text
  * @property-read string $view_route
  * @property-read string $discussion_route
+ * @property-read bool $on_ventilator
  * */
 class AcuteHemodialysisOrderNote extends Note
 {
@@ -86,6 +87,14 @@ class AcuteHemodialysisOrderNote extends Note
     {
         return Attribute::make(
             get: fn () => route('procedures.acute-hemodialysis.orders.show', $this->hashed_key).'#discussion',
+        );
+    }
+
+    /** @alias $on_ventilator */
+    protected function onVentilator(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->form['oxygen_support'] === 'Ventilator',
         );
     }
 }

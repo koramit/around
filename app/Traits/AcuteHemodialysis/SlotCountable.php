@@ -24,7 +24,7 @@ trait SlotCountable
         }
 
         return AcuteHemodialysisOrderNote::query()
-            ->select(['id', 'date_note', 'status', 'meta', 'author_id', 'attending_staff_id', 'case_record_id'])
+            ->select(['id', 'date_note', 'status', 'meta', 'form', 'author_id', 'attending_staff_id', 'case_record_id'])
             ->slotOccupiedStatuses()
             ->withAuthorName()
             ->withAttendingName()
@@ -42,6 +42,7 @@ trait SlotCountable
                     'extra_slot' => $note->meta['extra_slot'],
                     'attending' => 'อ.'.$this->getFirstName($note->attending_name),
                     'covid_case' => $note->meta['covid_case'] ?? false,
+                    'on_ventilator' => $note->on_ventilator,
                     'order_route' => $user->can('edit', $note)
                         ? route('procedures.acute-hemodialysis.orders.edit', $note->hashed_key)
                         : ($user->can('view', $note)

@@ -7,9 +7,8 @@ use App\Models\Notes\AcuteHemodialysisOrderNote;
 use App\Models\Resources\Ward;
 use App\Models\Subscription;
 use App\Models\User;
-use App\Rules\HashedKeyExistsInCaseRecords;
-use App\Rules\NameExistsInPeople;
-use App\Rules\NameExistsInWards;
+use App\Rules\FieldValueExists;
+use App\Rules\HashedKeyIdExists;
 use App\Traits\AcuteHemodialysis\OrderShareValidatable;
 use App\Traits\AcuteHemodialysis\OrderSwappable;
 use Exception;
@@ -202,21 +201,23 @@ class OrderStoreAction extends AcuteHemodialysisAction
             return []; // call api
         }
 
-        $cacheKeyPrefix = $user->login;
+        $caseRecordKeyCache = "uid-$user->id-validated-id-case-records";
+        $wardKeyCache = "uid-$user->id-validated-name-wards";
+        $personKeyCache = "uid-$user->id-validated-name-people";
 
         $validated = Validator::make($data, [
             'dialysis_type' => ['required', 'string', Rule::in($this->getAllDialysisType())],
             'patient_type' => ['required', 'string', Rule::in($this->PATIENT_TYPES)],
-            'dialysis_at' => ['required', 'string', 'max:255', new NameExistsInWards($cacheKeyPrefix)],
-            'attending_staff' => ['required', 'string', 'max:255', new NameExistsInPeople($cacheKeyPrefix)],
-            'case_record_hashed_key' => ['required', new HashedKeyExistsInCaseRecords($cacheKeyPrefix, 'App\Models\Registries\AcuteHemodialysisCaseRecord')],
+            'dialysis_at' => ['required', 'string', 'max:255', new FieldValueExists('App\Models\Resources\Ward', 'name', $wardKeyCache)],
+            'attending_staff' => ['required', 'string', 'max:255', new FieldValueExists('App\Models\Resources\Person', 'name', $personKeyCache)],
+            'case_record_hashed_key' => ['required', new HashedKeyIdExists('App\Models\Registries\AcuteHemodialysisCaseRecord', $caseRecordKeyCache)],
             'date_note' => ['required', 'date', Rule::in(collect($this->getPossibleDates())->transform(fn ($d) => $d->format('Y-m-d')))],
             'covid_case' => ['nullable', 'bool'],
         ])->validate();
 
         $validated['covid_case'] = $validated['covid_case'] ?? false;
 
-        $caseRecord = cache()->pull($cacheKeyPrefix.'-validatedCaseRecord');
+        $caseRecord = cache()->pull($caseRecordKeyCache);
         if (! $this->isDialysisReservable($caseRecord)) {
             throw ValidationException::withMessages(['status' => 'one active order at a time']);
         }
@@ -240,9 +241,9 @@ class OrderStoreAction extends AcuteHemodialysisAction
         $dateNote = now()->create($validated['date_note']);
         $note = new AcuteHemodialysisOrderNote();
         $note->case_record_id = $caseRecord->id;
-        $note->attending_staff_id = cache()->pull($cacheKeyPrefix.'-validatedPerson')->id;
+        $note->attending_staff_id = cache()->pull($personKeyCache)->id;
         $note->place_type = Ward::class;
-        $ward = cache()->pull($cacheKeyPrefix.'-validatedWard');
+        $ward = cache()->pull($wardKeyCache);
         $note->place_id = $ward->id;
         $note->date_note = $validated['date_note'];
         $note->status = ($reserveToday || $validated['covid_case']) ? 'scheduling' : 'draft';

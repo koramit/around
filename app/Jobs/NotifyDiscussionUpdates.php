@@ -38,6 +38,7 @@ class NotifyDiscussionUpdates implements ShouldQueue
 
                 $channel = $sub->subscribable;
 
+                /** @noinspection PhpPossiblePolymorphicInvocationInspection */
                 $message = ! empty($channel->meta)
                     ? "มีข้อความใหม่ใน discussion เคส {$channel->meta['name']}{link}$channel->discussion_route"
                     : 'มีข้อความใหม่ใน discussion เคส error 😅';

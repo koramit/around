@@ -8,7 +8,17 @@ use Illuminate\Support\Collection;
 
 class AcuteHemodialysisOrderStatus implements CastsAttributes, NoteStatusCast
 {
-    protected array $statuses = ['', 'draft', 'submitted', 'scheduling', 'canceled', 'started', 'finished', 'expired', 'disapproved'];
+    protected array $statuses = [
+        '',
+/**  1 */ 'draft',
+/**  2 */ 'submitted',
+/**  3 */ 'scheduling',
+/**  4 */ 'canceled',
+/**  5 */ 'started',
+/**  6 */ 'finished',
+/**  7 */ 'expired',
+/**  8 */ 'disapproved',
+    ];
 
     protected array $activeStatusCodes = [1, 2, 3]; // 'draft', 'submitted', 'scheduling'
 

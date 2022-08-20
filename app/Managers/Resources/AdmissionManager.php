@@ -13,24 +13,38 @@ class AdmissionManager
         $api = app('App\Contracts\PatientAPI');
 
         if ($recently) {
-            $admissionData = $api->recentlyAdmission($key);
-            if (! $admissionData['found']) {
-                return $admissionData;
+            $admissionData = cache("api-get-recently-admission-$key");
+            if (! $admissionData) {
+                $admissionData = $api->recentlyAdmission($key);
+                if (! $admissionData['found']) {
+                    return $admissionData;
+                }
+                cache()->put("api-get-recently-admission-$key", $admissionData, 60);
+                cache()->put("api-get-admission-{$admissionData['an']}", $admissionData, 60);
             }
             $an = $admissionData['an'];
         } else {
-            $admissionData = $api->getAdmission($key);
             $an = $key;
+            $admissionData = cache("api-get-admission-$key");
+            if (! $admissionData) {
+                $admissionData = $api->getAdmission($key);
+                if ($admissionData['found']) {
+                    cache()->put("api-get-admission-$an", $admissionData, 60);
+                }
+            }
         }
 
         $admission = Admission::findByHashedKey($an)->withPlaceName()->first();
 
         if ($admission) {
-            // update
-            $admission->meta['discharge_type'] = $admissionData['discharge_type_name'] ?? null;
-            $admission->meta['discharge_status'] = $admissionData['discharge_status_name'] ?? null;
-            $admission->dismissed_at = $admissionData['dismissed_at'] ?? null;
-            $admission->save();
+            if ($admissionData['found']) { // update
+                $ward = $this->maintainWard($admissionData);
+                $admission->ward_id = $ward->id;
+                $admission->meta['discharge_type'] = $admissionData['discharge_type_name'] ?? null;
+                $admission->meta['discharge_status'] = $admissionData['discharge_status_name'] ?? null;
+                $admission->dismissed_at = $admissionData['dismissed_at'] ?? null;
+                $admission->save();
+            }
 
             return [
                 'found' => true,
@@ -71,13 +85,13 @@ class AdmissionManager
         ];
     }
 
-    protected function maintainWard(array &$data): Ward
+    protected function maintainWard(array $data): Ward
     {
-        if ($ward = Ward::where('name_ref', $data['ward_name'])->first()) {
+        if ($ward = Ward::query()->where('name_ref', $data['ward_name'])->first()) {
             return $ward;
         }
 
-        return Ward::create([
+        return Ward::query()->create([
             'name' => $data['ward_name'],
             'name_short' => $data['ward_name_short'],
             'name_ref' => $data['ward_name'],

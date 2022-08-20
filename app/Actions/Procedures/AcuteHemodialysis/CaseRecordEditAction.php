@@ -131,14 +131,7 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
                 'route_lab' => fn () => route('resources.api.covid-lab'),
                 'route_vaccine' => fn () => route('resources.api.covid-vaccine'),
             ],
-            'comment' => [
-                'commentable_type' => $caseRecord::class,
-                'commentable_id' => $caseRecord->hashed_key,
-                'routes' => [
-                    'store' => route('comments.store'),
-                    'index' => route('comments.index'),
-                ],
-            ],
+            'comment' => $this->getCommentRoutes($caseRecord),
         ];
 
         $flash = [

@@ -6,7 +6,7 @@ trait FirstNameAware
 {
     protected function getFirstName(?string $name): string
     {
-        $names = explode(' ', $name);
+        $names = explode(' ', $name ?? '');
         $count = count($names);
         if ($count === 1) {
             return $names[0];

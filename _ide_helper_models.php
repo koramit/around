@@ -138,6 +138,9 @@ namespace App\Models{
 /**
  * App\Models\Comment
  *
+ * @property-read string $hashed_key
+ * @property-read string $body_html
+ * @property-read string $commentator_name
  * @property int $id
  * @property string $commentable_type
  * @property int $commentable_id
@@ -148,8 +151,10 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $commentable
  * @property-read \App\Models\User|null $commentator
+ * @property-read Comment|null $parent
  * @property-read \Illuminate\Database\Eloquent\Collection|Comment[] $replies
  * @property-read int|null $replies_count
+ * @method static \Illuminate\Database\Eloquent\Builder|Comment findByUnhashKey(string $hashed)
  * @method static \Illuminate\Database\Eloquent\Builder|Comment newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Comment newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Comment query()
@@ -379,6 +384,7 @@ namespace App\Models\Notes{
  * @property-read string $cancel_confirm_text
  * @property-read string $view_route
  * @property-read string $discussion_route
+ * @property-read bool $on_ventilator
  * @property int $id
  * @property int $case_record_id
  * @property int $note_type_id

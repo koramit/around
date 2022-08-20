@@ -36,4 +36,18 @@ trait Subscribable
             'can' => true,
         ];
     }
+
+    protected function getCommentRoutes(mixed $model): array
+    {
+        return [
+            'commentable_type' => $model::class,
+            'commentable_id' => $model->hashed_key,
+            'routes' => [
+                'reply_index' => route('comments.reply-oriented.index'),
+                'reply_store' => route('comments.reply-oriented.store'),
+                'timeline_index' => route('comments.timeline-oriented.index'),
+                'timeline_store' => route('comments.timeline-oriented.store'),
+            ],
+        ];
+    }
 }

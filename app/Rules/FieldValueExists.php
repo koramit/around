@@ -6,7 +6,6 @@ use Illuminate\Contracts\Validation\Rule;
 
 class FieldValueExists implements Rule
 {
-
     public function __construct(
         protected string $className,
         protected string $fieldName,
@@ -28,7 +27,7 @@ class FieldValueExists implements Rule
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function message(): string
     {

@@ -3,7 +3,7 @@
 namespace App\Actions\Procedures\AcuteHemodialysis;
 
 use App\Models\User;
-use App\Rules\NameExistsInWards;
+use App\Rules\FieldValueExists;
 use App\Traits\AcuteHemodialysis\OrderShareValidatable;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -19,7 +19,7 @@ class SlotAvailableDatesAction extends AcuteHemodialysisAction
         }
 
         $validated = Validator::make($data, [
-            'dialysis_at' => ['required', 'string', 'max:255', new NameExistsInWards],
+            'dialysis_at' => ['required', 'string', 'max:255', new FieldValueExists('App\Models\Resources\Ward', 'name')],
             'dialysis_type' => ['required', 'string', Rule::in($this->getAllDialysisType())],
             'covid_case' => 'required|boolean',
         ])->validate();
