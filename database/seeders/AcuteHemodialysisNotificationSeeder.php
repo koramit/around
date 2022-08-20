@@ -85,7 +85,9 @@ class AcuteHemodialysisNotificationSeeder extends Seeder
                 return;
             }
 
-            $p->registries()->attach(1);
+            if ($p->registries()->where('id', 1)->count() === 0) {
+                $p->registries()->attach(1);
+            }
         });
 
         // registry-user
@@ -94,7 +96,9 @@ class AcuteHemodialysisNotificationSeeder extends Seeder
                 return;
             }
 
-            $u->registries()->attach(1);
+            if ($u->registries()->where('id', 1)->count() === 0) {
+                $u->registries()->attach(1);
+            }
         });
 
 
