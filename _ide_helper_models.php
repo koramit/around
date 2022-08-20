@@ -38,6 +38,44 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * App\Models\CaseRecord
+ *
+ * @property-read string $hashed_key
+ * @property int $id
+ * @property int $patient_id
+ * @property int $registry_id
+ * @property mixed $meta
+ * @property mixed $form
+ * @property int $status
+ * @property string|null $deleted_at
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ResourceActionLog[] $actionLogs
+ * @property-read int|null $action_logs_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Comment[] $comments
+ * @property-read int|null $comments_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Note[] $notes
+ * @property-read int|null $notes_count
+ * @property-read \App\Models\Resources\Patient $patient
+ * @method static \Illuminate\Database\Eloquent\Builder|CaseRecord findByUnhashKey(string $hashed)
+ * @method static \Illuminate\Database\Eloquent\Builder|CaseRecord newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|CaseRecord newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|CaseRecord query()
+ * @method static \Illuminate\Database\Eloquent\Builder|CaseRecord whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CaseRecord whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CaseRecord whereForm($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CaseRecord whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CaseRecord whereMeta($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CaseRecord wherePatientId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CaseRecord whereRegistryId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CaseRecord whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CaseRecord whereUpdatedAt($value)
+ */
+	class CaseRecord extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * App\Models\ChatBot
  *
  * @property-read string $hashed_key
@@ -215,7 +253,7 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property mixed $locale
- * @property-read \App\Models\Resources\Registry|null $registry
+ * @property-read \App\Models\Resources\Registry $registry
  * @property-read \App\Models\Subscription|null $subscription
  * @method static \Illuminate\Database\Eloquent\Builder|EventBasedNotification findByUnhashKey(string $hashed)
  * @method static \Illuminate\Database\Eloquent\Builder|EventBasedNotification newModelQuery()
@@ -283,6 +321,164 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * App\Models\Note
+ *
+ * @property-read string $hashed_key
+ * @property-read string $place_name
+ * @property-read string $attending_name
+ * @property-read string $author_name
+ * @property int $id
+ * @property int $case_record_id
+ * @property int $note_type_id
+ * @property int|null $attending_staff_id
+ * @property string|null $place_type
+ * @property int|null $place_id
+ * @property mixed $meta
+ * @property mixed $form
+ * @property mixed|null $report
+ * @property int $status
+ * @property \Illuminate\Support\Carbon $date_note
+ * @property int $author_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ResourceActionLog[] $actionLogs
+ * @property-read int|null $action_logs_count
+ * @property-read \App\Models\Resources\Person|null $attendingStaff
+ * @property-read \App\Models\User|null $author
+ * @property-read \App\Models\CaseRecord $caseRecord
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\DocumentChangeRequest[] $changeRequests
+ * @property-read int|null $change_requests_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Comment[] $comments
+ * @property-read int|null $comments_count
+ * @property-read \App\Models\Resources\Patient|null $patient
+ * @method static \Illuminate\Database\Eloquent\Builder|Note findByUnhashKey(string $hashed)
+ * @method static \Illuminate\Database\Eloquent\Builder|Note newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Note newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Note query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Note whereAttendingStaffId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Note whereAuthorId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Note whereCaseRecordId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Note whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Note whereDateNote($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Note whereForm($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Note whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Note whereMeta($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Note whereNoteTypeId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Note wherePlaceId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Note wherePlaceType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Note whereReport($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Note whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Note whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Note withAttendingName()
+ * @method static \Illuminate\Database\Eloquent\Builder|Note withAuthorName()
+ * @method static \Illuminate\Database\Eloquent\Builder|Note withAuthorUsername()
+ * @method static \Illuminate\Database\Eloquent\Builder|Note withPlaceName($className)
+ */
+	class Note extends \Eloquent {}
+}
+
+namespace App\Models\Notes{
+/**
+ * App\Models\Notes\AcuteHemodialysisOrderNote
+ *
+ * @property-read string $cancel_confirm_text
+ * @property-read string $edit_route
+ * @property-read string $view_route
+ * @property-read string $discussion_route
+ * @property-read bool $on_ventilator
+ * @property int $id
+ * @property int $case_record_id
+ * @property int $note_type_id
+ * @property int|null $attending_staff_id
+ * @property string|null $place_type
+ * @property int|null $place_id
+ * @property mixed $meta
+ * @property mixed $form
+ * @property mixed|null $report
+ * @property string|null $status
+ * @property \Illuminate\Support\Carbon $date_note
+ * @property int $author_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ResourceActionLog[] $actionLogs
+ * @property-read int|null $action_logs_count
+ * @property-read \App\Models\Resources\Person|null $attendingStaff
+ * @property-read \App\Models\User|null $author
+ * @property-read \App\Models\Registries\AcuteHemodialysisCaseRecord $caseRecord
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\DocumentChangeRequests\AcuteHemodialysisSlotRequest[] $changeRequests
+ * @property-read int|null $change_requests_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Comment[] $comments
+ * @property-read int|null $comments_count
+ * @property-read \App\Models\Resources\Patient|null $patient
+ * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisOrderNote activeStatuses()
+ * @method static \Illuminate\Database\Eloquent\Builder|Note findByUnhashKey(string $hashed)
+ * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisOrderNote newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisOrderNote newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisOrderNote query()
+ * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisOrderNote slotOccupiedStatuses()
+ * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisOrderNote whereAttendingStaffId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisOrderNote whereAuthorId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisOrderNote whereCaseRecordId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisOrderNote whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisOrderNote whereDateNote($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisOrderNote whereForm($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisOrderNote whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisOrderNote whereMeta($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisOrderNote whereNoteTypeId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisOrderNote wherePlaceId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisOrderNote wherePlaceType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisOrderNote whereReport($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisOrderNote whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisOrderNote whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Note withAttendingName()
+ * @method static \Illuminate\Database\Eloquent\Builder|Note withAuthorName()
+ * @method static \Illuminate\Database\Eloquent\Builder|Note withAuthorUsername()
+ * @method static \Illuminate\Database\Eloquent\Builder|Note withPlaceName($className)
+ */
+	class AcuteHemodialysisOrderNote extends \Eloquent {}
+}
+
+namespace App\Models\Registries{
+/**
+ * App\Models\Registries\AcuteHemodialysisCaseRecord
+ *
+ * @property int $id
+ * @property int $patient_id
+ * @property int $registry_id
+ * @property mixed $meta
+ * @property mixed $form
+ * @property int $status
+ * @property string|null $deleted_at
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ResourceActionLog[] $actionLogs
+ * @property-read int|null $action_logs_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Comment[] $comments
+ * @property-read int|null $comments_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Note[] $notes
+ * @property-read int|null $notes_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Notes\AcuteHemodialysisOrderNote[] $orders
+ * @property-read int|null $orders_count
+ * @property-read \App\Models\Resources\Patient $patient
+ * @method static \Illuminate\Database\Eloquent\Builder|CaseRecord findByUnhashKey(string $hashed)
+ * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisCaseRecord newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisCaseRecord newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisCaseRecord query()
+ * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisCaseRecord whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisCaseRecord whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisCaseRecord whereForm($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisCaseRecord whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisCaseRecord whereMeta($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisCaseRecord wherePatientId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisCaseRecord whereRegistryId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisCaseRecord whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisCaseRecord whereUpdatedAt($value)
+ */
+	class AcuteHemodialysisCaseRecord extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * App\Models\ResourceActionLog
  *
  * @property int $id
@@ -311,6 +507,39 @@ namespace App\Models{
 
 namespace App\Models\Resources{
 /**
+ * App\Models\Resources\Admission
+ *
+ * @property int $id
+ * @property string $an
+ * @property int $patient_id
+ * @property mixed|null $meta
+ * @property \Illuminate\Support\Carbon|null $encountered_at
+ * @property \Illuminate\Support\Carbon|null $dismissed_at
+ * @property int $ward_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Resources\Patient $patient
+ * @property-read \App\Models\Resources\Ward $place
+ * @method static \Illuminate\Database\Eloquent\Builder|Admission findByHashedKey(string $plain)
+ * @method static \Illuminate\Database\Eloquent\Builder|Admission newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Admission newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Admission query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Admission whereAn($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Admission whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Admission whereDismissedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Admission whereEncounteredAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Admission whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Admission whereMeta($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Admission wherePatientId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Admission whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Admission whereWardId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Admission withPlaceName()
+ */
+	class Admission extends \Eloquent {}
+}
+
+namespace App\Models\Resources{
+/**
  * App\Models\Resources\Division
  *
  * @property int $id
@@ -318,7 +547,7 @@ namespace App\Models\Resources{
  * @property string $name_en
  * @property string $name_en_short
  * @property string $department
- * @property int $active
+ * @property bool $active
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @method static \Illuminate\Database\Eloquent\Builder|Division newModelQuery()
@@ -343,7 +572,7 @@ namespace App\Models\Resources{
  * @property int $id
  * @property string $name
  * @property string $label
- * @property int $active
+ * @property bool $active
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @method static \Illuminate\Database\Eloquent\Builder|NoteType newModelQuery()
@@ -367,10 +596,10 @@ namespace App\Models\Resources{
  * @property-read string $full_name
  * @property int $id
  * @property string $hn
- * @property int $gender
+ * @property bool $gender
  * @property \Illuminate\Support\Carbon|null $dob
  * @property mixed|null $profile
- * @property int $alive
+ * @property bool $alive
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Resources\Admission[] $admissions
@@ -404,7 +633,7 @@ namespace App\Models\Resources{
  * @property string $name
  * @property int $division_id
  * @property int $position
- * @property int $active
+ * @property bool $active
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @method static \Illuminate\Database\Eloquent\Builder|Person newModelQuery()
@@ -419,6 +648,62 @@ namespace App\Models\Resources{
  * @method static \Illuminate\Database\Eloquent\Builder|Person whereUpdatedAt($value)
  */
 	class Person extends \Eloquent {}
+}
+
+namespace App\Models\Resources{
+/**
+ * App\Models\Resources\Registry
+ *
+ * @property int $id
+ * @property string $name
+ * @property string $route
+ * @property int $division_id
+ * @property bool $active
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Resources\Patient[] $patients
+ * @property-read int|null $patients_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\User[] $users
+ * @property-read int|null $users_count
+ * @method static \Illuminate\Database\Eloquent\Builder|Registry newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Registry newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Registry query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Registry whereActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Registry whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Registry whereDivisionId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Registry whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Registry whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Registry whereRoute($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Registry whereUpdatedAt($value)
+ */
+	class Registry extends \Eloquent {}
+}
+
+namespace App\Models\Resources{
+/**
+ * App\Models\Resources\Ward
+ *
+ * @property int $id
+ * @property string $name
+ * @property string|null $name_short
+ * @property string $name_ref
+ * @property int $division_id
+ * @property bool $active
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder|Ward newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Ward newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Ward query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Ward whereActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Ward whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Ward whereDivisionId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Ward whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Ward whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Ward whereNameRef($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Ward whereNameShort($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Ward whereUpdatedAt($value)
+ */
+	class Ward extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -457,7 +742,7 @@ namespace App\Models{
  * @property int $social_provider_id
  * @property string $profile_id
  * @property mixed $profile
- * @property int $active
+ * @property bool $active
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\SocialProvider|null $socialProvider
@@ -569,7 +854,7 @@ namespace App\Models{
  * @property mixed $profile
  * @property mixed $preferences
  * @property int $division_id
- * @property int $active
+ * @property bool $active
  * @property string|null $remember_token
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
