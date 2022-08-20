@@ -3,6 +3,7 @@
 namespace App\Models\Notes;
 
 use App\Casts\AcuteHemodialysisOrderStatus;
+use App\Events\Procedures\AcuteHemodialysis\AcuteHemodialysisOrderNoteUpdating;
 use App\Models\Note;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -11,6 +12,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
  * App\Models\Notes\AcuteHemodialysisOrderNote
  *
  * @property-read string $cancel_confirm_text
+ * @property-read string $edit_route
  * @property-read string $view_route
  * @property-read string $discussion_route
  * @property-read bool $on_ventilator
@@ -22,6 +24,10 @@ class AcuteHemodialysisOrderNote extends Note
     protected string $defaultChangeRequestClass = '\App\Models\DocumentChangeRequests\AcuteHemodialysisSlotRequest';
 
     protected string $caseRecordClass = '\App\Models\Registries\AcuteHemodialysisCaseRecord';
+
+    protected $dispatchesEvents = [
+        'updating' => AcuteHemodialysisOrderNoteUpdating::class,
+    ];
 
     /**
      * The "booted" method of the model.
@@ -72,6 +78,14 @@ class AcuteHemodialysisOrderNote extends Note
             : $this->date_note;
 
         return "Acute Hemodialysis Order : HN {$this->meta['hn']} {$this->meta['name']} : {$this->meta['dialysis_type']} {$dateNote->format('M j y')}";
+    }
+
+    /** @alias $edit_route */
+    protected function editRoute(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => route('procedures.acute-hemodialysis.orders.edit', $this->hashed_key),
+        );
     }
 
     /** @alias $view_route */

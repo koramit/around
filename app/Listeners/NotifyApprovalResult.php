@@ -13,7 +13,11 @@ class NotifyApprovalResult
         $new = $event->changeRequest->getAttributes();
 
         // status [2,3] -> [2 => 'approved', 3 => 'disapproved']
-        if ($new['status'] === $old['status'] || ! collect([2, 3])->contains($new['status'])) {
+        $interestedStatuses = collect(['approved', 'disapproved']);
+        if (
+            $new['status'] === $old['status']
+            || ! $interestedStatuses->contains($event->changeRequest->status)
+        ) {
             return;
         }
 

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\NotifyMentioned;
 use App\Models\Comment;
-use App\Notifications\AlertMentioned;
 use App\Rules\HashedKeyIdExists;
 use App\Traits\FirstNameAware;
 use Exception;
@@ -49,7 +49,7 @@ class CommentTimelineController extends Controller
             : ($resource->author ?? $resource->creator);
 
         if ($op) {
-            $op->notify(new AlertMentioned($resource));
+            NotifyMentioned::dispatchAfterResponse($op, $resource);
         }
 
         return $this->transformComment($comment);
@@ -74,10 +74,6 @@ class CommentTimelineController extends Controller
             ->withCommentatorName()
             ->get()
             ->transform(fn ($c) => $this->transformComment($c));
-    }
-
-    public function reply()
-    {
     }
 
     protected function transformComment(Comment $comment): array
