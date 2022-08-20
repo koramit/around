@@ -79,6 +79,25 @@ class AcuteHemodialysisNotificationSeeder extends Seeder
         User::query()->update(['preferences->auto_subscribe_to_channel' => false]);
         User::query()->update(['preferences->auto_unsubscribe_to_channel' => true]);
 
+        // patient-registry
+        Patient::query()->withCount('notes')->get()->each(function ($p) {
+            if ($p->notes_count === 0) {
+                return;
+            }
+
+            $p->registries()->attach(1);
+        });
+
+        // registry-user
+        User::query()->with('abilities')->get()->each(function ($u) {
+            if ($u->abilities->where('name', 'view_any_acute_hemodialysis_cases')->count() === 0) {
+                return;
+            }
+
+            $u->registries()->attach(1);
+        });
+
+
         /** additional */
         // order approved/disapproved CHECKED
         // tomorrow order not complete 20:00/20:30
