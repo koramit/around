@@ -66,6 +66,7 @@ class OrderShowAction extends AcuteHemodialysisAction
                 'patient location' => $this->getPatientLocation($order->meta['an'] ?? null),
                 'dialysis at' => $order->place_name,
                 'dialysis type' => $order->meta['dialysis_type'],
+                'patient type' => $order->meta['patient_type'],
                 'md' => $order->author_name,
                 'attending' => $order->attending_name,
             ],
