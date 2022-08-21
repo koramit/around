@@ -101,12 +101,11 @@ class AcuteHemodialysisNotificationSeeder extends Seeder
             }
         });
 
-
-        /** additional */
+        /** @TODO additional acute HD notifications */
         // order approved/disapproved CHECKED
-        // tomorrow order not complete 20:00/20:30
         // order started CHECKED
         // order finished CHECKED
+        // tomorrow order not complete 20:00/20:30
         // case d/c
         // case not complete after d/c or idle for two weeks
     }

@@ -58,7 +58,7 @@ const openTransitionEnd = (event) => {
     }
 };
 const closeTransitionEnd = (event) => {
-    if (event.target.tagName == 'DIV' && event.propertyName == 'transform') {
+    if (event.target.tagName === 'DIV' && event.propertyName === 'transform') {
         emit('closed');
         show.value = false;
         document.removeEventListener('transitionend', closeTransitionEnd);

@@ -8,7 +8,7 @@
         <button
             v-if="configs.can.reschedule"
             class="flex items-center text-sm text-accent"
-            @click="showReschedule.value = !showReschedule"
+            @click="showReschedule = !showReschedule"
         >
             <IconRotate
                 class="w-3 h-3 mr-1 transition-all transform duration-200 ease-out"

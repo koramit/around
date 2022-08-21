@@ -382,6 +382,7 @@ namespace App\Models\Notes{
  * App\Models\Notes\AcuteHemodialysisOrderNote
  *
  * @property-read string $cancel_confirm_text
+ * @property-read string $edit_route
  * @property-read string $view_route
  * @property-read string $discussion_route
  * @property-read bool $on_ventilator
@@ -603,6 +604,8 @@ namespace App\Models\Resources{
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Resources\Admission[] $admissions
  * @property-read int|null $admissions_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Note[] $notes
+ * @property-read int|null $notes_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Resources\Registry[] $registries
  * @property-read int|null $registries_count
  * @method static \Illuminate\Database\Eloquent\Builder|Patient findByHashedKey(string $plain)

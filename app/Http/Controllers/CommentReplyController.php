@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\NotifyMentioned;
 use App\Models\Comment;
-use App\Notifications\AlertMentioned;
 use App\Traits\FirstNameAware;
 use Exception;
 use Illuminate\Http\Request;
@@ -40,7 +40,7 @@ class CommentReplyController extends Controller
         $op = $resource->author ?? $resource->creator;
 
         if ($op) {
-            $op->notify(new AlertMentioned($resource));
+            NotifyMentioned::dispatchAfterResponse($op, $resource);
         }
 
         return $this->transformComment($comment);
@@ -93,7 +93,7 @@ class CommentReplyController extends Controller
         ]);
 
         if ($validated['notify_op']) {
-            $parent->commentator->notify(new AlertMentioned($parent->commentable));
+            NotifyMentioned::dispatchAfterResponse($parent->commentator, $parent->commentable);
         }
 
         return $this->transformReplies($parent);
