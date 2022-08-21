@@ -22,7 +22,7 @@ class NotifyDiscussionUpdates implements ShouldQueue
     {
         $notifications = Comment::query()
             ->select(['commentable_type', 'commentable_id', 'commentator_id'])
-            ->whereBetween('created_at', [now()->addMinutes(-15), now()])
+            ->whereBetween('created_at', [now()->addMinutes(-10), now()])
             ->distinct()
             ->get()
             ->map(function ($c) {
