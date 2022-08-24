@@ -276,7 +276,7 @@ class OrderStoreAction extends AcuteHemodialysisAction
             $user->subscriptions()->attach($sub->id);
         }
 
-        if (! $reserveToday && ! $validated['covid_case']) {
+        if (! $reserveToday && ! $validated['covid_case'] && ! $this->zombieHours($validated['date_note'])) {
             $note->actionLogs()->create([
                 'actor_id' => $user->id,
                 'action' => 'create',
