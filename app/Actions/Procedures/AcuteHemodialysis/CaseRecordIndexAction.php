@@ -12,7 +12,7 @@ class CaseRecordIndexAction extends AcuteHemodialysisAction
     use HomePageSelectable;
 
     /**
-     * @todo Optimize search on meta
+     * @todo Optimize search on meta, add scope of status
      */
     public function __invoke(array $filters, User $user, string $routeName = 'home'): array
     {

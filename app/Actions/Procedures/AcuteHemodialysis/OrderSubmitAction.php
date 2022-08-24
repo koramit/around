@@ -378,7 +378,6 @@ class OrderSubmitAction extends AcuteHemodialysisAction
         ];
     }
 
-    /** @TODO this method should be a job */
     private function shouldNotifyResubmit(AcuteHemodialysisOrderNote $note): void
     {
         // the day before @ 20:00 local time

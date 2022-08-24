@@ -5,6 +5,7 @@ namespace App\Models\Notes;
 use App\Casts\AcuteHemodialysisOrderStatus;
 use App\Events\Procedures\AcuteHemodialysis\AcuteHemodialysisOrderNoteUpdating;
 use App\Models\Note;
+use App\Models\Resources\NoteType;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 
@@ -37,11 +38,19 @@ class AcuteHemodialysisOrderNote extends Note
     protected static function booted(): void
     {
         static::creating(function ($note) {
-            $note->note_type_id = config('notes.acute_hd_order');
+            $note->note_type_id = cache()->rememberForever(
+                'note-type-id-acute_hd_order',
+                fn () => NoteType::query()->where('name', 'acute_hd_order')->first()->id
+            );
         });
 
         static::addGlobalScope('acuteHemodialysisOrderNoteTypeScope', function (Builder $builder) {
-            $builder->where('note_type_id', config('notes.acute_hd_order'));
+            $builder->where(
+                'note_type_id',
+                cache()->rememberForever(
+                'note-type-id-acute_hd_order',
+                    fn () => NoteType::query()->where('name', 'acute_hd_order')->first()->id
+                ));
         });
     }
 

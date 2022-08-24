@@ -2,7 +2,10 @@
 
 namespace App\Actions\Procedures\AcuteHemodialysis;
 
+use App\Models\Ability;
 use App\Models\Note;
+use App\Models\Resources\NoteType;
+use App\Models\Resources\Registry;
 use App\Traits\FirstNameAware;
 
 class AcuteHemodialysisAction
@@ -29,8 +32,7 @@ class AcuteHemodialysisAction
 
     protected string $TODAY;
 
-    // @TODO approve_acute_hemodialysis_slot_request instead of id hardcode
-    protected int $APPROVE_ACUTE_HEMODIALYSIS_SLOT_REQUEST_ABILITY_ID = 29;
+    protected int $APPROVE_ACUTE_HEMODIALYSIS_SLOT_REQUEST_ABILITY_ID;
 
     protected string $STAFF_SCOPE_PARAMS = '&position=8&division_id=6';
 
@@ -40,8 +42,19 @@ class AcuteHemodialysisAction
 
     public function __construct()
     {
-        $this->REGISTRY_ID = config('registries.acute_hd');
-        $this->ACUTE_HD_ORDER_NOTE_TYPE_ID = config('notes.acute_hd_order');
+        $this->REGISTRY_ID = cache()->rememberForever(
+            'registry-id-acute_hd',
+            fn () => Registry::query()->where('name', 'acute_hd')->first()->id
+        );
+        $this->ACUTE_HD_ORDER_NOTE_TYPE_ID = cache()->rememberForever(
+            'note-type-id-acute_hd_order',
+            fn () => NoteType::query()->where('name', 'acute_hd_order')->first()->id
+        );
+        $this->APPROVE_ACUTE_HEMODIALYSIS_SLOT_REQUEST_ABILITY_ID = cache()->rememberForever(
+            'ability-id-approve_acute_hemodialysis_slot_request',
+            fn () => Ability::query()->where('name', 'approve_acute_hemodialysis_slot_request')->first()->id
+        );
+
         $this->MENU = [
             ['icon' => 'patient', 'label' => 'Patients', 'route' => route('patients'), 'can' => true],
             ['icon' => 'clinic', 'label' => 'Clinics', 'route' => route('clinics'), 'can' => true],
