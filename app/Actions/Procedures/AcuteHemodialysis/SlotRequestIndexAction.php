@@ -19,8 +19,9 @@ class SlotRequestIndexAction extends AcuteHemodialysisAction
             ->withRequesterName()
             ->where('submitted_at', '>=', now()->tz($this->TIMEZONE)->addDays(-7))
             ->latest('submitted_at')
-            ->get()
-            ->transform(function ($request) use ($user) {
+            ->paginate($user->items_per_page)
+            ->withQueryString()
+            ->through(function ($request) use ($user) {
                 /** @var AcuteHemodialysisOrderNote $changeable */
                 $changeable = $request->changeable;
                 $actions = collect([
