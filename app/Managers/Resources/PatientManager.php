@@ -9,6 +9,13 @@ class PatientManager
 {
     public function manage(string $hn, bool $forceUpdate = false): array
     {
+        if ($cachePatient = cache("api-get-patient-$hn")) {
+            return [
+                'found' => true,
+                'patient' => $cachePatient,
+            ];
+        }
+
         $api = app('App\Contracts\PatientAPI');
 
         $patient = Patient::findByHashedKey($hn)->first();
@@ -27,6 +34,8 @@ class PatientManager
             $patient->profile = $data;
             $patient->save();
 
+            cache()->put("api-get-patient-$hn", $patient, 60);
+
             return [
                 'found' => true,
                 'patient' => $patient,
@@ -43,9 +52,12 @@ class PatientManager
 
         $data = $api->getPatient($hn);
         if (! $data['found']) {
-            Log::info($hn.' hn canceled or something went wrong');
+            Log::info($hn.' hn canceled or something went wrong or call repeat call too early');
 
-            return $patient;
+            return [
+                'found' => true,
+                'patient' => $patient,
+            ];
         }
 
         unset($data['ok'], $data['found']);
@@ -57,7 +69,7 @@ class PatientManager
         ];
     }
 
-    public function update(Patient &$patient, array $profile)
+    public function update(Patient $patient, array $profile): void
     {
         if (
             $patient->profile['title'] !== $profile['title']
