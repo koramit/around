@@ -49,4 +49,24 @@ trait OrderShareValidatable
 
         return $dates;
     }
+
+    protected function zombieHours(string $dateDialysis): bool
+    {
+        $dateDialysis = now()->create($dateDialysis);
+        if (!$dateDialysis->is('Saturday')) {
+            return false;
+        }
+
+        $ZOMBIES_HOURS_BEGIN = now()->create($dateDialysis->clone()->addDays(-2)->format('Y-m-d'). ' 13:00:00');
+        $now = now();
+
+        if (
+            $now->greaterThanOrEqualTo($ZOMBIES_HOURS_BEGIN)
+            && $now->lessThan($dateDialysis)
+        ) {
+            return true;
+        }
+
+        return false;
+    }
 }

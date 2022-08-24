@@ -47,6 +47,10 @@ class SlotAvailableDatesAction extends AcuteHemodialysisAction
                 return ['value' => $d->format('Y-m-d'), 'label' => $label.'Approval needed'];
             }
 
+            if ($this->zombieHours($data['date_note']) && $slot['available']) {
+                return ['value' => $d->format('Y-m-d'), 'label' => $label.'Approval needed (ZH)'];
+            }
+
             if ($data['date_note'] !== $this->TODAY && $slot['available']) {
                 return ['value' => $d->format('Y-m-d'), 'label' => $label.'Available'];
             }
