@@ -12,7 +12,6 @@ class InitUserRoleAction
 {
     use CSVLoader, RegistryUserAttachable;
 
-    /** @TODO attach registry */
     public function __invoke(User $user): bool
     {
         $list = $this->loadCSV(storage_path('app/seeders/users.csv'));

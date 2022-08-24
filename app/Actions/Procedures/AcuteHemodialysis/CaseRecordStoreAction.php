@@ -76,7 +76,6 @@ class CaseRecordStoreAction extends AcuteHemodialysisAction
 
         /**
          * @TODO check first admit ward
-         * @TODO attach patient to registry
          */
         if ($caseRecord = CaseRecord::query()->where('status', 1)->where('meta->hn', $validated['hn'])->first()) {
             return $caseRecord;
