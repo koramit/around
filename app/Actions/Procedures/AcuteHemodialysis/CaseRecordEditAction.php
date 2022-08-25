@@ -147,7 +147,7 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
                 ? $orderedFiltered->first()['md']
                 : null;
             $form['computed']['latest_dialysis_at'] = $orderedFiltered->last()
-                ? $orderedFiltered->first()['date_note']->format('d M Y')
+                ? $orderedFiltered->last()['date_note']->format('d M Y')
                 : null;
             $form['computed']['latest_md'] = $orderedFiltered->last()
                 ? $orderedFiltered->last()['md']
