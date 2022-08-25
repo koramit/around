@@ -53,7 +53,7 @@ trait OrderShareValidatable
     protected function zombieHours(string $dateDialysis): bool
     {
         $dateDialysis = now()->create($dateDialysis);
-        if (! $dateDialysis->is('Saturday')) {
+        if (! $dateDialysis->is('Monday')) {
             return false;
         }
 
