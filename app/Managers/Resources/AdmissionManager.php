@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Log;
 
 class AdmissionManager
 {
-    public function manage(string $key, bool $recently = false)
+    public function manage(string $key, bool $recently = false): array
     {
         $api = app('App\Contracts\PatientAPI');
 
@@ -96,5 +96,12 @@ class AdmissionManager
             'name_short' => $data['ward_name_short'],
             'name_ref' => $data['ward_name'],
         ]);
+    }
+
+    public function wards(int $an): array
+    {
+        $api = app('App\Contracts\PatientAPI');
+
+        return $api->patientAdmitWards($an);
     }
 }

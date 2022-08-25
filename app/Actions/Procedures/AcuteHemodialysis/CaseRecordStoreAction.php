@@ -74,9 +74,6 @@ class CaseRecordStoreAction extends AcuteHemodialysisAction
             'an' => ['digits:8', new AnExists],
         ])->validate();
 
-        /**
-         * @TODO check first admit ward
-         */
         if ($caseRecord = CaseRecord::query()->where('status', 1)->where('meta->hn', $validated['hn'])->first()) {
             return $caseRecord;
         }
@@ -97,6 +94,7 @@ class CaseRecordStoreAction extends AcuteHemodialysisAction
             'hn' => $patient->hn,
             'name' => $patient->first_name,
             'title' => "Acute Hemodialysis Case : HN $patient->hn $patient->first_name : $now",
+            'ward_admit' => null,
         ];
         $caseRecord->save();
 

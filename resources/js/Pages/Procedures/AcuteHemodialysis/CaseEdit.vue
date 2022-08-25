@@ -22,52 +22,64 @@
         <FormInput
             label="hn"
             :readonly="true"
-            name="encountered_at_text"
+            name="hn"
             v-model="form.record.hn"
         />
         <FormInput
             label="an"
             :readonly="true"
-            name="encountered_at_text"
+            name="an"
             v-model="form.admission.an"
             placeholder="No active admission"
+        />
+        <FormInput
+            label="first md"
+            :readonly="true"
+            name="first_md"
+            v-model="form.computed.first_md"
         />
         <FormInput
             label="first dialysis on"
             :readonly="true"
             name="first_dialysis_at"
-            v-model="dateFirstDialysis"
+            v-model="form.computed.first_dialysis_at"
         />
         <FormInput
-            label="last dialysis on"
+            label="latest md"
             :readonly="true"
-            name="last_dialysis_at"
-            v-model="form.last_dialysis_at"
+            name="latest_md"
+            v-model="form.computed.latest_md"
+        />
+        <FormInput
+            label="latest dialysis on"
+            :readonly="true"
+            name="latest_dialysis_at"
+            v-model="form.computed.latest_dialysis_at"
         />
         <template v-if="form.admission.an">
             <FormInput
                 label="admitted on"
                 :readonly="true"
-                name="encountered_at_text"
-                v-model="form.admission.encountered_at_text"
+                name="admitted_at"
+                v-model="form.admission.admitted_at"
             />
             <FormInput
                 label="discharged on"
                 :readonly="true"
-                name="dismissed_at_text"
-                v-model="form.admission.dismissed_at_text"
+                name="discharged_at"
+                v-model="form.admission.discharged_at"
             />
             <FormInput
                 label="ward admit"
                 :readonly="true"
                 name="ward_admit"
-                v-model="form.admission.place_name"
+                v-model="form.admission.ward_admit"
             />
-            <FormAutocomplete
+            <FormInput
                 label="ward discharge"
-                :endpoint="configs.endpoints.resources_api_wards"
-                v-model="form.ward_discharge"
+                :readonly="true"
                 name="ward_discharge"
+                v-model="form.admission.ward_discharge"
             />
         </template>
     </div>
@@ -375,7 +387,6 @@ import {nextTick, onMounted, reactive, ref, watch} from 'vue';
 import {useSelectOther} from '../../../functions/useSelectOther.js';
 import debounce from 'lodash/debounce';
 import FormInput from '../../../Components/Controls/FormInput.vue';
-import FormAutocomplete from '../../../Components/Controls/FormAutocomplete.vue';
 import FormRadio from '../../../Components/Controls/FormRadio.vue';
 import FormCheckbox from '../../../Components/Controls/FormCheckbox.vue';
 import FormDatetime from '../../../Components/Controls/FormDatetime.vue';
@@ -413,6 +424,7 @@ watch (
         let data = val.data();
         delete data.admission;
         delete data.record;
+        delete data.computed;
         autosave(configs.endpoints.update, data);
     },
     { deep: true }
@@ -451,7 +463,6 @@ const autosave = debounce(function (url, data) {
             console.log(error);
         });
 }, 2000);
-const dateFirstDialysis = ref(props.orders.length ? props.orders[0].date_note : null);
 const insurance = ref(null);
 if (form.insurance && !configs.insurances.includes(form.insurance)) {
     configs.insurances.push(form.insurance);
