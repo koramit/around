@@ -52,6 +52,7 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
 
         $caseRecord = CaseRecord::query()->findByUnhashKey($hashed)->firstOrFail();
 
+        /* @TODO can read order */
         // HD orders
         $orders = AcuteHemodialysisOrderNote::query()
             ->withAuthorName()
@@ -87,22 +88,73 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
                     'edit_route' => route('procedures.acute-hemodialysis.orders.edit', $order->hashed_key),
                     'ward_name' => $order->place_name,
                     'dialysis_type' => $order->meta['dialysis_type'],
-                    'date_note' => $order->date_note->format('d M'),
-                    'md' => $this->getFirstName($order->author_name),
+                    'date_note' => $order->date_note,
+                    'md' => $order->author_name,
                     'status' => $order->status,
                     'actions' => $actions,
                 ];
             });
 
         // form
-        /* @TODO add admitted/discharged dates */
-        /* @TODO correct first dialysis and add last dialysis date */
+        if (! $caseRecord->form['an'] && $caseRecord->created_at->diffInMinutes(now()) > 60) {
+            $admission = (new AdmissionManager)->manage($caseRecord->patient->hn, true);
+            if ($admission['found']) {
+                $caseRecord->form['an'] = $admission['admission']->an;
+                $caseRecord->save();
+            }
+        }
+
         $form = $caseRecord->form;
-        $form['admission'] = ($form['an'] ?? false)
-                        ? (new AdmissionManager)->manage($caseRecord->form['an'])['admission']
-                        : [];
         $form['record']['hashed_key'] = $caseRecord->hashed_key;
         $form['record']['hn'] = $caseRecord->patient->hn;
+
+        $form['admission']['an'] = null;
+        $form['admission']['admitted_at'] = null;
+        $form['admission']['discharged_at'] = null;
+        $form['admission']['ward_admit'] = null;
+        $form['admission']['ward_discharge'] = null;
+        if ($form['an']) {
+            $admission = (new AdmissionManager)->manage($caseRecord->form['an'])['admission'];
+            $form['admission']['an'] = $admission->an;
+            $form['admission']['admitted_at'] = $admission->encountered_at->tz($this->TIMEZONE)->format('d M Y H:i');
+            $form['admission']['discharged_at'] = $admission->dismissed_at?->tz($this->TIMEZONE)->format('d M Y H:i');
+            if (!($caseRecord->meta['ward_admit'] ?? false)) {
+                $wards = (new AdmissionManager)->wards($caseRecord->form['an']);
+                if ($wards['found']) {
+                    $caseRecord->meta['ward_admit'] = $wards['wards'][0]['name'];
+                    $caseRecord->save();
+                    $form['admission']['ward_admit'] = $caseRecord->meta['ward_admit'] ?? null;
+                }
+            } else {
+                $form['admission']['ward_admit'] = $caseRecord->meta['ward_admit'] ?? null;
+            }
+            $form['admission']['ward_discharge'] = $admission->dismissed_at
+                ? $admission->place_name
+                : null;
+        }
+
+        $form['computed']['first_dialysis_at'] = '';
+        $form['computed']['first_md'] = '';
+        $form['computed']['latest_dialysis_at'] = '';
+        $form['computed']['latest_md'] = '';
+        if ($orders->count()) {
+            $orderedFiltered = $orders->filter(fn ($o) => collect(['started', 'finished'])->contains($o['status']))
+                ->sortBy('date_note');
+            $form['computed']['first_dialysis_at'] = $orderedFiltered->first()
+                ? $orderedFiltered->first()['date_note']->format('d M Y')
+                : null;
+            $form['computed']['first_md'] = $orderedFiltered->first()?->md;
+            $form['computed']['latest_dialysis_at'] = $orderedFiltered->last()
+                ? $orderedFiltered->first()['date_note']->format('d M Y')
+                : null;
+            $form['computed']['latest_md'] = $orderedFiltered->last()?->md;
+        }
+        $orders->transform(function ($o) {
+            $o['md'] = $this->getFirstName($o['md']);
+            $o['date_note'] = $o['date_note']->format('d M');
+
+            return $o;
+        });
 
         // form configs
         $configs = $this->FORM_CONFIGS + [

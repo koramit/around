@@ -174,6 +174,24 @@ class SubHannahAPI implements PatientAPI, AuthenticationAPI, CovidInfoAPI
         return $this->makePost(route: 'vaccine-covid', form: ['cid' => $cid, 'raw' => $raw], timeout: 62);
     }
 
+    public function patientAdmitWards(int $an): array
+    {
+        $data = $this->makePost('patient-admit-wards', ['an' => $an]);
+
+        if (! $data || ! $data['ok']) { // error: $data = null
+            return [
+                'found' => false,
+                'message' => __('service.failed'),
+            ];
+        }
+
+        if (isset($data['found']) && $data['found']) {
+            return $data;
+        }
+
+        return ['found' => false];
+    }
+
     protected function makePost(string $route, array $form, int $timeout = 4): array
     {
         $headers = ['app' => config('services.SUBHANNAH_API_NAME'), 'token' => config('services.SUBHANNAH_API_TOKEN')];
