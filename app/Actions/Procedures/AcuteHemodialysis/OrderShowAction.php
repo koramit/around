@@ -117,9 +117,10 @@ class OrderShowAction extends AcuteHemodialysisAction
                     'status' => $order->status,
                     'hashed_key' => $order->hashed_key,
                 ],
+                /* @TODO refactor last 3 actions to policy */
                 'can' => [
-                    'start_session' => $this->dateNoteToday($order) && $order->status === 'submitted' && $user->can('perform_acute_hemodialysis_order'),
-                    'finish_session' => $order->status === 'started' && $user->can('perform_acute_hemodialysis_order'),
+                    'start_session' => $user->can('start', $order),
+                    'finish_session' => $user->can('finish', $order),
                     'edit_timestamp' => $order->status === 'finished' && $user->can('perform_acute_hemodialysis_order'),
                     'check_dialysis_at_chronic_unit' => $order->meta['in_unit'] && $user->can('perform_acute_hemodialysis_order'),
                     'change_session_data' => $user->can('perform_acute_hemodialysis_order'),
