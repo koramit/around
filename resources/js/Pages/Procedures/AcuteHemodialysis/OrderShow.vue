@@ -155,7 +155,7 @@
                 v-else-if="configs.can.finish_session"
                 @click="$inertia.post(configs.routes.finish_session, {_method: 'delete'}, {
                     preserveScroll: true,
-                    preserveState: true,
+                    preserveState: false,
                     onProgress: () => {form.processing = true;},
                     onFinish: () => {form.processing = false;}
                 })"

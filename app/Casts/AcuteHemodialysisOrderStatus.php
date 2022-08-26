@@ -30,7 +30,7 @@ class AcuteHemodialysisOrderStatus implements CastsAttributes, NoteStatusCast
 
     protected array $scheduleNotAllowStatuses = ['scheduling', 'canceled', 'started', 'finished', 'expired', 'disapproved'];
 
-    protected array $viewNotAllowStatuses = ['canceled', 'expired', 'disapproved'];
+    protected array $performNotAllowStatuses = ['canceled', 'expired', 'disapproved'];
 
     public function get($model, $key, $value, $attributes): ?string
     {
@@ -82,8 +82,8 @@ class AcuteHemodialysisOrderStatus implements CastsAttributes, NoteStatusCast
         return collect($this->scheduleNotAllowStatuses);
     }
 
-    public function getViewNotAllowStatuses(): Collection
+    public function getPerformNotAllowStatuses(): Collection
     {
-        return collect($this->viewNotAllowStatuses);
+        return collect($this->performNotAllowStatuses);
     }
 }
