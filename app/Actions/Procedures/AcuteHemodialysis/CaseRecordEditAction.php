@@ -45,7 +45,7 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
 
     public function __invoke(string $hashed, User $user): array
     {
-        /** @TODO view draft & finished note */
+        /* @TODO view draft & finished note */
         if (config('auth.guards.web.provider') === 'avatar') {
             return []; // call api
         }
@@ -81,6 +81,14 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
                         'theme' => 'accent',
                         'href' => route('procedures.acute-hemodialysis.orders.edit', $order->hashed_key),
                         'can' => $user->can('edit', $order),
+                    ],
+                    [
+                        'label' => 'View',
+                        'type' => 'link',
+                        'icon' => 'readme',
+                        'theme' => 'accent',
+                        'href' => route('procedures.acute-hemodialysis.orders.show', $order->hashed_key),
+                        'can' => $user->can('view', $order),
                     ],
                 ])->filter(fn ($action) => $action['can'])->values()->all();
 

@@ -48,7 +48,7 @@
                     <div>
                         {{ order.ward_name }}
                     </div>
-                    <DropdownList v-if="order.actions.length">
+                    <DropdownList v-if="order.actions.length > 1">
                         <template #default>
                             <div class="bg-primary-darker p-2 rounded-full">
                                 <IconDoubleDown class="w-4 h-4 text-accent" />
@@ -61,6 +61,11 @@
                             />
                         </template>
                     </DropdownList>
+                    <ActionColumn
+                        v-else-if="order.actions.length === 1"
+                        :actions="order.actions"
+                        @action-clicked="handleActionClicked"
+                    />
                 </div>
                 <div class="my-2 p-2 bg-gray-100 rounded space-y-2">
                     <div class="flex items-center justify-between">

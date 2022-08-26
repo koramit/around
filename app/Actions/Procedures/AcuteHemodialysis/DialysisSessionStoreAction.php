@@ -17,7 +17,7 @@ class DialysisSessionStoreAction extends AcuteHemodialysisAction
         /** @var AcuteHemodialysisOrderNote $order */
         $order = AcuteHemodialysisOrderNote::query()->findByUnhashKey($hashedKey)->firstOrFail();
 
-        if ($user->cannot('perform', $order)) {
+        if ($user->cannot('start', $order)) {
             abort(403);
         }
 

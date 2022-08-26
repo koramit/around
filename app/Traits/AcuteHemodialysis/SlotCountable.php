@@ -32,7 +32,7 @@ trait SlotCountable
             ->where('date_note', $dateNote)
             ->where('meta->in_unit', $inUnit)
             ->get()
-            ->transform(function ($note) use ($user, $inUnit) {
+            ->transform(function (AcuteHemodialysisOrderNote $note) use ($user, $inUnit) {
                 $trans = [
                     'case_record_route' => route('procedures.acute-hemodialysis.edit', $note->caseRecord->hashed_key),
                     'patient_name' => $note->caseRecord->meta['name'],

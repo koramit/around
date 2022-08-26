@@ -49,10 +49,9 @@ class AcuteHemodialysisOrderNotePolicy
             && ! $this->status->getScheduleNotAllowStatuses()->contains($note->status);
     }
 
-    public function view(User $user, AcuteHemodialysisOrderNote $note): bool
+    public function view(User $user): bool
     {
-        return $user->can('view_acute_hemodialysis_order')
-            && ! $this->status->getViewNotAllowStatuses()->contains($note->status);
+        return $user->can('view_acute_hemodialysis_order');
     }
 
     public function destroy(User $user, AcuteHemodialysisOrderNote $note): bool
@@ -61,11 +60,21 @@ class AcuteHemodialysisOrderNotePolicy
             && ! $this->status->getEditNotAllowStatuses()->contains($note->status);
     }
 
-    /** @TODO add start session policy */
-    /** @TODO add finish session policy */
+    public function start(User $user, AcuteHemodialysisOrderNote $note): bool
+    {
+        return $user->can('perform_acute_hemodialysis_order')
+            && $note->status === 'submitted';
+    }
+
+    public function finish(User $user, AcuteHemodialysisOrderNote $note): bool
+    {
+        return $user->can('perform_acute_hemodialysis_order')
+            && $note->status === 'started';
+    }
+
     public function perform(User $user, AcuteHemodialysisOrderNote $note): bool
     {
         return $user->can('perform_acute_hemodialysis_order')
-            && ! $this->status->getViewNotAllowStatuses()->contains($note->status);
+            && ! $this->status->getPerformNotAllowStatuses()->contains($note->status);
     }
 }
