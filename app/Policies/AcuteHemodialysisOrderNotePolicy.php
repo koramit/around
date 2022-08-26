@@ -62,8 +62,17 @@ class AcuteHemodialysisOrderNotePolicy
 
     public function start(User $user, AcuteHemodialysisOrderNote $note): bool
     {
-        return $user->can('perform_acute_hemodialysis_order')
-            && $note->status === 'submitted';
+        if (
+            ! $user->can('perform_acute_hemodialysis_order')
+            || $note->status !== 'submitted'
+        ) {
+            return false;
+        }
+
+        $since = $note->date_note->clone()->subHours(7);
+        $until = $note->date_note->clone()->addDay();
+
+        return now()->between($since, $until);
     }
 
     public function finish(User $user, AcuteHemodialysisOrderNote $note): bool
