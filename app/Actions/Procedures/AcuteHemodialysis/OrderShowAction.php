@@ -103,6 +103,7 @@ class OrderShowAction extends AcuteHemodialysisAction
             'flash' => $flash,
             'content' => $content,
             'configs' => [
+                'serology' => $this->getSerology($order->caseRecord->form->toArray()),
                 'covid' => [
                     'hn' => $order->patient->hn,
                     'cid' => $order->patient->profile['document_id'],
