@@ -105,7 +105,7 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
         // form
         if (! $caseRecord->form['an'] && $caseRecord->created_at->diffInMinutes(now()) > 60) {
             $admission = (new AdmissionManager)->manage($caseRecord->patient->hn, true);
-            if ($admission['found']) {
+            if ($admission['found'] && !$admission['admission']->dismissed_at) {
                 $caseRecord->form['an'] = $admission['admission']->an;
                 $caseRecord->save();
             }
