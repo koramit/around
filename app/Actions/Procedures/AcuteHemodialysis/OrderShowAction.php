@@ -438,7 +438,7 @@ class OrderShowAction extends AcuteHemodialysisAction
             $admission = (new PatientRecentlyAdmissionAction)($order->meta['hn']);
 
             return $admission['found']
-                ? ($admission['discharged_at'] ? $admission['ward_admit'] : 'ER ?')
+                ? (!$admission['discharged_at'] ? $admission['ward_admit'] : 'ER ?')
                 : ($admission['location'] ?? null);
         });
     }
