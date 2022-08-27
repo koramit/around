@@ -249,6 +249,7 @@ class OrderStoreAction extends AcuteHemodialysisAction
                 $caseRecord->save();
             }
         }
+        $zombieHours = $this->zombieHours($validated['date_note']);
 
         $dateNote = now()->create($validated['date_note']);
         $note = new AcuteHemodialysisOrderNote();
@@ -258,7 +259,7 @@ class OrderStoreAction extends AcuteHemodialysisAction
         $ward = cache()->pull($wardKeyCache);
         $note->place_id = $ward->id;
         $note->date_note = $validated['date_note'];
-        $note->status = ($reserveToday || $validated['covid_case']) ? 'scheduling' : 'draft';
+        $note->status = ($reserveToday || $validated['covid_case'] || $zombieHours) ? 'scheduling' : 'draft';
         $form = $this->initForm($validated['dialysis_type']);
         $note->form = $form;
         $note->meta = [
@@ -287,7 +288,7 @@ class OrderStoreAction extends AcuteHemodialysisAction
             $user->subscriptions()->attach($sub->id);
         }
 
-        if (! $reserveToday && ! $validated['covid_case'] && ! $this->zombieHours($validated['date_note'])) {
+        if (! $reserveToday && ! $validated['covid_case'] && ! $zombieHours) {
             $note->actionLogs()->create([
                 'actor_id' => $user->id,
                 'action' => 'create',

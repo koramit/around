@@ -13,10 +13,10 @@ class PatientStayManager
 
         $stay = $api->stayRecently($hn);
 
-        if (!isset($stay['found'])) {
+        if (! isset($stay['found'])) {
             return [
                 'found' => false,
-                'message' => 'error'
+                'message' => 'error',
             ];
         }
 

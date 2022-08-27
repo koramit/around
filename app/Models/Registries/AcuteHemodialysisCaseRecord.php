@@ -8,6 +8,7 @@ use App\Models\Resources\Registry;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class AcuteHemodialysisCaseRecord extends CaseRecord
 {
@@ -41,6 +42,15 @@ class AcuteHemodialysisCaseRecord extends CaseRecord
     public function orders(): HasMany
     {
         return $this->hasMany(AcuteHemodialysisOrderNote::class, 'case_record_id', 'id');
+    }
+
+    public function lastOrder(): HasOne
+    {
+        return $this->hasOne(AcuteHemodialysisOrderNote::class, 'case_record_id', 'id')->ofMany([
+            'date_note' => 'max',
+        ], function ($query) {
+            $query->whereNotIn('status', [4,7,8]); // canceled, expired, disapproved
+        });
     }
 
     public function genTitle(): string

@@ -21,6 +21,32 @@ use Illuminate\Support\Facades\Route;
 
 require __DIR__.'/auth.php';
 
+// TEST
+// Route::get('tt', function () {
+//     return \App\Models\Registries\AcuteHemodialysisCaseRecord::query()
+//         ->with('lastOrder')
+//         ->get()
+//         ->transform(function ($c) {
+//             $an = $c->form['an'];
+//             $admission = null;
+//             $dischargedAt = null;
+//            if ($an) {
+//                $admission = \App\Models\Resources\Admission::findByHashedKey($an)->withPlaceName()->first();
+//                $dischargedAt = $admission?->dismissed_at;
+//            }
+//
+//            return (Object) [
+//                'key' => $c->hashed_key,
+//                'name' => $c->meta['name'],
+//                'discharged_at' => $dischargedAt?->format('Y-m-d'),
+//                'last_order_date' => $c->lastOrder?->date_note->format('Y-m-d'),
+//                'overlap' => ($dischargedAt && $c->lastOrder)
+//                     ? ($c->lastOrder->date_note->greaterThan($dischargedAt))
+//                     : false,
+//            ];
+//         })->filter(fn ($c) => $c->overlap);
+// });
+
 // pages
 Route::get('terms-and-policies', TermsAndPoliciesController::class)
     ->middleware(['locale', 'no-in-app-allow'])
@@ -172,7 +198,3 @@ Route::get('in-app-browsing-redirect/{token}', InAppBrowsingRedirectController::
 Route::get('magic-link', MagicLinkController::class)
     ->middleware(['no-in-app-allow', 'signed'])
     ->name('magic-link');
-
-Route::get('test-no-bot', function () {
-    return \Inertia\Inertia::render('Guest/NoBotAllow');
-});
