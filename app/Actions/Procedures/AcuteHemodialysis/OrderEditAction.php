@@ -66,6 +66,7 @@ class OrderEditAction extends AcuteHemodialysisAction
             'orderForm' => $note->form,
             'flash' => $flash,
             'formConfigs' => $this->FORM_CONFIGS + [
+                'serology' => $this->getSerology($note->caseRecord->form->toArray()),
                 'endpoints' => [
                     'update' => route('procedures.acute-hemodialysis.orders.update', $note->hashed_key),
                     'submit' => route('procedures.acute-hemodialysis.orders.submit', $note->hashed_key),

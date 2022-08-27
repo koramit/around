@@ -1,4 +1,8 @@
 <template>
+    <SerologyInfo
+        class="mb-4 md:mb-8"
+        :serology="formConfigs.serology"
+    />
     <!-- reservation -->
     <h2
         class="flex justify-between items-center"
@@ -397,6 +401,7 @@ import FormDatetime from '../../../Components/Controls/FormDatetime.vue';
 import CopyToClipboardButton from '../../../Components/Controls/CopyToClipboardButton.vue';
 import IconRotate from '../../../Components/Helpers/Icons/IconRotate.vue';
 import CommentSection from '../../../Components/Forms/CommentSection.vue';
+import SerologyInfo from '../../../Components/Helpers/SerologyInfo.vue';
 const HDForm = defineAsyncComponent(() => import('../../../Partials/Procedures/AcuteHemodialysis/HDForm.vue'));
 const HFForm = defineAsyncComponent(() => import('../../../Partials/Procedures/AcuteHemodialysis/HFForm.vue'));
 const SLEDDForm = defineAsyncComponent(() => import('../../../Partials/Procedures/AcuteHemodialysis/SLEDDForm.vue'));

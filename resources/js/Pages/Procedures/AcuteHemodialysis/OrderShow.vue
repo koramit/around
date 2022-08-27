@@ -10,7 +10,11 @@
             </template>
         </Suspense>
     </Transition>
-    <!-- @TODO show serology -->
+    <!-- serology -->
+    <SerologyInfo
+        class="mt-4 md:mt-8"
+        :serology="configs.serology"
+    />
     <!-- reservation -->
     <h2 class="mt-6 md:mt-12 xl:mt-24 form-label italic text-xl text-complement">
         Reservation data
@@ -185,6 +189,7 @@ import FormCheckbox from '../../../Components/Controls/FormCheckbox.vue';
 import FormDatetime from '../../../Components/Controls/FormDatetime.vue';
 import {useForm} from '@inertiajs/inertia-vue3';
 import CommentSection from '../../../Components/Forms/CommentSection.vue';
+import SerologyInfo from '../../../Components/Helpers/SerologyInfo.vue';
 
 const props = defineProps({
     configs: {type: Object, required: true},

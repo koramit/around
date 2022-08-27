@@ -117,4 +117,13 @@ class AcuteHemodialysisAction
     {
         return $note->date_note?->format('Y-m-d') === $this->TODAY;
     }
+
+    protected function getSerology(array $form): array
+    {
+        return [
+            ['label' => 'HBS AG', 'result' => $form['hbs_ag'], 'date_lab' => $form['date_hbs_ag']],
+            ['label' => 'ANTI HCV', 'result' => $form['anti_hcv'], 'date_lab' => $form['date_anti_hcv']],
+            ['label' => 'ANTI HIV', 'result' => $form['anti_hiv'], 'date_lab' => $form['date_anti_hiv']],
+        ];
+    }
 }
