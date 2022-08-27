@@ -2,6 +2,7 @@
 
 namespace App\Actions\Procedures\AcuteHemodialysis;
 
+use App\Managers\Resources\AdmissionManager;
 use App\Models\DocumentChangeRequests\AcuteHemodialysisSlotRequest;
 use App\Models\Notes\AcuteHemodialysisOrderNote;
 use App\Models\Resources\Ward;
@@ -238,6 +239,17 @@ class OrderStoreAction extends AcuteHemodialysisAction
             }
         }
 
+        $patient = $caseRecord->patient;
+        $an = null;
+        if (! ($caseRecord->form['an'] ?? null)) {
+            $admission = (new AdmissionManager)->manage($patient->hn, true);
+            if ($admission['found'] && ! $admission['admission']->dismissed_at) {
+                $an = $admission['found']['admission']->an;
+                $caseRecord->form['an'] = $an;
+                $caseRecord->save();
+            }
+        }
+
         $dateNote = now()->create($validated['date_note']);
         $note = new AcuteHemodialysisOrderNote();
         $note->case_record_id = $caseRecord->id;
@@ -249,10 +261,9 @@ class OrderStoreAction extends AcuteHemodialysisAction
         $note->status = ($reserveToday || $validated['covid_case']) ? 'scheduling' : 'draft';
         $form = $this->initForm($validated['dialysis_type']);
         $note->form = $form;
-        $patient = $caseRecord->patient;
         $note->meta = [
             'hn' => $patient->hn,
-            'an' => $caseRecord->form['an'] ?? null,
+            'an' => $an,
             'name' => $patient->first_name,
             'version' => $this->FORM_VERSION,
             'in_unit' => $ward->id === $this->IN_UNIT_WARD_ID,
