@@ -52,7 +52,6 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
 
         $caseRecord = CaseRecord::query()->findByUnhashKey($hashed)->firstOrFail();
 
-        /* @TODO can read order */
         // HD orders
         $orders = AcuteHemodialysisOrderNote::query()
             ->withAuthorName()
@@ -126,7 +125,7 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
             $form['admission']['an'] = $admission->an;
             $form['admission']['admitted_at'] = $admission->encountered_at->tz($this->TIMEZONE)->format('d M Y H:i');
             $form['admission']['discharged_at'] = $admission->dismissed_at?->tz($this->TIMEZONE)->format('d M Y H:i');
-            if (!($caseRecord->meta['ward_admit'] ?? false)) {
+            if (! ($caseRecord->meta['ward_admit'] ?? false)) {
                 $wards = (new AdmissionManager)->wards($caseRecord->form['an']);
                 if ($wards['found']) {
                     $caseRecord->meta['ward_admit'] = $wards['wards'][0]['name'];

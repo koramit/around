@@ -2,6 +2,7 @@
 
 namespace App\Actions\Procedures\AcuteHemodialysis;
 
+use App\Actions\Resources\PatientRecentlyAdmissionAction;
 use App\Managers\Resources\AdmissionManager;
 use App\Models\Notes\AcuteHemodialysisOrderNote;
 use App\Models\User;
@@ -59,11 +60,13 @@ class OrderShowAction extends AcuteHemodialysisAction
             ];
         }
 
+        $location = $this->getPatientLocation($order);
+
         $content = [
             'reservation' => [
                 'hn' => $order->meta['hn'],
                 'an' => $order->meta['an'] ?? 'No active AN',
-                'patient location' => $this->getPatientLocation($order->meta['an'] ?? null),
+                'patient location' => $location ?? 'ER ?',
                 'dialysis at' => $order->place_name,
                 'dialysis type' => $order->meta['dialysis_type'],
                 'patient type' => $order->meta['patient_type'],
@@ -413,19 +416,30 @@ class OrderShowAction extends AcuteHemodialysisAction
         }
     }
 
-    protected function getPatientLocation(?string $an): string
+    protected function getPatientLocation($order): ?string
     {
-        if (! $an) {
-            return 'ER ?';
-        }
-
-        return cache()->remember('current-admit-location-'.$an, now()->addHour(), function () use ($an) {
-            $admission = (new AdmissionManager)->manage($an);
-            if (! $admission['found']) {
+        $an = $order->meta['an'];
+        if (! collect(['scheduling', 'draft', 'submitted'])->contains($order->status)) {
+            if (! $an) {
                 return 'ER ?';
             }
 
-            return $admission['admission']->place->name;
+            return cache()->remember('current-admit-location-'.$an, now()->addHour(), function () use ($an) {
+                $admission = (new AdmissionManager)->manage($an);
+                if (! $admission['found']) {
+                    return 'ER ?';
+                }
+
+                return $admission['admission']->place->name;
+            });
+        }
+
+        return cache()->remember("patient-recently-location-{$order->meta['hn']}", now()->addHour(), function () use ($order) {
+            $admission = (new PatientRecentlyAdmissionAction)($order->meta['hn']);
+
+            return $admission['found']
+                ? ($admission['discharged_at'] ? $admission['ward_admit'] : 'ER ?')
+                : ($admission['location'] ?? null);
         });
     }
 }
