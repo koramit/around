@@ -23,7 +23,7 @@
             <tr class="text-left font-semibold text-complement">
                 <th
                     class="px-6 pt-6 pb-4"
-                    v-for="column in ['HN', 'Name', 'On', 'Type', 'Status', 'MD']"
+                    v-for="column in ['HN', 'Name', 'Status', 'On', 'Type', 'Order', 'MD']"
                     :key="column"
                     v-text="column"
                     :colspan="column === 'MD' ? 2:1"
@@ -35,7 +35,7 @@
                 :key="key"
             >
                 <template
-                    v-for="field in ['hn', 'patient_name', 'date_note', 'dialysis_type', 'status', 'md']"
+                    v-for="field in ['hn', 'patient_name', 'case_status', 'date_note', 'dialysis_type', 'status', 'md']"
                     :key="field"
                 >
                     <td
@@ -139,6 +139,7 @@
                     >
                         <IconCalendarPlus class="w-4 h-4" />
                     </Link>
+                    <span v-else>{{ caseRecord.case_status }}</span>
                 </div>
                 <template v-else>
                     <div class="flex items-center justify-between">

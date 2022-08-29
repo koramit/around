@@ -2,8 +2,9 @@
 
 namespace App\Actions\Procedures\AcuteHemodialysis;
 
+use App\Casts\AcuteHemodialysisCaseRecordStatus;
 use App\Models\Registries\AcuteHemodialysisCaseRecord;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection;
 
 class IdleCaseAction
 {
@@ -17,6 +18,7 @@ class IdleCaseAction
 
         return AcuteHemodialysisCaseRecord::query()
             ->select(['id', 'meta', 'patient_id'])
+            ->where('status', (new AcuteHemodialysisCaseRecordStatus())->getCode('active'))
             ->with(['patient:id,hn,profile'])
             ->whereDoesntHave('orders', fn ($q) => $q->activeStatuses())
             ->where(fn ($q) => $q->where('meta->name', $ilike, '%'.$search.'%')

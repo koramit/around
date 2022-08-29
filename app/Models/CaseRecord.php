@@ -24,8 +24,6 @@ class CaseRecord extends Model
         'meta' => AsArrayObject::class,
     ];
 
-    protected array $statuses = ['', 'draft', 'submitted', 'canceled', 'dismissed', 'archived', 'deleted'];
-
     public function patient(): BelongsTo
     {
         return $this->belongsTo(Patient::class);
@@ -44,14 +42,6 @@ class CaseRecord extends Model
     public function comments(): MorphMany
     {
         return $this->morphMany(Comment::class, 'commentable');
-    }
-
-    protected function status(): Attribute
-    {
-        return Attribute::make(
-            get: fn () => $this->statuses[$this->attributes['status']] ?? null,
-            set: fn ($value) => array_search($value, $this->statuses) ?? null,
-        );
     }
 
     protected function title(): Attribute

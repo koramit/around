@@ -447,7 +447,7 @@ namespace App\Models\Registries{
  * @property int $registry_id
  * @property mixed $meta
  * @property mixed $form
- * @property int $status
+ * @property string|null $status
  * @property string|null $deleted_at
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
@@ -455,6 +455,7 @@ namespace App\Models\Registries{
  * @property-read int|null $action_logs_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Comment[] $comments
  * @property-read int|null $comments_count
+ * @property-read \App\Models\Notes\AcuteHemodialysisOrderNote|null $lastOrder
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Note[] $notes
  * @property-read int|null $notes_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Notes\AcuteHemodialysisOrderNote[] $orders

@@ -7,22 +7,22 @@ use App\Models\Notes\AcuteHemodialysisOrderNote;
 use App\Models\Registries\AcuteHemodialysisCaseRecord as CaseRecord;
 use App\Models\Resources\Ward;
 use App\Models\User;
+use App\Traits\AcuteHemodialysis\CaseRecordShareValidatable;
 use App\Traits\AcuteHemodialysis\OrderShareValidatable;
 use App\Traits\Subscribable;
 
 class CaseRecordEditAction extends AcuteHemodialysisAction
 {
-    use OrderShareValidatable, Subscribable;
+    use OrderShareValidatable, CaseRecordShareValidatable, Subscribable;
 
     protected array $FORM_CONFIGS = [
-        'renal_diagnosis' => ['AKI', 'AKI on top CKD', 'ESRD', 'Post KT'],
         'comorbidities' => [
-            ['name' => 'DM', 'label' => 'DM'],
-            ['name' => 'HT', 'label' => 'HT'],
-            ['name' => 'DLP', 'label' => 'DLP'],
+            ['name' => 'dm', 'label' => 'DM'],
+            ['name' => 'ht', 'label' => 'HT'],
+            ['name' => 'dlp', 'label' => 'DLP'],
             ['name' => 'coronary_artery_disease', 'label' => 'Coronary artery disease'],
             ['name' => 'cerebrovascular_disease', 'label' => 'Cerebrovascular disease'],
-            ['name' => 'COPD', 'label' => 'COPD'],
+            ['name' => 'copd', 'label' => 'COPD'],
             ['name' => 'cirrhosis', 'label' => 'Cirrhosis'],
             ['name' => 'cancer', 'label' => 'Cancer'],
         ],
@@ -40,7 +40,6 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
         'insurances' => ['เบิกจ่ายตรง', 'ประกันสังคม', '30 บาท'],
         'opd_consent_form_pathname' => 'procedures/acute-hemodialysis/opd-consent-form',
         'ipd_consent_form_pathname' => 'procedures/acute-hemodialysis/ipd-consent-form',
-        'serology_results' => ['positive', 'intermediate', 'negative'],
     ];
 
     public function __invoke(string $hashed, User $user): array
@@ -103,10 +102,10 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
             });
 
         // form
-        if (! $caseRecord->form['an'] && $caseRecord->created_at->diffInMinutes(now()) > 60) {
+        if (! $caseRecord->meta['an'] && $caseRecord->created_at->diffInMinutes(now()) > 60) {
             $admission = (new AdmissionManager)->manage($caseRecord->patient->hn, true);
             if ($admission['found'] && ! $admission['admission']->dismissed_at) {
-                $caseRecord->form['an'] = $admission['admission']->an;
+                $caseRecord->meta['an'] = $admission['admission']->an;
                 $caseRecord->save();
             }
         }
@@ -120,15 +119,18 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
         $form['admission']['discharged_at'] = null;
         $form['admission']['ward_admit'] = null;
         $form['admission']['ward_discharge'] = null;
-        if ($form['an']) {
-            $admission = (new AdmissionManager)->manage($caseRecord->form['an'])['admission'];
+        if ($caseRecord->meta['an']) {
+            $admission = (new AdmissionManager)->manage($caseRecord->meta['an'])['admission'];
             $form['admission']['an'] = $admission->an;
             $form['admission']['admitted_at'] = $admission->encountered_at->tz($this->TIMEZONE)->format('d M Y H:i');
             $form['admission']['discharged_at'] = $admission->dismissed_at?->tz($this->TIMEZONE)->format('d M Y H:i');
             if (! ($caseRecord->meta['ward_admit'] ?? false)) {
-                $wards = (new AdmissionManager)->wards($caseRecord->form['an']);
+                $wards = (new AdmissionManager)->wards($caseRecord->meta['an']);
                 if ($wards['found']) {
-                    $caseRecord->meta['ward_admit'] = $wards['wards'][0]['name'];
+                    $wardDb = Ward::query()->where('name_ref', $wards['wards'][0]['name'])->first();
+                    $caseRecord->meta['ward_admit'] = $wardDb
+                        ? $wardDb->name
+                        : $wards['wards'][0]['name'];
                     $caseRecord->save();
                     $form['admission']['ward_admit'] = $caseRecord->meta['ward_admit'] ?? null;
                 }
@@ -169,6 +171,10 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
 
         // form configs
         $configs = $this->FORM_CONFIGS + [
+            'renal_outcomes' => $this->RENAL_OUTCOMES,
+            'patient_outcomes' => $this->PATIENT_OUTCOMES,
+            'renal_diagnosis' => $this->RENAL_DIAGNOSIS,
+            'serology_results' => $this->SEROLOGY_RESULTS,
             'in_unit_dialysis_types' => $this->IN_UNIT,
             'out_unit_dialysis_types' => $this->OUT_UNIT,
             'patient_types' => $this->PATIENT_TYPES,
@@ -213,7 +219,9 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
                     'icon' => 'calendar-plus',
                     'label' => 'New order',
                     'route' => route('procedures.acute-hemodialysis.orders.create-shortcut', $caseRecord->hashed_key),
-                    'can' => $configs['dialysis_reservable'] && $user->can('create_acute_hemodialysis_order'),
+                    'can' => $caseRecord->status === 'active'
+                        && $configs['dialysis_reservable']
+                        && $user->can('create_acute_hemodialysis_order'),
                 ],
                 $this->getSubscriptionActionMenu($caseRecord, $user),
             ],

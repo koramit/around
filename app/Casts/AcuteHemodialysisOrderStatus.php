@@ -3,11 +3,14 @@
 namespace App\Casts;
 
 use App\Contracts\NoteStatusCast;
+use App\Traits\StatusCastable;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Support\Collection;
 
 class AcuteHemodialysisOrderStatus implements CastsAttributes, NoteStatusCast
 {
+    use StatusCastable;
+
     protected array $statuses = [
         '',
 /**  1 */ 'draft',
@@ -31,26 +34,6 @@ class AcuteHemodialysisOrderStatus implements CastsAttributes, NoteStatusCast
     protected array $scheduleNotAllowStatuses = ['scheduling', 'canceled', 'started', 'finished', 'expired', 'disapproved'];
 
     protected array $performNotAllowStatuses = ['canceled', 'expired', 'disapproved'];
-
-    public function get($model, $key, $value, $attributes): ?string
-    {
-        return $this->statuses[$value] ?? null;
-    }
-
-    public function set($model, $key, $value, $attributes): ?string
-    {
-        return array_search($value, $this->statuses) ?? null;
-    }
-
-    public function getStatuses(): array
-    {
-        return $this->statuses;
-    }
-
-    public function getCode(string $label): int
-    {
-        return array_search($label, $this->statuses) ?? 0;
-    }
 
     public function getActiveStatusCodes(): array
     {

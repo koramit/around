@@ -70,6 +70,14 @@ class AcuteHemodialysisOrderNotePolicy
         }
 
         $since = $note->date_note->clone()->subHours(7);
+        // in charge can start session after order date
+        if (
+            $user->can('start_session_days_after_date_note')
+            && now()->greaterThan($since)
+        ) {
+            return true;
+        }
+
         $until = $note->date_note->clone()->addDay();
 
         return now()->between($since, $until);

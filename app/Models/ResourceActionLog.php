@@ -43,6 +43,7 @@ class ResourceActionLog extends Model
 /** 17 */'archive', // CRF ONLY
 /** 18 */'grant', // role
 /** 19 */'revoke', // role
+/** 20 */'discharge', // role
     ];
 
     /**
