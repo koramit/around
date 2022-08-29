@@ -124,6 +124,15 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
             $form['admission']['an'] = $admission->an;
             $form['admission']['admitted_at'] = $admission->encountered_at->tz($this->TIMEZONE)->format('d M Y H:i');
             $form['admission']['discharged_at'] = $admission->dismissed_at?->tz($this->TIMEZONE)->format('d M Y H:i');
+
+            if ($caseRecord->status === 'active' && $admission->dismissed_at) {
+                $caseRecord->update(['status' => 'discharged']);
+                $caseRecord->actionLogs()->create([
+                    'action' => 'discharge',
+                    'actor_id' => 1,
+                ]);
+            }
+
             if (! ($caseRecord->meta['ward_admit'] ?? false)) {
                 $wards = (new AdmissionManager)->wards($caseRecord->meta['an']);
                 if ($wards['found']) {
@@ -170,6 +179,7 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
         });
 
         // form configs
+        $reservable = $this->isDialysisReservable($caseRecord);
         $configs = $this->FORM_CONFIGS + [
             'renal_outcomes' => $this->RENAL_OUTCOMES,
             'patient_outcomes' => $this->PATIENT_OUTCOMES,
@@ -193,7 +203,7 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
                 'update' => route('procedures.acute-hemodialysis.update', $caseRecord->hashed_key),
             ],
             'staffs_scope_params' => $this->STAFF_SCOPE_PARAMS,
-            'dialysis_reservable' => $this->isDialysisReservable($caseRecord),
+            'dialysis_reservable' => $reservable,
             'covid' => [
                 'hn' => $caseRecord->patient->hn,
                 'cid' => $caseRecord->patient->profile['document_id'],
@@ -219,9 +229,7 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
                     'icon' => 'calendar-plus',
                     'label' => 'New order',
                     'route' => route('procedures.acute-hemodialysis.orders.create-shortcut', $caseRecord->hashed_key),
-                    'can' => $caseRecord->status === 'active'
-                        && $configs['dialysis_reservable']
-                        && $user->can('create_acute_hemodialysis_order'),
+                    'can' => $reservable && $user->can('create_acute_hemodialysis_order'),
                 ],
                 $this->getSubscriptionActionMenu($caseRecord, $user),
             ],
