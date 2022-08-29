@@ -59,6 +59,9 @@ class AbilitiesTableSeeder extends Seeder
             // slot request
             ['registry_id' => 1, 'name' => 'view_any_acute_hemodialysis_slot_requests'] + $datetime, // index
             ['registry_id' => 1, 'name' => 'approve_acute_hemodialysis_slot_request'] + $datetime, // approve + policy
+
+            // start dialysis session
+            ['registry_id' => 1, 'name' => 'start_session_days_after_date_note'] + $datetime,
         ]);
 
         Role::query()->insert([
@@ -93,6 +96,7 @@ class AbilitiesTableSeeder extends Seeder
             'acute_hemodialysis_nurse_manager' => [
                 'approve_acute_hemodialysis_slot_request',
                 'create_acute_hemodialysis_case',
+                'start_session_after_date_note',
             ],
             'acute_hemodialysis_fellow' => [
                 'view_any_acute_hemodialysis_cases',

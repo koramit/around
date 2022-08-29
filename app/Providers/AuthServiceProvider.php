@@ -5,6 +5,8 @@ namespace App\Providers;
 use App\Extensions\Auth\AvatarUserProvider;
 use App\Models\DocumentChangeRequests\AcuteHemodialysisSlotRequest;
 use App\Models\Notes\AcuteHemodialysisOrderNote;
+use App\Models\Registries\AcuteHemodialysisCaseRecord;
+use App\Policies\AcuteHemodialysisCaseRecordPolicy;
 use App\Policies\AcuteHemodialysisOrderNotePolicy;
 use App\Policies\AcuteHemodialysisSlotRequestPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
@@ -19,6 +21,7 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
+        AcuteHemodialysisCaseRecord::class => AcuteHemodialysisCaseRecordPolicy::class,
         AcuteHemodialysisOrderNote::class => AcuteHemodialysisOrderNotePolicy::class,
         AcuteHemodialysisSlotRequest::class => AcuteHemodialysisSlotRequestPolicy::class,
     ];

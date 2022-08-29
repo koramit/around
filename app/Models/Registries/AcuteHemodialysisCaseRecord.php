@@ -2,6 +2,7 @@
 
 namespace App\Models\Registries;
 
+use App\Casts\AcuteHemodialysisCaseRecordStatus;
 use App\Models\CaseRecord;
 use App\Models\Notes\AcuteHemodialysisOrderNote;
 use App\Models\Resources\Registry;
@@ -39,6 +40,14 @@ class AcuteHemodialysisCaseRecord extends CaseRecord
         });
     }
 
+    /**
+     * Override.
+     */
+    public function getCasts(): array
+    {
+        return array_merge(parent::getCasts(), ['status' => AcuteHemodialysisCaseRecordStatus::class]);
+    }
+
     public function orders(): HasMany
     {
         return $this->hasMany(AcuteHemodialysisOrderNote::class, 'case_record_id', 'id');
@@ -49,7 +58,7 @@ class AcuteHemodialysisCaseRecord extends CaseRecord
         return $this->hasOne(AcuteHemodialysisOrderNote::class, 'case_record_id', 'id')->ofMany([
             'date_note' => 'max',
         ], function ($query) {
-            $query->whereNotIn('status', [4,7,8]); // canceled, expired, disapproved
+            $query->whereNotIn('status', [4, 7, 8]); // canceled, expired, disapproved
         });
     }
 

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Role extends Model
 {
@@ -11,27 +12,17 @@ class Role extends Model
 
     protected $guarded = [];
 
-    /**
-     * A role may have many abilities.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function abilities()
+    public function abilities(): BelongsToMany
     {
         return $this->belongsToMany(Ability::class)->withTimestamps();
     }
 
-    public function users()
+    public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class)->withTimestamps();
     }
 
-    /**
-     * Grant the given ability to the role.
-     *
-     * @param  mixed  $ability
-     */
-    public function allowTo($ability)
+    public function allowTo(mixed $ability)
     {
         if (is_string($ability)) {
             $ability = Ability::whereName($ability)->firstOrCreate(['name' => $ability]);

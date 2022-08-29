@@ -16,9 +16,6 @@ class CaseRecordStoreAction extends AcuteHemodialysisAction
     protected float $CRF_VERSION = 1.0;
 
     protected array $FORM_TEMPLATE = [
-        'an' => null,
-        'ward_admit' => null,
-        'ward_discharge' => null,
         'previous_crrt' => false,
         'date_start_crrt' => null,
         'date_end_crrt' => null,
@@ -66,7 +63,7 @@ class CaseRecordStoreAction extends AcuteHemodialysisAction
     public function __invoke(array $data, User $user): CaseRecord
     {
         if (config('auth.guards.web.provider') === 'avatar') {
-            return []; // call api
+            return new CaseRecord(); // call api
         }
 
         $validated = Validator::make($data, [
@@ -81,10 +78,11 @@ class CaseRecordStoreAction extends AcuteHemodialysisAction
         $patient = Patient::query()->findByHashedKey($validated['hn'])->first();
         $caseRecord->patient_id = $patient->id;
         $form = $this->FORM_TEMPLATE;
+        $an = null;
         if ($validated['an'] ?? false) {
             $admission = Admission::query()->findByHashedKey($validated['an'])->first();
             if (! $admission->dismissed_at) { // active admission
-                $form['an'] = $admission->an;
+                $an = $admission->an;
             }
         }
         $caseRecord->form = $form;
@@ -92,6 +90,7 @@ class CaseRecordStoreAction extends AcuteHemodialysisAction
         $caseRecord->meta = [
             'version' => $this->CRF_VERSION,
             'hn' => $patient->hn,
+            'an' => $an,
             'name' => $patient->first_name,
             'title' => "Acute Hemodialysis Case : HN $patient->hn $patient->first_name : $now",
             'ward_admit' => null,

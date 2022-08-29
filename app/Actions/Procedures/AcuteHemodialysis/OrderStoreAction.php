@@ -241,11 +241,11 @@ class OrderStoreAction extends AcuteHemodialysisAction
 
         $patient = $caseRecord->patient;
         $an = null;
-        if (! ($caseRecord->form['an'] ?? null)) {
+        if (! ($caseRecord->meta['an'] ?? null)) {
             $admission = (new AdmissionManager)->manage($patient->hn, true);
             if ($admission['found'] && ! $admission['admission']->dismissed_at) {
-                $an = $admission['found']['admission']->an;
-                $caseRecord->form['an'] = $an;
+                $an = $admission['admission']->an;
+                $caseRecord->meta['an'] = $an;
                 $caseRecord->save();
             }
         }

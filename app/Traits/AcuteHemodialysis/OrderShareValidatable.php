@@ -32,7 +32,8 @@ trait OrderShareValidatable
 
     public function isDialysisReservable($caseRecord): bool
     {
-        return $caseRecord->orders()->activeStatuses()->count() === 0;
+        return $caseRecord->status === 'active'
+            && $caseRecord->orders()->activeStatuses()->count() === 0;
     }
 
     protected function getPossibleDates(): array

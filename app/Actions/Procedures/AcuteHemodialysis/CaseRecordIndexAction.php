@@ -2,6 +2,7 @@
 
 namespace App\Actions\Procedures\AcuteHemodialysis;
 
+use App\Casts\AcuteHemodialysisCaseRecordStatus;
 use App\Models\Notes\AcuteHemodialysisOrderNote;
 use App\Models\Registries\AcuteHemodialysisCaseRecord as CaseRecord;
 use App\Models\User;
@@ -19,10 +20,13 @@ class CaseRecordIndexAction extends AcuteHemodialysisAction
         }
 
         $ilike = config('database.ilike');
+        $status = new AcuteHemodialysisCaseRecordStatus();
 
         $cases = CaseRecord::query()
             ->with(['patient', 'orders' => fn ($q) => $q->withAuthorName()->activeStatuses()])
-            ->where('status', '<>', 6)
+            ->whereNotIn('status', [
+                $status->getCode('archived'),
+            ])
             ->when($filters['search'] ?? null, function ($query, $search) use ($ilike) {
                 $query->where('meta->name', $ilike, $search.'%')
                     ->orWhere('meta->hn', $ilike, $search.'%');
@@ -37,6 +41,7 @@ class CaseRecordIndexAction extends AcuteHemodialysisAction
             ->through(fn ($case) => [
                 'hn' => $case->patient->hn,
                 'patient_name' => $case->patient->full_name,
+                'case_status' => $case->status,
                 'date_note' => $case->orders->first()?->date_note?->format('M j'),
                 'dialysis_type' => $case->orders->first()?->meta['dialysis_type'],
                 'dialysis_at' => $case->orders->first() ? ($case->orders->first()->meta['in_unit'] ? 'in' : 'out') : null,
@@ -44,7 +49,9 @@ class CaseRecordIndexAction extends AcuteHemodialysisAction
                 'md' => $this->getFirstName($case->orders->first()?->author_name),
                 'can' => [
                     'edit_order' => $case->orders->first() && $user->can('edit', $case->orders->first()),
-                    'create_order' => ! $case->orders->first() && $user->can('create_acute_hemodialysis_order'),
+                    'create_order' => $case->status === 'active'
+                        && ! $case->orders->first()
+                        && $user->can('create_acute_hemodialysis_order'),
                     'view_order' => $case->orders->first() && $user->can('view', $case->orders->first()),
                 ],
                 'routes' => [

@@ -96,7 +96,7 @@
                 name="renal_outcome"
                 v-model="form.renal_outcome"
                 :allow-reset="true"
-                :options="['Recovery', 'ESRD', 'KT']"
+                :options="configs.renal_outcomes"
             />
             <Transition name="slide-fade">
                 <FormInput
@@ -114,7 +114,7 @@
                 name="patient_outcome"
                 v-model="form.patient_outcome"
                 :allow-reset="true"
-                :options="['Alive', 'Dead']"
+                :options="configs.patient_outcomes"
             />
             <Transition name="slide-fade">
                 <FormInput
@@ -126,6 +126,12 @@
                 />
             </Transition>
         </div>
+        <FormInput
+            label="last creatinine"
+            name="cr_before_discharge"
+            v-model="form.cr_before_discharge"
+            type="number"
+        />
     </div>
     <hr class="border border-dashed my-2 md:my-4 xl:my-8">
 

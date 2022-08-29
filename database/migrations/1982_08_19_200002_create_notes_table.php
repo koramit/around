@@ -6,12 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
+    public function up(): void
     {
         Schema::create('notes', function (Blueprint $table) {
             $table->id();
@@ -26,17 +21,12 @@ return new class extends Migration
             $table->json('report')->nullable();
             $table->unsignedTinyInteger('status')->default(1);
             $table->date('date_note');
-            $table->index(['status', 'date_note']);
+            $table->index(['date_note', 'status']);
             $table->unsignedInteger('author_id');
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down(): void
     {
     }

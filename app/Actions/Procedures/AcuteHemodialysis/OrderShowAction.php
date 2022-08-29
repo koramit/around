@@ -16,7 +16,6 @@ class OrderShowAction extends AcuteHemodialysisAction
 
     public function __invoke(string $hashedKey, User $user): array
     {
-        /* @TODO check if AN is null then try to get active one or แพทย์เวร */
         if (config('auth.guards.web.provider') === 'avatar') {
             return []; // call api
         }
