@@ -23,8 +23,12 @@ class CaseRecordIndexAction extends AcuteHemodialysisAction
         $status = new AcuteHemodialysisCaseRecordStatus();
 
         $cases = CaseRecord::query()
-            ->with(['patient', 'orders' => fn ($q) => $q->withAuthorName()->activeStatuses()])
-            ->whereNotIn('status', [
+            ->select(['id', 'patient_id', 'status'])
+            ->with(['patient:id,profile,hn', 'orders' =>
+                fn ($q) => $q->select(['id', 'case_record_id', 'author_id', 'status', 'meta'])
+                    ->withAuthorName()
+                    ->activeStatuses()
+            ])->whereNotIn('status', [
                 $status->getCode('archived'),
             ])
             ->when($filters['search'] ?? null, function ($query, $search) use ($ilike) {
@@ -33,10 +37,12 @@ class CaseRecordIndexAction extends AcuteHemodialysisAction
             })->orderByDesc(
                 AcuteHemodialysisOrderNote::query()
                     ->select('date_note')
+                    ->activeStatuses()
                     ->whereColumn('notes.case_record_id', 'case_records.id')
                     ->latest('date_note')
                     ->take(1)
-            )->paginate($user->items_per_page)
+            )->orderBy('status')
+            ->paginate($user->items_per_page)
             ->withQueryString()
             ->through(fn ($case) => [
                 'hn' => $case->patient->hn,

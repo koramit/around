@@ -3,8 +3,7 @@
 namespace App\Actions\Procedures\AcuteHemodialysis;
 
 use App\Managers\Resources\AdmissionManager;
-use App\Models\Notes\AcuteHemodialysisOrderNote;
-use App\Models\Registries\AcuteHemodialysisCaseRecord as CaseRecord;
+use App\Models\Registries\AcuteHemodialysisCaseRecord;
 use App\Models\Resources\Ward;
 use App\Models\User;
 use App\Traits\AcuteHemodialysis\CaseRecordShareValidatable;
@@ -49,18 +48,17 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
             return []; // call api
         }
 
-        $caseRecord = CaseRecord::query()->findByUnhashKey($hashed)->firstOrFail();
+        $caseRecord = AcuteHemodialysisCaseRecord::query()->findByUnhashKey($hashed)->firstOrFail();
 
         // HD orders
-        $orders = AcuteHemodialysisOrderNote::query()
+        /** @noinspection PhpPossiblePolymorphicInvocationInspection */
+        $orders = $caseRecord->orders()
+            ->select(['id', 'date_note', 'status', 'author_id', 'place_id', 'meta'])
             ->withAuthorName()
             ->withPlaceName(Ward::class)
-            ->where('case_record_id', $caseRecord->id)
-            ->orderBy('status')
-            ->orderByDesc('date_note')
-            ->orderByDesc('created_at')
+            ->latest('date_note')
             ->get()
-            ->transform(function (AcuteHemodialysisOrderNote $order) use ($user) {
+            ->transform(function ($order) use ($user) {
                 $actions = collect([
                     [
                         'label' => 'Cancel',
