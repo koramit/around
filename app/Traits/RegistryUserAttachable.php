@@ -12,7 +12,7 @@ trait RegistryUserAttachable
         $registries = ['view_any_acute_hemodialysis_cases'];
         foreach ($registries as $registry) {
             $registryId = Ability::query()
-                ->select('id')
+                ->select('registry_id')
                 ->where('name', $registry)
                 ->first()
                 ->registry_id;
@@ -25,6 +25,8 @@ trait RegistryUserAttachable
                     $user->registries()->detach($registryId);
                 }
             }
+
+            cache()->forget("uid-$user->id-registry-names");
         }
     }
 }

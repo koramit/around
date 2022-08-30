@@ -29,6 +29,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @property bool $auto_subscribe_to_channel
  * @property bool $mute_notification
  * @property bool $notify_approval_result
+ * @property string $registry_names
  */
 class User extends Authenticatable
 {
@@ -168,6 +169,16 @@ class User extends Authenticatable
         return Attribute::make(
             get: fn () => cache()->remember("uid-$this->id-role-labels", config('session.lifetime') * 60, function () {
                 return $this->roles()->whereNotNull('label')->pluck('label');
+            }),
+        );
+    }
+
+    /** @alias string $registry_names*/
+    protected function registryNames(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => cache()->remember("uid-$this->id-registry-names", config('session.lifetime') * 60, function () {
+                return $this->registries()->pluck('name');
             }),
         );
     }
