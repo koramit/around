@@ -59,7 +59,7 @@ class AcuteHemodialysisCaseRecord extends CaseRecord
         return $this->hasOne(AcuteHemodialysisOrderNote::class, 'case_record_id', 'id')->ofMany([
             'date_note' => 'max',
         ], function ($query) {
-            $query->whereNotIn('status', [4, 7, 8]); // canceled, expired, disapproved
+            $query->slotOccupiedStatuses();
         });
     }
 
