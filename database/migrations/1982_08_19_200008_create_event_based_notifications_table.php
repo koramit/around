@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('event_based_notifications', function (Blueprint $table) {
             $table->smallIncrements('id');
             $table->string('name');
-            $table->string('notification_class_name');
+            $table->string('notification_class_name')->unique();
             $table->unsignedSmallInteger('registry_id');
             $table->unsignedSmallInteger('ability_id')->index();
             $table->timestamps();
