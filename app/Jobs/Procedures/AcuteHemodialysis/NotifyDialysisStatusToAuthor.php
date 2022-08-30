@@ -18,12 +18,13 @@ class NotifyDialysisStatusToAuthor implements ShouldQueue
 
     protected EventBasedNotification $event;
 
-    /** @TODO review id hardcode */
     public function __construct(AcuteHemodialysisOrderNote $order)
     {
         $this->order = $order;
         $this->event = cache()->rememberForever('event-based-notification-alert-session-updates', function () {
-            return EventBasedNotification::query()->find(4);
+            return EventBasedNotification::query()
+                ->where('notification_class_name', 'App\Notifications\Procedures\AcuteHemodialysis\AlertSessionUpdate')
+                ->first();
         });
     }
 
