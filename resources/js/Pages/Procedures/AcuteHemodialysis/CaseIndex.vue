@@ -129,7 +129,7 @@
             </div>
             <div class="my-2 p-2 bg-gray-100 rounded space-y-2">
                 <div
-                    v-if="!caseRecord.md"
+                    v-if="!caseRecord.date_note"
                     class="flex justify-center items-center h-12"
                 >
                     <Link

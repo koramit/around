@@ -19,8 +19,7 @@ class CaseRecordIndexAction extends AcuteHemodialysisAction
 
         $cases = AcuteHemodialysisCaseRecord::query()
             ->select(['id', 'patient_id', 'status'])
-            ->with(['patient:id,profile,hn', 'orders' => fn ($query) =>
-                $query->select(['id', 'case_record_id', 'author_id', 'status', 'meta', 'date_note'])
+            ->with(['patient:id,profile,hn', 'orders' => fn ($query) => $query->select(['id', 'case_record_id', 'author_id', 'status', 'meta', 'date_note'])
                     ->withAuthorName()
                     ->slotoccupiedStatuses()
                     ->orderByDesc('date_note'),
@@ -37,12 +36,11 @@ class CaseRecordIndexAction extends AcuteHemodialysisAction
             ->paginate($user->items_per_page)
             ->withQueryString()
             ->through(function ($case) use ($user) {
-                $activeOrder = $case->orders->filter(fn($o)
-                    => !collect(['started', 'finished'])->contains($o->status)
+                $activeOrder = $case->orders->filter(fn ($o) => ! collect(['started', 'finished'])->contains($o->status)
                 )->first();
-                $lastPerformedOrder = $case->orders->filter(fn($o)
-                    => collect(['started', 'finished'])->contains($o->status)
+                $lastPerformedOrder = $case->orders->filter(fn ($o) => collect(['started', 'finished'])->contains($o->status)
                 )->first();
+
                 return [
                     'hn' => $case->patient->hn,
                     'patient_name' => $case->patient->full_name,
@@ -57,7 +55,7 @@ class CaseRecordIndexAction extends AcuteHemodialysisAction
                     'can' => [
                         'edit_order' => $activeOrder && $user->can('edit', $activeOrder),
                         'create_order' => $case->status === 'active'
-                            && !$activeOrder
+                            && ! $activeOrder
                             && $user->can('create_acute_hemodialysis_order'),
                         'view_order' => $activeOrder && $user->can('view', $activeOrder),
                     ],
@@ -68,7 +66,7 @@ class CaseRecordIndexAction extends AcuteHemodialysisAction
                         'create_order' => route('procedures.acute-hemodialysis.orders.create-shortcut', $case->hashed_key),
                     ],
                 ];
-        });
+            });
 
         $flash = [
             'page-title' => 'Acute Hemodialysis - Cases',
