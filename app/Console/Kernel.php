@@ -11,14 +11,14 @@ class Kernel extends ConsoleKernel
 {
     protected function schedule(Schedule $schedule): void
     {
-        // $schedule->command('inspire')->hourly();
         $schedule->job(new NotifyDiscussionUpdates())->everyTenMinutes();
 
+        /* Acute Hemodialysis */
+        $schedule->command('acute-hd:assign-an')->timezone('Asia/Bangkok')->at('13:00');
         $schedule->job(new NotifyIncompleteOrderToAuthor())->timezone('Asia/Bangkok')->at('20:00');
         $schedule->job(new NotifyIncompleteOrderToAuthor())->timezone('Asia/Bangkok')->at('20:30');
-
         /** unsubscribe from inactive channel */
-        // @TODO auto archived/expired acute HD order
+        // @TODO auto archived/expired acute HD case/order
     }
 
     protected function commands(): void

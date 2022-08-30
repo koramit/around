@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
+/** @property string $discussion_route */
 class AcuteHemodialysisCaseRecord extends CaseRecord
 {
     protected $table = 'case_records';
@@ -67,6 +68,7 @@ class AcuteHemodialysisCaseRecord extends CaseRecord
         return "Acute Hemodialysis Case : HN {$this->meta['hn']} {$this->meta['name']} : {$this->created_at->format('M j y')}";
     }
 
+    /** @alias $discussion_route */
     protected function discussionRoute(): Attribute
     {
         return Attribute::make(
