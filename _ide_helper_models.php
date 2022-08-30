@@ -851,6 +851,7 @@ namespace App\Models{
  * @property bool $auto_subscribe_to_channel
  * @property bool $mute_notification
  * @property bool $notify_approval_result
+ * @property string $registry_names
  * @property int $id
  * @property string $name
  * @property string $login
