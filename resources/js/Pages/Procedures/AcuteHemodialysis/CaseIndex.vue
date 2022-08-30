@@ -2,7 +2,7 @@
     <!-- search tool & create case -->
     <div class="flex flex-col-reverse md:flex-row justify-between items-center mb-4">
         <SearchIndex
-            :scopes="['active', 'discharged', 'all']"
+            :scopes="configs.scopes"
             :form="searchForm"
             @search-changed="(val) => searchForm.search = val"
             @scope-changed="(val) => searchForm.scope = val"
@@ -216,6 +216,7 @@ import IconReadme from '../../../Components/Helpers/Icons/IconReadme.vue';
 const SearchAdmission = defineAsyncComponent(() => import('../../../Components/Forms/SearchAdmission.vue'));
 const props = defineProps({
     cases: {type: Object, required: true},
+    configs: {type: Object, required: true},
     filters: {type: Object, required: true},
     routes: {type: Object, required: true},
     can: {type: Object, required: true},

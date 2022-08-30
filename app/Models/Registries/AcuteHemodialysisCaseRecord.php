@@ -59,7 +59,7 @@ class AcuteHemodialysisCaseRecord extends CaseRecord
         return $this->hasOne(AcuteHemodialysisOrderNote::class, 'case_record_id', 'id')->ofMany([
             'date_note' => 'max',
         ], function ($query) {
-            $query->whereNotIn('status', [4, 7, 8]); // canceled, expired, disapproved
+            $query->slotOccupiedStatuses();
         });
     }
 
@@ -74,5 +74,30 @@ class AcuteHemodialysisCaseRecord extends CaseRecord
         return Attribute::make(
             get: fn () => route('procedures.acute-hemodialysis.edit', $this->hashed_key).'#discussion',
         );
+    }
+
+    public function scopeFilterStatus($query, $status)
+    {
+        // active, incomplete, empty, valid
+        $statusCaster = new AcuteHemodialysisCaseRecordStatus();
+        $statusCodes = match ($status ?? '') {
+            'incomplete' => [
+                $statusCaster->getCode('dismissed'),
+                $statusCaster->getCode('discharged'),
+            ],
+            'empty' => [
+                $statusCaster->getCode('canceled'),
+                $statusCaster->getCode('expired'),
+            ],
+            'valid' => [
+                $statusCaster->getCode('active'),
+                $statusCaster->getCode('dismissed'),
+                $statusCaster->getCode('discharged'),
+                $statusCaster->getCode('completed'),
+                $statusCaster->getCode('archived'),
+            ],
+            default => [$statusCaster->getCode('active')],
+        };
+        $query->whereIn('status', $statusCodes);
     }
 }

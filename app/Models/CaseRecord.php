@@ -62,4 +62,13 @@ class CaseRecord extends Model
     {
         return 'placeholder';
     }
+
+    public function scopeMetaSearchTerms($query, $search)
+    {
+        $ilike = config('database.ilike');
+        $query->when($search ?? null, function ($query, $search) use ($ilike) {
+            $query->where('meta->name', $ilike, $search.'%')
+                ->orWhere('meta->hn', $ilike, $search.'%');
+        });
+    }
 }

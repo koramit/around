@@ -33,7 +33,7 @@
                     <div class="mt-2 py-2 shadow-xl bg-white text-complement cursor-pointer rounded text-sm">
                         <button
                             class="block w-full text-left font-semibold px-6 py-2 transition-colors duration-200 ease-out hover:bg-primary hover:text-accent-darker"
-                            v-for="(scope, key) in scopes"
+                            v-for="(scope, key) in scopes.filter(s => s !== form.scope)"
                             :key="key"
                             @click="$emit('scopeChanged', scope)"
                         >
