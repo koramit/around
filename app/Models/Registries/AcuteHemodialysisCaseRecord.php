@@ -75,4 +75,29 @@ class AcuteHemodialysisCaseRecord extends CaseRecord
             get: fn () => route('procedures.acute-hemodialysis.edit', $this->hashed_key).'#discussion',
         );
     }
+
+    public function scopeFilterStatus($query, $status)
+    {
+        // active, incomplete, empty, valid
+        $statusCaster = new AcuteHemodialysisCaseRecordStatus();
+        $statusCodes = match ($status ?? '') {
+            'incomplete' => [
+                $statusCaster->getCode('dismissed'),
+                $statusCaster->getCode('discharged'),
+            ],
+            'empty' => [
+                $statusCaster->getCode('canceled'),
+                $statusCaster->getCode('expired'),
+            ],
+            'valid' => [
+                $statusCaster->getCode('active'),
+                $statusCaster->getCode('dismissed'),
+                $statusCaster->getCode('discharged'),
+                $statusCaster->getCode('completed'),
+                $statusCaster->getCode('archived'),
+            ],
+            default => [$statusCaster->getCode('active')],
+        };
+        $query->whereIn('status', $statusCodes);
+    }
 }

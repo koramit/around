@@ -58,6 +58,7 @@ namespace App\Models{
  * @property-read int|null $notes_count
  * @property-read \App\Models\Resources\Patient $patient
  * @method static \Illuminate\Database\Eloquent\Builder|CaseRecord findByUnhashKey(string $hashed)
+ * @method static \Illuminate\Database\Eloquent\Builder|CaseRecord metaSearchTerms($search)
  * @method static \Illuminate\Database\Eloquent\Builder|CaseRecord newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|CaseRecord newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|CaseRecord query()
@@ -442,6 +443,7 @@ namespace App\Models\Registries{
 /**
  * App\Models\Registries\AcuteHemodialysisCaseRecord
  *
+ * @property string $discussion_route
  * @property int $id
  * @property int $patient_id
  * @property int $registry_id
@@ -461,7 +463,9 @@ namespace App\Models\Registries{
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Notes\AcuteHemodialysisOrderNote[] $orders
  * @property-read int|null $orders_count
  * @property-read \App\Models\Resources\Patient $patient
+ * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisCaseRecord filterStatus($status)
  * @method static \Illuminate\Database\Eloquent\Builder|CaseRecord findByUnhashKey(string $hashed)
+ * @method static \Illuminate\Database\Eloquent\Builder|CaseRecord metaSearchTerms($search)
  * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisCaseRecord newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisCaseRecord newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisCaseRecord query()

@@ -2,9 +2,8 @@
 
 namespace App\Actions\Procedures\AcuteHemodialysis;
 
-use App\Casts\AcuteHemodialysisCaseRecordStatus;
 use App\Models\Notes\AcuteHemodialysisOrderNote;
-use App\Models\Registries\AcuteHemodialysisCaseRecord as CaseRecord;
+use App\Models\Registries\AcuteHemodialysisCaseRecord;
 use App\Models\User;
 use App\Traits\HomePageSelectable;
 
@@ -19,22 +18,14 @@ class CaseRecordIndexAction extends AcuteHemodialysisAction
             return []; // call api + query params
         }
 
-        $ilike = config('database.ilike');
-        $status = new AcuteHemodialysisCaseRecordStatus();
-
-        $cases = CaseRecord::query()
+        $cases = AcuteHemodialysisCaseRecord::query()
             ->select(['id', 'patient_id', 'status'])
-            ->with(['patient:id,profile,hn', 'orders' =>
-                fn ($q) => $q->select(['id', 'case_record_id', 'author_id', 'status', 'meta'])
+            ->with(['patient:id,profile,hn', 'orders' => fn ($q) => $q->select(['id', 'case_record_id', 'author_id', 'status', 'meta', 'date_note'])
                     ->withAuthorName()
-                    ->activeStatuses()
-            ])->whereNotIn('status', [
-                $status->getCode('archived'),
-            ])
-            ->when($filters['search'] ?? null, function ($query, $search) use ($ilike) {
-                $query->where('meta->name', $ilike, $search.'%')
-                    ->orWhere('meta->hn', $ilike, $search.'%');
-            })->orderByDesc(
+                    ->activeStatuses(),
+            ])->metaSearchTerms($filters['search'] ?? null)
+            ->filterStatus($filters['scope'] ?? null)
+            ->orderByDesc(
                 AcuteHemodialysisOrderNote::query()
                     ->select('date_note')
                     ->activeStatuses()
@@ -82,6 +73,9 @@ class CaseRecordIndexAction extends AcuteHemodialysisAction
             'filters' => [
                 'search' => $filters['search'] ?? '',
                 'scope' => $filters['scope'] ?? 'all',
+            ],
+            'configs' => [
+                'scopes' => ['active', 'incomplete', 'valid', 'empty'],
             ],
             'routes' => [
                 'index' => route('procedures.acute-hemodialysis.index'),
