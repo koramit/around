@@ -105,7 +105,7 @@ class AcuteHemodialysisNotificationSeeder extends Seeder
         // order approved/disapproved CHECKED
         // order started CHECKED
         // order finished CHECKED
-        // tomorrow order not complete 20:00/20:30
+        // tomorrow order not complete 20:00/20:30 CHECKED
         // case d/c
         // case not complete after d/c or idle for two weeks
     }
