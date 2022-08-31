@@ -13,13 +13,16 @@ class Kernel extends ConsoleKernel
     {
         $schedule->job(new NotifyDiscussionUpdates())->everyTenMinutes();
 
+        $schedule->call(function () {
+            \Log::notice('hello from '.cache('last-hello', now()->format('H:i')));
+            cache()->put('last-hello', now()->format('H:i'));
+        })->everyMinute();
+
         /* Acute Hemodialysis */
         $schedule->command('acute-hd:assign-an')->timezone('Asia/Bangkok')->at('11:00');
-        $schedule->exec('chown -R www-data:www-data storage')->timezone('Asia/Bangkok')->at('11:01');
         $schedule->job(new NotifyIncompleteOrderToAuthor())->timezone('Asia/Bangkok')->at('20:00');
         $schedule->job(new NotifyIncompleteOrderToAuthor())->timezone('Asia/Bangkok')->at('20:30');
         $schedule->command('acute-hd:assign-an')->timezone('Asia/Bangkok')->at('23:00');
-        $schedule->exec('chown -R www-data:www-data storage')->timezone('Asia/Bangkok')->at('23:01');
         /** unsubscribe from inactive channel */
         // @TODO auto archived/expired acute HD case/order
     }
