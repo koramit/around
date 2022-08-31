@@ -13,11 +13,6 @@ class Kernel extends ConsoleKernel
     {
         $schedule->job(new NotifyDiscussionUpdates())->everyTenMinutes();
 
-        $schedule->call(function () {
-            \Log::notice('hello from '.cache('last-hello', now()->format('H:i')));
-            cache()->put('last-hello', now()->format('H:i'));
-        })->everyMinute();
-
         /* Acute Hemodialysis */
         $schedule->command('acute-hd:assign-an')->timezone('Asia/Bangkok')->at('11:00');
         $schedule->job(new NotifyIncompleteOrderToAuthor())->timezone('Asia/Bangkok')->at('20:00');
