@@ -17,7 +17,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('acute-hd:assign-an')->timezone('Asia/Bangkok')->at('11:00');
         $schedule->job(new NotifyIncompleteOrderToAuthor())->timezone('Asia/Bangkok')->at('20:00');
         $schedule->job(new NotifyIncompleteOrderToAuthor())->timezone('Asia/Bangkok')->at('20:30');
-        $schedule->command('acute-hd:assign-an')->timezone('Asia/Bangkok')->at('23:00');
+        $schedule->command('acute-hd:assign-an')->timezone('Asia/Bangkok')->at('23:32');
         /** unsubscribe from inactive channel */
         // @TODO auto archived/expired acute HD case/order
     }

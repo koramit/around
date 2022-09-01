@@ -15,7 +15,6 @@ class OrderExportAction
 
     public function __invoke(?string $dateNote, User $user): array
     {
-        // $data = (new App\Actions\Procedures\AcuteHemodialysis\OrderExportAction)('2022-08-01', User::first())
         if (config('auth.guards.web.provider') === 'avatar') {
             return []; // call api
         }
@@ -228,7 +227,7 @@ class OrderExportAction
             }
         }
         $data['dialysis_at'] = $order->place_name;
-        $data['dialysis_type'] = $meta['dialysis_type'];
+        $data['dialysis_type'] = explode(' ', $meta['dialysis_type'])[0];
 
         $data['post_dialysis_weight'] = $form['postdialysis_bw'] ? 'YES' : 'NO';
 
