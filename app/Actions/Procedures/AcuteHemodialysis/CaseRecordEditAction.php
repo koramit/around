@@ -50,9 +50,9 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
 
         $caseRecord = AcuteHemodialysisCaseRecord::query()->findByUnhashKey($hashed)->firstOrFail();
 
-        if ($user->cannot('update', $caseRecord)) {
-            abort(403);
-        }
+        // if ($user->cannot('update', $caseRecord)) {
+        //     abort(403);
+        // }
 
         // HD orders
         /** @noinspection PhpPossiblePolymorphicInvocationInspection */
