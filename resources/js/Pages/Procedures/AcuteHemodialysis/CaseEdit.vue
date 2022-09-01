@@ -492,7 +492,6 @@ const cancelCaseConfirmedEvent = 'cancel-acute-hd-case-confirmed';
 watch (
     () => usePage().props.value.event.fire,
     (event) => {
-        console.log(`${event} ${usePage().props.value.event.name}`);
         if (! event) {
             return;
         }
