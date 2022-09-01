@@ -50,6 +50,10 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
 
         $caseRecord = AcuteHemodialysisCaseRecord::query()->findByUnhashKey($hashed)->firstOrFail();
 
+        if ($user->cannot('update', $caseRecord)) {
+            abort(403);
+        }
+
         // HD orders
         /** @noinspection PhpPossiblePolymorphicInvocationInspection */
         $orders = $caseRecord->orders()
@@ -199,6 +203,7 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
                 'acute_hemodialysis_slot_available' => route('procedures.acute-hemodialysis.slot-available'),
                 'orders_store' => route('procedures.acute-hemodialysis.orders.store'),
                 'update' => route('procedures.acute-hemodialysis.update', $caseRecord->hashed_key),
+                'case_destroy' => route('procedures.acute-hemodialysis.destroy', $caseRecord->hashed_key),
             ],
             'staffs_scope_params' => $this->STAFF_SCOPE_PARAMS,
             'dialysis_reservable' => $reservable,
@@ -228,6 +233,12 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
                     'label' => 'New order',
                     'route' => route('procedures.acute-hemodialysis.orders.create-shortcut', $caseRecord->hashed_key),
                     'can' => $reservable && $user->can('create_acute_hemodialysis_order'),
+                ],
+                [
+                    'icon' => 'trash',
+                    'label' => 'Cancel',
+                    'action' => 'cancel-case',
+                    'can' => $user->can('destroy', $caseRecord),
                 ],
                 $this->getSubscriptionActionMenu($caseRecord, $user),
             ],

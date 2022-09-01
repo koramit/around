@@ -12,6 +12,13 @@ class AcuteHemodialysisCaseRecordPolicy
 
     public function update(User $user, AcuteHemodialysisCaseRecord $caseRecord): bool
     {
-        return $user->can('edit_acute_hemodialysis_case');
+        return $user->can('edit_acute_hemodialysis_case')
+            && collect(['active', 'discharged', 'dismissed'])->contains($caseRecord->status);
+    }
+
+    public function destroy(User $user, AcuteHemodialysisCaseRecord $caseRecord): bool
+    {
+        return $user->can('edit_acute_hemodialysis_case')
+            && $caseRecord->lastPerformedOrder()->count() === 0;
     }
 }

@@ -80,6 +80,11 @@ class AcuteHemodialysisOrderNote extends Note
         $query->whereIn('status', (new AcuteHemodialysisOrderStatus)->getSlotOccupiedStatusCodes());
     }
 
+    public function scopePerformedStatuses($query)
+    {
+        $query->whereIn('status', (new AcuteHemodialysisOrderStatus)->getPerformedStatusCodes());
+    }
+
     public function genTitle(?string $dateNote = null): string
     {
         $dateNote = $dateNote

@@ -32,27 +32,29 @@ Route::prefix('acute-hemodialysis')
             ->can('view_any_acute_hemodialysis_cases')
             ->name('index');
         Route::post('/', [AcuteHemodialysisCaseController::class, 'store'])
-           ->can('create_acute_hemodialysis_case')
-           ->name('store');
+            ->can('create_acute_hemodialysis_case')
+            ->name('store');
+        /* @TODO split to show */
         Route::get('/{hashedKey}/edit', [AcuteHemodialysisCaseController::class, 'edit'])
             ->middleware(['page-transition', 'locale', 'no-in-app-allow'])
-           ->can('view_any_acute_hemodialysis_cases')
-           ->name('edit');
+            ->can('view_any_acute_hemodialysis_cases')
+            ->name('edit');
         Route::patch('/{hashedKey}', [AcuteHemodialysisCaseController::class, 'update'])
-            ->can('edit_acute_hemodialysis_case')
-           ->name('update');
+            ->name('update');
+        Route::delete('/{hashedKey}', [AcuteHemodialysisCaseController::class, 'destroy'])
+            ->name('destroy');
         Route::post('/orders', [AcuteHemodialysisOrderController::class, 'store'])
-           ->can('create_acute_hemodialysis_order')
-           ->name('orders.store');
+            ->can('create_acute_hemodialysis_order')
+            ->name('orders.store');
         Route::get('/orders/{hashedKey}/edit', [AcuteHemodialysisOrderController::class, 'edit'])
             ->middleware(['page-transition', 'locale', 'no-in-app-allow'])
-           ->name('orders.edit');
+            ->name('orders.edit');
         Route::patch('/orders/{hashedKey}/submit', AcuteHemodialysisOrderSubmitController::class)
-           ->name('orders.submit');
+            ->name('orders.submit');
         Route::patch('/orders/{hashedKey}/reschedule', AcuteHemodialysisOrderRescheduleController::class)
-           ->name('orders.reschedule');
+            ->name('orders.reschedule');
         Route::patch('/orders/{hashedKey}/swap', AcuteHemodialysisOrderSwapController::class)
-              ->name('orders.swap');
+            ->name('orders.swap');
         Route::patch('/orders/{hashedKey}/today-slot-request', AcuteHemodialysisTodaySlotRequestController::class)
            ->name('orders.today-slot-request');
         Route::get('/orders/{hashedKey}/create-shortcut', AcuteHemodialysisCreateOrderShortcutController::class)
