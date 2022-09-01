@@ -35,6 +35,8 @@ class AcuteHemodialysisOrderStatus implements CastsAttributes, NoteStatusCast
 
     protected array $performNotAllowStatuses = ['canceled', 'expired', 'disapproved'];
 
+    protected array $performedStatusCodes = [5, 6];
+
     public function getActiveStatusCodes(): array
     {
         return $this->activeStatusCodes;
@@ -68,5 +70,10 @@ class AcuteHemodialysisOrderStatus implements CastsAttributes, NoteStatusCast
     public function getPerformNotAllowStatuses(): Collection
     {
         return collect($this->performNotAllowStatuses);
+    }
+
+    public function getPerformedStatusCodes(): array
+    {
+        return $this->performedStatusCodes;
     }
 }

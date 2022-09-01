@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Procedures\AcuteHemodialysis;
 
+use App\Actions\Procedures\AcuteHemodialysis\CaseRecordDestroyAction;
 use App\Actions\Procedures\AcuteHemodialysis\CaseRecordEditAction;
 use App\Actions\Procedures\AcuteHemodialysis\CaseRecordIndexAction;
 use App\Actions\Procedures\AcuteHemodialysis\CaseRecordStoreAction;
@@ -61,5 +62,14 @@ class CaseRecordController extends Controller
         // if request want json then return $data
 
         return ['ok' => $status];
+    }
+
+    public function destroy($hashedKey, Request $request)
+    {
+        $message = (new CaseRecordDestroyAction())(data: $request->all(), hashedKey: $hashedKey, user: $request->user());
+
+        // if request want json then return $data
+
+        return redirect()->route('procedures.acute-hemodialysis.index')->with('message', $message);
     }
 }

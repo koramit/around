@@ -388,7 +388,7 @@
 </template>
 
 <script setup>
-import {useForm} from '@inertiajs/inertia-vue3';
+import {useForm, usePage} from '@inertiajs/inertia-vue3';
 import {nextTick, onMounted, reactive, ref, watch} from 'vue';
 import {useSelectOther} from '../../../functions/useSelectOther.js';
 import debounce from 'lodash/debounce';
@@ -488,65 +488,28 @@ watch (
 );
 const { selectOtherInput, selectOther, selectOtherClosed } = useSelectOther();
 
-// HD orders
-const order = useForm({
-    dialysis_type: null,
-    dialysis_at: null,
-    attending_staff: null,
-    date_note: null,
-    patient_type: null,
-    case_record_hashed_key: form.record.hashed_key,
-});
-const patientTypeInput = ref(null);
+const cancelCaseConfirmedEvent = 'cancel-acute-hd-case-confirmed';
 watch (
-    () => order.date_note,
-    (val) => {
-        if (!val) {
+    () => usePage().props.value.event.fire,
+    (event) => {
+        console.log(`${event} ${usePage().props.value.event.name}`);
+        if (! event) {
             return;
         }
-        window.axios
-            .post(configs.endpoints.acute_hemodialysis_slot_available, {
-                dialysis_type: order.dialysis_type,
-                dialysis_at: order.dialysis_at,
-                date_note: order.date_note,
-            }).then(response => {
-                reservedSlots.slots = response.data.slots;
-                reservedSlots.available = response.data.available;
-                reservedSlots.reply = response.data.reply;
-            });
-    }
-);
-watch (
-    () => order.dialysis_type,
-    () => {
-        if (!order.patient_type && (form.indications.initiate_chronic_hd || form.indications.maintain_chronic_hd)) {
-            patientTypeInput.value.setOther('Chronic');
+
+        if (usePage().props.value.event.name === 'action-clicked') {
+            let action = usePage().props.value.event.payload;
+            if (action === 'cancel-case') {
+                usePage().props.value.event.name = 'confirmation-required';
+                usePage().props.value.event.payload = { heading: usePage().props.value.flash.title, confirmText: 'Cancel this Acute HD case', confirmedEvent: cancelCaseConfirmedEvent, requireReason: true };
+                usePage().props.value.event.fire = + new Date();
+            }
+        } else if (usePage().props.value.event.name === cancelCaseConfirmedEvent) {
+            useForm({reason: usePage().props.value.event.payload})
+                .delete(configs.endpoints.case_destroy);
         }
     }
 );
-const dateNoteInput = ref(null);
-const resetSlots = () => {
-    reservedSlots.slots = [];
-    reservedSlots.available = false;
-    reservedSlots.reply = '';
-    if (dateNoteInput.value) {
-        dateNoteInput.value.clear();
-    }
-};
-watch (
-    () => order.dialysis_at,
-    resetSlots,
-);
-watch (
-    () => order.dialysis_type,
-    resetSlots,
-);
-
-const reservedSlots = reactive({
-    slots: [],
-    available: false,
-    reply: '',
-});
 
 onMounted(() => {
     if (props.gotoSection === null) {
