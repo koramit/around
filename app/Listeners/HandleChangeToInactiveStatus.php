@@ -14,7 +14,7 @@ class HandleChangeToInactiveStatus
         $interestedStatuses = collect(['canceled', 'expired', 'archived', 'discharged']);
         if (
             $new['status'] === $old['status']
-            || ! $interestedStatuses->contains($event->subscribable->status)
+            || $interestedStatuses->doesntContain($event->subscribable->status)
         ) {
             return;
         }

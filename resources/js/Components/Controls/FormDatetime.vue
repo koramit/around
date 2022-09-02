@@ -1,12 +1,14 @@
 <template>
-    <div class="w-full">
+    <div
+        class="w-full form-scroll-mt"
+        :id="name"
+    >
         <label
             class="form-label"
             :for="name"
             v-if="label"
         >{{ label }} :</label>
         <input
-            :id="name"
             :name="name"
             ref="input"
             type="date"
@@ -15,10 +17,11 @@
             readonly
             :value="modelValue"
             class="form-input"
+            :class="{ '!border-red-400 !text-red-400': error }"
         >
         <div
             v-if="error"
-            class="text-red-700 mt-2 text-sm"
+            class="form-error-block"
         >
             {{ error }}
         </div>
@@ -81,22 +84,10 @@ onMounted(() => {
     fp = flatpickr(input.value, flatpickrOptions[props.mode]);
 });
 
-// const disabled = ref(false);
-const error = ref(null);
 watch(
     () => props.disabled,
     (val) => {
         fp._input.disabled = val;
-    }
-);
-watch(
-    () => error.value,
-    (val) => {
-        if (val) {
-            fp._input.classList.add('border-red-400', 'text-red-400');
-        } else {
-            fp._input.classList.remove('border-red-400', 'text-red-400');
-        }
     }
 );
 const setDate = (date) => {

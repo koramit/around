@@ -19,12 +19,8 @@ class OrderExportAction
             return []; // call api
         }
 
-        if (config('database.default') === 'sqlite') {
-            $dateNote = $dateNote.' 00:00:00';
-        }
-
         $ans = AcuteHemodialysisOrderNote::query()
-            ->where('date_note', $dateNote)
+            ->dialysisDate($dateNote)
             ->slotOccupiedStatuses()
             ->select('meta')
             ->get()
@@ -48,7 +44,7 @@ class OrderExportAction
             ->slotOccupiedStatuses()
             ->withPlaceName('App\Models\Resources\Ward')
             ->withAuthorName()
-            ->where('date_note', $dateNote)
+            ->dialysisDate($dateNote)
             ->get();
 
         $hdALike = $orders->filter(fn ($o) => ! str_contains($o->meta['dialysis_type'], 'TPE'))->values();

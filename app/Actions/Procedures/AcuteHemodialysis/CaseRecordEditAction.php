@@ -4,6 +4,7 @@ namespace App\Actions\Procedures\AcuteHemodialysis;
 
 use App\Managers\Resources\AdmissionManager;
 use App\Models\Registries\AcuteHemodialysisCaseRecord;
+use App\Models\Resources\Admission;
 use App\Models\Resources\Ward;
 use App\Models\User;
 use App\Traits\AcuteHemodialysis\CaseRecordShareValidatable;
@@ -122,7 +123,12 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
         $form['admission']['ward_admit'] = null;
         $form['admission']['ward_discharge'] = null;
         if ($caseRecord->meta['an']) {
-            $admission = (new AdmissionManager)->manage($caseRecord->meta['an'])['admission'];
+            $admission = $caseRecord->status === 'discharged'
+                ? Admission::query()
+                    ->findByHashedKey($caseRecord->meta['an'])
+                    ->withPlaceName()
+                    ->first()
+                : (new AdmissionManager)->manage($caseRecord->meta['an'])['admission'];
             $form['admission']['an'] = $admission->an;
             $form['admission']['admitted_at'] = $admission->encountered_at->tz($this->TIMEZONE)->format('d M Y H:i');
             $form['admission']['discharged_at'] = $admission->dismissed_at?->tz($this->TIMEZONE)->format('d M Y H:i');
@@ -197,6 +203,11 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
                 'store' => route('uploads.store'),
                 'show' => url('uploads'),
             ],
+            'can' => [
+                'complete' => $user->can('complete', $caseRecord),
+                'update' => $user->can('update', $caseRecord),
+                'addendum' => $user->can('addendum', $caseRecord),
+            ],
             'endpoints' => [
                 'resources_api_wards' => route('resources.api.wards'),
                 'resources_api_staffs' => route('resources.api.people'),
@@ -204,6 +215,8 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
                 'orders_store' => route('procedures.acute-hemodialysis.orders.store'),
                 'update' => route('procedures.acute-hemodialysis.update', $caseRecord->hashed_key),
                 'case_destroy' => route('procedures.acute-hemodialysis.destroy', $caseRecord->hashed_key),
+                'case_complete' => route('procedures.acute-hemodialysis.complete', $caseRecord->hashed_key),
+                'case_addendum' => route('procedures.acute-hemodialysis.addendum', $caseRecord->hashed_key),
             ],
             'staffs_scope_params' => $this->STAFF_SCOPE_PARAMS,
             'dialysis_reservable' => $reservable,
@@ -239,6 +252,18 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
                     'label' => 'Cancel',
                     'action' => 'cancel-case',
                     'can' => $user->can('destroy', $caseRecord),
+                ],
+                [
+                    'icon' => 'box-archive',
+                    'label' => 'Complete case',
+                    'action' => 'complete-case',
+                    'can' => $user->can('complete', $caseRecord),
+                ],
+                [
+                    'icon' => 'edit',
+                    'label' => 'Addendum case',
+                    'action' => 'addendum-case',
+                    'can' => $user->can('addendum', $caseRecord),
                 ],
                 $this->getSubscriptionActionMenu($caseRecord, $user),
             ],

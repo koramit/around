@@ -23,8 +23,8 @@ class CaseRecordIndexAction extends AcuteHemodialysisAction
                     ->withAuthorName()
                     ->slotoccupiedStatuses()
                     ->orderByDesc('date_note'),
-            ])->metaSearchTerms($filters['search'] ?? null)
-            ->filterStatus($filters['scope'] ?? null)
+            ])->filterStatus($filters['scope'] ?? null)
+            ->metaSearchTerms($filters['search'] ?? null)
             ->orderByDesc(
                 AcuteHemodialysisOrderNote::query()
                     ->select('date_note')
@@ -36,10 +36,10 @@ class CaseRecordIndexAction extends AcuteHemodialysisAction
             ->paginate($user->items_per_page)
             ->withQueryString()
             ->through(function ($case) use ($user) {
-                $activeOrder = $case->orders->filter(fn ($o) => ! collect(['started', 'finished'])->contains($o->status)
-                )->first();
-                $lastPerformedOrder = $case->orders->filter(fn ($o) => collect(['started', 'finished'])->contains($o->status)
-                )->first();
+                $activeOrder = $case->orders
+                    ->filter(fn ($o) => collect(['started', 'finished'])->doesntContain($o->status))->first();
+                $lastPerformedOrder = $case->orders
+                    ->filter(fn ($o) => collect(['started', 'finished'])->contains($o->status))->first();
 
                 return [
                     'hn' => $case->patient->hn,
@@ -84,7 +84,7 @@ class CaseRecordIndexAction extends AcuteHemodialysisAction
                 'scope' => $filters['scope'] ?? 'active',
             ],
             'configs' => [
-                'scopes' => ['active', 'incomplete', 'valid', 'empty'],
+                'scopes' => ['active', 'incomplete', 'completed', 'valid', 'empty'],
             ],
             'routes' => [
                 'index' => route('procedures.acute-hemodialysis.index'),

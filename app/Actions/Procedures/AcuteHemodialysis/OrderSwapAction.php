@@ -64,8 +64,8 @@ class OrderSwapAction extends AcuteHemodialysisAction
 
         $orderIsTpe = str_contains($order->meta['dialysis_type'], 'TPE');
         $swapIsTpe = str_contains($swap->meta['dialysis_type'], 'TPE');
-        $tpeOrderDate = AcuteHemodialysisOrderNote::query()->where('date_note', $order->date_note)->where('meta->dialysis_type', config('database.ilike'), '%TPE%')->count();
-        $tpeSwapDate = AcuteHemodialysisOrderNote::query()->where('date_note', $swap->date_note)->where('meta->dialysis_type', config('database.ilike'), '%TPE%')->count();
+        $tpeOrderDate = AcuteHemodialysisOrderNote::query()->dialysisDate($order->date_note)->dialysisTypeLike('TPE')->count();
+        $tpeSwapDate = AcuteHemodialysisOrderNote::query()->dialysisDate($swap->date_note)->dialysisTypeLike('TPE')->count();
         if (
             ($orderIsTpe && ! $swapIsTpe && $tpeSwapDate === $this->LIMIT_TPE_SLOTS)
             || (! $orderIsTpe && $swapIsTpe && $tpeOrderDate === $this->LIMIT_TPE_SLOTS)

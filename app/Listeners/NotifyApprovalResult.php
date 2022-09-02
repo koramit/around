@@ -16,7 +16,7 @@ class NotifyApprovalResult
         $interestedStatuses = collect(['approved', 'disapproved']);
         if (
             $new['status'] === $old['status']
-            || ! $interestedStatuses->contains($event->changeRequest->status)
+            || $interestedStatuses->doesntContain($event->changeRequest->status)
         ) {
             return;
         }

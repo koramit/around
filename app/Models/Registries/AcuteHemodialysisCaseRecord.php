@@ -90,6 +90,9 @@ class AcuteHemodialysisCaseRecord extends CaseRecord
         // active, incomplete, empty, valid
         $statusCaster = new AcuteHemodialysisCaseRecordStatus();
         $statusCodes = match ($status ?? '') {
+            'completed' => [
+                $statusCaster->getCode('completed'),
+            ],
             'incomplete' => [
                 $statusCaster->getCode('dismissed'),
                 $statusCaster->getCode('discharged'),
