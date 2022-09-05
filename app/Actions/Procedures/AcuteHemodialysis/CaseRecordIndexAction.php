@@ -13,7 +13,7 @@ class CaseRecordIndexAction extends AcuteHemodialysisAction
 
     public function __invoke(array $filters, User $user, string $routeName = 'home'): array
     {
-        if (config('auth.guards.web.provider' === 'avatar')) {
+        if (config('auth.guards.web.provider') === 'avatar') {
             return []; // call api + query params
         }
 

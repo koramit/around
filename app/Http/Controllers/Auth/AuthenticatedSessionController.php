@@ -43,7 +43,7 @@ class AuthenticatedSessionController extends Controller
             'password' => 'required|string',
         ]);
 
-        if (config('auth.guards.web.provider') === 'avatars') {
+        if (config('auth.guards.web.provider') === 'avatar') {
             return $this->storeAvatarUser($request);
         }
 
