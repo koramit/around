@@ -4,6 +4,7 @@ namespace App\Actions\User;
 
 use App\Extensions\Auth\AvatarUser;
 use App\Traits\HomePageSelectable;
+use Illuminate\Support\Facades\Http;
 
 class HomePageAction
 {
@@ -12,7 +13,13 @@ class HomePageAction
     public function __invoke(mixed $user, string $routeName): array
     {
         if ($user instanceof AvatarUser) {
-            return [];
+            $url = str_replace(config('app.url'), config('auth.avatar.url'), route($routeName));
+
+            $response = Http::withToken($user->getAuthIdentifier())
+                ->acceptJson()
+                ->get($url);
+
+            return $response->json();
         }
 
         // ['icon' => 'graduation-cap', 'label' => 'Kidney club', 'route' => route('kidney-club'), 'can' => true],

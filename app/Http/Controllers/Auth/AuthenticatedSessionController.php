@@ -79,12 +79,11 @@ class AuthenticatedSessionController extends Controller
 
     public function destroy(Request $request)
     {
-        (new LogoutRecordAction)($request->user());
-
-        Auth::guard('web')->logout();
-
+        if (config('auth.guards.web.provider') !== 'avatar') {
+            (new LogoutRecordAction)($request->user());
+            Auth::guard('web')->logout();
+        }
         $request->session()->invalidate();
-
         $request->session()->regenerateToken();
 
         return redirect()->route('login');
