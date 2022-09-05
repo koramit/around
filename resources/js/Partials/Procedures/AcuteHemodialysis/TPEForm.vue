@@ -23,7 +23,7 @@
             :options="configs.access_types"
         />
         <FormSelect
-            label="access site coagulant"
+            label="access site"
             v-model="form.access_site_coagulant"
             name="tpe.access_site_coagulant"
             :error="$page.props.errors['tpe.access_site_coagulant']"

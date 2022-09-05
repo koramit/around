@@ -262,7 +262,7 @@ class OrderShowAction extends AcuteHemodialysisAction
 
             // common
             ['label' => 'access type', 'name' => 'access_type'],
-            ['label' => 'access site coagulant', 'name' => 'access_site_coagulant'],
+            ['label' => 'access site', 'name' => 'access_site_coagulant'],
             ['label' => 'dialyzer', 'name' => 'dialyzer'],
 
             // TPE
