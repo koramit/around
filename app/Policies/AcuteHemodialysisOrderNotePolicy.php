@@ -21,32 +21,32 @@ class AcuteHemodialysisOrderNotePolicy
     public function edit(User $user, AcuteHemodialysisOrderNote $note): bool
     {
         return $user->id === $note->author_id
-            && ! $this->status->getEditNotAllowStatuses()->contains($note->status);
+            && $this->status->getEditNotAllowStatuses()->doesntContain($note->status);
     }
 
     public function update(User $user, AcuteHemodialysisOrderNote $note): bool
     {
         return $user->id === $note->author_id
-            && ! $this->status->getUpdateNotAllowStatuses()->contains($note->status)
+            && $this->status->getUpdateNotAllowStatuses()->doesntContain($note->status)
             && ! ($note->meta['submitted'] ?? false);
     }
 
     public function submit(User $user, AcuteHemodialysisOrderNote $note): bool
     {
         return $user->id === $note->author_id
-            && ! $this->status->getSubmitNotAllowStatuses()->contains($note->status);
+            && $this->status->getSubmitNotAllowStatuses()->doesntContain($note->status);
     }
 
     public function reschedule(User $user, AcuteHemodialysisOrderNote $note): bool
     {
         return $user->id === $note->author_id
-            && ! $this->status->getScheduleNotAllowStatuses()->contains($note->status);
+            && $this->status->getScheduleNotAllowStatuses()->doesntContain($note->status);
     }
 
     public function swap(User $user, AcuteHemodialysisOrderNote $note): bool
     {
         return $user->id === $note->author_id
-            && ! $this->status->getScheduleNotAllowStatuses()->contains($note->status);
+            && $this->status->getScheduleNotAllowStatuses()->doesntContain($note->status);
     }
 
     public function view(User $user): bool
@@ -57,7 +57,7 @@ class AcuteHemodialysisOrderNotePolicy
     public function destroy(User $user, AcuteHemodialysisOrderNote $note): bool
     {
         return $user->id === $note->author_id
-            && ! $this->status->getEditNotAllowStatuses()->contains($note->status);
+            && $this->status->getEditNotAllowStatuses()->doesntContain($note->status);
     }
 
     public function start(User $user, AcuteHemodialysisOrderNote $note): bool
@@ -92,6 +92,6 @@ class AcuteHemodialysisOrderNotePolicy
     public function perform(User $user, AcuteHemodialysisOrderNote $note): bool
     {
         return $user->can('perform_acute_hemodialysis_order')
-            && ! $this->status->getPerformNotAllowStatuses()->contains($note->status);
+            && $this->status->getPerformNotAllowStatuses()->doesntContain($note->status);
     }
 }

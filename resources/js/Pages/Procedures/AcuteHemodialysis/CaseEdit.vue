@@ -1,6 +1,6 @@
 <template>
     <Transition mode="out-in">
-        <Suspense v-if="configs.covid.hn">
+        <Suspense v-if="configs.covid.hn && !Object.keys($page.props.errors).length">
             <CovidInfo
                 class="mb-4"
                 :configs="configs.covid"
@@ -97,14 +97,16 @@
                 v-model="form.renal_outcome"
                 :allow-reset="true"
                 :options="configs.renal_outcomes"
+                :error="$page.props.errors.renal_outcome"
             />
             <Transition name="slide-fade">
                 <FormInput
                     v-if="form.renal_outcome === 'Recovery'"
-                    label="last creatinine before discharge"
+                    label="last creatinine"
                     class="mt-2 md:mt-t xl:mt-6"
                     name="cr_before_discharge"
                     v-model="form.cr_before_discharge"
+                    :error="$page.props.errors.cr_before_discharge"
                 />
             </Transition>
         </div>
@@ -115,6 +117,7 @@
                 v-model="form.patient_outcome"
                 :allow-reset="true"
                 :options="configs.patient_outcomes"
+                :error="$page.props.errors.patient_outcome"
             />
             <Transition name="slide-fade">
                 <FormInput
@@ -123,22 +126,17 @@
                     class="mt-2 md:mt-t xl:mt-6"
                     name="cause_of_dead"
                     v-model="form.cause_of_dead"
+                    :error="$page.props.errors.cause_of_dead"
                 />
             </Transition>
         </div>
-        <FormInput
-            label="last creatinine"
-            name="cr_before_discharge"
-            v-model="form.cr_before_discharge"
-            type="number"
-        />
     </div>
     <hr class="border border-dashed my-2 md:my-4 xl:my-8">
 
     <!-- previous crrt -->
     <FormCheckbox
         class="mt-4 md:mb-4 md:mt-8 xl:mt-16"
-        label="Previous crrt"
+        label="Previous CRRT"
         v-model="form.previous_crrt"
         :toggler="true"
     />
@@ -151,11 +149,13 @@
                 label="date start crrt"
                 name="date_start_crrt"
                 v-model="form.date_start_crrt"
+                :error="$page.props.errors.date_start_crrt"
             />
             <FormDatetime
                 label="date end crrt"
                 name="date_end_crrt"
                 v-model="form.date_end_crrt"
+                :error="$page.props.errors.date_end_crrt"
             />
         </div>
     </Transition>
@@ -170,6 +170,7 @@
         name="renal_diagnosis"
         v-model="form.renal_diagnosis"
         :options="[...configs.renal_diagnosis]"
+        :error="$page.props.errors.renal_diagnosis"
     />
     <hr class="border border-dashed my-2 md:my-4 xl:my-8">
 
@@ -181,50 +182,13 @@
         <FormInput
             name="admission_diagnosis"
             v-model="form.admission_diagnosis"
+            :error="$page.props.errors.admission_diagnosis"
         />
         <hr class="border border-dashed my-2 md:my-4 xl:my-8">
     </template>
 
-    <!-- comorbid and indication -->
-    <div class="sm:hidden">
-        <h3 class="form-label mt-4 md:mt-8 xl:mt-16">
-            Comorbidities :
-        </h3>
-        <div class="mt-2 md:mt-4 xl:mt-6 grid gap-2 md:gap-4 xl:gap-6 2xl:grid-cols-2">
-            <FormCheckbox
-                v-for="(disease, key) in configs.comorbidities"
-                :key="key"
-                :name="disease.name"
-                :label="disease.label"
-                v-model="form.comorbidities[disease.name]"
-            />
-        </div>
-        <FormInput
-            class="mt-2 md:mt-4 xl:mt-6 h-auto"
-            name="comorbidities_other"
-            label="Other comorbidities"
-            v-model="form.comorbidities.other"
-        />
-        <h3 class="form-label mt-4 md:mt-8 xl:mt-16">
-            Indication for dialysis :
-        </h3>
-        <div class="mt-2 md:mt-4 xl:mt-6 grid gap-2 md:gap-4 xl:gap-6 2xl:grid-cols-2">
-            <FormCheckbox
-                v-for="(disease, key) in configs.indications"
-                :key="key"
-                :name="disease.name"
-                :label="disease.label"
-                v-model="form.indications[disease.name]"
-            />
-        </div>
-        <FormInput
-            class="mt-2 md:mt-4 xl:mt-6 h-auto"
-            name="indications_other"
-            label="Other indications"
-            v-model="form.indications.other"
-        />
-    </div>
-    <div class="hidden sm:grid grid-cols-2 gap-2">
+    <!--comorbidities & indications-->
+    <div class="md:grid grid-cols-2 gap-2 lg:gap-x-8">
         <div>
             <h3 class="form-label mt-4 md:mt-8 xl:mt-16">
                 Comorbidities :
@@ -238,11 +202,22 @@
                     v-model="form.comorbidities[disease.name]"
                 />
             </div>
+            <FormInput
+                class="mt-2 md:mt-4 xl:mt-6 h-auto"
+                name="comorbidities_other"
+                label="Other comorbidities"
+                v-model="form.comorbidities.other"
+                :error="$page.props.errors['comorbidities.other']"
+            />
         </div>
         <div>
             <h3 class="form-label mt-4 md:mt-8 xl:mt-16">
                 Indication for dialysis :
             </h3>
+            <small
+                id="indications"
+                class="form-scroll-mt text-red-400"
+            >{{ $page.props.errors.indications }}</small>
             <div class="mt-2 md:mt-4 xl:mt-6 grid gap-2 md:gap-4 xl:gap-6 2xl:grid-cols-2">
                 <FormCheckbox
                     v-for="(disease, key) in configs.indications"
@@ -252,19 +227,14 @@
                     v-model="form.indications[disease.name]"
                 />
             </div>
+            <FormInput
+                class="mt-2 md:mt-4 xl:mt-6 h-auto"
+                name="indications.other"
+                label="Other indications"
+                v-model="form.indications.other"
+                :error="$page.props.errors['indications.other']"
+            />
         </div>
-        <FormInput
-            class="mt-2 md:mt-4 xl:mt-6 h-auto"
-            name="comorbidities_other"
-            label="Other comorbidities"
-            v-model="form.comorbidities.other"
-        />
-        <FormInput
-            class="mt-2 md:mt-4 xl:mt-6 h-auto"
-            name="indications_other"
-            label="Other indications"
-            v-model="form.indications.other"
-        />
     </div>
     <hr class="border border-dashed my-2 md:my-4 xl:my-8">
 
@@ -280,6 +250,7 @@
                 name="hbs_ag"
                 v-model="form.hbs_ag"
                 :options="configs.serology_results"
+                :error="$page.props.errors.hbs_ag"
             />
         </div>
         <FormDatetime
@@ -294,6 +265,7 @@
                 name="anti_hcv"
                 v-model="form.anti_hcv"
                 :options="configs.serology_results"
+                :error="$page.props.errors.anti_hcv"
             />
         </div>
         <FormDatetime
@@ -308,6 +280,7 @@
                 name="anti_hiv"
                 v-model="form.anti_hiv"
                 :options="configs.serology_results"
+                :error="$page.props.errors.anti_hiv"
             />
         </div>
         <FormDatetime
@@ -329,6 +302,10 @@
         v-model="form.opd_consent_form"
         :service-endpoints="configs.image_upload_endpoints"
     />
+    <small
+        id="opd_consent_form"
+        class="form-error-block form-scroll-mt"
+    >{{ $page.props.errors.opd_consent_form }}</small>
     <template v-if="form.admission.an">
         <ImageUploader
             class="mt-4 md:mt-6"
@@ -337,6 +314,10 @@
             :service-endpoints="configs.image_upload_endpoints"
             v-model="form.ipd_consent_form"
         />
+        <small
+            id="ipd_consent_form"
+            class="form-error-block form-scroll-mt"
+        >{{ $page.props.errors.ipd_consent_form }}</small>
         <FormCheckbox
             class="mt-4 md:mt-6"
             label="Use same form"
@@ -358,7 +339,25 @@
         :options="configs.insurances"
         :allow-other="true"
         ref="insurance"
+        :error="$page.props.errors.insurance"
     />
+
+    <SpinnerButton
+        v-if="configs.can.complete"
+        @click="complete"
+        :spin="form.processing"
+        class="mt-4 md:mt-8 w-full btn-accent"
+    >
+        COMPLETE CASE
+    </SpinnerButton>
+    <SpinnerButton
+        v-if="configs.can.addendum"
+        @click="addendum"
+        :spin="form.processing"
+        class="mt-4 md:mt-8 w-full btn-complement"
+    >
+        ADDENDUM CASE
+    </SpinnerButton>
 
     <!-- HD orders -->
     <h2
@@ -387,6 +386,7 @@
     />
 </template>
 
+<!--suppress JSIncompatibleTypesComparison -->
 <script setup>
 import {useForm, usePage} from '@inertiajs/inertia-vue3';
 import {nextTick, onMounted, reactive, ref, watch} from 'vue';
@@ -403,6 +403,7 @@ import {useInPageLinkHelpers} from '../../../functions/useInPageLinkHelpers';
 import CovidInfo from '../../../Components/Helpers/CovidInfo.vue';
 import FallbackSpinner from '../../../Components/Helpers/FallbackSpinner.vue';
 import CommentSection from '../../../Components/Forms/CommentSection.vue';
+import SpinnerButton from '../../../Components/Controls/SpinnerButton.vue';
 
 const props = defineProps({
     caseRecordForm: { type: Object, required: true },
@@ -412,6 +413,7 @@ const props = defineProps({
 });
 
 const configs = reactive({...props.formConfigs});
+/** @member {Object} */
 const form = useForm({...props.caseRecordForm});
 const reset = {
     previous_crrt: true,
@@ -427,11 +429,7 @@ watch (
             reset.previous_crrt = false;
         }
 
-        let data = val.data();
-        delete data.admission;
-        delete data.record;
-        delete data.computed;
-        autosave(configs.endpoints.update, data);
+        autosave();
     },
     { deep: true }
 );
@@ -462,9 +460,13 @@ watch(
         }
     }
 );
-const autosave = debounce(function (url, data) {
+const autosave = debounce(function () {
+    if (!configs.can.update) {
+        return;
+    }
+
     window.axios
-        .patch(url, data)
+        .patch(configs.endpoints.update, form.data())
         .catch(error => {
             console.log(error);
         });
@@ -489,6 +491,14 @@ watch (
 const { selectOtherInput, selectOther, selectOtherClosed } = useSelectOther();
 
 const cancelCaseConfirmedEvent = 'cancel-acute-hd-case-confirmed';
+const complete = () => form.post(configs.endpoints.case_complete, {
+    onStart: () => configs.can.update = false,
+    onError: () => configs.can.update = true,
+});
+const addendum = () => form.put(configs.endpoints.case_addendum, {
+    onStart: () => configs.can.update = false,
+    onError: () => configs.can.update = true,
+});
 watch (
     () => usePage().props.value.event.fire,
     (event) => {
@@ -502,6 +512,10 @@ watch (
                 usePage().props.value.event.name = 'confirmation-required';
                 usePage().props.value.event.payload = { heading: usePage().props.value.flash.title, confirmText: 'Cancel this Acute HD case', confirmedEvent: cancelCaseConfirmedEvent, requireReason: true };
                 usePage().props.value.event.fire = + new Date();
+            } else if (action === 'complete-case') {
+                complete();
+            }  else if (action === 'addendum-case') {
+                addendum();
             }
         } else if (usePage().props.value.event.name === cancelCaseConfirmedEvent) {
             useForm({reason: usePage().props.value.event.payload})

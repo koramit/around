@@ -55,14 +55,14 @@ class CaseRecordUpdateAction extends AcuteHemodialysisAction
             'date_anti_hcv' => 'nullable|date',
             'anti_hiv' => ['nullable', Rule::in($this->SEROLOGY_RESULTS)],
             'date_anti_hiv' => 'nullable|date',
-            'opd_consent_form' => 'nullable|string|max:124',
-            'ipd_consent_form' => 'nullable|string|max:124',
+            'opd_consent_form' => 'nullable|string|max:128',
+            'ipd_consent_form' => 'nullable|string|max:128',
             'same_consent_form' => 'boolean',
             'insurance' => 'nullable|string|max:60',
             'renal_outcome' => ['nullable', Rule::in($this->RENAL_OUTCOMES)],
             'cr_before_discharge' => 'nullable|numeric',
             'patient_outcome' => ['nullable', Rule::in($this->PATIENT_OUTCOMES)],
-            'cause_of_dead' => 'nullable|string|max:124',
+            'cause_of_dead' => 'nullable|string|max:128',
         ])->validate();
 
         $caseRecord->form = $validated;

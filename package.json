@@ -13,7 +13,7 @@
         "autosize": "^5.0.1",
         "axios": "^0.25",
         "clipboard": "^2.0.11",
-        "eslint": "^8.15.0",
+        "eslint": "8.22.0",
         "eslint-plugin-vue": "^9.0.1",
         "flatpickr": "^4.6.13",
         "laravel-vite-plugin": "^0.2.4",

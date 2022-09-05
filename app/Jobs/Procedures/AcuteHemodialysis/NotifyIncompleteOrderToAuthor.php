@@ -20,7 +20,7 @@ class NotifyIncompleteOrderToAuthor implements ShouldQueue
         $tomorrow = today('Asia/Bangkok')->addDay();
 
         AcuteHemodialysisOrderNote::query()
-            ->where('date_note', $tomorrow)
+            ->dialysisDate($tomorrow)
             ->where('status', (new AcuteHemodialysisOrderStatus())->getCode('draft'))
             ->get()
             ->each(function (AcuteHemodialysisOrderNote $order) {

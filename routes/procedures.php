@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Procedures\AcuteHemodialysis\CaseRecordCompleteController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\CaseRecordController as AcuteHemodialysisCaseController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\CreateOrderShortcutController as AcuteHemodialysisCreateOrderShortcutController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\DialysisSessionController as AcuteHemodialysisDialysisSessionController;
@@ -43,6 +44,11 @@ Route::prefix('acute-hemodialysis')
             ->name('update');
         Route::delete('/{hashedKey}', [AcuteHemodialysisCaseController::class, 'destroy'])
             ->name('destroy');
+        Route::post('/{hashedKey}/complete', CaseRecordCompleteController::class)
+            ->name('complete');
+        Route::put('/{hashedKey}/addendum', CaseRecordCompleteController::class)
+            ->name('addendum');
+
         Route::post('/orders', [AcuteHemodialysisOrderController::class, 'store'])
             ->can('create_acute_hemodialysis_order')
             ->name('orders.store');

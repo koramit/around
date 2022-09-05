@@ -35,8 +35,8 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        if (config('auth.guards.web.provider') === 'avatars') {
-            Auth::provider('avatars', fn () => new AvatarUserProvider(config('auth.avatars')));
+        if (config('auth.guards.web.provider') === 'avatar') {
+            Auth::provider('avatar', fn () => new AvatarUserProvider(config('auth.avatar')));
         }
 
         Gate::before(function ($user, $ability) {

@@ -262,7 +262,7 @@ class OrderShowAction extends AcuteHemodialysisAction
 
             // common
             ['label' => 'access type', 'name' => 'access_type'],
-            ['label' => 'access site coagulant', 'name' => 'access_site_coagulant'],
+            ['label' => 'access site', 'name' => 'access_site_coagulant'],
             ['label' => 'dialyzer', 'name' => 'dialyzer'],
 
             // TPE
@@ -418,7 +418,7 @@ class OrderShowAction extends AcuteHemodialysisAction
     protected function getPatientLocation($order): ?string
     {
         $an = $order->meta['an'];
-        if (! collect(['scheduling', 'draft', 'submitted'])->contains($order->status)) {
+        if (collect(['scheduling', 'draft', 'submitted'])->doesntContain($order->status)) {
             if (! $an) {
                 return 'ER ?';
             }

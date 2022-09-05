@@ -24,7 +24,9 @@ class AuthenticatedSessionController extends Controller
     public function create()
     {
         session()->flash('page-title', __('Please Login'));
-        $lineProvider = SocialProvider::query()->where('platform', 1)->first();
+        $lineProvider = config('auth.guards.web.provider') === 'avatar'
+            ? null
+            : SocialProvider::query()->where('platform', 1)->first();
 
         return Inertia::render('Auth/LoginForm', [
             'links' => [
@@ -41,7 +43,7 @@ class AuthenticatedSessionController extends Controller
             'password' => 'required|string',
         ]);
 
-        if (config('auth.guards.web.provider') === 'avatars') {
+        if (config('auth.guards.web.provider') === 'avatar') {
             return $this->storeAvatarUser($request);
         }
 

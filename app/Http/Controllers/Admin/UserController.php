@@ -78,7 +78,7 @@ class UserController extends Controller
         $checked = collect($request->input('roles'))->filter(fn ($r) => $r['has_role'])
             ->values()
             ->pluck('name')
-            ->filter(fn ($name) => ! $user->role_labels->contains($name))
+            ->filter(fn ($name) => $user->role_labels->doesntContain($name))
             ->values();
         if ($checked->count()) {
             $user->actionLogs()->create([

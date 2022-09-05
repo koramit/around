@@ -35,7 +35,7 @@
             :error="$page.props.errors['sledd.access_type']"
         />
         <FormSelect
-            label="access site coagulant"
+            label="access site"
             v-model="form.access_site_coagulant"
             name="sledd.access_site_coagulant"
             :options="(form.access_type && form.access_type.startsWith('AV')) ? configs.av_access_sites : configs.non_av_access_sites"

@@ -92,7 +92,7 @@ class AcuteHemodialysisNotificationSeeder extends Seeder
 
         // registry-user
         User::query()->get()->each(function ($u) {
-            if (! $u->abilities->contains('view_any_acute_hemodialysis_cases')) {
+            if ($u->abilities->doesntContain('view_any_acute_hemodialysis_cases')) {
                 return;
             }
 

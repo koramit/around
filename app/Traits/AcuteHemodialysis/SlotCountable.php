@@ -19,17 +19,13 @@ trait SlotCountable
 
     protected function getNotes(string $dateNote, User $user, bool $inUnit = true): \Illuminate\Database\Eloquent\Collection|array
     {
-        if (config('database.default') === 'sqlite') {
-            $dateNote = $dateNote.' 00:00:00';
-        }
-
         return AcuteHemodialysisOrderNote::query()
             ->select(['id', 'date_note', 'status', 'meta', 'form', 'author_id', 'attending_staff_id', 'case_record_id'])
             ->slotOccupiedStatuses()
             ->withAuthorName()
             ->withAttendingName()
             ->with(['caseRecord:id,meta'])
-            ->where('date_note', $dateNote)
+            ->dialysisDate($dateNote)
             ->where('meta->in_unit', $inUnit)
             ->get()
             ->transform(function (AcuteHemodialysisOrderNote $note) use ($user, $inUnit) {
@@ -115,13 +111,9 @@ trait SlotCountable
 
     protected function tpeCaseCount(string $dateNote): int
     {
-        if (config('database.default') === 'sqlite') {
-            $dateNote = $dateNote.' 00:00:00';
-        }
-
         return AcuteHemodialysisOrderNote::query()
-            ->where('date_note', $dateNote)
-            ->where('meta->dialysis_type', config('database.ilike'), '%TPE%')
+            ->dialysisDate($dateNote)
+            ->dialysisTypeLike('TPE')
             ->slotOccupiedStatuses()
             ->count();
     }

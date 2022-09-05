@@ -70,6 +70,22 @@ class AcuteHemodialysisOrderNote extends Note
         );
     }
 
+    public function scopeDialysisDate($query, $dateRef)
+    {
+        if (gettype($dateRef) === 'string') {
+            if (config('database.default') === 'sqlite') {
+                $dateRef = $dateRef.' 00:00:00';
+            }
+        }
+
+        $query->where('date_note', $dateRef);
+    }
+
+    public function scopeDialysisTypeLike($query, $type)
+    {
+        $query->where('meta->dialysis_type', config('database.ilike'), "%$type%");
+    }
+
     public function scopeActiveStatuses($query)
     {
         $query->whereIn('status', (new AcuteHemodialysisOrderStatus)->getActiveStatusCodes());

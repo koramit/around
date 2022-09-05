@@ -30,6 +30,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @property bool $mute_notification
  * @property bool $notify_approval_result
  * @property string $registry_names
+ * @property string $avatar_token
  */
 class User extends Authenticatable
 {
@@ -100,7 +101,7 @@ class User extends Authenticatable
         }]);
     }
 
-    /** @alias string $avatar_token*/
+    /** @alias $avatar_token*/
     protected function avatarToken(): Attribute
     {
         return Attribute::make(

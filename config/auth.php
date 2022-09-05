@@ -65,8 +65,8 @@ return [
             'model' => App\Models\User::class,
         ],
 
-        'avatars' => [
-            'driver' => 'avatars',
+        'avatar' => [
+            'driver' => 'avatar',
         ],
     ],
 
@@ -107,7 +107,7 @@ return [
 
     'password_timeout' => 10800,
 
-    'avatars' => [
+    'avatar' => [
         'url' => env('AVARTAR_USER_PROVIDER_URL'),
         'token' => env('AVARTAR_USER_PROVIDER_TOKEN'),
     ],
