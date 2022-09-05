@@ -81,8 +81,8 @@ class AuthenticatedSessionController extends Controller
     {
         if (config('auth.guards.web.provider') !== 'avatar') {
             (new LogoutRecordAction)($request->user());
-            Auth::guard('web')->logout();
         }
+        Auth::guard('web')->logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 

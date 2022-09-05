@@ -3,24 +3,22 @@
 namespace App\Actions\User;
 
 use App\Extensions\Auth\AvatarUser;
+use App\Traits\AvatarLinkable;
 use App\Traits\HomePageSelectable;
 use Illuminate\Support\Facades\Http;
 
 class HomePageAction
 {
-    use HomePageSelectable;
+    use HomePageSelectable, AvatarLinkable;
 
     public function __invoke(mixed $user, string $routeName): array
     {
-        if ($user instanceof AvatarUser) {
-            $url = str_replace(config('app.url'), config('auth.avatar.url'), route($routeName));
+        $link = $this->shouldLinkAvatar($user, $routeName);
+        if ($link !== false) {
 
-            $response = Http::withToken($user->getAuthIdentifier())
-                ->acceptJson()
-                ->get($url);
-
-            return $response->json();
+            return $link;
         }
+
 
         // ['icon' => 'graduation-cap', 'label' => 'Kidney club', 'route' => route('kidney-club'), 'can' => true],
         // ['icon' => 'graduation-cap', 'label' => 'Club Nephro', 'route' => 'procedures', 'can' => true],
