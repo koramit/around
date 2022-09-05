@@ -74,7 +74,7 @@ class AcuteHemodialysisOrderNote extends Note
     {
         if (gettype($dateRef) === 'string') {
             if (config('database.default') === 'sqlite') {
-                $dateRef = $dateRef . ' 00:00:00';
+                $dateRef = $dateRef.' 00:00:00';
             }
         }
 

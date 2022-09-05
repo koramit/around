@@ -33,7 +33,7 @@ class AcuteHemodialysisCaseRecordPolicy
                     $caseRecord->status === 'active'
                     && (
                         $caseRecord->orders()->ActiveStatuses()->count() === 0
-                        || !$caseRecord->meta['an']
+                        || ! $caseRecord->meta['an']
                     )
                 )
             );

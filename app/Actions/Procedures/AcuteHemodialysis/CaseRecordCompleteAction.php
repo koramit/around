@@ -34,7 +34,7 @@ class CaseRecordCompleteAction
             'renal_outcome' => ['required', Rule::in($this->RENAL_OUTCOMES)],
             'patient_outcome' => ['required', Rule::in($this->PATIENT_OUTCOMES)],
             'cause_of_dead' => ['required_if:patient_outcome,Dead', 'nullable', 'string', 'max:128'],
-            'cr_before_discharge' => ['required_if:renal_outcome,Recovery', 'nullable','numeric'],
+            'cr_before_discharge' => ['required_if:renal_outcome,Recovery', 'nullable', 'numeric'],
 
             'previous_crrt' => ['required', 'boolean'],
             'date_start_crrt' => ['required_if:previous_crrt,true', 'nullable', 'date'],
@@ -101,7 +101,6 @@ class CaseRecordCompleteAction
     {
         $diff = $this->formJsonDiff($caseRecord->form, $validated);
         if (! count($diff)) {
-
             return [
                 'type' => 'warning',
                 'title' => 'No updates',
@@ -121,5 +120,4 @@ class CaseRecordCompleteAction
             'message' => "Acute HD case HN {$caseRecord->meta['hn']} {$caseRecord->meta['name']} updated.",
         ];
     }
-
 }

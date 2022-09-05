@@ -2,35 +2,52 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Contracts\AuthenticationAPI;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
+use App\Models\User;
+use Illuminate\Http\Request;
 
 class AvatarController extends Controller
 {
-    public function store()
+    public function store(Request $request, AuthenticationAPI $api)
     {
-        if (Auth::attempt(request()->only(['email', 'password']))) {
-            $user = Auth::user();
+        $validated = $request->validate([
+            'login' => 'required|string|max:255',
+            'password' => 'required|string|max:255',
+        ]);
 
-            return $user->toArray() + [
-                'found' => true,
-                'avatar_token' => $user->avatar_token,
-                'login' => $user->name,
-            ];
-        } else {
+        $data = $api->authenticate($validated['login'], $validated['password']);
+
+        if (! $data['found']) {
             return [
                 'found' => false,
             ];
         }
+
+        $user = User::query()->where('login', $validated['login'])->firstOrFail();
+
+        return $this->userData($user);
     }
 
     public function show()
     {
         $user = request()->user();
 
-        return $user->toArray() + [
+        return $this->userData($user, true);
+    }
+
+    protected function userData(User $user, $withOutToken = false)
+    {
+        return [
             'found' => true,
-            'login' => $user->name,
+            'avatar_token' => $withOutToken ? null : $user->avatar_token,
+            'login' => $user->login,
+            'name' => $user->name,
+            'password' => $user->password,
+            'profile' => $user->profile,
+            'home_page' => $user->home_page,
+            'abilities' => $user->abilities,
+            'preferences' => $user->preferences,
         ];
     }
 }
