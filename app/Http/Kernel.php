@@ -45,6 +45,10 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
 
+        'avatar' => [
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        ],
+
         'hook' => [
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
