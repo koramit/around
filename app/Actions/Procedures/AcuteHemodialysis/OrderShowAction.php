@@ -61,6 +61,7 @@ class OrderShowAction extends AcuteHemodialysisAction
 
         $location = $this->getPatientLocation($order);
 
+        /* @TODO update an if null */
         $content = [
             'reservation' => [
                 'hn' => $order->meta['hn'],
