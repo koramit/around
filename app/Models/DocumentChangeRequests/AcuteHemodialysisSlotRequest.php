@@ -50,7 +50,7 @@ class AcuteHemodialysisSlotRequest extends DocumentChangeRequest
                     $text .= ' / COVID case';
                 }
 
-                return "$changeable->meta['name'] $text";
+                return "{$changeable->meta['name']} $text";
             },
         );
     }
