@@ -34,7 +34,7 @@ class AcuteHemodialysisSlotRequest extends DocumentChangeRequest
                 if (isset($changes['swap'])) {
                     $swap = AcuteHemodialysisOrderNote::query()->find($changes['swap']);
 
-                    return "แลก HN: {$swap->meta['hn']} {$swap->meta['name']} {$swap->date_note->format('M j')}".' / '.($changeable->meta['in_unit'] ? 'ห้อง Acute' : 'ward');
+                    return "{$changeable->meta['name']} แลก HN: {$swap->meta['hn']} {$swap->meta['name']} {$swap->date_note->format('M j')}".' / '.($changeable->meta['in_unit'] ? 'ห้อง Acute' : 'ward');
                 }
                 $dateLabel = (new AcuteHemodialysisAction)->getToday() === $changes['date_note'] ? 'วันนี้' : now()->create($changes['date_note'])->format('M j');
                 if ($dateNoteStr === $changes['date_note']) {
@@ -50,7 +50,7 @@ class AcuteHemodialysisSlotRequest extends DocumentChangeRequest
                     $text .= ' / COVID case';
                 }
 
-                return $text;
+                return "$changeable->meta['name'] $text";
             },
         );
     }
