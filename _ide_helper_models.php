@@ -412,9 +412,12 @@ namespace App\Models\Notes{
  * @property-read int|null $comments_count
  * @property-read \App\Models\Resources\Patient|null $patient
  * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisOrderNote activeStatuses()
+ * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisOrderNote dialysisDate($dateRef)
+ * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisOrderNote dialysisTypeLike($type)
  * @method static \Illuminate\Database\Eloquent\Builder|Note findByUnhashKey(string $hashed)
  * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisOrderNote newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisOrderNote newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisOrderNote performedStatuses()
  * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisOrderNote query()
  * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisOrderNote slotOccupiedStatuses()
  * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisOrderNote whereAttendingStaffId($value)
@@ -458,6 +461,7 @@ namespace App\Models\Registries{
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Comment[] $comments
  * @property-read int|null $comments_count
  * @property-read \App\Models\Notes\AcuteHemodialysisOrderNote|null $lastOrder
+ * @property-read \App\Models\Notes\AcuteHemodialysisOrderNote|null $lastPerformedOrder
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Note[] $notes
  * @property-read int|null $notes_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Notes\AcuteHemodialysisOrderNote[] $orders
@@ -852,6 +856,7 @@ namespace App\Models{
  * @property bool $mute_notification
  * @property bool $notify_approval_result
  * @property string $registry_names
+ * @property string $avatar_token
  * @property int $id
  * @property string $name
  * @property string $login
