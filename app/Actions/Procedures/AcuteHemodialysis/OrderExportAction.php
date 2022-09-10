@@ -4,16 +4,17 @@ namespace App\Actions\Procedures\AcuteHemodialysis;
 
 use App\Models\Notes\AcuteHemodialysisOrderNote;
 use App\Models\Resources\Admission;
+use App\Models\Resources\Registry;
 use App\Models\User;
 use App\Traits\FirstNameAware;
 use Hashids\Hashids;
 use Illuminate\Database\Eloquent\Collection;
 
-class OrderExportAction
+class OrderExportAction extends AcuteHemodialysisAction
 {
     use FirstNameAware;
 
-    public function __invoke(?string $dateNote, User $user): array
+    public function __invoke(string $dateNote, User $user): array
     {
         if (config('auth.guards.web.provider') === 'avatar') {
             return []; // call api
@@ -40,11 +41,11 @@ class OrderExportAction
             ->transform(fn (Admission $a) => ['an' => $a->an, 'ward' => $a->place_name]);
 
         $orders = AcuteHemodialysisOrderNote::query()
-            ->with('patient')
-            ->slotOccupiedStatuses()
-            ->withPlaceName('App\Models\Resources\Ward')
-            ->withAuthorName()
             ->dialysisDate($dateNote)
+            ->slotOccupiedStatuses()
+            ->withAuthorName()
+            ->withPlaceName('App\Models\Resources\Ward')
+            ->with('patient')
             ->get();
 
         $hdALike = $orders->filter(fn ($o) => ! str_contains($o->meta['dialysis_type'], 'TPE'))->values();
@@ -53,6 +54,16 @@ class OrderExportAction
         $tpe = $tpe->transform(fn (AcuteHemodialysisOrderNote $order) => $this->getTpeRow($order, $admissions));
         $hdTpe = $orders->filter(fn ($o) => str_starts_with($o->meta['dialysis_type'], 'HD+TPE'))->values();
         $hdTpe = $hdTpe->transform(fn (AcuteHemodialysisOrderNote $order) => $this->getHdTpeRow($order, $admissions));
+
+        $registry = Registry::query()->find($this->REGISTRY_ID);
+        $registry->actionLogs()->create([
+            'action' => 'export',
+            'actor_id' => $user->id,
+            'payload' => [
+                'report' => 'orders',
+                'config' => ['date_ref' => $dateNote]
+            ],
+        ]);
 
         return ['hd_hf_sledd' => $hdALike, 'tpe' => $tpe, 'hd+tpe' => $hdTpe];
     }
