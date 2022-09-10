@@ -39,7 +39,7 @@ class DismissCase extends Command
             ->get()
             ->each(function ($order) {
                 $suffix = $order->date_note->longRelativeToNowDiffForHumans();
-                $this->line("order expire : {$order->status} : $suffix");
+                $this->line("order expire : {$order->meta['hn']} {$order->meta['name']} {$order->status} : $suffix");
                 if ($order->status === 'scheduling') {
                     $changeRequest = $order->changeRequests()->where('status', 1)->latest()->first(); // pending
                     $this->line("-> also expire request : {$changeRequest->status}");
