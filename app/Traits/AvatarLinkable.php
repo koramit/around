@@ -10,7 +10,6 @@ trait AvatarLinkable
     protected function shouldLinkAvatar($routeName, $user)
     {
         if (! ($user instanceof AvatarUser)) {
-
             return false;
         }
 

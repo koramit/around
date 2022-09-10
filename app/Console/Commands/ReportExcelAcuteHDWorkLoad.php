@@ -42,7 +42,7 @@ class ReportExcelAcuteHDWorkLoad extends Command
                 'patient' => $o->meta['patient_type'],
                 'type' => explode(' ', $o->meta['dialysis_type'])[0],
                 'hours' => $this->getDuration($o->meta['dialysis_type']) ?? $o->form['sledd']['duration'],
-                'ventilator' => $o->form['oxygen_support'] === 'Ventilator' ? 1: 0,
+                'ventilator' => $o->form['oxygen_support'] === 'Ventilator' ? 1 : 0,
                 'extra' => $o->meta['extra_slot'] ? 1 : 0,
                 'covid' => $o->meta['covid_case'] ? 1 : 0,
                 'unit' => ($o->meta['dialysis_at_chronic_unit'] ?? false)
@@ -50,7 +50,7 @@ class ReportExcelAcuteHDWorkLoad extends Command
                     : ($o->place_id === 72
                         ? 'A'
                         : 'ICU'
-                    )
+                    ),
             ]);
 
         (new FastExcel($data))->export(storage_path('app/excel/slots.xlsx'));

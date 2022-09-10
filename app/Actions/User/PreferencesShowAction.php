@@ -77,7 +77,7 @@ class PreferencesShowAction
                     ],
                     'event_based_notifications' => $this->getEventBasedNotifications($user),
                     'subscribed_channels' => $this->getChannelBasedNotifications($user),
-                ]
+                ],
             ],
         ];
     }

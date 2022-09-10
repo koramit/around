@@ -4,10 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Actions\User\PreferencesShowAction;
 use App\Actions\User\PreferencesUpdateAction;
-use App\Models\ChatBot;
-use App\Models\EventBasedNotification;
-use App\Models\SocialProvider;
-use App\Models\User;
 use App\Traits\AppLayoutSessionFlashable;
 use Illuminate\Http\Request;
 use Inertia\Inertia;

@@ -61,7 +61,7 @@ class OrderExportAction extends AcuteHemodialysisAction
             'actor_id' => $user->id,
             'payload' => [
                 'report' => 'orders',
-                'config' => ['date_ref' => $dateNote]
+                'config' => ['date_ref' => $dateNote],
             ],
         ]);
 

@@ -63,6 +63,15 @@ class AcuteHemodialysisCaseRecord extends CaseRecord
         });
     }
 
+    public function firstPerformedOrder(): HasOne
+    {
+        return $this->hasOne(AcuteHemodialysisOrderNote::class, 'case_record_id', 'id')->ofMany([
+            'date_note' => 'min',
+        ], function ($query) {
+            $query->performedStatuses();
+        });
+    }
+
     public function lastPerformedOrder(): HasOne
     {
         return $this->hasOne(AcuteHemodialysisOrderNote::class, 'case_record_id', 'id')->ofMany([
