@@ -2,10 +2,8 @@
 
 namespace App\Actions\User;
 
-use App\Extensions\Auth\AvatarUser;
 use App\Traits\AvatarLinkable;
 use App\Traits\HomePageSelectable;
-use Illuminate\Support\Facades\Http;
 
 class HomePageAction
 {
@@ -15,10 +13,8 @@ class HomePageAction
     {
         $link = $this->shouldLinkAvatar($user, $routeName);
         if ($link !== false) {
-
             return $link;
         }
-
 
         // ['icon' => 'graduation-cap', 'label' => 'Kidney club', 'route' => route('kidney-club'), 'can' => true],
         // ['icon' => 'graduation-cap', 'label' => 'Club Nephro', 'route' => 'procedures', 'can' => true],
@@ -32,7 +28,7 @@ class HomePageAction
             ])->filter(fn ($link) => $link['can'])->values(),
             'action-menu' => [
                 $this->getSetHomePageActionMenu($routeName, $user),
-            ]
+            ],
         ];
     }
 }

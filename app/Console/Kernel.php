@@ -16,6 +16,7 @@ class Kernel extends ConsoleKernel
         /* Acute Hemodialysis */
         $schedule->command('acute-hd:dismiss-case')->timezone('Asia/Bangkok')->at('00:01');
         $schedule->command('acute-hd:assign-an')->timezone('Asia/Bangkok')->at('11:00');
+        $schedule->command('acute-hd:remind-incomplete-case notify')->timezone('Asia/Bangkok')->at('13:00');
         $schedule->job(new NotifyIncompleteOrderToAuthor())->timezone('Asia/Bangkok')->at('20:00');
         $schedule->job(new NotifyIncompleteOrderToAuthor())->timezone('Asia/Bangkok')->at('20:30');
         $schedule->command('acute-hd:assign-an')->timezone('Asia/Bangkok')->at('23:32');

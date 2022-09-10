@@ -45,7 +45,7 @@ class DismissCase extends Command
                     $this->line("-> also expire request : {$changeRequest->status}");
                     $changeRequest->actionLogs()->create([
                         'action' => 'expire',
-                        'actor_id' => 1
+                        'actor_id' => 1,
                     ]);
                     $changeRequest->update(['status' => 'expired']);
                 }
@@ -65,12 +65,11 @@ class DismissCase extends Command
                 $status->getCode('discharged'),
             ])
             ->whereDoesntHave('lastPerformedOrder')
-            ->where(fn ($query) =>
-                $query->where('created_at', '<', now()->subWeek())
+            ->where(fn ($query) => $query->where('created_at', '<', now()->subWeek())
                     ->orWhere('status', $status->getCode('discharged')))
             ->get()
             ->each(function ($case) {
-                if ( $case->meta['an']
+                if ($case->meta['an']
                     && $case->status === 'active'
                     && ($case->created_at->greaterThan(now()->subWeeks(2)))) {
                     return;
