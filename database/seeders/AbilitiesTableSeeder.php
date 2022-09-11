@@ -62,6 +62,13 @@ class AbilitiesTableSeeder extends Seeder
 
             // start dialysis session
             ['registry_id' => 1, 'name' => 'start_session_days_after_date_note'] + $datetime,
+
+            // track md performance
+            ['registry_id' => 1, 'name' => 'subscribe_md_performance_notification'] + $datetime,
+
+            // manager stuff
+            ['registry_id' => 1, 'name' => 'force_complete_case'] + $datetime,
+
         ]);
 
         Role::query()->insert([
@@ -69,10 +76,11 @@ class AbilitiesTableSeeder extends Seeder
             ['registry_id' => null, 'name' => 'authority', 'label' => 'Authority'] + $datetime, // authorize role to user
             ['registry_id' => null, 'name' => 'participant', 'label' => null] + $datetime,
 
-            ['registry_id' => 1, 'name' => 'acute_hemodialysis_nurse', 'label' => 'Acute HD nurse'] + $datetime,
-            ['registry_id' => 1, 'name' => 'acute_hemodialysis_nurse_manager', 'label' => 'Acute HD in charge nurse'] + $datetime,
-            ['registry_id' => 1, 'name' => 'acute_hemodialysis_fellow', 'label' => 'Acute HD fellow'] + $datetime,
-            ['registry_id' => 1, 'name' => 'acute_hemodialysis_staff', 'label' => 'Acute HD nephrologist'] + $datetime,
+            ['registry_id' => 1, 'name' => 'acute_hemodialysis_nurse', 'label' => 'Acute HD Nurse'] + $datetime,
+            ['registry_id' => 1, 'name' => 'acute_hemodialysis_nurse_manager', 'label' => 'Acute HD In charge nurse'] + $datetime,
+            ['registry_id' => 1, 'name' => 'acute_hemodialysis_fellow', 'label' => 'Acute HD Fellow'] + $datetime,
+            ['registry_id' => 1, 'name' => 'acute_hemodialysis_staff', 'label' => 'Acute HD Nephrologist'] + $datetime,
+            ['registry_id' => 1, 'name' => 'acute_hemodialysis_manager', 'label' => 'Acute HD Manager'] + $datetime,
         ]);
 
         $assignments = [
@@ -110,6 +118,10 @@ class AbilitiesTableSeeder extends Seeder
                 'view_acute_hemodialysis_order',
                 'view_any_acute_hemodialysis_slot_requests',
             ],
+            'acute_hemodialysis_staff' => [
+                'subscribe_md_performance_notification',
+                'force_complete_case',
+            ],
         ];
 
         foreach ($assignments as $roleName => $abilities) {
@@ -120,6 +132,10 @@ class AbilitiesTableSeeder extends Seeder
 
         $root = Role::query()->where('name', 'root')->first();
         $root->abilities()->attach(Ability::query()->select('id')->pluck('id'));
+
+        $manager = Role::query()->where('name', 'acute_hemodialysis_manager')->first();
+        $manager->abilities()
+            ->attach(Ability::query()->where('registry_id', 1)->pluck('id'));
 
         User::query()->create([
             'name' => 'around',

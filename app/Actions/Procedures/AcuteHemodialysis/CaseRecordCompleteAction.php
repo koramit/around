@@ -30,7 +30,7 @@ class CaseRecordCompleteAction
             abort(403);
         }
 
-        $validated = Validator::make($data, [
+        $rules = [
             'renal_outcome' => ['required', Rule::in($this->RENAL_OUTCOMES)],
             'patient_outcome' => ['required', Rule::in($this->PATIENT_OUTCOMES)],
             'cause_of_dead' => ['required_if:patient_outcome,Dead', 'nullable', 'string', 'max:128'],
@@ -75,8 +75,13 @@ class CaseRecordCompleteAction
             'ipd_consent_form' => ['required_if:opd_consent_form,null', 'nullable', 'string', 'max:128'],
             'same_consent_form' => 'boolean',
             'insurance' => ['required', 'string', 'max:60'],
+        ];
 
-        ])->validate();
+        if ($user->can('force_complete_case') && isset($data['force'])) {
+            unset($rules['opd_consent_form'], $rules['ipd_consent_form']);
+        }
+
+        $validated = Validator::make($data, $rules)->validate();
 
         if ($caseRecord->status === 'completed') {
             return $this->addendum($caseRecord, $validated, $user->id);

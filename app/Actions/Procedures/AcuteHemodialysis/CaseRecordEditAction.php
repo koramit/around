@@ -207,6 +207,8 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
                 'complete' => $user->can('complete', $caseRecord),
                 'update' => $user->can('update', $caseRecord),
                 'addendum' => $user->can('addendum', $caseRecord),
+                'force_complete' => $user->can('complete', $caseRecord)
+                    && $user->can('force_complete_case'),
             ],
             'endpoints' => [
                 'resources_api_wards' => route('resources.api.wards'),
