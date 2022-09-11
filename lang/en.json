@@ -7,5 +7,5 @@
     "alert_session_updates": "Dialysis session started/finished",
     "alert_order_resubmit_detail": "When tomorrow's order changes after 8 PM today",
     "alert_order_cancel_detail": "When, tomorrow's order is canceled after 8 PM today",
-    "incomplete_case_daily_report": "In complete case daily report"
+    "incomplete_case_daily_report": "Incomplete case daily report"
 }
