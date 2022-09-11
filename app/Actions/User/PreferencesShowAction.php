@@ -87,7 +87,7 @@ class PreferencesShowAction
     {
         $subscribedEvents = $user->subscriptions()
             ->where('subscribable_type', EventBasedNotification::class)
-            ->pluck('id');
+            ->pluck('subscribable_id');
 
         return EventBasedNotification::query()
             ->select(['id', 'name', 'registry_id'])
