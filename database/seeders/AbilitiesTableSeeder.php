@@ -65,6 +65,10 @@ class AbilitiesTableSeeder extends Seeder
 
             // track md performance
             ['registry_id' => 1, 'name' => 'subscribe_md_performance_notification'] + $datetime,
+
+            // manager stuff
+            ['registry_id' => 1, 'name' => 'force_complete_case'] + $datetime,
+
         ]);
 
         Role::query()->insert([
@@ -113,6 +117,10 @@ class AbilitiesTableSeeder extends Seeder
                 'create_acute_hemodialysis_order',
                 'view_acute_hemodialysis_order',
                 'view_any_acute_hemodialysis_slot_requests',
+            ],
+            'acute_hemodialysis_staff' => [
+                'subscribe_md_performance_notification',
+                'force_complete_case',
             ],
         ];
 

@@ -351,6 +351,14 @@
         COMPLETE CASE
     </SpinnerButton>
     <SpinnerButton
+        v-if="configs.can.force_complete"
+        @click="forceComplete"
+        :spin="form.processing"
+        class="mt-4 md:mt-8 w-full btn-complement"
+    >
+        COMPLETE CASE WITHOUT CONSENT FORM
+    </SpinnerButton>
+    <SpinnerButton
         v-if="configs.can.addendum"
         @click="addendum"
         :spin="form.processing"
@@ -499,6 +507,12 @@ const addendum = () => form.put(configs.endpoints.case_addendum, {
     onStart: () => configs.can.update = false,
     onError: () => configs.can.update = true,
 });
+const forceComplete = () => {
+    form.transform(data => ({...data, force: true})).post(configs.endpoints.case_complete, {
+        onStart: () => configs.can.update = false,
+        onError: () => configs.can.update = true,
+    });
+};
 watch (
     () => usePage().props.value.event.fire,
     (event) => {
