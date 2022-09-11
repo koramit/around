@@ -17,11 +17,12 @@ class Kernel extends ConsoleKernel
         $schedule->command('acute-hd:dismiss-case')->timezone('Asia/Bangkok')->at('00:01');
         $schedule->command('acute-hd:assign-an')->timezone('Asia/Bangkok')->at('11:00');
         $schedule->command('acute-hd:remind-incomplete-case notify')->timezone('Asia/Bangkok')->at('13:00');
+        $schedule->command('acute-hd:remind-incomplete-case report')->timezone('Asia/Bangkok')->at('18:00');
         $schedule->job(new NotifyIncompleteOrderToAuthor())->timezone('Asia/Bangkok')->at('20:00');
         $schedule->job(new NotifyIncompleteOrderToAuthor())->timezone('Asia/Bangkok')->at('20:30');
         $schedule->command('acute-hd:assign-an')->timezone('Asia/Bangkok')->at('23:32');
-        /** unsubscribe from inactive channel */
-        // @TODO auto archived/expired acute HD case/order
+        /* @TODO auto unsubscribe from inactive channel */
+        /* @TODO refactor command as Job interface */
     }
 
     protected function commands(): void

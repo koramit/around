@@ -3,9 +3,12 @@
 namespace App\Console\Commands\Procedures\AcuteHemodialysis;
 
 use App\Casts\AcuteHemodialysisCaseRecordStatus;
+use App\Models\EventBasedNotification;
 use App\Models\Registries\AcuteHemodialysisCaseRecord;
+use App\Models\Subscription;
 use App\Models\User;
 use App\Notifications\MessagingApp;
+use App\Notifications\Procedures\AcuteHemodialysis\IncompleteCaseDailyReport;
 use Illuminate\Console\Command;
 
 class RemindIncompleteCase extends Command
@@ -40,9 +43,9 @@ class RemindIncompleteCase extends Command
         return 0;
     }
 
-    protected function getConsent(): array
+    protected function getNoConsent(): array
     {
-        $consent = [];
+        $noConsent = [];
         $status = new AcuteHemodialysisCaseRecordStatus();
         AcuteHemodialysisCaseRecord::query()
             ->select(['id', 'meta'])
@@ -52,19 +55,19 @@ class RemindIncompleteCase extends Command
             ->whereNull('form->ipd_consent_form')
             ->with(['firstPerformedOrder' => fn ($query) => $query->with('author:id,name')])
             ->get()
-            ->each(function ($case) use (&$consent) {
-                if (! isset($consent[$case->firstPerformedOrder->author->name])) {
-                    $consent[$case->firstPerformedOrder->author->name] = [];
+            ->each(function ($case) use (&$noConsent) {
+                if (! isset($noConsent[$case->firstPerformedOrder->author->name])) {
+                    $noConsent[$case->firstPerformedOrder->author->name] = [];
                 }
-                $consent[$case->firstPerformedOrder->author->name][] = $case->meta['name'].' **'.substr($case->meta['hn'], 6, 2);
+                $noConsent[$case->firstPerformedOrder->author->name][] = $case->meta['name'].' **'.substr($case->meta['hn'], 6, 2);
             });
 
-        return $consent;
+        return $noConsent;
     }
 
-    protected function getComplete(): array
+    protected function getIncomplete(): array
     {
-        $complete = [];
+        $incomplete = [];
         $status = new AcuteHemodialysisCaseRecordStatus();
         AcuteHemodialysisCaseRecord::query()
             ->select(['id', 'meta'])
@@ -72,50 +75,64 @@ class RemindIncompleteCase extends Command
             ->whereHas('firstPerformedOrder')
             ->with(['lastPerformedOrder' => fn ($query) => $query->with('author:id,name')])
             ->get()
-            ->each(function ($case) use (&$complete) {
-                if (! isset($complete[$case->lastPerformedOrder->author->name])) {
-                    $complete[$case->lastPerformedOrder->author->name] = [];
+            ->each(function ($case) use (&$incomplete) {
+                if (! isset($incomplete[$case->lastPerformedOrder->author->name])) {
+                    $incomplete[$case->lastPerformedOrder->author->name] = [];
                 }
-                $complete[$case->lastPerformedOrder->author->name][] = $case->meta['name'].' **'.substr($case->meta['hn'], 6, 2);
+                $incomplete[$case->lastPerformedOrder->author->name][] = $case->meta['name'].' **'.substr($case->meta['hn'], 6, 2);
             });
 
-        return $complete;
+        return $incomplete;
     }
 
     private function notifyAuthor()
     {
         // case has no consent form
-        $consent = $this->getConsent();
+        $noConsent = $this->getNoConsent();
         // complete case
-        $complete = $this->getComplete();
+        $incomplete = $this->getIncomplete();
         // authors
         $authors = [];
 
-        foreach ($consent as $author => $cases) {
-            $authors[$author]['consent'] = implode("\n", $cases);
-            $authors[$author]['complete'] = '';
+        foreach ($noConsent as $author => $cases) {
+            $count = 1;
+            $text = '';
+            foreach ($cases as $case) {
+                $text .= "$count. $case\n";
+                $count++;
+            }
+            $authors[$author]['noConsent'] = $text;
+            $authors[$author]['incomplete'] = '';
         }
 
-        foreach ($complete as $author => $cases) {
+        foreach ($incomplete as $author => $cases) {
             if (! isset($authors[$author])) {
-                $authors[$author]['consent'] = '';
+                $authors[$author]['noConsent'] = '';
             }
-            $authors[$author]['complete'] = implode("\n", $cases);
+            $count = 1;
+            $text = '';
+            foreach ($cases as $case) {
+                $text .= "$count. $case\n";
+                $count++;
+            }
+            $authors[$author]['incomplete'] = $text;
         }
 
         User::query()
             ->whereIn('name', array_keys($authors))
             ->get()
             ->each(function ($notifiable) use (&$authors) {
-                $message = '';
-                if ($authors[$notifiable->name]['consent']) {
-                    $message .= '* เคสที่ยังไม่มีใบ consent';
-                    $message .= "\n\n{$authors[$notifiable->name]['consent']}\n\n";
+                $message = 'แจ้งเตือนเคส Acute HD ค้างสรุป วันที่ '.now(+7)->format('d M y') . "\n\n";
+                if ($authors[$notifiable->name]['noConsent']) {
+                    $message .= '* ไม่มีใบ consent';
+                    $message .= "\n\n{$authors[$notifiable->name]['noConsent']}\n\n";
                 }
-                if ($authors[$notifiable->name]['complete']) {
-                    $message .= '* เคสที่ยังค้างสรุป';
-                    $message .= "\n\n{$authors[$notifiable->name]['complete']}\n\n";
+                if ($authors[$notifiable->name]['incomplete']) {
+                    $message .= '* ค้างสรุป';
+                    $message .= "\n\n{$authors[$notifiable->name]['incomplete']}\n\n";
                 }
+
+                $message .= " ✌️✌️😃";
 
                 // $this->line("$notifiable->name\n$message");
                 $notifiable->notify(new MessagingApp($message));
@@ -124,23 +141,37 @@ class RemindIncompleteCase extends Command
 
     private function reportManager()
     {
+        $event = EventBasedNotification::query()
+            ->where('notification_class_name', IncompleteCaseDailyReport::class)
+            ->first();
+
+        $subscribers = Subscription::query()
+            ->where('subscribable_type', $event::class)
+            ->where('subscribable_id', $event->id)
+            ->first()
+            ->subscribers;
+
+        if ($subscribers->count() === 0) {
+            return;
+        }
+
         // case has no consent form
-        $consent = $this->getConsent();
+        $noConsent = $this->getNoConsent();
         // complete case
-        $complete = $this->getComplete();
+        $incomplete = $this->getIncomplete();
         // authors
         $authors = [];
 
-        foreach ($consent as $author => $cases) {
-            $authors[$author]['consent'] = $cases;
-            $authors[$author]['complete'] = [];
+        foreach ($noConsent as $author => $cases) {
+            $authors[$author]['noConsent'] = $cases;
+            $authors[$author]['incomplete'] = [];
         }
 
-        foreach ($complete as $author => $cases) {
+        foreach ($incomplete as $author => $cases) {
             if (! isset($authors[$author])) {
-                $authors[$author]['consent'] = [];
+                $authors[$author]['noConsent'] = [];
             }
-            $authors[$author]['complete'] = $cases;
+            $authors[$author]['incomplete'] = $cases;
         }
 
         $message = '';
@@ -149,17 +180,23 @@ class RemindIncompleteCase extends Command
             ->get()
             ->each(function ($author) use (&$authors, &$message) {
                 $text = '';
-                $count = count($authors[$author->name]['consent']);
+                $count = count($authors[$author->name]['noConsent']);
                 if ($count) {
                     $text .= "ยังไม่มีใบ consent $count เคส\n";
                 }
-                $count = count($authors[$author->name]['complete']);
+                $count = count($authors[$author->name]['incomplete']);
                 if ($count) {
                     $text .= "ยังไม่สรุป $count เคส\n";
                 }
                 $message .= "พ.$author->first_name\n$text\n\n";
             });
 
-        $this->line($message);
+        if ($message) {
+            $message = 'รายงานเคส Acute HD ค้างสรุปวันที่ ' . now(+7)->format('d M Y') . "\n\n" . trim($message, "\n");
+        } else {
+            $message = 'วันนี้ไม่มีเคส Acute HD ค้างสรุป';
+        }
+
+        $subscribers->each(fn ($subscriber) => $subscriber->notify(new IncompleteCaseDailyReport($message)));
     }
 }
