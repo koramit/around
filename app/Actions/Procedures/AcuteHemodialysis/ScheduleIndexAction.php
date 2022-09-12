@@ -101,7 +101,7 @@ class ScheduleIndexAction extends AcuteHemodialysisAction
                 'main-menu-links' => $this->MENU,
                 'navs' => $this->NAVS,
                 'action-menu' => [
-                    $this->getSetHomePageActionMenu($routeName, $user),
+                    $this->getSetHomePageActionMenu($routeName, $user->home_page),
                 ],
             ],
             'slots' => $slots,

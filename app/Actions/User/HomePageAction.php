@@ -27,7 +27,7 @@ class HomePageAction
                 ['icon' => 'procedure', 'label' => 'Procedures', 'route' => route('procedures.index'), 'can' => $user->can('view_any_patients')],
             ])->filter(fn ($link) => $link['can'])->values(),
             'action-menu' => [
-                $this->getSetHomePageActionMenu($routeName, $user),
+                $this->getSetHomePageActionMenu($routeName, $user->home_page),
             ],
         ];
     }
