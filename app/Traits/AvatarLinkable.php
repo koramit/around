@@ -4,20 +4,28 @@ namespace App\Traits;
 
 use App\Extensions\Auth\AvatarUser;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Route;
 
 trait AvatarLinkable
 {
-    protected function shouldLinkAvatar(mixed $user, string $routeName)
+    protected function shouldLinkAvatar(mixed $user)
     {
         if (! ($user instanceof AvatarUser)) {
             return false;
         }
 
+        $routeName = Route::currentRouteName();
         $url = str_replace(config('app.url'), config('auth.avatar.url'), route($routeName));
+        $method = $this->getRouteMethod($routeName);
+        $client = Http::withToken($user->getAuthIdentifier())->acceptJson();
+        if ($method === 'GET') {
+            $response = $client->get($url, request()->all());
+        } elseif ($method === 'PATCH') {
+            $response = $client->patch($url, request()->all());
+        } else {
+            abort(404);
+        }
 
-        $response = Http::withToken($user->getAuthIdentifier())
-            ->acceptJson()
-            ->get($url);
         $data = $response->json();
         $this->replaceDomain($data);
 
@@ -37,5 +45,16 @@ trait AvatarLinkable
                 }
             }
         }
+    }
+
+    protected function getRouteMethod(string $name)
+    {
+        $routes = collect(Route::getRoutes())->map(fn ($route) => $route);
+        $index = $routes->search(fn ($route) => ($route->action['as'] ?? '') === $name);
+        if ($index === false) {
+            abort(404);
+        }
+
+        return $routes[$index]->methods[0];
     }
 }
