@@ -19,6 +19,14 @@ Route::middleware('auth:sanctum')
         Route::patch('preferences', [PreferenceController::class, 'update'])->name('preferences.update');
     });
 
+// resources
+Route::middleware('auth:sanctum')
+    ->prefix('resources')
+    ->name('resources.api.')
+    ->group(function () {
+        require __DIR__.'/resources.php';
+    });
+
 // procedures
 Route::middleware('auth:sanctum')
     ->get('procedures', ProcedureController::class)
