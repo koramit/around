@@ -194,12 +194,6 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
             'patient_outcomes' => $this->PATIENT_OUTCOMES,
             'renal_diagnosis' => $this->RENAL_DIAGNOSIS,
             'serology_results' => $this->SEROLOGY_RESULTS,
-            'in_unit_dialysis_types' => $this->IN_UNIT,
-            'out_unit_dialysis_types' => $this->OUT_UNIT,
-            'patient_types' => $this->PATIENT_TYPES,
-            'today' => $this->TODAY,
-            'reserve_available_dates' => $this->reserveAvailableDates(),
-            'reserve_disable_dates' => [], // 'August 13, 2021',
             'image_upload_endpoints' => [
                 'store' => route('uploads.store'),
                 'show' => url('uploads'),
@@ -226,8 +220,8 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
             'covid' => [
                 'hn' => $caseRecord->patient->hn,
                 'cid' => $caseRecord->patient->profile['document_id'],
-                'route_lab' => fn () => route('resources.api.covid-lab'),
-                'route_vaccine' => fn () => route('resources.api.covid-vaccine'),
+                'route_lab' => route('resources.api.covid-lab'),
+                'route_vaccine' => route('resources.api.covid-vaccine'),
             ],
             'comment' => $this->getCommentRoutes($caseRecord),
         ];
