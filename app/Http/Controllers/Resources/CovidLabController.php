@@ -9,8 +9,8 @@ use Illuminate\Http\Request;
 
 class CovidLabController extends Controller
 {
-    public function __invoke(PatientAPI $api, Request $request)
+    public function __invoke(Request $request)
     {
-        return (new CovidLabAction)(data: $request->all(), api: $api);
+        return (new CovidLabAction)(data: $request->all());
     }
 }
