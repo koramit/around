@@ -12,7 +12,7 @@ class HomePageAction
 
     public function __invoke(mixed $user, string $routeName): array
     {
-        $link = $this->shouldLinkAvatar($user);
+        $link = $this->shouldLinkAvatar();
         if ($link !== false) {
             return $link;
         }

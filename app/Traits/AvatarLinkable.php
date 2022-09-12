@@ -11,7 +11,8 @@ trait AvatarLinkable
 {
     protected function shouldLinkAvatar()
     {
-        if (! (Auth::user() instanceof AvatarUser)) {
+        $user = Auth::user();
+        if (! ($user instanceof AvatarUser)) {
             return false;
         }
 

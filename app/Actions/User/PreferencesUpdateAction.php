@@ -13,7 +13,7 @@ class PreferencesUpdateAction
 
     public function __invoke(array $data, mixed $user): array
     {
-        $link = $this->shouldLinkAvatar($user);
+        $link = $this->shouldLinkAvatar();
         if ($link !== false) {
             return $link;
         }
