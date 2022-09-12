@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Http;
 
 trait AvatarLinkable
 {
-    protected function shouldLinkAvatar($routeName, $user)
+    protected function shouldLinkAvatar(mixed $user, string $routeName)
     {
         if (! ($user instanceof AvatarUser)) {
             return false;
