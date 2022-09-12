@@ -8,11 +8,11 @@ use App\Http\Controllers\Procedures\ProcedureController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/', [AvatarController::class, 'store'])->name('login');
+Route::get('user', [AvatarController::class, 'show'])->middleware('auth:sanctum')->name('user');
 
 Route::middleware('auth:sanctum')
     ->group(function () {
         Route::get('/', HomeController::class)->name('home');
-        Route::get('user', [AvatarController::class, 'show'])->name('user');
 
         // preferences
         Route::get('preferences', [PreferenceController::class, 'show'])->name('preferences');
@@ -25,6 +25,14 @@ Route::middleware('auth:sanctum')
     ->name('resources.api.')
     ->group(function () {
         require __DIR__.'/resources.php';
+    });
+
+// discussion
+Route::middleware('auth:sanctum')
+    ->prefix('comments')
+    ->name('comments.')
+    ->group(function () {
+        require __DIR__.'/discussion.php';
     });
 
 // procedures
