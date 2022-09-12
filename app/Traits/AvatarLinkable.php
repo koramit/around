@@ -15,7 +15,7 @@ trait AvatarLinkable
         }
 
         $routeName = Route::currentRouteName();
-        $url = str_replace(config('app.url'), config('auth.avatar.url'), route($routeName));
+        $url = str_replace(config('app.url'), config('auth.avatar.url'), route($routeName, request()->route()->parameters()));
         $method = $this->getRouteMethod($routeName);
         $client = Http::withToken($user->getAuthIdentifier())->acceptJson();
         if ($method === 'GET') {
