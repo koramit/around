@@ -2,22 +2,25 @@
 
 namespace App\Actions\User;
 
-use App\Models\User;
+use App\Traits\AvatarLinkable;
 use Hashids\Hashids;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\ValidationException;
 
 class PreferencesUpdateAction
 {
-    public function __invoke(array $data, User $user): array
+    use AvatarLinkable;
+
+    public function __invoke(array $data, mixed $user): array
     {
-        if (config('auth.guards.web.provider') === 'avatar') {
-            return []; // call api
+        $link = $this->shouldLinkAvatar($user);
+        if ($link !== false) {
+            return $link;
         }
 
         if (isset($data['home_page'])) {
             if (! Route::has($data['home_page'])) {
-                throw ValidationException::withMessages(['home_page' => 'route note define']);
+                throw ValidationException::withMessages(['home_page' => 'route not define']);
             }
             $user->home_page = $data['home_page'];
 
