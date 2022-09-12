@@ -4,16 +4,17 @@ namespace App\Traits;
 
 use App\Extensions\Auth\AvatarUser;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Route;
 
 trait AvatarLinkable
 {
-    protected function shouldLinkAvatar(mixed $user, string $routeName)
+    protected function shouldLinkAvatar(mixed $user)
     {
         if (! ($user instanceof AvatarUser)) {
             return false;
         }
 
-        $url = str_replace(config('app.url'), config('auth.avatar.url'), route($routeName));
+        $url = str_replace(config('app.url'), config('auth.avatar.url'), route(Route::currentRouteName()));
 
         $response = Http::withToken($user->getAuthIdentifier())
             ->acceptJson()
