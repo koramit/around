@@ -47,6 +47,8 @@ trait AvatarLinkable
                 if (str_starts_with($data[$key], $source)) {
                     $data[$key] = str_replace($source, config('app.url'), $data[$key]);
                 }
+                // remove avatar prefix generate by route in avatar group
+                $data[$key] = str_replace("/avatar/", "/", $data[$key]);
             }
         }
     }
