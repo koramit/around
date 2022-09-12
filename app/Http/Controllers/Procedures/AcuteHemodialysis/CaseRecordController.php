@@ -20,7 +20,9 @@ class CaseRecordController extends Controller
     {
         $data = (new CaseRecordIndexAction)(filters: $request->all(), user: $request->user(), routeName: $request->route()->getName());
 
-        // if request want json then return $data
+        if ($request->wantsJson()) {
+            return $data;
+        }
 
         $this->setFlash($data['flash']);
         unset($data['flash']);
