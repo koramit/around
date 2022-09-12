@@ -42,6 +42,10 @@ class AcuteHemodialysisAction
 
     public function __construct()
     {
+        if (config('auth.guards.web.provider') === 'avatar') {
+            return;
+        }
+        
         $this->REGISTRY_ID = cache()->rememberForever(
             'registry-id-acute_hd',
             fn () => Registry::query()->where('name', 'acute_hd')->first()->id
