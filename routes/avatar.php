@@ -40,7 +40,9 @@ Route::middleware('auth:sanctum')
         Route::get('/', [AcuteHemodialysisCaseController::class, 'index'])
             ->can('view_any_acute_hemodialysis_cases')
             ->name('index');
-        // store next
+        Route::post('/', [AcuteHemodialysisCaseController::class, 'store'])
+            ->can('create_acute_hemodialysis_case')
+            ->name('store');
         Route::get('/{hashedKey}/edit', [AcuteHemodialysisCaseController::class, 'edit'])
             ->can('view_any_acute_hemodialysis_cases')
             ->name('edit');
