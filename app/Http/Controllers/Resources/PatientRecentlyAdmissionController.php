@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 
 class PatientRecentlyAdmissionController extends Controller
 {
-    public function __invoke(Request $request, PatientAPI $api)
+    public function __invoke(Request $request)
     {
         return (new PatientRecentlyAdmissionAction)($request->input('key'));
     }
