@@ -190,6 +190,7 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
         // form configs
         $reservable = $this->isDialysisReservable($caseRecord);
         $configs = $this->FORM_CONFIGS + [
+            'case_status' => $caseRecord->status,
             'renal_outcomes' => $this->RENAL_OUTCOMES,
             'patient_outcomes' => $this->PATIENT_OUTCOMES,
             'renal_diagnosis' => $this->RENAL_DIAGNOSIS,
