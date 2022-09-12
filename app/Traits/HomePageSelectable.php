@@ -6,6 +6,10 @@ trait HomePageSelectable
 {
     protected function getSetHomePageActionMenu(string $routeName, string $userHomePage): ?array
     {
+        if (str_starts_with($routeName, 'avatar.')) {
+            $routeName = str_replace('avatar.', '', $routeName);
+        }
+
         if ($userHomePage === $routeName) {
             return null;
         }

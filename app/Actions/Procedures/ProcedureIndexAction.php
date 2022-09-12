@@ -5,12 +5,13 @@ namespace App\Actions\Procedures;
 use App\Models\Resources\Registry;
 use App\Traits\AvatarLinkable;
 use App\Traits\FlashDataGeneratable;
+use App\Traits\HomePageSelectable;
 
 class ProcedureIndexAction
 {
-    use FlashDataGeneratable, AvatarLinkable;
+    use FlashDataGeneratable, HomePageSelectable, AvatarLinkable;
 
-    public function __invoke(mixed $user)
+    public function __invoke(mixed $user, string $routeName)
     {
         $link = $this->shouldLinkAvatar($user);
         if ($link !== false) {
@@ -42,9 +43,12 @@ class ProcedureIndexAction
             $redirectTo = $procedures[0]['route'];
         }
 
+        $flash = $this->getFlash(__('Procedures'), $user);
+        $flash['action-menu'] = [$this->getSetHomePageActionMenu($routeName, $user->home_page)];
+
         return [
             'redirect' => $redirectTo,
-            'flash' => $this->getFlash(__('Procedures'), $user),
+            'flash' => $flash,
         ];
     }
 }
