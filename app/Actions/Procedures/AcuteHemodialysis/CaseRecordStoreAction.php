@@ -64,7 +64,7 @@ class CaseRecordStoreAction extends AcuteHemodialysisAction
 
     public function __invoke(array $data, mixed $user): array
     {
-        if ($link = $this->shouldLinkAvatar()) {
+        if ($link = $this->shouldLinkAvatar($user)) {
             return $link;
         }
 

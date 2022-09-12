@@ -12,7 +12,7 @@ class CommentTimelineStoreAction extends CommentTimelineAction
 {
     public function __invoke(array $data, mixed $user)
     {
-        if ($link = $this->shouldLinkAvatar()) {
+        if ($link = $this->shouldLinkAvatar($user)) {
             return $link;
         }
 

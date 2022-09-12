@@ -11,11 +11,11 @@ class WardSearchAction
 
     public function __invoke(?string $search)
     {
-        if ($link = $this->shouldLinkAvatar()) {
+        if ($link = $this->shouldLinkAvatar($user)) {
             return $link;
         }
 
-        if (!$search) {
+        if (! $search) {
             return [];
         }
 

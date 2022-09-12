@@ -17,4 +17,3 @@ Route::get('/timeline-oriented', [CommentTimelineController::class, 'index'])
     ->name('timeline-oriented.index');
 Route::post('/timeline-oriented', [CommentTimelineController::class, 'store'])
     ->name('timeline-oriented.store');
-

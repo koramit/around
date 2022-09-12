@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Resources;
 
 use App\Actions\Resources\CovidVaccineAction;
-use App\Contracts\PatientAPI;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 

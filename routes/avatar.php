@@ -54,5 +54,4 @@ Route::middleware('auth:sanctum')
         Route::get('/{hashedKey}/edit', [AcuteHemodialysisCaseController::class, 'edit'])
             ->can('view_any_acute_hemodialysis_cases')
             ->name('edit');
-
     });

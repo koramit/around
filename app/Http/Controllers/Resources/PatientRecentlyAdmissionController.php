@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Resources;
 
 use App\Actions\Resources\PatientRecentlyAdmissionAction;
-use App\Contracts\PatientAPI;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 

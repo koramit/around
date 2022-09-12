@@ -3,15 +3,13 @@
 namespace App\Traits;
 
 use App\Extensions\Auth\AvatarUser;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 
 trait AvatarLinkable
 {
-    protected function shouldLinkAvatar()
+    protected function shouldLinkAvatar(mixed $user)
     {
-        $user = Auth::user();
         if (! ($user instanceof AvatarUser)) {
             return false;
         }
@@ -48,7 +46,7 @@ trait AvatarLinkable
                     $data[$key] = str_replace($source, config('app.url'), $data[$key]);
                 }
                 // remove avatar prefix generate by route in avatar group
-                $data[$key] = str_replace("/avatar/", "/", $data[$key]);
+                $data[$key] = str_replace('/avatar/', '/', $data[$key]);
             }
         }
     }

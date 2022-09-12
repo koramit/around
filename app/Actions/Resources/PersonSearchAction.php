@@ -11,7 +11,7 @@ class PersonSearchAction
 
     public function __invoke(array $filters)
     {
-        if ($link = $this->shouldLinkAvatar()) {
+        if ($link = $this->shouldLinkAvatar($user)) {
             return $link;
         }
 

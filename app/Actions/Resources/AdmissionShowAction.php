@@ -11,7 +11,7 @@ class AdmissionShowAction
 
     public function __invoke(string $key): array
     {
-        if ($link = $this->shouldLinkAvatar()) {
+        if ($link = $this->shouldLinkAvatar($user)) {
             return $link;
         }
 
