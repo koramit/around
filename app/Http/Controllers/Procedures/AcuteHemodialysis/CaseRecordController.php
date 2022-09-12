@@ -36,9 +36,11 @@ class CaseRecordController extends Controller
     {
         $case = (new CaseRecordStoreAction)(data: $request->all(), user: $request->user());
 
-        // if request want json then return $case
+        if ($request->wantsJson()) {
+            return $case;
+        }
 
-        return redirect()->route('procedures.acute-hemodialysis.edit', $case->hashed_key);
+        return redirect()->route('procedures.acute-hemodialysis.edit', $case['key']);
     }
 
     public function edit($hashedKey, Request $request)
