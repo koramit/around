@@ -22,6 +22,8 @@ trait AvatarLinkable
         $client = Http::withToken($user->getAuthIdentifier())->acceptJson();
         if ($method === 'GET') {
             $response = $client->get($url, request()->all());
+        } elseif ($method === 'POST') {
+            $response = $client->post($url, request()->all());
         } elseif ($method === 'PATCH') {
             $response = $client->patch($url, request()->all());
         } else {
