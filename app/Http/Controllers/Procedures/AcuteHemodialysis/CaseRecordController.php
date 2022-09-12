@@ -45,7 +45,9 @@ class CaseRecordController extends Controller
     {
         $data = (new CaseRecordEditAction)(hashed: $hashedKey, user: $request->user());
 
-        // if request want json then return $data
+        if ($request->wantsJson()) {
+            return $data;
+        }
 
         $this->setFlash($data['flash']);
         unset($data['flash']);

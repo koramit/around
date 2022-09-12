@@ -3,7 +3,7 @@
 use App\Http\Controllers\Auth\AvatarController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PreferenceController;
-use App\Http\Controllers\Procedures\AcuteHemodialysis\CaseRecordController as AcuteHemodialysisCaseRecordController;
+use App\Http\Controllers\Procedures\AcuteHemodialysis\CaseRecordController as AcuteHemodialysisCaseController;
 use App\Http\Controllers\Procedures\ProcedureController;
 use Illuminate\Support\Facades\Route;
 
@@ -29,7 +29,12 @@ Route::middleware('auth:sanctum')
     ->prefix('procedures/acute-hemodialysis')
     ->name('procedures.acute-hemodialysis.')
     ->group(function () {
-        Route::get('/', [AcuteHemodialysisCaseRecordController::class, 'index'])
+        Route::get('/', [AcuteHemodialysisCaseController::class, 'index'])
             ->can('view_any_acute_hemodialysis_cases')
             ->name('index');
+        // store next
+        Route::get('/{hashedKey}/edit', [AcuteHemodialysisCaseController::class, 'edit'])
+            ->can('view_any_acute_hemodialysis_cases')
+            ->name('edit');
+
     });

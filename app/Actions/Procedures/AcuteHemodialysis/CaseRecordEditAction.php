@@ -6,14 +6,14 @@ use App\Managers\Resources\AdmissionManager;
 use App\Models\Registries\AcuteHemodialysisCaseRecord;
 use App\Models\Resources\Admission;
 use App\Models\Resources\Ward;
-use App\Models\User;
 use App\Traits\AcuteHemodialysis\CaseRecordShareValidatable;
 use App\Traits\AcuteHemodialysis\OrderShareValidatable;
+use App\Traits\AvatarLinkable;
 use App\Traits\Subscribable;
 
 class CaseRecordEditAction extends AcuteHemodialysisAction
 {
-    use OrderShareValidatable, CaseRecordShareValidatable, Subscribable;
+    use OrderShareValidatable, CaseRecordShareValidatable, Subscribable, AvatarLinkable;
 
     protected array $FORM_CONFIGS = [
         'comorbidities' => [
@@ -42,11 +42,12 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
         'ipd_consent_form_pathname' => 'procedures/acute-hemodialysis/ipd-consent-form',
     ];
 
-    public function __invoke(string $hashed, User $user): array
+    public function __invoke(string $hashed, mixed $user): array
     {
         /* @TODO view draft & finished note */
-        if (config('auth.guards.web.provider') === 'avatar') {
-            return []; // call api
+        $link = $this->shouldLinkAvatar($user);
+        if ($link !== false) {
+            return $link;
         }
 
         $caseRecord = AcuteHemodialysisCaseRecord::query()->findByUnhashKey($hashed)->firstOrFail();
