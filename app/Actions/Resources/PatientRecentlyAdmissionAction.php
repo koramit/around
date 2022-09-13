@@ -13,7 +13,7 @@ class PatientRecentlyAdmissionAction
 
     public function __invoke(string $hn): array
     {
-        if ($link = $this->shouldLinkAvatar($user)) {
+        if ($link = $this->shouldLinkAvatar()) {
             return $link;
         }
 

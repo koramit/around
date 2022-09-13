@@ -11,7 +11,7 @@ class CovidVaccineAction
 
     public function __invoke(array $data): array
     {
-        if ($link = $this->shouldLinkAvatar($user)) {
+        if ($link = $this->shouldLinkAvatar()) {
             return $link;
         }
 

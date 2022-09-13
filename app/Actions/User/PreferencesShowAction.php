@@ -15,8 +15,7 @@ class PreferencesShowAction
 
     public function __invoke(mixed $user): array
     {
-        $link = $this->shouldLinkAvatar();
-        if ($link !== false) {
+        if ($link = $this->shouldLinkAvatar($user)) {
             return $link;
         }
 

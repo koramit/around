@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Route;
 
 trait AvatarLinkable
 {
-    protected function shouldLinkAvatar(mixed $user)
+    protected function shouldLinkAvatar(mixed $user = null)
     {
         if (! ($user instanceof AvatarUser)) {
             return false;

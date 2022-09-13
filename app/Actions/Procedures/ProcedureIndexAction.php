@@ -13,8 +13,7 @@ class ProcedureIndexAction
 
     public function __invoke(mixed $user, string $routeName)
     {
-        $link = $this->shouldLinkAvatar();
-        if ($link !== false) {
+        if ($link = $this->shouldLinkAvatar($user)) {
             return $link;
         }
 
