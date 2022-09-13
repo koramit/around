@@ -3,13 +3,15 @@
 namespace App\Traits;
 
 use App\Extensions\Auth\AvatarUser;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 
 trait AvatarLinkable
 {
-    protected function shouldLinkAvatar(mixed $user = null)
+    protected function shouldLinkAvatar()
     {
+        $user = Auth::user();
         if (! ($user instanceof AvatarUser)) {
             return false;
         }

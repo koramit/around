@@ -13,7 +13,7 @@ class CaseRecordIndexAction extends AcuteHemodialysisAction
 
     public function __invoke(array $filters, mixed $user, string $routeName = 'home'): array
     {
-        if ($link = $this->shouldLinkAvatar($user)) {
+        if ($link = $this->shouldLinkAvatar()) {
             return $link;
         }
 

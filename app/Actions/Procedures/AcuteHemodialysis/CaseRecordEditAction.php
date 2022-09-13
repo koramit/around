@@ -45,7 +45,7 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
     public function __invoke(string $hashed, mixed $user): array
     {
         /* @TODO view draft & finished note */
-        if ($link = $this->shouldLinkAvatar($user)) {
+        if ($link = $this->shouldLinkAvatar()) {
             return $link;
         }
 
