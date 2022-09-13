@@ -4,7 +4,7 @@ namespace App\Actions\Discussion;
 
 use Illuminate\Support\Facades\Validator;
 
-class CommentTimelineIndexAction extends CommentTimelineAction
+class CommentReplyIndexAction extends CommentReplyAction
 {
     public function __invoke(array $data)
     {
@@ -14,16 +14,17 @@ class CommentTimelineIndexAction extends CommentTimelineAction
         }
 
         $validated = Validator::make($data, [
-            'commentable_type' => 'required|string|starts_with:App\Models',
             'commentable_id' => 'required|string',
+            'commentable_type' => 'required|string|starts_with:App\Models',
         ])->validate();
 
         $resource = $this->getResource($validated);
 
         return $resource->comments()
             ->select(['id', 'body', 'updated_at', 'commentator_id', 'parent_id'])
-            ->with('parent:id,body')
+            ->withCount('replies')
             ->withCommentatorName()
+            ->whereNull('parent_id')
             ->get()
             ->transform(fn ($c) => $this->transformComment($c));
     }

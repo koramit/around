@@ -4,12 +4,13 @@ namespace App\Actions\Discussion;
 
 use App\Models\Comment;
 use App\Traits\AvatarLinkable;
+use App\Traits\CommentResourceValidatable;
 use App\Traits\FirstNameAware;
 use Illuminate\Support\Str;
 
 class CommentTimelineAction
 {
-    use AvatarLinkable, FirstNameAware;
+    use AvatarLinkable, FirstNameAware, CommentResourceValidatable;
 
     protected function transformComment(Comment $comment): array
     {
