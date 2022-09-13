@@ -10,7 +10,8 @@ class CommentTimelineIndexAction extends CommentTimelineAction
 {
     public function __invoke(array $data)
     {
-        if ($link = $this->shouldLinkAvatar()) {
+        $link = $this->shouldLinkAvatar();
+        if ($link !== false) {
             return $link;
         }
 
