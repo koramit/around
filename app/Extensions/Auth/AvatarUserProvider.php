@@ -11,9 +11,9 @@ use Illuminate\Support\Facades\Http;
 
 class AvatarUserProvider implements UserProvider
 {
-    private $providerUrl;
+    private string $providerUrl;
 
-    private $providerToken;
+    private string $providerToken;
 
     public function __construct(array $config)
     {
@@ -21,15 +21,21 @@ class AvatarUserProvider implements UserProvider
         $this->providerToken = $config['token'];
     }
 
-    public function retrieveById($identifier)
+    /**
+     * @throws Exception
+     */
+    public function retrieveById($identifier): ?AvatarUser
     {
         /*
          * Work the same as User::find($id);
          */
         $response = Http::withToken($identifier)->get($this->providerUrl.'/user');
-        $user = $response->json() ?? ['found' => false];
-        if (! ($response->ok() && $user['found'])) {
+        if (! $response->ok()) {
             throw new Exception('provider service not available');
+        }
+        $user = $response->json() ?? ['found' => false];
+        if (! $user['found']) {
+            return null;
         }
         $user['avatar_token'] = $identifier;
 
@@ -45,7 +51,7 @@ class AvatarUserProvider implements UserProvider
         $user->setRememberToken($token);
     }
 
-    public function retrieveByCredentials(array $credentials)
+    public function retrieveByCredentials(array $credentials): ?AvatarUser
     {
         /*
          * The retrieveByCredentials method receives the array of credentials passed to the Auth::attempt
@@ -69,7 +75,7 @@ class AvatarUserProvider implements UserProvider
         return new AvatarUser($user);
     }
 
-    public function validateCredentials(Authenticatable $user, array $credentials)
+    public function validateCredentials(Authenticatable $user, array $credentials): bool
     {
         /*
          * The validateCredentials method should compare the given $user with the $credentials
