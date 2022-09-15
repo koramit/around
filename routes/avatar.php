@@ -6,6 +6,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PreferenceController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\CaseRecordController as AcuteHemodialysisCaseController;
 use App\Http\Controllers\Procedures\ProcedureController;
+use App\Http\Controllers\UploadController;
 use Illuminate\Support\Facades\Route;
 
 // auth
@@ -38,6 +39,14 @@ Route::middleware('auth:sanctum')
     ->group(function () {
         require __DIR__.'/resources.php';
     });
+
+// uploads
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('uploads', [UploadController::class, 'store'])
+        ->name('uploads.store');
+    Route::get('uploads', [UploadController::class, 'show'])
+        ->name('uploads.show');
+});
 
 // discussion
 Route::middleware('auth:sanctum')

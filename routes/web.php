@@ -74,6 +74,14 @@ Route::middleware(['auth', 'can:upload_file'])->group(function () {
         ->name('uploads.show');
 });
 
+// discussion
+Route::middleware(['auth', 'can:comment'])
+    ->prefix('comments')
+    ->name('comments.')
+    ->group(function () {
+        require __DIR__.'/discussion.php';
+    });
+
 // support
 Route::middleware(['auth', 'can:get_support'])->group(function () {
     Route::get('support-tickets', [SupportTicketController::class, 'index'])
@@ -95,14 +103,6 @@ Route::middleware(['auth'])
     ->name('procedures.')
     ->group(function () {
         require __DIR__.'/procedures.php';
-    });
-
-// comment
-Route::middleware(['auth', 'can:comment'])
-    ->prefix('comments')
-    ->name('comments.')
-    ->group(function () {
-        require __DIR__.'/discussion.php';
     });
 
 // subscription
