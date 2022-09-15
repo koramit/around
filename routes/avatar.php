@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\AvatarController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PreferenceController;
@@ -7,17 +8,28 @@ use App\Http\Controllers\Procedures\AcuteHemodialysis\CaseRecordController as Ac
 use App\Http\Controllers\Procedures\ProcedureController;
 use Illuminate\Support\Facades\Route;
 
+// auth
 Route::post('/', [AvatarController::class, 'store'])->name('login');
 Route::get('user', [AvatarController::class, 'show'])->middleware('auth:sanctum')->name('user');
 
-Route::middleware('auth:sanctum')
-    ->group(function () {
-        Route::get('/', HomeController::class)->name('home');
+// common
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/', HomeController::class)->name('home');
 
-        // preferences
-        Route::get('preferences', [PreferenceController::class, 'show'])->name('preferences');
-        Route::patch('preferences', [PreferenceController::class, 'update'])->name('preferences.update');
-    });
+    // preferences
+    Route::get('preferences', [PreferenceController::class, 'show'])->name('preferences');
+    Route::patch('preferences', [PreferenceController::class, 'update'])->name('preferences.update');
+});
+
+// administrative
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/users', [UserController::class, 'index'])
+        ->name('users.index');
+    Route::get('/users/{hashedKey}', [UserController::class, 'show'])
+        ->name('users.roles.show');
+    Route::patch('/users/{hashedKey}', [UserController::class, 'update'])
+        ->name('users.roles.update');
+});
 
 // resources
 Route::middleware('auth:sanctum')

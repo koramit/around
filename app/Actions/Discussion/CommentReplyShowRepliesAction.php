@@ -8,8 +8,7 @@ class CommentReplyShowRepliesAction extends CommentReplyAction
 {
     public function __invoke(string $hashedKey)
     {
-        $link = $this->shouldLinkAvatar();
-        if ($link !== false) {
+        if (($link = $this->shouldLinkAvatar()) !== false) {
             return $link;
         }
 

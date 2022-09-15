@@ -53,9 +53,9 @@ Route::middleware(['auth', 'can:authorize_user'])->group(function () {
         ->middleware(['page-transition', 'locale', 'no-in-app-allow'])
         ->name('users.index');
     Route::get('/users/{hashedKey}', [UserController::class, 'show'])
-        ->name('users.show');
+        ->name('users.roles.show');
     Route::patch('/users/{hashedKey}', [UserController::class, 'update'])
-        ->name('users.update');
+        ->name('users.roles.update');
 });
 
 // resources

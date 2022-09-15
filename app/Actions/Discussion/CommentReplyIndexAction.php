@@ -8,8 +8,7 @@ class CommentReplyIndexAction extends CommentReplyAction
 {
     public function __invoke(array $data)
     {
-        $link = $this->shouldLinkAvatar();
-        if ($link !== false) { // empty array exception
+        if (($link = $this->shouldLinkAvatar()) !== false) {
             return $link;
         }
 
