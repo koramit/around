@@ -31,6 +31,9 @@ trait AvatarLinkable
         }
 
         $data = $response->json();
+        if (! $data) {
+            return $response;
+        }
         $this->replaceDomain($data);
 
         return $data;

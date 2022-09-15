@@ -4,13 +4,12 @@ namespace App\Actions\Resources;
 
 use App\Traits\AvatarLinkable;
 use Illuminate\Support\Facades\Storage;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class UploadShowAction
 {
     use AvatarLinkable;
 
-    public function __invoke(string $path): StreamedResponse
+    public function __invoke(string $path)
     {
         if ($link = $this->shouldLinkAvatar()) {
             return $link;
