@@ -5,17 +5,18 @@ namespace App\Actions\Procedures\AcuteHemodialysis;
 use App\Models\Registries\AcuteHemodialysisCaseRecord as CaseRecord;
 use App\Models\User;
 use App\Traits\AcuteHemodialysis\CaseRecordShareValidatable;
+use App\Traits\AvatarLinkable;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
 class CaseRecordUpdateAction extends AcuteHemodialysisAction
 {
-    use CaseRecordShareValidatable;
+    use AvatarLinkable, CaseRecordShareValidatable;
 
-    public function __invoke(array $data, string $hashedKey, User $user): bool
+    public function __invoke(array $data, string $hashedKey, mixed $user): array
     {
-        if (config('auth.guards.web.provider') === 'avatar') {
-            return true; // call api
+        if ($link = $this->shouldLinkAvatar()) {
+            return $link;
         }
 
         $caseRecord = CaseRecord::query()->findByUnhashKey($hashedKey)->firstOrFail();
@@ -67,6 +68,6 @@ class CaseRecordUpdateAction extends AcuteHemodialysisAction
 
         $caseRecord->form = $validated;
 
-        return $caseRecord->save();
+        return ['ok' => $caseRecord->save()];
     }
 }

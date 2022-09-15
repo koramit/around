@@ -63,11 +63,7 @@ class CaseRecordController extends Controller
 
     public function update($hashedKey, Request $request)
     {
-        $status = (new CaseRecordUpdateAction)(data: $request->all(), hashedKey: $hashedKey, user: $request->user());
-
-        // if request want json then return $data
-
-        return ['ok' => $status];
+        return (new CaseRecordUpdateAction)(data: $request->all(), hashedKey: $hashedKey, user: $request->user());
     }
 
     public function destroy($hashedKey, Request $request)
