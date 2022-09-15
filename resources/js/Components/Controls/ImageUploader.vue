@@ -43,14 +43,15 @@
         >
             {{ error }}
         </div>
-        <!-- route('uploads.show', {path: name, filename: filename }) -->
-        <img
-            v-if="modelValue !== undefined && show"
-            :src="`${serviceEndpoints.show}?path=${pathname}/${filename}`"
-            @loadstart="busy = true"
-            @load="$nextTick(() => busy = false)"
-            alt=""
-        >
+        <transition name="slide-fade">
+            <img
+                v-if="modelValue !== undefined && show"
+                :src="`${serviceEndpoints.show}?path=${pathname}/${filename}`"
+                @loadstart="busy = true"
+                @load="loaded"
+                alt=""
+            >
+        </transition>
         <input
             class="hidden"
             type="file"
@@ -75,7 +76,7 @@ import IconCamera from '../Helpers/Icons/IconCamera.vue';
 import IconImage from '../Helpers/Icons/IconImage.vue';
 import IconEyesSlash from '../Helpers/Icons/IconEyesSlash.vue';
 import IconEyes from '../Helpers/Icons/IconEyes.vue';
-import {ref} from 'vue';
+import {nextTick, ref} from 'vue';
 const emits = defineEmits(['update:modelValue', 'autosave']);
 const props = defineProps({
     modelValue: { type: String, default: '' },
@@ -111,6 +112,8 @@ const fileInput = (event) => {
         }).finally(() => {
             busy.value = false;
         });
-    console.log(event.target.files[0]);
 };
+const loaded = () => nextTick(() => {
+    busy.value = false;
+});
 </script>
