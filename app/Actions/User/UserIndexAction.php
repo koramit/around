@@ -10,7 +10,7 @@ class UserIndexAction
 {
     use AvatarLinkable, FlashDataGeneratable;
 
-    public function __invoke(mixed $user)
+    public function __invoke(array $filters, mixed $user)
     {
         if (($link = $this->shouldLinkAvatar()) !== false) {
             return $link;
@@ -20,6 +20,7 @@ class UserIndexAction
         $users = User::query()
             ->select(['id', 'full_name'])
             ->whereNotIn('id', [1, $user->id])
+            ->when($filters['search'] ?? null, fn ($query, $search) => $query->where('full_name', 'like', "%$search%"))
             ->orderBy('full_name')
             ->paginate($user->items_per_page)
             ->withQueryString()
@@ -32,6 +33,10 @@ class UserIndexAction
         return [
             'flash' => $flash,
             'users' => $users,
+            'filters' => [
+                'search' => $filters['search'] ?? '',
+                'scope' => null,
+            ],
         ];
     }
 }

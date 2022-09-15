@@ -16,17 +16,16 @@ class UserController extends Controller
 
     public function index(Request $request)
     {
-        $data = (new UserIndexAction())($request->user());
+        $data = (new UserIndexAction())($request->all(), $request->user());
 
         if ($request->wantsJson()) {
             return $data;
         }
 
         $this->setFlash($data['flash']);
+        unset($data['flash']);
 
-        return Inertia::render('User/ManageUser', [
-            'users' => $data['users'],
-        ]);
+        return Inertia::render('User/ManageUser', [...$data]);
     }
 
     public function show(string $hashedKey, Request $request)
