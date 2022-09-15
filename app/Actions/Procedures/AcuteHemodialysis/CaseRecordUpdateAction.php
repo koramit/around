@@ -3,7 +3,6 @@
 namespace App\Actions\Procedures\AcuteHemodialysis;
 
 use App\Models\Registries\AcuteHemodialysisCaseRecord as CaseRecord;
-use App\Models\User;
 use App\Traits\AcuteHemodialysis\CaseRecordShareValidatable;
 use App\Traits\AvatarLinkable;
 use Illuminate\Support\Facades\Validator;
