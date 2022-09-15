@@ -6,13 +6,15 @@ use App\Models\Registries\AcuteHemodialysisCaseRecord as CaseRecord;
 use App\Models\Resources\Admission;
 use App\Models\Resources\Patient;
 use App\Models\Subscription;
-use App\Models\User;
 use App\Rules\AnExists;
 use App\Rules\HnExists;
+use App\Traits\AvatarLinkable;
 use Illuminate\Support\Facades\Validator;
 
 class CaseRecordStoreAction extends AcuteHemodialysisAction
 {
+    use AvatarLinkable;
+
     protected float $CRF_VERSION = 1.0;
 
     protected array $FORM_TEMPLATE = [
@@ -60,10 +62,10 @@ class CaseRecordStoreAction extends AcuteHemodialysisAction
         'cause_of_dead' => null,
     ];
 
-    public function __invoke(array $data, User $user): CaseRecord
+    public function __invoke(array $data, mixed $user): array
     {
-        if (config('auth.guards.web.provider') === 'avatar') {
-            return new CaseRecord(); // call api
+        if ($link = $this->shouldLinkAvatar()) {
+            return $link;
         }
 
         $validated = Validator::make($data, [
@@ -72,7 +74,7 @@ class CaseRecordStoreAction extends AcuteHemodialysisAction
         ])->validate();
 
         if ($caseRecord = CaseRecord::query()->where('status', 1)->where('meta->hn', $validated['hn'])->first()) {
-            return $caseRecord;
+            return ['key' => $caseRecord->hashed_key];
         }
         $caseRecord = new CaseRecord();
         $patient = Patient::query()->findByHashedKey($validated['hn'])->first();
@@ -115,6 +117,6 @@ class CaseRecordStoreAction extends AcuteHemodialysisAction
             $user->subscriptions()->attach($sub->id);
         }
 
-        return $caseRecord;
+        return ['key' => $caseRecord->hashed_key];
     }
 }

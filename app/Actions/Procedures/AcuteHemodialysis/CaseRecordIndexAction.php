@@ -4,17 +4,17 @@ namespace App\Actions\Procedures\AcuteHemodialysis;
 
 use App\Models\Notes\AcuteHemodialysisOrderNote;
 use App\Models\Registries\AcuteHemodialysisCaseRecord;
-use App\Models\User;
+use App\Traits\AvatarLinkable;
 use App\Traits\HomePageSelectable;
 
 class CaseRecordIndexAction extends AcuteHemodialysisAction
 {
-    use HomePageSelectable;
+    use HomePageSelectable, AvatarLinkable;
 
-    public function __invoke(array $filters, User $user, string $routeName = 'home'): array
+    public function __invoke(array $filters, mixed $user, string $routeName = 'home'): array
     {
-        if (config('auth.guards.web.provider') === 'avatar') {
-            return []; // call api + query params
+        if ($link = $this->shouldLinkAvatar()) {
+            return $link;
         }
 
         $cases = AcuteHemodialysisCaseRecord::query()
@@ -73,7 +73,7 @@ class CaseRecordIndexAction extends AcuteHemodialysisAction
             'main-menu-links' => $this->MENU,
             'navs' => $this->NAVS,
             'action-menu' => [
-                $this->getSetHomePageActionMenu($routeName, $user),
+                $this->getSetHomePageActionMenu($routeName, $user->home_page),
             ],
         ];
 

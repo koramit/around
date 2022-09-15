@@ -122,7 +122,7 @@ class RemindIncompleteCase extends Command
             ->whereIn('name', array_keys($authors))
             ->get()
             ->each(function ($notifiable) use (&$authors) {
-                $message = 'แจ้งเตือนเคส Acute HD ค้างสรุป วันที่ '.now(+7)->format('d M y') . "\n\n";
+                $message = 'แจ้งเตือนเคส Acute HD ค้างสรุป วันที่ '.now(+7)->format('d M y')."\n\n";
                 if ($authors[$notifiable->name]['noConsent']) {
                     $message .= '* ไม่มีใบ consent';
                     $message .= "\n\n{$authors[$notifiable->name]['noConsent']}\n\n";
@@ -132,7 +132,7 @@ class RemindIncompleteCase extends Command
                     $message .= "\n\n{$authors[$notifiable->name]['incomplete']}\n\n";
                 }
 
-                $message .= " ✌️✌️😃";
+                $message .= ' ✌️✌️😃';
 
                 // $this->line("$notifiable->name\n$message");
                 $notifiable->notify(new MessagingApp($message));
@@ -192,7 +192,7 @@ class RemindIncompleteCase extends Command
             });
 
         if ($message) {
-            $message = 'รายงานเคส Acute HD ค้างสรุปวันที่ ' . now(+7)->format('d M Y') . "\n\n" . trim($message, "\n");
+            $message = 'รายงานเคส Acute HD ค้างสรุปวันที่ '.now(+7)->format('d M Y')."\n\n".trim($message, "\n");
         } else {
             $message = 'วันนี้ไม่มีเคส Acute HD ค้างสรุป';
         }

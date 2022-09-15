@@ -4,8 +4,6 @@
 
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\ChatBotController;
-use App\Http\Controllers\CommentReplyController;
-use App\Http\Controllers\CommentTimelineController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InAppBrowsingRedirectController;
@@ -21,7 +19,6 @@ use Illuminate\Support\Facades\Route;
 
 require __DIR__.'/auth.php';
 
-// pages
 // pages
 Route::get('terms-and-policies', TermsAndPoliciesController::class)
     ->middleware(['locale', 'no-in-app-allow'])
@@ -56,9 +53,9 @@ Route::middleware(['auth', 'can:authorize_user'])->group(function () {
         ->middleware(['page-transition', 'locale', 'no-in-app-allow'])
         ->name('users.index');
     Route::get('/users/{hashedKey}', [UserController::class, 'show'])
-        ->name('users.show');
+        ->name('users.roles.show');
     Route::patch('/users/{hashedKey}', [UserController::class, 'update'])
-        ->name('users.update');
+        ->name('users.roles.update');
 });
 
 // resources
@@ -76,6 +73,14 @@ Route::middleware(['auth', 'can:upload_file'])->group(function () {
     Route::get('uploads', [UploadController::class, 'show'])
         ->name('uploads.show');
 });
+
+// discussion
+Route::middleware(['auth', 'can:comment'])
+    ->prefix('comments')
+    ->name('comments.')
+    ->group(function () {
+        require __DIR__.'/discussion.php';
+    });
 
 // support
 Route::middleware(['auth', 'can:get_support'])->group(function () {
@@ -98,29 +103,6 @@ Route::middleware(['auth'])
     ->name('procedures.')
     ->group(function () {
         require __DIR__.'/procedures.php';
-    });
-
-// comment
-Route::middleware(['auth', 'can:comment'])
-    ->prefix('comments')
-    ->name('comments.')
-    ->group(function () {
-        // Route::post('', CommentController::class)
-        //     ->name('store');
-
-        Route::get('/reply-oriented', [CommentReplyController::class, 'index'])
-            ->name('reply-oriented.index');
-        Route::post('/reply-oriented', [CommentReplyController::class, 'store'])
-            ->name('reply-oriented.store');
-        Route::get('/reply-oriented/{hashedKey}', [CommentReplyController::class, 'show'])
-            ->name('reply-oriented.show');
-        Route::post('/reply-oriented/{hashedKey}', [CommentReplyController::class, 'reply'])
-            ->name('reply-oriented.reply');
-
-        Route::get('/timeline-oriented', [CommentTimelineController::class, 'index'])
-            ->name('timeline-oriented.index');
-        Route::post('/timeline-oriented', [CommentTimelineController::class, 'store'])
-            ->name('timeline-oriented.store');
     });
 
 // subscription

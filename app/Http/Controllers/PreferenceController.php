@@ -14,8 +14,12 @@ class PreferenceController extends Controller
 
     public function show(Request $request)
     {
-        $user = $request->user();
-        $data = (new PreferencesShowAction())($user);
+        $data = (new PreferencesShowAction())($request->user());
+
+        if ($request->wantsJson()) {
+            return $data;
+        }
+
         $this->setFlash($data['flash']);
 
         return Inertia::render('User/PreferencePage')->with([...$data['props']]);

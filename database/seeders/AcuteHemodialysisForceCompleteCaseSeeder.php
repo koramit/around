@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\Ability;
 use App\Models\Role;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class AcuteHemodialysisForceCompleteCaseSeeder extends Seeder

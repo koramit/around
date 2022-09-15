@@ -4,12 +4,19 @@ namespace App\Actions\Resources;
 
 use App\Managers\Resources\AdmissionManager;
 use App\Managers\Resources\PatientStayManager;
+use App\Traits\AvatarLinkable;
 use Illuminate\Support\Carbon;
 
 class PatientRecentlyAdmissionAction
 {
+    use AvatarLinkable;
+
     public function __invoke(string $hn): array
     {
+        if ($link = $this->shouldLinkAvatar()) {
+            return $link;
+        }
+
         $admission = (new AdmissionManager)->manage(key: $hn, recently: true);
         $stay = (new PatientStayManager)->manage($hn);
         $stayLocation = 'แพทย์เวร ';

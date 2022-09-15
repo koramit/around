@@ -20,7 +20,9 @@ class CaseRecordController extends Controller
     {
         $data = (new CaseRecordIndexAction)(filters: $request->all(), user: $request->user(), routeName: $request->route()->getName());
 
-        // if request want json then return $data
+        if ($request->wantsJson()) {
+            return $data;
+        }
 
         $this->setFlash($data['flash']);
         unset($data['flash']);
@@ -34,16 +36,20 @@ class CaseRecordController extends Controller
     {
         $case = (new CaseRecordStoreAction)(data: $request->all(), user: $request->user());
 
-        // if request want json then return $case
+        if ($request->wantsJson()) {
+            return $case;
+        }
 
-        return redirect()->route('procedures.acute-hemodialysis.edit', $case->hashed_key);
+        return redirect()->route('procedures.acute-hemodialysis.edit', $case['key']);
     }
 
     public function edit($hashedKey, Request $request)
     {
         $data = (new CaseRecordEditAction)(hashed: $hashedKey, user: $request->user());
 
-        // if request want json then return $data
+        if ($request->wantsJson()) {
+            return $data;
+        }
 
         $this->setFlash($data['flash']);
         unset($data['flash']);
@@ -57,11 +63,7 @@ class CaseRecordController extends Controller
 
     public function update($hashedKey, Request $request)
     {
-        $status = (new CaseRecordUpdateAction)(data: $request->all(), hashedKey: $hashedKey, user: $request->user());
-
-        // if request want json then return $data
-
-        return ['ok' => $status];
+        return (new CaseRecordUpdateAction)(data: $request->all(), hashedKey: $hashedKey, user: $request->user());
     }
 
     public function destroy($hashedKey, Request $request)

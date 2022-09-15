@@ -6,6 +6,7 @@ use App\Http\Controllers\Resources\CovidVaccineController;
 use App\Http\Controllers\Resources\PatientRecentlyAdmissionController;
 use App\Http\Controllers\Resources\PeopleController;
 use App\Http\Controllers\Resources\WardController;
+use Illuminate\Support\Facades\Route;
 
 Route::post('admissions', AdmissionController::class)
     ->name('admissions.show');

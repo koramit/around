@@ -6,14 +6,14 @@ use App\Managers\Resources\AdmissionManager;
 use App\Models\Registries\AcuteHemodialysisCaseRecord;
 use App\Models\Resources\Admission;
 use App\Models\Resources\Ward;
-use App\Models\User;
 use App\Traits\AcuteHemodialysis\CaseRecordShareValidatable;
 use App\Traits\AcuteHemodialysis\OrderShareValidatable;
+use App\Traits\AvatarLinkable;
 use App\Traits\Subscribable;
 
 class CaseRecordEditAction extends AcuteHemodialysisAction
 {
-    use OrderShareValidatable, CaseRecordShareValidatable, Subscribable;
+    use OrderShareValidatable, CaseRecordShareValidatable, Subscribable, AvatarLinkable;
 
     protected array $FORM_CONFIGS = [
         'comorbidities' => [
@@ -42,11 +42,11 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
         'ipd_consent_form_pathname' => 'procedures/acute-hemodialysis/ipd-consent-form',
     ];
 
-    public function __invoke(string $hashed, User $user): array
+    public function __invoke(string $hashed, mixed $user): array
     {
         /* @TODO view draft & finished note */
-        if (config('auth.guards.web.provider') === 'avatar') {
-            return []; // call api
+        if ($link = $this->shouldLinkAvatar()) {
+            return $link;
         }
 
         $caseRecord = AcuteHemodialysisCaseRecord::query()->findByUnhashKey($hashed)->firstOrFail();
@@ -189,16 +189,11 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
         // form configs
         $reservable = $this->isDialysisReservable($caseRecord);
         $configs = $this->FORM_CONFIGS + [
+            'case_status' => $caseRecord->status,
             'renal_outcomes' => $this->RENAL_OUTCOMES,
             'patient_outcomes' => $this->PATIENT_OUTCOMES,
             'renal_diagnosis' => $this->RENAL_DIAGNOSIS,
             'serology_results' => $this->SEROLOGY_RESULTS,
-            'in_unit_dialysis_types' => $this->IN_UNIT,
-            'out_unit_dialysis_types' => $this->OUT_UNIT,
-            'patient_types' => $this->PATIENT_TYPES,
-            'today' => $this->TODAY,
-            'reserve_available_dates' => $this->reserveAvailableDates(),
-            'reserve_disable_dates' => [], // 'August 13, 2021',
             'image_upload_endpoints' => [
                 'store' => route('uploads.store'),
                 'show' => url('uploads'),
@@ -225,8 +220,8 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
             'covid' => [
                 'hn' => $caseRecord->patient->hn,
                 'cid' => $caseRecord->patient->profile['document_id'],
-                'route_lab' => fn () => route('resources.api.covid-lab'),
-                'route_vaccine' => fn () => route('resources.api.covid-vaccine'),
+                'route_lab' => route('resources.api.covid-lab'),
+                'route_vaccine' => route('resources.api.covid-vaccine'),
             ],
             'comment' => $this->getCommentRoutes($caseRecord),
         ];

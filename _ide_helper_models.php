@@ -292,6 +292,7 @@ namespace App\Models{
  *
  * @property int $id
  * @property int $user_id
+ * @property string $provider
  * @property string|null $ip_address
  * @property string $device
  * @property int $type
@@ -302,7 +303,6 @@ namespace App\Models{
  * @property string|null $robot
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property string $provider
  * @method static \Illuminate\Database\Eloquent\Builder|LoginRecord newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|LoginRecord newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|LoginRecord query()
@@ -339,7 +339,7 @@ namespace App\Models{
  * @property int|null $place_id
  * @property mixed $meta
  * @property mixed $form
- * @property string|null $report
+ * @property mixed|null $report
  * @property int $status
  * @property \Illuminate\Support\Carbon $date_note
  * @property int $author_id
@@ -398,7 +398,7 @@ namespace App\Models\Notes{
  * @property int|null $place_id
  * @property mixed $meta
  * @property mixed $form
- * @property string|null $report
+ * @property mixed|null $report
  * @property string|null $status
  * @property \Illuminate\Support\Carbon $date_note
  * @property int $author_id
@@ -563,7 +563,7 @@ namespace App\Models\Resources{
  * @property string $name_en
  * @property string $name_en_short
  * @property string $department
- * @property int $active
+ * @property bool $active
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @method static \Illuminate\Database\Eloquent\Builder|Division newModelQuery()
@@ -588,7 +588,7 @@ namespace App\Models\Resources{
  * @property int $id
  * @property string $name
  * @property string $label
- * @property int $active
+ * @property bool $active
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @method static \Illuminate\Database\Eloquent\Builder|NoteType newModelQuery()
@@ -612,10 +612,10 @@ namespace App\Models\Resources{
  * @property-read string $full_name
  * @property int $id
  * @property string $hn
- * @property int $gender
+ * @property bool $gender
  * @property \Illuminate\Support\Carbon|null $dob
  * @property mixed|null $profile
- * @property int $alive
+ * @property bool $alive
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Resources\Admission[] $admissions
@@ -649,9 +649,10 @@ namespace App\Models\Resources{
  * @property string $name
  * @property int $division_id
  * @property int $position
- * @property int $active
+ * @property bool $active
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder|Person filter($filters)
  * @method static \Illuminate\Database\Eloquent\Builder|Person newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Person newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Person query()
@@ -672,11 +673,9 @@ namespace App\Models\Resources{
  *
  * @property int $id
  * @property string $name
- * @property string $label
- * @property string $label_eng
  * @property string $route
  * @property int $division_id
- * @property int $active
+ * @property bool $active
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ResourceActionLog[] $actionLogs
@@ -692,8 +691,6 @@ namespace App\Models\Resources{
  * @method static \Illuminate\Database\Eloquent\Builder|Registry whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Registry whereDivisionId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Registry whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Registry whereLabel($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Registry whereLabelEng($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Registry whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Registry whereRoute($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Registry whereUpdatedAt($value)
@@ -710,12 +707,13 @@ namespace App\Models\Resources{
  * @property string|null $name_short
  * @property string $name_ref
  * @property int $division_id
- * @property int $active
+ * @property bool $active
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @method static \Illuminate\Database\Eloquent\Builder|Ward newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Ward newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Ward query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Ward search($search)
  * @method static \Illuminate\Database\Eloquent\Builder|Ward whereActive($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Ward whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Ward whereDivisionId($value)
@@ -764,7 +762,7 @@ namespace App\Models{
  * @property int $social_provider_id
  * @property string $profile_id
  * @property mixed $profile
- * @property int $active
+ * @property bool $active
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\SocialProvider|null $socialProvider
@@ -851,5 +849,75 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|SupportTicket query()
  */
 	class SupportTicket extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\User
+ *
+ * @property int $items_per_page
+ * @property string $home_page
+ * @property Collection $role_names
+ * @property Collection $role_labels
+ * @property string $hashed_key
+ * @property string $first_name
+ * @property Collection $abilities
+ * @property Collection $abilities_id
+ * @property bool $auto_subscribe_to_channel
+ * @property bool $mute_notification
+ * @property bool $notify_approval_result
+ * @property string $registry_names
+ * @property string $avatar_token
+ * @property int $id
+ * @property string $name
+ * @property string $login
+ * @property string $full_name
+ * @property string $password
+ * @property mixed $profile
+ * @property mixed $preferences
+ * @property int $division_id
+ * @property bool $active
+ * @property string|null $remember_token
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ResourceActionLog[] $actionLogs
+ * @property-read int|null $action_logs_count
+ * @property-read \App\Models\SocialProfile|null $activeLINEProfile
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ChatBot[] $chatBots
+ * @property-read int|null $chat_bots_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ChatLog[] $chatLogs
+ * @property-read int|null $chat_logs_count
+ * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
+ * @property-read int|null $notifications_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Resources\Registry[] $registries
+ * @property-read int|null $registries_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Role[] $roles
+ * @property-read int|null $roles_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\SocialProfile[] $socialProfiles
+ * @property-read int|null $social_profiles_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Subscription[] $subscriptions
+ * @property-read int|null $subscriptions_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Laravel\Sanctum\PersonalAccessToken[] $tokens
+ * @property-read int|null $tokens_count
+ * @method static \Database\Factories\UserFactory factory(...$parameters)
+ * @method static \Illuminate\Database\Eloquent\Builder|User findByUnhashKey(string $hashed)
+ * @method static \Illuminate\Database\Eloquent\Builder|User newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|User newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|User query()
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereDivisionId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereFullName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereLogin($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User wherePassword($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User wherePreferences($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereProfile($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereRememberToken($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User withActiveChatBots()
+ */
+	class User extends \Eloquent {}
 }
 

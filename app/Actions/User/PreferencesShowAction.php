@@ -6,14 +6,19 @@ use App\Models\ChatBot;
 use App\Models\EventBasedNotification;
 use App\Models\SocialProvider;
 use App\Models\User;
+use App\Traits\AvatarLinkable;
 use App\Traits\FlashDataGeneratable;
 
 class PreferencesShowAction
 {
-    use FlashDataGeneratable;
+    use FlashDataGeneratable, AvatarLinkable;
 
     public function __invoke(mixed $user): array
     {
+        if ($link = $this->shouldLinkAvatar()) {
+            return $link;
+        }
+
         // LINE config
         // for now all user share the same LINE provider
         $lineProvider = SocialProvider::query()->where('platform', 1)->first();

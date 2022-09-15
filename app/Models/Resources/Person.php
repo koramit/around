@@ -39,6 +39,19 @@ class Person extends Model
         'อ.', // 'staff',
     ];
 
+    public function scopeFilter($query, $filters)
+    {
+        $ilike = config('database.ilike');
+
+        $query->when($filters['position'] ?? null, function ($query, $position) {
+            $query->where('position', $position);
+        })->when($filters['division_id'] ?? null, function ($query, $division_id) {
+            $query->where('division_id', $division_id);
+        })
+        ->where('name', $ilike, '%'.$filters['search'].'%')
+        ->where('active', true);
+    }
+
     protected function position(): Attribute
     {
         return Attribute::make(

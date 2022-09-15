@@ -1,7 +1,10 @@
 <template>
     <div class="flex items-center w-full md:w-auto">
         <input
-            class="form-input md:w-auto !border-r-0 !rounded-r-none"
+            class="form-input md:w-auto"
+            :class="{
+                '!border-r-0 !rounded-r-none': scopes.length
+            }"
             type="text"
             name="search"
             @input="$emit('searchChanged', $event.target.value)"
@@ -10,7 +13,10 @@
             autocomplete="off"
             ref="searchInput"
         >
-        <div class="flex justify-end form-input md:w-auto !border-l-0 !rounded-l-none">
+        <div
+            class="flex justify-end form-input md:w-auto !border-l-0 !rounded-l-none"
+            v-if="scopes.length"
+        >
             <DropdownList>
                 <template #default>
                     <div class="flex items-center cursor-pointer select-none group">

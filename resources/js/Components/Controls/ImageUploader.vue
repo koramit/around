@@ -43,14 +43,16 @@
         >
             {{ error }}
         </div>
-        <!-- route('uploads.show', {path: name, filename: filename }) -->
-        <img
-            v-if="modelValue !== undefined && show"
-            :src="`${serviceEndpoints.show}?path=${pathname}/${filename}`"
-            @loadstart="busy = true"
-            @load="$nextTick(() => busy = false)"
-            alt=""
-        >
+        <transition name="slide-fade">
+            <!--suppress JSUndeclaredVariable -->
+            <img
+                v-if="modelValue !== undefined && show"
+                :src="`${serviceEndpoints.show}?path=${pathname}/${filename}`"
+                @loadstart="busy = true"
+                @load="$nextTick(() => busy = false)"
+                alt=""
+            >
+        </transition>
         <input
             class="hidden"
             type="file"
@@ -111,6 +113,5 @@ const fileInput = (event) => {
         }).finally(() => {
             busy.value = false;
         });
-    console.log(event.target.files[0]);
 };
 </script>

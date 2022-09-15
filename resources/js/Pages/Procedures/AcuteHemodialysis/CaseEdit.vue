@@ -1,6 +1,6 @@
 <template>
     <Transition mode="out-in">
-        <Suspense v-if="configs.covid.hn && !Object.keys($page.props.errors).length">
+        <Suspense v-if="configs.case_status === 'active' && configs.covid.hn && !Object.keys($page.props.errors).length">
             <CovidInfo
                 class="mb-4"
                 :configs="configs.covid"

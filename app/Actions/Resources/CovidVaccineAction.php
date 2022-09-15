@@ -2,15 +2,17 @@
 
 namespace App\Actions\Resources;
 
-use App\Contracts\PatientAPI;
+use App\Traits\AvatarLinkable;
 use Illuminate\Support\Facades\Validator;
 
 class CovidVaccineAction
 {
-    public function __invoke(array $data, PatientAPI $api): array
+    use AvatarLinkable;
+
+    public function __invoke(array $data): array
     {
-        if (config('auth.guards.web.provider') === 'avatar') {
-            return []; // call api
+        if ($link = $this->shouldLinkAvatar()) {
+            return $link;
         }
 
         $validated = Validator::make($data, ['cid' => 'required|string|max:13'])->validate();
@@ -19,6 +21,7 @@ class CovidVaccineAction
             cache()->forget($key);
         }
 
+        $api = app('App\Contracts\PatientAPI');
         $cached = cache()->remember(
             key: $key,
             ttl: now()->addDay(),

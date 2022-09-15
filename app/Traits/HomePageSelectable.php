@@ -2,13 +2,15 @@
 
 namespace App\Traits;
 
-use App\Models\User;
-
 trait HomePageSelectable
 {
-    protected function getSetHomePageActionMenu(string $routeName, User $user): ?array
+    protected function getSetHomePageActionMenu(string $routeName, string $userHomePage): ?array
     {
-        if ($user->home_page === $routeName) {
+        if (str_starts_with($routeName, 'avatar.')) {
+            $routeName = str_replace('avatar.', '', $routeName);
+        }
+
+        if ($userHomePage === $routeName) {
             return null;
         }
 
