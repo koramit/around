@@ -129,7 +129,10 @@
             </div>
             <div class="my-2 p-2 bg-gray-100 rounded space-y-2">
                 <template v-if="caseRecord.case_status !== 'active'">
-                    <div class="flex justify-end" v-if="caseRecord.md">
+                    <div
+                        class="flex justify-end"
+                        v-if="caseRecord.md"
+                    >
                         <p class="font-semibold text-complement text-xs flex items-center">
                             <IconUserMd class="h-3 w-3 mr-1" />
                             <span class="block italic truncate">{{ caseRecord.md }}</span>
@@ -138,7 +141,9 @@
                     <p
                         class="text-center"
                         :class="{'pb-4': caseRecord.md}"
-                    >{{ caseRecord.case_status }}</p>
+                    >
+                        {{ caseRecord.case_status }}
+                    </p>
                 </template>
                 <div
                     v-else-if="!caseRecord.date_note"

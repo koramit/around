@@ -1,14 +1,21 @@
 <template>
-    <div class="flex flex-col-reverse md:flex-row md:space-x-8">
+    <SearchIndex
+        :scopes="[]"
+        :form="searchForm"
+        @search-changed="(val) => searchForm.search = val"
+        @scope-changed="(val) => searchForm.scope = val"
+        ref="searchInput"
+    />
+    <div class="mt-2 md:mt-4 flex flex-col-reverse md:flex-row md:space-x-8">
         <div class="md:w-1/2">
             <div
-                class="p-2 md:p-4 bg-white rounded shadow mb-2 md:mb-4 flex justify-between items-center"
+                class="p-1 md:p-2 bg-white rounded shadow mb-1 md:mb-2 flex justify-between items-center"
                 v-for="user in users.data"
                 :key="user.id"
             >
                 <p>{{ user.name }}</p>
                 <button
-                    class="px-4 py-2 flex items-center"
+                    class="flex items-center"
                     @click="getUser(user.get_route)"
                 >
                     <span class="md:hidden action-icon-mobile">
@@ -67,9 +74,11 @@ import IconDoubleRight from '../../Components/Helpers/Icons/IconDoubleRight.vue'
 import SpinnerButton from '../../Components/Controls/SpinnerButton.vue';
 import {isEqual} from 'lodash';
 import PaginationNav from '../../Components/Helpers/PaginationNav.vue';
+import SearchIndex from '../../Components/Controls/SearchIndex.vue';
 
-defineProps({
+const props = defineProps({
     users: {type: Object, required: true},
+    filters: {type: Object, required: true},
 });
 
 const form = reactive({
@@ -80,6 +89,11 @@ const form = reactive({
     remark: null,
     roles: [],
     route: null,
+});
+
+const searchForm = reactive({
+    search: props.filters.search,
+    scope: props.filters.scope,
 });
 
 let formOrg = {roles: []};
