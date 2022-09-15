@@ -44,11 +44,12 @@
             {{ error }}
         </div>
         <transition name="slide-fade">
+            <!--suppress JSUndeclaredVariable -->
             <img
                 v-if="modelValue !== undefined && show"
                 :src="`${serviceEndpoints.show}?path=${pathname}/${filename}`"
                 @loadstart="busy = true"
-                @load="loaded"
+                @load="$nextTick(() => busy = false)"
                 alt=""
             >
         </transition>
@@ -76,7 +77,7 @@ import IconCamera from '../Helpers/Icons/IconCamera.vue';
 import IconImage from '../Helpers/Icons/IconImage.vue';
 import IconEyesSlash from '../Helpers/Icons/IconEyesSlash.vue';
 import IconEyes from '../Helpers/Icons/IconEyes.vue';
-import {nextTick, ref} from 'vue';
+import {ref} from 'vue';
 const emits = defineEmits(['update:modelValue', 'autosave']);
 const props = defineProps({
     modelValue: { type: String, default: '' },
@@ -113,7 +114,4 @@ const fileInput = (event) => {
             busy.value = false;
         });
 };
-const loaded = () => nextTick(() => {
-    busy.value = false;
-});
 </script>
