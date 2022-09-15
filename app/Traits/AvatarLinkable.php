@@ -6,6 +6,7 @@ use App\Extensions\Auth\AvatarUser;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Validation\ValidationException;
 
 trait AvatarLinkable
 {
@@ -20,12 +21,22 @@ trait AvatarLinkable
         $url = str_replace(config('app.url'), config('auth.avatar.url'), route($routeName, request()->route()->parameters()));
         $method = $this->getRouteMethod($routeName);
         $client = Http::withToken($user->getAuthIdentifier())->acceptJson();
+        if (request()->hasFile('file')) {
+            $file = request()->file('file');
+            if (! $file->isValid()) {
+                throw ValidationException::withMessages(['file' => 'file not invalid']);
+            }
+            $client->attach('file', $file->getContent(), $file->getClientOriginalName());
+            $requestData = request()->except('file');
+        } else {
+            $requestData = request()->all();
+        }
         if ($method === 'GET') {
-            $response = $client->get($url, request()->all());
+            $response = $client->get($url, $requestData);
         } elseif ($method === 'POST') {
-            $response = $client->post($url, request()->all());
+            $response = $client->post($url, $requestData);
         } elseif ($method === 'PATCH') {
-            $response = $client->patch($url, request()->all());
+            $response = $client->patch($url, $requestData);
         } else {
             abort(404);
         }
