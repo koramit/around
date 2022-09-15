@@ -2,14 +2,17 @@
     <SearchIndex
         :scopes="[]"
         :form="searchForm"
-        @search-changed="(val) => searchForm.search = val"
+        @search-changed="(val) => {
+            searchForm.search = val;
+            form.show = false;
+        }"
         @scope-changed="(val) => searchForm.scope = val"
         ref="searchInput"
     />
     <div class="mt-2 md:mt-4 flex flex-col-reverse md:flex-row md:space-x-8">
         <div class="md:w-1/2">
             <div
-                class="p-1 md:p-2 bg-white rounded shadow mb-1 md:mb-2 flex justify-between items-center"
+                class="p-2 bg-white rounded shadow mb-2 flex justify-between items-center"
                 v-for="user in users.data"
                 :key="user.id"
             >
