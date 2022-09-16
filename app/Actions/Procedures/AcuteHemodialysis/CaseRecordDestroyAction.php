@@ -3,7 +3,6 @@
 namespace App\Actions\Procedures\AcuteHemodialysis;
 
 use App\Models\Registries\AcuteHemodialysisCaseRecord;
-use App\Models\User;
 use App\Traits\AvatarLinkable;
 use Illuminate\Support\Facades\Validator;
 
@@ -11,7 +10,7 @@ class CaseRecordDestroyAction
 {
     use AvatarLinkable;
 
-    public function __invoke(array $data, string $hashedKey, User $user): array
+    public function __invoke(array $data, string $hashedKey, mixed $user): array
     {
         if (($link = $this->shouldLinkAvatar()) !== false) {
             return $link;
