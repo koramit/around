@@ -43,6 +43,10 @@ trait AvatarLinkable
             abort(404);
         }
 
+        if (collect([422])->contains($response->status())) {
+            throw ValidationException::withMessages($response->json()['errors']);
+        }
+
         $data = $response->json();
         if (! $data) {
             return $response;
