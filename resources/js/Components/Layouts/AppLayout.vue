@@ -404,7 +404,11 @@ watch (
             return;
         }
         if (usePage().props.value.event.name === 'confirmation-required') {
-            setTimeout(() => confirmForm.value.open(usePage().props.value.event.payload), 300);
+            nextTick(() => {
+                setTimeout(() => {
+                    confirmForm.value.open(usePage().props.value.event.payload);
+                }, 300); // equal to animate duration
+            });
         }
     }
 );

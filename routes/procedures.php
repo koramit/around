@@ -1,7 +1,5 @@
 <?php
 
-use App\Http\Controllers\Procedures\AcuteHemodialysis\CaseRecordCompleteController;
-use App\Http\Controllers\Procedures\AcuteHemodialysis\CaseRecordController as AcuteHemodialysisCaseController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\CreateOrderShortcutController as AcuteHemodialysisCreateOrderShortcutController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\DialysisSessionController as AcuteHemodialysisDialysisSessionController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\IdleCaseController as AcuteHemodialysisIdleCase;
@@ -28,26 +26,7 @@ Route::get('/', ProcedureController::class)
 Route::prefix('acute-hemodialysis')
     ->name('acute-hemodialysis.')
     ->group(function () {
-        Route::get('/', [AcuteHemodialysisCaseController::class, 'index'])
-            ->middleware(['remember', 'page-transition', 'locale', 'no-in-app-allow'])
-            ->can('view_any_acute_hemodialysis_cases')
-            ->name('index');
-        Route::post('/', [AcuteHemodialysisCaseController::class, 'store'])
-            ->can('create_acute_hemodialysis_case')
-            ->name('store');
-        /* @TODO split to show */
-        Route::get('/{hashedKey}/edit', [AcuteHemodialysisCaseController::class, 'edit'])
-            ->middleware(['page-transition', 'locale', 'no-in-app-allow'])
-            ->can('view_any_acute_hemodialysis_cases')
-            ->name('edit');
-        Route::patch('/{hashedKey}', [AcuteHemodialysisCaseController::class, 'update'])
-            ->name('update');
-        Route::delete('/{hashedKey}', [AcuteHemodialysisCaseController::class, 'destroy'])
-            ->name('destroy');
-        Route::post('/{hashedKey}/complete', CaseRecordCompleteController::class)
-            ->name('complete');
-        Route::put('/{hashedKey}/addendum', CaseRecordCompleteController::class)
-            ->name('addendum');
+        require __DIR__.'/procedures/acute_hd.php';
 
         Route::post('/orders', [AcuteHemodialysisOrderController::class, 'store'])
             ->can('create_acute_hemodialysis_order')
