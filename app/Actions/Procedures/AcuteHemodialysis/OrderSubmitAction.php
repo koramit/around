@@ -4,20 +4,20 @@ namespace App\Actions\Procedures\AcuteHemodialysis;
 
 use App\Jobs\Procedures\AcuteHemodialysis\NotifyOrderResubmitToSubscribers;
 use App\Models\Notes\AcuteHemodialysisOrderNote;
-use App\Models\User;
 use App\Rules\AcceptedIfOthersFalsy;
 use App\Traits\AcuteHemodialysis\OrderFormConfigsShareable;
+use App\Traits\AvatarLinkable;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
 class OrderSubmitAction extends AcuteHemodialysisAction
 {
-    use OrderFormConfigsShareable;
+    use OrderFormConfigsShareable, AvatarLinkable;
 
-    public function __invoke(array $data, string $hashedKey, User $user): array
+    public function __invoke(array $data, string $hashedKey, mixed $user): array
     {
-        if (config('auth.guards.web.provider') === 'avatar') {
-            return []; // call api
+        if (($link = $this->shouldLinkAvatar()) !== false) {
+            return $link;
         }
 
         /** @var AcuteHemodialysisOrderNote $note */
@@ -369,7 +369,7 @@ class OrderSubmitAction extends AcuteHemodialysisAction
         $this->shouldNotifyResubmit($note);
 
         return [
-            'note' => $note,
+            'case' => $note->caseRecord->hashed_key,
             'message' => [
                 'type' => 'success',
                 'title' => 'Submit successful.',

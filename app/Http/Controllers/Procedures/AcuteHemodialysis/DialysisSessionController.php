@@ -14,6 +14,10 @@ class DialysisSessionController extends Controller
     {
         $reply = (new DialysisSessionStoreAction)($hashedKey, $request->user());
 
+        if ($request->wantsJson()) {
+            return $reply;
+        }
+
         return back()->with('message', $reply);
     }
 
@@ -21,12 +25,20 @@ class DialysisSessionController extends Controller
     {
         $reply = (new DialysisSessionDestroyAction)($hashedKey, $request->user());
 
+        if ($request->wantsJson()) {
+            return $reply;
+        }
+
         return back()->with('message', $reply);
     }
 
     public function update(string $hashedKey, Request $request)
     {
         $reply = (new DialysisSessionUpdateAction)($hashedKey, $request->all(), $request->user());
+
+        if ($request->wantsJson()) {
+            return $reply;
+        }
 
         return back()->with('message', $reply);
     }

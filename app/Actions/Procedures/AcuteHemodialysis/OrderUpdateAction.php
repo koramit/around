@@ -3,19 +3,19 @@
 namespace App\Actions\Procedures\AcuteHemodialysis;
 
 use App\Models\Notes\AcuteHemodialysisOrderNote;
-use App\Models\User;
 use App\Traits\AcuteHemodialysis\OrderFormConfigsShareable;
+use App\Traits\AvatarLinkable;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
 class OrderUpdateAction extends AcuteHemodialysisAction
 {
-    use OrderFormConfigsShareable;
+    use OrderFormConfigsShareable, AvatarLinkable;
 
-    public function __invoke(array $data, string $hashedKey, User $user): bool
+    public function __invoke(array $data, string $hashedKey, mixed $user): array
     {
-        if (config('auth.guards.web.provider') === 'avatar') {
-            return true; // call api
+        if (($link = $this->shouldLinkAvatar()) !== false) {
+            return $link;
         }
 
         $note = AcuteHemodialysisOrderNote::query()->findByUnhashKey($hashedKey)->firstOrFail();
@@ -208,6 +208,6 @@ class OrderUpdateAction extends AcuteHemodialysisAction
 
         $note->form = $validated;
 
-        return $note->save();
+        return ['ok' => $note->save()];
     }
 }

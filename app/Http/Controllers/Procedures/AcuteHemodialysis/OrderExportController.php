@@ -23,8 +23,9 @@ class OrderExportController extends Controller
      */
     public function __invoke(Request $request, User $user)
     {
-        $sheets = new SheetCollection((new OrderExportAction)($request->input('date_note'), $request->user()));
-
-        return (new FastExcel($sheets))->download("acute_hd_order_{$request->input('date_note')}.xlsx");
+        return (new OrderExportAction())($request->input('date_note'), $request->user());
+        // $sheets = new SheetCollection((new OrderExportAction)($request->input('date_note'), $request->user()));
+        //
+        // return (new FastExcel($sheets))->download("acute_hd_order_{$request->input('date_note')}.xlsx");
     }
 }

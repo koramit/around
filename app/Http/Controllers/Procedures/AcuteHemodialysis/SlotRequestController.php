@@ -14,11 +14,20 @@ class SlotRequestController extends Controller
 {
     use AppLayoutSessionFlashable;
 
+    public function __construct(Request $request)
+    {
+        if (! $request->wantsJson()) {
+            $this->middleware(['page-transition', 'locale', 'no-in-app-allow']);
+        }
+    }
+
     public function index(Request $request)
     {
         $data = (new SlotRequestIndexAction)(user: $request->user(), routeName: $request->route()->getName());
 
-        // if request want json return $data
+        if ($request->wantsJson()) {
+            return $data;
+        }
 
         $this->setFlash($data['flash']);
         unset($data['flash']);
@@ -32,12 +41,20 @@ class SlotRequestController extends Controller
     {
         $reply = (new SlotRequestUpdateAction)(hashedKey: $hashedKey, data: $request->all(), user: $request->user());
 
+        if ($request->wantsJson()) {
+            return $reply;
+        }
+
         return back()->with('message', $reply);
     }
 
     public function destroy(string $hashedKey, Request $request)
     {
         $reply = (new SlotRequestDestroyAction())(hashedKey: $hashedKey, data: $request->all(), user: $request->user());
+
+        if ($request->wantsJson()) {
+            return $reply;
+        }
 
         return back()->with('message', $reply);
     }

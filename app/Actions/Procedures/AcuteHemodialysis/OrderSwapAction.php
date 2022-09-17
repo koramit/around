@@ -4,23 +4,23 @@ namespace App\Actions\Procedures\AcuteHemodialysis;
 
 use App\Models\DocumentChangeRequests\AcuteHemodialysisSlotRequest;
 use App\Models\Notes\AcuteHemodialysisOrderNote;
-use App\Models\User;
 use App\Traits\AcuteHemodialysis\OrderSwappable;
 use App\Traits\AcuteHemodialysis\SlotCountable;
+use App\Traits\AvatarLinkable;
 use Exception;
 use Illuminate\Support\Facades\Validator;
 
 class OrderSwapAction extends AcuteHemodialysisAction
 {
-    use OrderSwappable, SlotCountable;
+    use OrderSwappable, SlotCountable, AvatarLinkable;
 
     /**
      * @throws Exception
      */
-    public function __invoke(array $data, string $hashedKey, User $user): array
+    public function __invoke(array $data, string $hashedKey, mixed $user): array
     {
-        if (config('auth.guards.web.provider') === 'avatar') {
-            return []; // call api
+        if (($link = $this->shouldLinkAvatar()) !== false) {
+            return $link;
         }
 
         /** @var AcuteHemodialysisOrderNote $order */

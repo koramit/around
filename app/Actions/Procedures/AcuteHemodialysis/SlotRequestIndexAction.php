@@ -4,16 +4,20 @@ namespace App\Actions\Procedures\AcuteHemodialysis;
 
 use App\Models\DocumentChangeRequests\AcuteHemodialysisSlotRequest;
 use App\Models\Notes\AcuteHemodialysisOrderNote;
-use App\Models\User;
 use App\Traits\AcuteHemodialysis\OrderShareValidatable;
+use App\Traits\AvatarLinkable;
 use App\Traits\HomePageSelectable;
 
 class SlotRequestIndexAction extends AcuteHemodialysisAction
 {
-    use OrderShareValidatable, HomePageSelectable;
+    use OrderShareValidatable, HomePageSelectable, AvatarLinkable;
 
-    public function __invoke(User $user, string $routeName): array
+    public function __invoke(mixed $user, string $routeName): array
     {
+        if (($link = $this->shouldLinkAvatar()) !== false) {
+            return $link;
+        }
+
         $requests = AcuteHemodialysisSlotRequest::query()
             ->with(['changeable:id,date_note,meta'])
             ->withRequesterName()
@@ -90,7 +94,6 @@ class SlotRequestIndexAction extends AcuteHemodialysisAction
                 'in_unit_dialysis_types' => $this->IN_UNIT,
                 'out_unit_dialysis_types' => $this->OUT_UNIT,
                 'patient_types' => $this->PATIENT_TYPES,
-                'extra_slot_requests_endpoint' => route('procedures.acute-hemodialysis.extra-slot-requests.store'),
             ],
         ];
     }

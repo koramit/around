@@ -4,19 +4,19 @@ namespace App\Actions\Procedures\AcuteHemodialysis;
 
 use App\Models\Notes\AcuteHemodialysisOrderNote;
 use App\Models\Resources\Ward;
-use App\Models\User;
 use App\Traits\AcuteHemodialysis\OrderFormConfigsShareable;
+use App\Traits\AvatarLinkable;
 use App\Traits\Subscribable;
 use Hashids\Hashids;
 
 class OrderEditAction extends AcuteHemodialysisAction
 {
-    use OrderFormConfigsShareable, Subscribable;
+    use OrderFormConfigsShareable, Subscribable, AvatarLinkable;
 
-    public function __invoke(string $hashedKey, User $user): array
+    public function __invoke(string $hashedKey, mixed $user): array
     {
-        if (config('auth.guards.web.provider') === 'avatar') {
-            return []; // call api
+        if (($link = $this->shouldLinkAvatar()) !== false) {
+            return $link;
         }
 
         $note = AcuteHemodialysisOrderNote::query()->withPlaceName(Ward::class)->findByUnhashKey($hashedKey)->firstOrFail();

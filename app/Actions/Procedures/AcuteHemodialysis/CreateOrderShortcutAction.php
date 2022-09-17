@@ -2,14 +2,16 @@
 
 namespace App\Actions\Procedures\AcuteHemodialysis;
 
-use App\Models\User;
+use App\Traits\AvatarLinkable;
 
 class CreateOrderShortcutAction
 {
-    public function __invoke(string $hashedKey, User $user): bool
+    use AvatarLinkable;
+
+    public function __invoke(string $hashedKey, mixed $user): bool
     {
-        if (config('auth.guards.web.provider') === 'avatar') {
-            return true; // call api
+        if (($link = $this->shouldLinkAvatar()) !== false) {
+            return $link;
         }
 
         cache()->put("acute-hemodialysis-create-order-shortcut-session-$user->id", $hashedKey, now()->addMinutes(config('session.lifetime')));

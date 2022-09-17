@@ -5,19 +5,19 @@ namespace App\Actions\Procedures\AcuteHemodialysis;
 use App\Actions\Resources\PatientRecentlyAdmissionAction;
 use App\Managers\Resources\AdmissionManager;
 use App\Models\Notes\AcuteHemodialysisOrderNote;
-use App\Models\User;
+use App\Traits\AvatarLinkable;
 use App\Traits\Subscribable;
 use ArrayObject;
 use Hashids\Hashids;
 
 class OrderShowAction extends AcuteHemodialysisAction
 {
-    use Subscribable;
+    use Subscribable, AvatarLinkable;
 
-    public function __invoke(string $hashedKey, User $user): array
+    public function __invoke(string $hashedKey, mixed $user): array
     {
-        if (config('auth.guards.web.provider') === 'avatar') {
-            return []; // call api
+        if (($link = $this->shouldLinkAvatar()) !== false) {
+            return $link;
         }
 
         $order = AcuteHemodialysisOrderNote::query()
@@ -267,10 +267,8 @@ class OrderShowAction extends AcuteHemodialysisAction
             ['label' => 'dialyzer', 'name' => 'dialyzer'],
 
             // TPE
-            // ['label' => 'replacement_fluid_albumin', 'name' => 'replacement_fluid_albumin'],
             ['label' => 'albumin concentrated (%)', 'name' => 'replacement_fluid_albumin_concentrated'],
             ['label' => 'albumin volume (ml)', 'name' => 'replacement_fluid_albumin_volume'],
-            // ['label' => 'replacement_fluid_ffp', 'name' => 'replacement_fluid_ffp'],
             ['label' => 'ffp volume (ml)', 'name' => 'replacement_fluid_ffp_volume'],
             ['label' => 'blood pump (ml/min)', 'name' => 'blood_pump'],
             ['label' => 'filtration pump (%)', 'name' => 'filtration_pump'],
