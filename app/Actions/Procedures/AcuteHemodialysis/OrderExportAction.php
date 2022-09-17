@@ -9,22 +9,11 @@ use App\Traits\AvatarLinkable;
 use App\Traits\FirstNameAware;
 use Hashids\Hashids;
 use Illuminate\Database\Eloquent\Collection;
-use OpenSpout\Common\Exception\InvalidArgumentException;
-use OpenSpout\Common\Exception\IOException;
-use OpenSpout\Common\Exception\UnsupportedTypeException;
-use OpenSpout\Writer\Exception\WriterNotOpenedException;
-use Rap2hpoutre\FastExcel\FastExcel;
 
 class OrderExportAction extends AcuteHemodialysisAction
 {
     use FirstNameAware, AvatarLinkable;
 
-    /**
-     * @throws WriterNotOpenedException
-     * @throws IOException
-     * @throws UnsupportedTypeException
-     * @throws InvalidArgumentException
-     */
     public function __invoke(string $dateNote, mixed $user)
     {
         if (($link = $this->shouldLinkAvatar()) !== false) {
@@ -76,9 +65,7 @@ class OrderExportAction extends AcuteHemodialysisAction
             ],
         ]);
 
-        return (new FastExcel(['hd_hf_sledd' => $hdALike, 'tpe' => $tpe, 'hd+tpe' => $hdTpe]))
-            ->download("acute_hd_order_$dateNote.xlsx");
-        // return ['hd_hf_sledd' => $hdALike, 'tpe' => $tpe, 'hd+tpe' => $hdTpe];
+        return ['hd_hf_sledd' => $hdALike, 'tpe' => $tpe, 'hd+tpe' => $hdTpe];
     }
 
     private function getHdRow(AcuteHemodialysisOrderNote $order, Collection $admissions): array

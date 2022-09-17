@@ -23,7 +23,9 @@ class ScheduleController extends Controller
     {
         $data = (new ScheduleIndexAction)(data: $request->all(), user: $request->user(), routeName: $request->route()->getName());
 
-        // if request want json return $data
+        if ($request->wantsJson()) {
+            return $data;
+        }
 
         $this->setFlash($data['flash']);
         unset($data['flash']);

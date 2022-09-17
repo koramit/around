@@ -16,16 +16,19 @@ use Rap2hpoutre\FastExcel\SheetCollection;
 class OrderExportController extends Controller
 {
     /**
-     * @throws WriterNotOpenedException
      * @throws IOException
+     * @throws WriterNotOpenedException
      * @throws UnsupportedTypeException
      * @throws InvalidArgumentException
      */
     public function __invoke(Request $request, User $user)
     {
-        return (new OrderExportAction())($request->input('date_note'), $request->user());
-        // $sheets = new SheetCollection((new OrderExportAction)($request->input('date_note'), $request->user()));
-        //
-        // return (new FastExcel($sheets))->download("acute_hd_order_{$request->input('date_note')}.xlsx");
+        $sheets = new SheetCollection((new OrderExportAction)($request->input('date_note'), $request->user()));
+
+        if ($request->wantsJson()) {
+            return $sheets;
+        }
+
+        return (new FastExcel($sheets))->download("acute_hd_order_{$request->input('date_note')}.xlsx");
     }
 }
