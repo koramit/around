@@ -90,7 +90,7 @@ class ScheduleIndexAction extends AcuteHemodialysisAction
             if ($this->isDialysisReservable($case)) {
                 $caseConfig = [
                     'value' => implode('|', [$shortCut, $case->patient->hn, $case->patient->profile['document_id']]),
-                    'label' => "HN {$case->patient->hn} {$case->patient->first_name}",
+                    'label' => "HN {$case->patient->hn} {$case->patient->full_name}",
                 ];
             }
         }
