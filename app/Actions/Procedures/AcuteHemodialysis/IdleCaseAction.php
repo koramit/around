@@ -11,7 +11,7 @@ class IdleCaseAction
 {
     use AvatarLinkable;
 
-    public function __invoke(string $search): Collection
+    public function __invoke(string $search): Collection|array
     {
         if (($link = $this->shouldLinkAvatar()) !== false) {
             return $link;
