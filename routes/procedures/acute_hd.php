@@ -4,6 +4,8 @@ use App\Http\Controllers\Procedures\AcuteHemodialysis\CaseRecordCompleteControll
 use App\Http\Controllers\Procedures\AcuteHemodialysis\CaseRecordController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\CreateOrderShortcutController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\DialysisSessionController;
+use App\Http\Controllers\Procedures\AcuteHemodialysis\IdleCaseController;
+use App\Http\Controllers\Procedures\AcuteHemodialysis\LastIndexSectionController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\OrderController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\OrderCopyController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\OrderExportController;
@@ -11,6 +13,8 @@ use App\Http\Controllers\Procedures\AcuteHemodialysis\OrderRescheduleController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\OrderSubmitController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\OrderSwapController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\ScheduleController;
+use App\Http\Controllers\Procedures\AcuteHemodialysis\SlotAvailableController;
+use App\Http\Controllers\Procedures\AcuteHemodialysis\SlotAvailableDatesController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\SlotRequestController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\TodaySlotRequestController;
 use Illuminate\Support\Facades\Route;
@@ -83,3 +87,17 @@ Route::get('/orders/{hashedKey}', [OrderController::class, 'show'])
 Route::get('/orders-export', OrderExportController::class)
     ->can('view_any_acute_hemodialysis_orders')
     ->name('orders.export');
+
+// resources
+Route::post('/slot-available', SlotAvailableController::class)
+    ->can('view_any_acute_hemodialysis_slot_requests')
+    ->name('slot-available');
+Route::post('/slot-available-dates', SlotAvailableDatesController::class)
+    ->can('create_acute_hemodialysis_order')
+    ->name('slot-available-dates');
+Route::get('/idle-cases', IdleCaseController::class)
+    ->can('view_any_acute_hemodialysis_cases')
+    ->name('idle-cases');
+Route::get('/last-index-section', LastIndexSectionController::class)
+    ->can('view_any_acute_hemodialysis_cases')
+    ->name('last-index-section');

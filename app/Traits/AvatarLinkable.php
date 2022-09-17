@@ -47,13 +47,13 @@ trait AvatarLinkable
             throw ValidationException::withMessages($response->json()['errors']);
         }
 
-        $data = $response->json();
-        if (! $data) {
+        $json = $response->json();
+        if (! $json) {
             return $response;
         }
-        $this->replaceDomain($data);
+        $this->replaceDomain($json);
 
-        return $data;
+        return $json;
     }
 
     protected function replaceDomain(array &$data): void
