@@ -11,7 +11,7 @@ class CreateOrderShortcutAction
     public function __invoke(string $hashedKey, mixed $user): bool
     {
         if (($link = $this->shouldLinkAvatar()) !== false) {
-            return $link;
+            return (bool) $link;
         }
 
         cache()->put("acute-hemodialysis-create-order-shortcut-session-$user->id", $hashedKey, now()->addMinutes(config('session.lifetime')));
