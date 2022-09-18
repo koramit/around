@@ -11,11 +11,6 @@ use Illuminate\Support\Str;
 
 class AbilitiesTableSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
     public function run(): void
     {
         $datetime = ['created_at' => now(), 'updated_at' => now()];
@@ -42,45 +37,19 @@ class AbilitiesTableSeeder extends Seeder
             ['registry_id' => null, 'name' => 'upload_file'] + $datetime,
             ['registry_id' => null, 'name' => 'comment'] + $datetime,
 
-            // acute hd case
-            ['registry_id' => 1, 'name' => 'view_any_acute_hemodialysis_cases'] + $datetime, // index
-            ['registry_id' => 1, 'name' => 'create_acute_hemodialysis_case'] + $datetime, // create/store
-            ['registry_id' => 1, 'name' => 'edit_acute_hemodialysis_case'] + $datetime, // edit/update + policy
-            ['registry_id' => 1, 'name' => 'view_acute_hemodialysis_case'] + $datetime, // show + policy
-            ['registry_id' => 1, 'name' => 'archive_acute_hemodialysis_case'] + $datetime, // archive + policy
-            ['registry_id' => 1, 'name' => 'cancel_acute_hemodialysis_case'] + $datetime, // destroy + policy
+            ['registry_id' => null, 'name' => 'view_any_social_providers'] + $datetime,
+            ['registry_id' => null, 'name' => 'create_social_provider'] + $datetime,
+            ['registry_id' => null, 'name' => 'edit_social_provider'] + $datetime,
 
-            // acute hd order
-            ['registry_id' => 1, 'name' => 'view_any_acute_hemodialysis_orders'] + $datetime, // index [view schedule]
-            ['registry_id' => 1, 'name' => 'create_acute_hemodialysis_order'] + $datetime, // create/store
-            ['registry_id' => 1, 'name' => 'view_acute_hemodialysis_order'] + $datetime, // show + policy
-            ['registry_id' => 1, 'name' => 'perform_acute_hemodialysis_order'] + $datetime, // perform + policy
-
-            // slot request
-            ['registry_id' => 1, 'name' => 'view_any_acute_hemodialysis_slot_requests'] + $datetime, // index
-            ['registry_id' => 1, 'name' => 'approve_acute_hemodialysis_slot_request'] + $datetime, // approve + policy
-
-            // start dialysis session
-            ['registry_id' => 1, 'name' => 'start_session_days_after_date_note'] + $datetime,
-
-            // track md performance
-            ['registry_id' => 1, 'name' => 'subscribe_md_performance_notification'] + $datetime,
-
-            // manager stuff
-            ['registry_id' => 1, 'name' => 'force_complete_case'] + $datetime,
-
+            ['registry_id' => null, 'name' => 'view_any_chat_bots'] + $datetime,
+            ['registry_id' => null, 'name' => 'create_chat_bot'] + $datetime,
+            ['registry_id' => null, 'name' => 'edit_chat_bot'] + $datetime,
         ]);
 
         Role::query()->insert([
             ['registry_id' => null, 'name' => 'root', 'label' => null] + $datetime,
             ['registry_id' => null, 'name' => 'authority', 'label' => 'Authority'] + $datetime, // authorize role to user
             ['registry_id' => null, 'name' => 'participant', 'label' => null] + $datetime,
-
-            ['registry_id' => 1, 'name' => 'acute_hemodialysis_nurse', 'label' => 'Acute HD Nurse'] + $datetime,
-            ['registry_id' => 1, 'name' => 'acute_hemodialysis_nurse_manager', 'label' => 'Acute HD In charge nurse'] + $datetime,
-            ['registry_id' => 1, 'name' => 'acute_hemodialysis_fellow', 'label' => 'Acute HD Fellow'] + $datetime,
-            ['registry_id' => 1, 'name' => 'acute_hemodialysis_staff', 'label' => 'Acute HD Nephrologist'] + $datetime,
-            ['registry_id' => 1, 'name' => 'acute_hemodialysis_manager', 'label' => 'Acute HD Manager'] + $datetime,
         ]);
 
         $assignments = [
@@ -93,35 +62,6 @@ class AbilitiesTableSeeder extends Seeder
                 'get_support',
                 'comment',
             ],
-            'acute_hemodialysis_nurse' => [
-                'view_any_acute_hemodialysis_cases',
-                'view_acute_hemodialysis_case',
-                'view_any_acute_hemodialysis_orders',
-                'view_acute_hemodialysis_order',
-                'perform_acute_hemodialysis_order',
-                'view_any_acute_hemodialysis_slot_requests',
-            ],
-            'acute_hemodialysis_nurse_manager' => [
-                'approve_acute_hemodialysis_slot_request',
-                'create_acute_hemodialysis_case',
-                'start_session_after_date_note',
-            ],
-            'acute_hemodialysis_fellow' => [
-                'view_any_acute_hemodialysis_cases',
-                'create_acute_hemodialysis_case',
-                'edit_acute_hemodialysis_case',
-                'view_acute_hemodialysis_case',
-                'archive_acute_hemodialysis_case',
-                'cancel_acute_hemodialysis_case',
-                'view_any_acute_hemodialysis_orders',
-                'create_acute_hemodialysis_order',
-                'view_acute_hemodialysis_order',
-                'view_any_acute_hemodialysis_slot_requests',
-            ],
-            'acute_hemodialysis_staff' => [
-                'subscribe_md_performance_notification',
-                'force_complete_case',
-            ],
         ];
 
         foreach ($assignments as $roleName => $abilities) {
@@ -132,10 +72,6 @@ class AbilitiesTableSeeder extends Seeder
 
         $root = Role::query()->where('name', 'root')->first();
         $root->abilities()->attach(Ability::query()->select('id')->pluck('id'));
-
-        $manager = Role::query()->where('name', 'acute_hemodialysis_manager')->first();
-        $manager->abilities()
-            ->attach(Ability::query()->where('registry_id', 1)->pluck('id'));
 
         User::query()->create([
             'name' => 'around',

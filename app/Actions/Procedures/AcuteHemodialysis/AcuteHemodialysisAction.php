@@ -3,7 +3,6 @@
 namespace App\Actions\Procedures\AcuteHemodialysis;
 
 use App\Models\Ability;
-use App\Models\Note;
 use App\Models\Resources\NoteType;
 use App\Models\Resources\Registry;
 use App\Traits\FirstNameAware;
@@ -115,11 +114,6 @@ class AcuteHemodialysisAction
     public function getUnitDayOff(): string
     {
         return $this->UNIT_DAY_OFF;
-    }
-
-    public function dateNoteToday(Note $note): bool
-    {
-        return $note->date_note?->format('Y-m-d') === $this->TODAY;
     }
 
     protected function getSerology(array $form): array

@@ -91,7 +91,7 @@ Route::get('/orders-export', OrderExportController::class)
 // resources
 Route::post('/slot-available', SlotAvailableController::class)
     ->can('view_any_acute_hemodialysis_slot_requests')
-    ->name('slot-available');
+    ->name('slot-available'); // @TODO make covid case can reschedule without hd-out-unit limit
 Route::post('/slot-available-dates', SlotAvailableDatesController::class)
     ->can('create_acute_hemodialysis_order')
     ->name('slot-available-dates');

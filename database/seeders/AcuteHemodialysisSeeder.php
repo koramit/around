@@ -14,6 +14,8 @@ use App\Models\Notes\AcuteHemodialysisOrderNote;
 use App\Models\Resources\Admission;
 use App\Models\Resources\Patient;
 use App\Models\Resources\Person;
+use App\Models\Resources\Registry;
+use App\Models\Role;
 use App\Models\User;
 use Exception;
 use Illuminate\Database\Seeder;
@@ -29,16 +31,23 @@ class AcuteHemodialysisSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory()->create(['login' => 'nurse1.ahd'])->roles()->attach([3, 4]); // participant, nurse;
-        User::factory()->create(['login' => 'nurse2.ahd'])->roles()->attach([3, 4]); // participant, nurse;
-        User::factory()->create(['login' => 'manager1.ahd'])->roles()->attach([2, 3, 4, 5]); // authority, participant, nurse, manager;
-        User::factory()->create(['login' => 'manager2.ahd'])->roles()->attach([2, 3, 4, 5]); // authority, participant, nurse, manager;
-        User::factory()->create(['login' => 'fellow1.ahd'])->roles()->attach([3, 6]); // participant, fellow;
-        User::factory()->create(['login' => 'fellow2.ahd'])->roles()->attach([3, 6]); // participant, fellow;
-        User::factory()->create(['login' => 'fellow3.ahd'])->roles()->attach([3, 6]); // participant, fellow;
-        User::factory()->create(['login' => 'fellow4.ahd'])->roles()->attach([3, 6]); // participant, fellow;
-        User::factory()->create(['login' => 'staff1.ahd'])->roles()->attach([2, 3, 6, 7]); // authority, participant, fellow, staff;
-        User::factory()->create(['login' => 'staff2.ahd'])->roles()->attach([2, 3, 6, 7]); // authority, participant, fellow, staff;
+        $authority = Role::query()->where('name', 'authority')->first();
+        $participant = Role::query()->where('name', 'participant')->first();
+        $nurse = Role::query()->where('name', 'acute_hemodialysis_nurse')->first();
+        $inCharge = Role::query()->where('name', 'acute_hemodialysis_nurse_manager')->first();
+        $fellow = Role::query()->where('name', 'acute_hemodialysis_fellow')->first();
+        $staff = Role::query()->where('name', 'acute_hemodialysis_staff')->first();
+        $manager = Role::query()->where('name', 'acute_hemodialysis_manager')->first();
+        User::factory()->create(['login' => 'nurse.ahd'])->roles()->attach([$participant->id, $nurse->id]); // participant, nurse;
+        User::factory()->create(['login' => 'in-charge.ahd'])->roles()->attach([$authority->id, $participant->id, $nurse->id, $inCharge->id]); // authority, participant, nurse, manager;
+        User::factory()->create(['login' => 'fellow1.ahd'])->roles()->attach([$participant->id, $fellow->id]); // participant, fellow;
+        User::factory()->create(['login' => 'fellow2.ahd'])->roles()->attach([$participant->id, $fellow->id]); // participant, fellow;
+        User::factory()->create(['login' => 'fellow3.ahd'])->roles()->attach([$participant->id, $fellow->id]); // participant, fellow;
+        User::factory()->create(['login' => 'fellow4.ahd'])->roles()->attach([$participant->id, $fellow->id]); // participant, fellow;
+        User::factory()->create(['login' => 'staff.ahd'])->roles()->attach([$participant->id, $fellow->id, $staff->id]); // participant, fellow, staff;
+        User::factory()->create(['login' => 'manager.ahd'])->roles()->attach([$authority->id, $participant->id, $manager->id]); // authority, participant, manager;
+        $users = User::query()->where('id', '>', 1)->pluck('id');
+        Registry::query()->where('name', 'acute_hd')->first()->users()->attach($users);
 
         /** admissions */
         $anRun = env('SEED_AN_START');
@@ -96,10 +105,10 @@ class AcuteHemodialysisSeeder extends Seeder
         }
 
         // approve today request
-        $managers = User::query()->whereIn('login', ['manager.ahd1', 'manager2.ahd'])->get();
+        $inCharge = User::query()->where('login', 'in-charge.ahd')->first();
         AcuteHemodialysisSlotRequest::query()
-            ->each(function ($r) use ($managers) {
-                (new SlotRequestUpdateAction())($r->hashed_key, ['approve' => true], $managers->random());
+            ->each(function ($r) use ($inCharge) {
+                (new SlotRequestUpdateAction())($r->hashed_key, ['approve' => true], $inCharge);
             });
 
         // fake patient name
@@ -153,7 +162,7 @@ class AcuteHemodialysisSeeder extends Seeder
         $data['attending_staff'] = $staff->name;
         $data['patient_type'] = 'Acute';
         $data['dialysis_at'] = $dialysisAt;
-        $data['case_record_hashed_key'] = $case->hashed_key;
+        $data['case_record_hashed_key'] = $case['key'];
         $data['date_note'] = $dateNote;
         (new OrderStoreAction())($data, $user);
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Database\Seeders;
+namespace Database\Seeders\deployed;
 
 use App\Models\Ability;
 use App\Models\EventBasedNotification;
