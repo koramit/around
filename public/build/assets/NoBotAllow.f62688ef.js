@@ -1,0 +1,1 @@
+import{o as e,c as t,a as o}from"./app.94c97313.js";const s={class:"w-full min-h-screen flex items-center justify-center"},n=o("h1",{class:"text-center font-semibold text-2xl md:text-4xl italic text-complement"}," Please open link in browser ",-1),c=[n],_={__name:"NoBotAllow",props:{layout:null},setup(l){return(a,r)=>(e(),t("main",s,c))}};export{_ as default};
