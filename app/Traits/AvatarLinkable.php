@@ -40,6 +40,8 @@ trait AvatarLinkable
             $response = $client->post($url, $requestData);
         } elseif ($method === 'PATCH') {
             $response = $client->patch($url, $requestData);
+        } elseif ($method === 'PUT') {
+            $response = $client->put($url, $requestData);
         } elseif ($method === 'DELETE') {
             $response = $client->delete($url, $requestData);
         } else {
