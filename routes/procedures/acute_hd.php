@@ -22,32 +22,32 @@ use Illuminate\Support\Facades\Route;
 // Case
 Route::get('/', [CaseRecordController::class, 'index'])
     ->can('view_any_acute_hemodialysis_cases')
-    ->name('index'); /* CHECKED */
+    ->name('index');
 Route::post('/', [CaseRecordController::class, 'store'])
     ->can('create_acute_hemodialysis_case')
-    ->name('store'); /* CHECKED */
+    ->name('store');
 /* @TODO split to show */
 Route::get('/{hashedKey}/edit', [CaseRecordController::class, 'edit'])
     ->can('view_any_acute_hemodialysis_cases')
-    ->name('edit'); /* CHECKED */
+    ->name('edit');
 Route::patch('/{hashedKey}', [CaseRecordController::class, 'update'])
-    ->name('update'); /* CHECKED */
+    ->name('update');
 Route::delete('/{hashedKey}', [CaseRecordController::class, 'destroy'])
-    ->name('destroy'); /* CHECKED */
+    ->name('destroy');
 Route::post('/{hashedKey}/complete', CaseRecordCompleteController::class)
-    ->name('complete'); /* CHECKED */
+    ->name('complete');
 Route::put('/{hashedKey}/addendum', CaseRecordCompleteController::class)
-    ->name('addendum'); /* CHECKED */
+    ->name('addendum');
 
 // schedule
 Route::get('/schedule', ScheduleController::class)
     ->can('view_any_acute_hemodialysis_orders')
-    ->name('schedule'); /* CHECKED */
+    ->name('schedule');
 
 // slot request
 Route::get('/slot-requests', [SlotRequestController::class, 'index'])
     ->can('view_any_acute_hemodialysis_slot_requests')
-    ->name('slot-requests'); /* CHECKED */
+    ->name('slot-requests');
 Route::patch('/slot-requests/{hashedKey}', [SlotRequestController::class, 'update'])
     ->name('slot-requests.approve');
 Route::delete('/slot-requests/{hashedKey}', [SlotRequestController::class, 'destroy'])
