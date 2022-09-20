@@ -3,15 +3,17 @@
 namespace App\Actions\Procedures\AcuteHemodialysis;
 
 use App\Models\Notes\AcuteHemodialysisOrderNote;
-use App\Models\User;
+use App\Traits\AvatarLinkable;
 use Illuminate\Support\Facades\Validator;
 
 class DialysisSessionUpdateAction
 {
-    public function __invoke(string $hashedKey, array $data, User $user): array
+    use AvatarLinkable;
+
+    public function __invoke(string $hashedKey, array $data, mixed $user): array
     {
-        if (config('auth.guards.web.provider') === 'avatar') {
-            return []; // call api
+        if (($link = $this->shouldLinkAvatar()) !== false) {
+            return $link;
         }
 
         $order = AcuteHemodialysisOrderNote::query()->findByUnhashKey($hashedKey)->firstOrFail();

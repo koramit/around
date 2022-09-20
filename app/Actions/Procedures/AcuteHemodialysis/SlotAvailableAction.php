@@ -6,17 +6,22 @@ use App\Models\User;
 use App\Rules\FieldValueExists;
 use App\Traits\AcuteHemodialysis\OrderShareValidatable;
 use App\Traits\AcuteHemodialysis\SlotCountable;
+use App\Traits\AvatarLinkable;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
 class SlotAvailableAction extends AcuteHemodialysisAction
 {
-    use OrderShareValidatable, SlotCountable;
+    use OrderShareValidatable, SlotCountable, AvatarLinkable;
 
     protected User $user;
 
-    public function __invoke(array $data, User $user): array
+    public function __invoke(array $data, mixed $user): array
     {
+        if (($link = $this->shouldLinkAvatar()) !== false) {
+            return $link;
+        }
+
         // validate
         $validated = Validator::make($data, [
             'date_note' => 'required|date',

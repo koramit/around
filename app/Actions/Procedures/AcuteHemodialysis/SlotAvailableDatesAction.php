@@ -2,20 +2,20 @@
 
 namespace App\Actions\Procedures\AcuteHemodialysis;
 
-use App\Models\User;
 use App\Rules\FieldValueExists;
 use App\Traits\AcuteHemodialysis\OrderShareValidatable;
+use App\Traits\AvatarLinkable;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
 class SlotAvailableDatesAction extends AcuteHemodialysisAction
 {
-    use OrderShareValidatable;
+    use OrderShareValidatable, AvatarLinkable;
 
-    public function __invoke(array $data, User $user): array
+    public function __invoke(array $data, mixed $user): array
     {
-        if (config('auth.guards.web.provider') === 'avatar') {
-            return []; // call api
+        if (($link = $this->shouldLinkAvatar()) !== false) {
+            return $link;
         }
 
         $validated = Validator::make($data, [

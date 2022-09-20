@@ -3,6 +3,7 @@ import laravel from 'laravel-vite-plugin';
 import vue from '@vitejs/plugin-vue';
 import FullReload from 'vite-plugin-full-reload';
 
+// noinspection JSUnusedGlobalSymbols
 export default defineConfig({
     plugins: [
         laravel({

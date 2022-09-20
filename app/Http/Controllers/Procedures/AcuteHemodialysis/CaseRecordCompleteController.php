@@ -12,6 +12,10 @@ class CaseRecordCompleteController extends Controller
     {
         $message = (new CaseRecordCompleteAction())($request->all(), $hashedKey, $request->user());
 
+        if ($request->wantsJson()) {
+            return $message;
+        }
+
         return redirect()->route('procedures.acute-hemodialysis.index')->with('message', $message);
     }
 }

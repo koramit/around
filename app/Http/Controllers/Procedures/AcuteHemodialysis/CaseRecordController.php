@@ -16,6 +16,14 @@ class CaseRecordController extends Controller
 {
     use AppLayoutSessionFlashable;
 
+    public function __construct(Request $request)
+    {
+        if (! $request->wantsJson()) {
+            $this->middleware(['remember', 'page-transition', 'locale', 'no-in-app-allow'])->only(['index']);
+            $this->middleware(['page-transition', 'locale', 'no-in-app-allow'])->only(['edit']);
+        }
+    }
+
     public function index(Request $request)
     {
         $data = (new CaseRecordIndexAction)(filters: $request->all(), user: $request->user(), routeName: $request->route()->getName());
@@ -70,7 +78,9 @@ class CaseRecordController extends Controller
     {
         $message = (new CaseRecordDestroyAction())(data: $request->all(), hashedKey: $hashedKey, user: $request->user());
 
-        // if request want json then return $data
+        if ($request->wantsJson()) {
+            return $message;
+        }
 
         return redirect()->route('procedures.acute-hemodialysis.index')->with('message', $message);
     }

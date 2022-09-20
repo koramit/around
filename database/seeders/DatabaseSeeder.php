@@ -6,11 +6,6 @@ use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     *
-     * @return void
-     */
     public function run(): void
     {
         $this->call([
@@ -20,8 +15,8 @@ class DatabaseSeeder extends Seeder
             NoteTypesTableSeeder::class,
             RegistriesTableSeeder::class,
             AbilitiesTableSeeder::class,
-            NotificationFeatureSeeder::class,
-            AcuteHemodialysisNotificationSeeder::class,
+            AcuteHemodialysisAbilityRoleSeeder::class,
+            AcuteHemodialysisEventNotificationSeeder::class,
         ]);
     }
 }

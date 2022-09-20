@@ -13,7 +13,9 @@ class OrderSubmitController extends Controller
     {
         $data = (new OrderSubmitAction)(data: $request->all(), hashedKey: $hashedKey, user: $request->user());
 
-        // if request want json return $data
+        if ($request->wantsJson()) {
+            return $data;
+        }
 
         if ($previous = $request->session()->pull('acute-hd-order-edit-previous-route')) {
             try {
@@ -22,6 +24,6 @@ class OrderSubmitController extends Controller
             }
         }
 
-        return redirect()->route('procedures.acute-hemodialysis.edit', $data['note']->caseRecord->hashed_key)->with('message', $data['message']);
+        return redirect()->route('procedures.acute-hemodialysis.edit', $data['case'])->with('message', $data['message']);
     }
 }

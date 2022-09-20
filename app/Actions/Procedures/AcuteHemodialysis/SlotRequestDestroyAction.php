@@ -4,13 +4,19 @@ namespace App\Actions\Procedures\AcuteHemodialysis;
 
 use App\Models\DocumentChangeRequests\AcuteHemodialysisSlotRequest;
 use App\Models\Notes\AcuteHemodialysisOrderNote;
-use App\Models\User;
+use App\Traits\AvatarLinkable;
 use Illuminate\Support\Facades\Validator;
 
 class SlotRequestDestroyAction
 {
-    public function __invoke(string $hashedKey, array $data, User $user): array
+    use AvatarLinkable;
+
+    public function __invoke(string $hashedKey, array $data, mixed $user): array
     {
+        if (($link = $this->shouldLinkAvatar()) !== false) {
+            return $link;
+        }
+
         $request = AcuteHemodialysisSlotRequest::query()->findByUnhashKey($hashedKey)->firstOrFail();
 
         if ($user->cannot('cancel', $request)) {

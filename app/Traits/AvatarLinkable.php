@@ -21,6 +21,8 @@ trait AvatarLinkable
         $url = str_replace(config('app.url'), config('auth.avatar.url'), route($routeName, request()->route()->parameters()));
         $method = $this->getRouteMethod($routeName);
         $client = Http::withToken($user->getAuthIdentifier())->acceptJson();
+
+        // handle upload file
         if (request()->hasFile('file')) {
             $file = request()->file('file');
             if (! $file->isValid()) {
@@ -31,23 +33,60 @@ trait AvatarLinkable
         } else {
             $requestData = request()->all();
         }
+
         if ($method === 'GET') {
             $response = $client->get($url, $requestData);
         } elseif ($method === 'POST') {
             $response = $client->post($url, $requestData);
         } elseif ($method === 'PATCH') {
             $response = $client->patch($url, $requestData);
+        } elseif ($method === 'PUT') {
+            $response = $client->put($url, $requestData);
+        } elseif ($method === 'DELETE') {
+            $response = $client->delete($url, $requestData);
         } else {
             abort(404);
         }
 
-        $data = $response->json();
-        if (! $data) {
+        $status = $response->status();
+        if (collect([403, 404])->contains($status)) {
+            abort($status);
+        } elseif ($status === 422) {
+            throw ValidationException::withMessages($response->json()['errors']);
+        }
+
+        // handle download file
+        $headers = $response->headers();
+        logger($headers);
+        if (in_array('Content-Disposition', array_keys($headers))) {
+            $attachment = false;
+            $filename = null;
+            foreach ($headers['Content-Disposition'] as $value) {
+                if (str_starts_with($value, 'attachment;')) {
+                    $filename = explode('; ', $value)[1] ?? null;
+                    if (! $filename) {
+                        continue;
+                    }
+                    $filename = str_replace('filename=', '', $filename);
+                    $filename = str_replace('"', '', $filename);
+                    $attachment = true;
+                    break;
+                }
+            }
+            if ($attachment) {
+                return response()->streamDownload(function () use ($response, $filename) {
+                    echo $response->body();
+                }, $filename);
+            }
+        }
+
+        $json = $response->json();
+        if (! $json) { // for now, an inline image
             return $response;
         }
-        $this->replaceDomain($data);
+        $this->replaceDomain($json);
 
-        return $data;
+        return $json;
     }
 
     protected function replaceDomain(array &$data): void

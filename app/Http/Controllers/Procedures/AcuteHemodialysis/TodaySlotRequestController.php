@@ -12,7 +12,9 @@ class TodaySlotRequestController extends Controller
     {
         $reply = (new TodaySlotRequestAction)(hashedKey: $hashedKey, user: $request->user());
 
-        // if request want json return $reply
+        if ($request->wantsJson()) {
+            return $reply;
+        }
 
         return back()->with('message', $reply);
     }

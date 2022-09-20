@@ -4,14 +4,17 @@ namespace App\Actions\Procedures\AcuteHemodialysis;
 
 use App\Casts\AcuteHemodialysisCaseRecordStatus;
 use App\Models\Registries\AcuteHemodialysisCaseRecord;
+use App\Traits\AvatarLinkable;
 use Illuminate\Support\Collection;
 
 class IdleCaseAction
 {
-    public function __invoke(string $search): Collection
+    use AvatarLinkable;
+
+    public function __invoke(string $search): Collection|array
     {
-        if (config('auth.guards.web.provider') === 'avatar') {
-            return collect([]); // call api
+        if (($link = $this->shouldLinkAvatar()) !== false) {
+            return $link;
         }
 
         return AcuteHemodialysisCaseRecord::query()

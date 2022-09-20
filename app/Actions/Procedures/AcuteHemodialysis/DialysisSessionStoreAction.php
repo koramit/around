@@ -4,14 +4,16 @@ namespace App\Actions\Procedures\AcuteHemodialysis;
 
 use App\Jobs\Procedures\AcuteHemodialysis\NotifyDialysisStatusToAuthor;
 use App\Models\Notes\AcuteHemodialysisOrderNote;
-use App\Models\User;
+use App\Traits\AvatarLinkable;
 
 class DialysisSessionStoreAction extends AcuteHemodialysisAction
 {
-    public function __invoke(string $hashedKey, User $user): array
+    use AvatarLinkable;
+
+    public function __invoke(string $hashedKey, mixed $user): array
     {
-        if (config('auth.guards.web.provider') === 'avatar') {
-            return []; // call api
+        if (($link = $this->shouldLinkAvatar()) !== false) {
+            return $link;
         }
 
         /** @var AcuteHemodialysisOrderNote $order */

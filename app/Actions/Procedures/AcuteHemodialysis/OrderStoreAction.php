@@ -7,11 +7,11 @@ use App\Models\DocumentChangeRequests\AcuteHemodialysisSlotRequest;
 use App\Models\Notes\AcuteHemodialysisOrderNote;
 use App\Models\Resources\Ward;
 use App\Models\Subscription;
-use App\Models\User;
 use App\Rules\FieldValueExists;
 use App\Rules\HashedKeyIdExists;
 use App\Traits\AcuteHemodialysis\OrderShareValidatable;
 use App\Traits\AcuteHemodialysis\OrderSwappable;
+use App\Traits\AvatarLinkable;
 use Exception;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -20,7 +20,7 @@ use Illuminate\Validation\ValidationException;
 
 class OrderStoreAction extends AcuteHemodialysisAction
 {
-    use OrderShareValidatable, OrderSwappable;
+    use OrderShareValidatable, OrderSwappable, AvatarLinkable;
 
     protected float $FORM_VERSION = 1.0;
 
@@ -196,10 +196,10 @@ class OrderStoreAction extends AcuteHemodialysisAction
     /**
      * @throws Exception
      */
-    public function __invoke(array $data, User $user): array
+    public function __invoke(array $data, mixed $user): array
     {
-        if (config('auth.guards.web.provider') === 'avatar') {
-            return []; // call api
+        if (($link = $this->shouldLinkAvatar()) !== false) {
+            return $link;
         }
 
         $caseRecordKeyCache = "uid-$user->id-validated-id-case-records";
@@ -295,7 +295,7 @@ class OrderStoreAction extends AcuteHemodialysisAction
             ]);
 
             return [
-                'note' => $note,
+                'note' => $note->hashed_key,
             ];
         }
 
@@ -316,7 +316,7 @@ class OrderStoreAction extends AcuteHemodialysisAction
         ]);
 
         return [
-            'note' => $note,
+            'note' => $note->hashed_key,
             'message' => [
                 'type' => 'warning',
                 'title' => 'Your slot request has been submitted.',

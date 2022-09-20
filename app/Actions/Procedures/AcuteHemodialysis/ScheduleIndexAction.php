@@ -3,20 +3,20 @@
 namespace App\Actions\Procedures\AcuteHemodialysis;
 
 use App\Models\Registries\AcuteHemodialysisCaseRecord;
-use App\Models\User;
 use App\Traits\AcuteHemodialysis\OrderShareValidatable;
 use App\Traits\AcuteHemodialysis\SlotCountable;
+use App\Traits\AvatarLinkable;
 use App\Traits\HomePageSelectable;
 use Illuminate\Support\Facades\Validator;
 
 class ScheduleIndexAction extends AcuteHemodialysisAction
 {
-    use SlotCountable, OrderShareValidatable, HomePageSelectable;
+    use SlotCountable, OrderShareValidatable, HomePageSelectable, AvatarLinkable;
 
-    public function __invoke(array $data, User $user, string $routeName): array
+    public function __invoke(array $data, mixed $user, string $routeName): array
     {
-        if (config('auth.guards.web.provider') === 'avatar') {
-            return []; // call api + query params
+        if (($link = $this->shouldLinkAvatar()) !== false) {
+            return $link;
         }
 
         $validated = Validator::make($data, [
@@ -90,7 +90,7 @@ class ScheduleIndexAction extends AcuteHemodialysisAction
             if ($this->isDialysisReservable($case)) {
                 $caseConfig = [
                     'value' => implode('|', [$shortCut, $case->patient->hn, $case->patient->profile['document_id']]),
-                    'label' => "HN {$case->patient->hn} {$case->patient->first_name}",
+                    'label' => "HN {$case->patient->hn} {$case->patient->full_name}",
                 ];
             }
         }

@@ -4,15 +4,17 @@ namespace App\Actions\Procedures\AcuteHemodialysis;
 
 use App\Jobs\Procedures\AcuteHemodialysis\NotifyOrderCanceledToSubscribers;
 use App\Models\Notes\AcuteHemodialysisOrderNote;
-use App\Models\User;
+use App\Traits\AvatarLinkable;
 use Illuminate\Support\Facades\Validator;
 
 class OrderDestroyAction extends AcuteHemodialysisAction
 {
-    public function __invoke(array $data, string $hashedKey, User $user): array
+    use AvatarLinkable;
+
+    public function __invoke(array $data, string $hashedKey, mixed $user): array
     {
-        if (config('auth.guards.web.provider') === 'avatar') {
-            return []; // call api
+        if (($link = $this->shouldLinkAvatar()) !== false) {
+            return $link;
         }
 
         $validated = Validator::make($data, ['reason' => 'required|string|max:255'])->validate();

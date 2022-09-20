@@ -16,9 +16,9 @@ class PageTransition
      */
     public function handle(Request $request, Closure $next)
     {
-        $previous = app('router')->getRoutes()->match($request->create(url()->previous()))->getName();
-        $current = $request->route()->getName();
-        session()->put('no-page-transition', $previous == $current);
+        $current = app('request')->route()->getName();
+        session()->put('no-page-transition', session('no-page-transition-previous') === $current);
+        session()->put('no-page-transition-previous', $current);
 
         return $next($request);
     }

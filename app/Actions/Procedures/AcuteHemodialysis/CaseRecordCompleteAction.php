@@ -3,21 +3,21 @@
 namespace App\Actions\Procedures\AcuteHemodialysis;
 
 use App\Models\Registries\AcuteHemodialysisCaseRecord;
-use App\Models\User;
 use App\Rules\SelectAtLeastOne;
 use App\Traits\AcuteHemodialysis\CaseRecordShareValidatable;
+use App\Traits\AvatarLinkable;
 use App\Traits\ChangesComparable;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
 class CaseRecordCompleteAction
 {
-    use CaseRecordShareValidatable, ChangesComparable;
+    use CaseRecordShareValidatable, ChangesComparable, AvatarLinkable;
 
-    public function __invoke(array $data, string $hashed, User $user): array
+    public function __invoke(array $data, string $hashed, mixed $user): array
     {
-        if (config('auth.guards.web.provider') === 'avatar') {
-            return []; // call api
+        if (($link = $this->shouldLinkAvatar()) !== false) {
+            return $link;
         }
 
         /** @var AcuteHemodialysisCaseRecord $caseRecord */
