@@ -74,7 +74,7 @@ trait AvatarLinkable
                 }
             }
             if ($attachment) {
-                return response()->streamDownload(function () use ($response, $filename) {
+                return response()->streamDownload(function () use ($response) {
                     echo $response->body();
                 }, $filename);
             }
