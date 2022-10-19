@@ -12,7 +12,6 @@ use OpenSpout\Writer\Exception\WriterNotOpenedException;
 
 class OrderExportController extends Controller
 {
-
     /**
      * @throws WriterNotOpenedException
      * @throws IOException

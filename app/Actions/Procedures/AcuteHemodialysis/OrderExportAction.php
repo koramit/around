@@ -77,7 +77,7 @@ class OrderExportAction extends AcuteHemodialysisAction
             ],
         ]);
 
-        $sheets =  new SheetCollection(['hd_hf_sledd' => $hdALike, 'tpe' => $tpe, 'hd+tpe' => $hdTpe]);
+        $sheets = new SheetCollection(['hd_hf_sledd' => $hdALike, 'tpe' => $tpe, 'hd+tpe' => $hdTpe]);
 
         return (new FastExcel($sheets))->download("acute_hd_order_$dateNote.xlsx");
     }

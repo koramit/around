@@ -9,6 +9,6 @@
 
 <script setup>
 import { Head } from '@inertiajs/inertia-vue3';
-import { pageRoutines } from '@/functions/pageRoutines.js';
+import { pageRoutines } from '../../functions/pageRoutines.js';
 pageRoutines();
 </script>
