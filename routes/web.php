@@ -37,11 +37,6 @@ Route::middleware(['auth'])->group(function () {
         ->middleware(['can:config_preferences', 'page-transition', 'locale', 'no-in-app-allow'])
         ->name('preferences');
     Route::patch('/preferences', [PreferenceController::class, 'update'])->name('preferences.update');
-
-    //
-    Route::get('/clinics', function () {
-        return 'clinics';
-    })->name('clinics');
     Route::get('/patients', function () {
         return 'patients';
     })->can('view_any_patients')->name('patients');
@@ -99,10 +94,24 @@ Route::middleware(['auth', 'can:get_support'])->group(function () {
 });
 
 Route::middleware(['auth'])
+    ->prefix('clinics')
+    ->name('clinics.')
+    ->group(function () {
+        require __DIR__.'/clinics.php';
+    });
+
+Route::middleware(['auth'])
     ->prefix('procedures')
     ->name('procedures.')
     ->group(function () {
         require __DIR__.'/procedures.php';
+    });
+
+Route::middleware(['auth'])
+    ->prefix('labs')
+    ->name('labs.')
+    ->group(function () {
+        require __DIR__.'/labs.php';
     });
 
 // subscription

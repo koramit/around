@@ -27,7 +27,11 @@
                 </button>
                 <!-- title display on mobile -->
                 <div class="text-primary flex text-sm md:hidden">
-                    <span>{{ $page.props.flash.title }}</span>
+                    <span
+                        class="sm:hidden"
+                        v-html="$page.props.flash.title.replace(':', '<br>')"
+                    />
+                    <span class="hidden sm:block">{{ $page.props.flash.title }}</span>
                     <CopyToClipboardButton
                         v-if="$page.props.flash.hn"
                         :text="$page.props.flash.hn"
@@ -77,7 +81,7 @@
                     <template #default>
                         <div class="cursor-pointer select-none group">
                             <div class="flex items-center group-hover:text-accent-darker focus:text-accent-darker mr-1 whitespace-nowrap transition-colors duration-200 ease-out">
-                                {{ $page.props.user.name }}
+                                {{ $page.props.user?.name }}
                                 <IconChevronCircleDown class="w-4 h-4 ml-1" />
                             </div>
                         </div>
@@ -101,21 +105,21 @@
                             <InertiaLink
                                 class="block w-full text-left px-6 py-2 hover:bg-complement-darker hover:text-primary transition-colors duration-200 ease-out"
                                 :href="$page.props.routePreferences"
-                                v-if="!isUrl($page.props.routePreferences) && $page.props.user.can.config_preferences"
+                                v-if="!isUrl($page.props.routePreferences) && $page.props.user?.can.config_preferences"
                             >
                                 {{ __('Preferences') }}
                             </InertiaLink>
                             <InertiaLink
                                 class="block w-full text-left px-6 py-2 hover:bg-complement-darker hover:text-primary transition-colors duration-200 ease-out"
                                 :href="$page.props.routeManageUser"
-                                v-if="!isUrl($page.props.routeManageUser) && $page.props.user.can.manage_user"
+                                v-if="!isUrl($page.props.routeManageUser) && $page.props.user?.can.manage_user"
                             >
                                 {{ __('Manage User') }}
                             </InertiaLink>
                             <InertiaLink
                                 class="block w-full text-left px-6 py-2 hover:bg-complement-darker hover:text-primary transition-colors duration-200 ease-out"
                                 :href="$page.props.routeSupport[0]"
-                                v-if="!isUrl($page.props.routeSupport) && $page.props.user.can.get_support"
+                                v-if="!isUrl($page.props.routeSupport) && $page.props.user?.can.get_support"
                             >
                                 {{ __('Support') }}
                             </InertiaLink>
@@ -143,7 +147,7 @@
                         class="flex flex-col text-center justify-center"
                         @click="mobileMenuVisible = false"
                     >
-                        <span class="inline-block py-1 text-white">{{ $page.props.user.name }}</span>
+                        <span class="inline-block py-1 text-white">{{ $page.props.user?.name }}</span>
                         <InertiaLink
                             class="block py-1"
                             :href="$page.props.routeHome"
@@ -161,21 +165,21 @@
                         <InertiaLink
                             class="block py-1"
                             :href="$page.props.routePreferences"
-                            v-if="!isUrl($page.props.routePreferences) && $page.props.user.can.config_preferences"
+                            v-if="!isUrl($page.props.routePreferences) && $page.props.user?.can.config_preferences"
                         >
                             {{ __('Preferences') }}
                         </InertiaLink>
                         <InertiaLink
                             class="block py-1"
                             :href="$page.props.routeManageUser"
-                            v-if="!isUrl($page.props.routeManageUser) && $page.props.user.can.manage_user"
+                            v-if="!isUrl($page.props.routeManageUser) && $page.props.user?.can.manage_user"
                         >
                             {{ __('Manage user') }}
                         </InertiaLink>
                         <InertiaLink
                             class="block py-1"
                             :href="$page.props.routeSupport[0]"
-                            v-if="!isUrl($page.props.routeSupport) && $page.props.user.can.get_support"
+                            v-if="!isUrl($page.props.routeSupport) && $page.props.user?.can.get_support"
                         >
                             {{ __('Support') }}
                         </InertiaLink>
@@ -231,7 +235,7 @@
             >
                 <!-- breadcrumbs -->
                 <nav
-                    class="flex mb-4 md:mb-0 py-2 md:pb-8 bg-primary z-10 sticky top-10 md:top-0"
+                    class="flex mb-4 md:mb-0 py-2 md:pb-8 bg-primary z-10 sticky top-14 sm:top-10 md:top-0"
                     v-if="$page.props.flash.breadcrumbs.length"
                 >
                     <menu class="flex justify-between">

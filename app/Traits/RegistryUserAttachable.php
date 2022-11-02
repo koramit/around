@@ -9,13 +9,18 @@ trait RegistryUserAttachable
 {
     protected function toggleRegistryUser(User $user): void
     {
-        $registries = ['view_any_acute_hemodialysis_cases'];
-        foreach ($registries as $registry) {
-            $registryId = Ability::query()
-                ->select('registry_id')
-                ->where('name', $registry)
-                ->first()
-                ->registry_id;
+        $user->flushPrivileges();
+
+        $registries = cache()->rememberForever(
+            'ability-registry-map',
+            fn () => Ability::query()
+                ->select(['name', 'registry_id'])
+                ->where('name', 'like', 'view_any_%_cases')
+                ->whereNotNull('registry_id')
+                ->pluck('name', 'registry_id')
+        );
+
+        foreach ($registries as $registryId => $registry) {
             if ($user->abilities->contains($registry)) {
                 if ($user->registries()->where('registry_id', $registryId)->count() === 0) {
                     $user->registries()->attach($registryId);

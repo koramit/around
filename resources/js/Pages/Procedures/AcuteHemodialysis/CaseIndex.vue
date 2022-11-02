@@ -40,7 +40,7 @@
                 >
                     <td
                         v-if="field === 'date_note'"
-                        class="px-6 py4 border-t"
+                        class="px-6 py-4 border-t"
                     >
                         <span
                             class="inline-flex h-6 w-6 mr-2 rounded-full items-center justify-center text-sm italic"
@@ -55,7 +55,7 @@
                     </td>
                     <td
                         v-else-if="field === 'status'"
-                        class="px-6 py4 border-t"
+                        class="px-6 py-4 border-t"
                     >
                         <div class="flex items-center justify-between">
                             <template v-if="caseRecord.can.edit_order">
@@ -91,7 +91,7 @@
                     </td>
                     <td
                         v-else
-                        class="px-6 py4 border-t"
+                        class="px-6 py-4 border-t"
                         v-text="caseRecord[field]"
                     />
                 </template>

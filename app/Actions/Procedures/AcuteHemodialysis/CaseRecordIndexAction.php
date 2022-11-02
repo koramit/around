@@ -5,11 +5,12 @@ namespace App\Actions\Procedures\AcuteHemodialysis;
 use App\Models\Notes\AcuteHemodialysisOrderNote;
 use App\Models\Registries\AcuteHemodialysisCaseRecord;
 use App\Traits\AvatarLinkable;
+use App\Traits\FlashDataGeneratable;
 use App\Traits\HomePageSelectable;
 
 class CaseRecordIndexAction extends AcuteHemodialysisAction
 {
-    use HomePageSelectable, AvatarLinkable;
+    use HomePageSelectable, AvatarLinkable, FlashDataGeneratable;
 
     public function __invoke(array $filters, mixed $user, string $routeName = 'home'): array
     {
@@ -68,14 +69,9 @@ class CaseRecordIndexAction extends AcuteHemodialysisAction
                 ];
             });
 
-        $flash = [
-            'page-title' => 'Acute Hemodialysis - Cases',
-            'main-menu-links' => $this->MENU,
-            'navs' => $this->NAVS,
-            'action-menu' => [
-                $this->getSetHomePageActionMenu($routeName, $user->home_page),
-            ],
-        ];
+        $flash = $this->getFlash('Acute Hemodialysis - Cases', $user);
+        $flash['navs'] = $this->NAVS;
+        $flash['action-menu'][] = $this->getSetHomePageActionMenu($routeName, $user->home_page);
 
         return [
             'cases' => $cases,
