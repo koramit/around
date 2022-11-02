@@ -20,8 +20,5 @@ class HomePageAction
         $flash['action-menu'] = [$this->getSetHomePageActionMenu($routeName, $user->home_page)];
 
         return $flash;
-        // ['icon' => 'graduation-cap', 'label' => 'Kidney club', 'route' => route('kidney-club'), 'can' => true],
-        // ['icon' => 'graduation-cap', 'label' => 'Club Nephro', 'route' => 'procedures', 'can' => true],
-        // ['icon' => 'box', 'label' => 'Code Drive', 'route' => 'procedures', 'can' => true],
     }
 }

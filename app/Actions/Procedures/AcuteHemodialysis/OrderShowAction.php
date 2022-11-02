@@ -40,7 +40,7 @@ class OrderShowAction extends AcuteHemodialysisAction
                 ['icon' => 'slack-hash', 'label' => 'Prescription', 'type' => '#', 'route' => '#prescription', 'can' => true],
                 ['icon' => 'slack-hash', 'label' => 'Discussion', 'type' => '#', 'route' => '#discussion', 'can' => true],
                 ['icon' => 'patient', 'label' => 'Patients', 'route' => route('patients'), 'can' => true],
-                ['icon' => 'clinic', 'label' => 'Clinics', 'route' => route('clinics'), 'can' => true],
+                ['icon' => 'clinic', 'label' => 'Clinics', 'route' => route('clinics.index'), 'can' => true],
                 ['icon' => 'procedure', 'label' => 'Procedures', 'route' => route('procedures.index'), 'can' => true],
             ],
             'action-menu' => [

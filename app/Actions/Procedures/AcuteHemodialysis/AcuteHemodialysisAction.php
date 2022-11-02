@@ -60,7 +60,7 @@ class AcuteHemodialysisAction
 
         $this->MENU = [
             ['icon' => 'patient', 'label' => 'Patients', 'route' => route('patients'), 'can' => true],
-            ['icon' => 'clinic', 'label' => 'Clinics', 'route' => route('clinics'), 'can' => true],
+            ['icon' => 'clinic', 'label' => 'Clinics', 'route' => route('clinics.index'), 'can' => true],
             ['icon' => 'procedure', 'label' => 'Procedures', 'route' => route('procedures.index'), 'can' => true],
         ];
         $this->NAVS = [

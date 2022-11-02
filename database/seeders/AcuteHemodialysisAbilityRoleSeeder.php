@@ -91,6 +91,11 @@ class AcuteHemodialysisAbilityRoleSeeder extends Seeder
 
         $manager = Role::query()->where('name', 'acute_hemodialysis_manager')->first();
         $manager->abilities()
-            ->attach(Ability::query()->where('registry_id', 1)->pluck('id'));
+            ->attach(Ability::query()->where('registry_id', $registry->id)->pluck('id'));
+
+        // attach abilities to root role
+        $root = Role::query()->where('name', 'root')->first();
+        $root->abilities()
+            ->attach(Ability::query()->where('registry_id', $registry->id)->pluck('id'));
     }
 }

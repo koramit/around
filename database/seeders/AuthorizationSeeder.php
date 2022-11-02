@@ -12,6 +12,8 @@ class AuthorizationSeeder extends Seeder
 
     public function run(): void
     {
+        cache()->forget('ability-registry-map');
+
         $user = User::factory()->create(['login' => 'root.app']);
         $user->roles()->attach([1]); // authority, participant, nurse, manager;
         $this->toggleRegistryUser($user);

@@ -234,7 +234,7 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
                 ['icon' => 'slack-hash', 'label' => 'Orders', 'type' => '#', 'route' => '#orders', 'can' => true],
                 ['icon' => 'slack-hash', 'label' => 'Discussion', 'type' => '#', 'route' => '#discussion', 'can' => true],
                 ['icon' => 'patient', 'label' => 'Patients', 'route' => route('patients'), 'can' => true],
-                ['icon' => 'clinic', 'label' => 'Clinics', 'route' => route('clinics'), 'can' => true],
+                ['icon' => 'clinic', 'label' => 'Clinics', 'route' => route('clinics.index'), 'can' => true],
                 ['icon' => 'procedure', 'label' => 'Procedures', 'route' => route('procedures.index'), 'can' => true],
             ],
             'action-menu' => [
