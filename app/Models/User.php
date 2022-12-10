@@ -239,12 +239,12 @@ class User extends Authenticatable
     protected function cacheAbilities(string $key, string $field)
     {
         return cache()->remember($key, config('session.lifetime') * 60, function () use ($field) {
-            unset($this->roles); // reload for new role
+            $this->refresh(); // reload for new role
 
             // if unique() is not activated then the output is an array
             // but the output is an associated array so, provide
             // flatten() to guarantee output always an array
-            return $this->roles->map->abilities->flatten()->pluck($field)->unique()->flatten();
+            return $this->roles()->with('abilities')->get()->map->abilities->flatten()->pluck($field)->unique()->flatten();
         });
     }
 

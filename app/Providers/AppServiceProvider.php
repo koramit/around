@@ -47,6 +47,11 @@ class AppServiceProvider extends ServiceProvider
 
         Model::preventAccessingMissingAttributes(! $this->app->isProduction());
 
+        /*Model::handleLazyLoadingViolationUsing(function ($model, $relation) {
+            $class = get_class($model);
+            info("Attempted to lazy load [{$relation}] on model [{$class}].");
+        });*/
+
         DB::whenQueryingForLongerThan(2000, function (Connection $connection, QueryExecuted $event) {
             Log::warning("Database queries exceeded 2 seconds on {$connection->getName()} : $event->sql");
         });

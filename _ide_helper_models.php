@@ -355,6 +355,7 @@ namespace App\Models{
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Comment[] $comments
  * @property-read int|null $comments_count
  * @property-read \App\Models\Resources\Patient|null $patient
+ * @property-read \App\Models\Subscription|null $subscription
  * @method static \Illuminate\Database\Eloquent\Builder|Note findByUnhashKey(string $hashed)
  * @method static \Illuminate\Database\Eloquent\Builder|Note metaSearchTerms($search)
  * @method static \Illuminate\Database\Eloquent\Builder|Note newModelQuery()
@@ -415,6 +416,7 @@ namespace App\Models\Notes{
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Comment[] $comments
  * @property-read int|null $comments_count
  * @property-read \App\Models\Resources\Patient|null $patient
+ * @property-read \App\Models\Subscription|null $subscription
  * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisOrderNote activeStatuses()
  * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisOrderNote dialysisDate($dateRef)
  * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisOrderNote dialysisTypeLike($type)
@@ -475,6 +477,7 @@ namespace App\Models\Notes{
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Comment[] $comments
  * @property-read int|null $comments_count
  * @property-read \App\Models\Resources\Patient|null $patient
+ * @property-read \App\Models\Subscription|null $subscription
  * @method static \Illuminate\Database\Eloquent\Builder|Note findByUnhashKey(string $hashed)
  * @method static \Illuminate\Database\Eloquent\Builder|Note metaSearchTerms($search)
  * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantAdditionTissueTypingNote newModelQuery()
@@ -530,6 +533,7 @@ namespace App\Models\Notes{
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Comment[] $comments
  * @property-read int|null $comments_count
  * @property-read \App\Models\Resources\Patient|null $patient
+ * @property-read \App\Models\Subscription|null $subscription
  * @method static \Illuminate\Database\Eloquent\Builder|Note findByUnhashKey(string $hashed)
  * @method static \Illuminate\Database\Eloquent\Builder|Note metaSearchTerms($search)
  * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantCrossmatchNote newModelQuery()
@@ -585,6 +589,7 @@ namespace App\Models\Notes{
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Comment[] $comments
  * @property-read int|null $comments_count
  * @property-read \App\Models\Resources\Patient|null $patient
+ * @property-read \App\Models\Subscription|null $subscription
  * @method static \Illuminate\Database\Eloquent\Builder|Note findByUnhashKey(string $hashed)
  * @method static \Illuminate\Database\Eloquent\Builder|Note metaSearchTerms($search)
  * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantHLATypingNote newModelQuery()
@@ -640,6 +645,7 @@ namespace App\Models\Notes{
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Comment[] $comments
  * @property-read int|null $comments_count
  * @property-read \App\Models\Resources\Patient|null $patient
+ * @property-read \App\Models\Subscription|null $subscription
  * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantHLATypingReportNote filterStatus($status)
  * @method static \Illuminate\Database\Eloquent\Builder|Note findByUnhashKey(string $hashed)
  * @method static \Illuminate\Database\Eloquent\Builder|Note metaSearchTerms($search)

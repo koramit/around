@@ -34,8 +34,8 @@ class LabKTHLATypingFeatureSeeder extends Seeder
         // new registry
         $registry = Registry::query()->create([
             'name' => 'kt_hla_typing',
-            /*'label' => 'Kidney Transplant HLA Typing Lab',
-            'label_eng' => 'Kidney Transplant HLA Typing Lab',*/
+            'label' => 'Kidney Transplant HLA Typing Lab', // just for the old schema
+            'label_eng' => 'Kidney Transplant HLA Typing Lab', // just for the old schema
             'route' => 'labs.kt-hla-typing.index',
             'division_id' => Division::query()->where('name_en_short', 'nephrology')->first()->id,
         ]);
@@ -104,13 +104,16 @@ class LabKTHLATypingFeatureSeeder extends Seeder
 
         // refactor meta->title
         AcuteHemodialysisCaseRecord::query()
+            ->with('patient')
             ->each(fn ($case) => $case->update(['meta->title' => $case->genTitle()]));
         AcuteHemodialysisOrderNote::query()
+            ->with(['patient', 'subscription'])
             ->each(function ($note) {
-                Subscription::query()->firstOrCreate([
-                    'subscribable_type' => $note::class,
-                    'subscribable_id' => $note->id,
-                ]);
+                if (! $note->subscription) {
+                    $note->subscription()->save(new Subscription());
+                    $note->refresh();
+                }
+
                 $note->update(['meta->title' => $note->genTitle()]);
             });
     }
