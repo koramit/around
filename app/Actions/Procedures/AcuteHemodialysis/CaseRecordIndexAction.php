@@ -2,17 +2,17 @@
 
 namespace App\Actions\Procedures\AcuteHemodialysis;
 
+use App\Extensions\Auth\AvatarUser;
 use App\Models\Notes\AcuteHemodialysisOrderNote;
 use App\Models\Registries\AcuteHemodialysisCaseRecord;
-use App\Traits\AvatarLinkable;
-use App\Traits\FlashDataGeneratable;
+use App\Models\User;
 use App\Traits\HomePageSelectable;
 
 class CaseRecordIndexAction extends AcuteHemodialysisAction
 {
-    use HomePageSelectable, AvatarLinkable, FlashDataGeneratable;
+    use HomePageSelectable;
 
-    public function __invoke(array $filters, mixed $user, string $routeName = 'home'): array
+    public function __invoke(array $filters, User|AvatarUser $user, string $routeName = 'home'): array
     {
         if ($link = $this->shouldLinkAvatar()) {
             return $link;

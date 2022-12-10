@@ -6,7 +6,6 @@ use App\Models\Resources\Patient;
 use App\Traits\PKHashable;
 use Illuminate\Database\Eloquent\Casts\AsArrayObject;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -14,9 +13,10 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /** @property-read string $hashed_key */
+/** @property-read string $title */
 class CaseRecord extends Model
 {
-    use HasFactory, PKHashable, SoftDeletes;
+    use PKHashable, SoftDeletes;
 
     protected $casts = [
         'form' => AsArrayObject::class,

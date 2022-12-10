@@ -2,17 +2,18 @@
 
 namespace App\Actions\Procedures\AcuteHemodialysis;
 
+use App\Extensions\Auth\AvatarUser;
 use App\Models\DocumentChangeRequests\AcuteHemodialysisSlotRequest;
 use App\Models\Notes\AcuteHemodialysisOrderNote;
+use App\Models\User;
 use App\Traits\AcuteHemodialysis\OrderShareValidatable;
-use App\Traits\AvatarLinkable;
 use App\Traits\HomePageSelectable;
 
 class SlotRequestIndexAction extends AcuteHemodialysisAction
 {
-    use OrderShareValidatable, HomePageSelectable, AvatarLinkable;
+    use OrderShareValidatable, HomePageSelectable;
 
-    public function __invoke(mixed $user, string $routeName): array
+    public function __invoke(User|AvatarUser $user, string $routeName): array
     {
         if (($link = $this->shouldLinkAvatar()) !== false) {
             return $link;
@@ -78,16 +79,13 @@ class SlotRequestIndexAction extends AcuteHemodialysisAction
                 ];
             });
 
+        $flash = $this->getFlash('Acute Hemodialysis - Slot Request', $user);
+        $flash['navs'] = $this->NAVS;
+        $flash['action-menu'][] = $this->getSetHomePageActionMenu($routeName, $user->home_page);
+
         return [
             'requests' => $requests,
-            'flash' => [
-                'page-title' => 'Acute Hemodialysis - Slot Request',
-                'main-menu-links' => $this->MENU,
-                'navs' => $this->NAVS,
-                'action-menu' => [
-                    $this->getSetHomePageActionMenu($routeName, $user->home_page),
-                ],
-            ],
+            'flash' => $flash,
             'endpoints' => [
                 'resources_api_wards' => route('resources.api.wards'),
                 'resources_api_staffs' => route('resources.api.people'),

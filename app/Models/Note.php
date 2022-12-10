@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
  * @property-read string $place_name
  * @property-read string $attending_name
  * @property-read string $author_name
+ * @property-read string $title
  */
 class Note extends Model
 {
