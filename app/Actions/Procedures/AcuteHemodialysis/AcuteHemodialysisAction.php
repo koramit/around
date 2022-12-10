@@ -3,13 +3,19 @@
 namespace App\Actions\Procedures\AcuteHemodialysis;
 
 use App\Models\Ability;
+use App\Models\Notes\AcuteHemodialysisOrderNote;
 use App\Models\Resources\NoteType;
 use App\Models\Resources\Registry;
+use App\Models\User;
+use App\Traits\AvatarLinkable;
 use App\Traits\FirstNameAware;
+use App\Traits\FlashDataGeneratable;
+use App\Traits\Subscribable;
+use Hashids\Hashids;
 
 class AcuteHemodialysisAction
 {
-    use FirstNameAware;
+    use FirstNameAware, FlashDataGeneratable, AvatarLinkable, Subscribable;
 
     protected int $REGISTRY_ID;
 
@@ -22,8 +28,6 @@ class AcuteHemodialysisAction
     protected array $PATIENT_TYPES = ['Acute', 'Chronic'];
 
     protected int $IN_UNIT_WARD_ID = 72;
-
-    protected array $MENU;
 
     protected array $NAVS;
 
@@ -58,11 +62,6 @@ class AcuteHemodialysisAction
             fn () => Ability::query()->where('name', 'approve_acute_hemodialysis_slot_request')->first()->id
         );
 
-        $this->MENU = [
-            ['icon' => 'patient', 'label' => 'Patients', 'route' => route('patients'), 'can' => true],
-            ['icon' => 'clinic', 'label' => 'Clinics', 'route' => route('clinics'), 'can' => true],
-            ['icon' => 'procedure', 'label' => 'Procedures', 'route' => route('procedures.index'), 'can' => true],
-        ];
         $this->NAVS = [
             ['label' => 'Cases', 'route' => route('procedures.acute-hemodialysis.index')],
             ['label' => 'Schedule', 'route' => route('procedures.acute-hemodialysis.schedule')],
@@ -123,5 +122,21 @@ class AcuteHemodialysisAction
             ['label' => 'ANTI HCV', 'result' => $form['anti_hcv'], 'date_lab' => $form['date_anti_hcv']],
             ['label' => 'ANTI HIV', 'result' => $form['anti_hiv'], 'date_lab' => $form['date_anti_hiv']],
         ];
+    }
+
+    protected function initOrderFlash(AcuteHemodialysisOrderNote $order, User $user)
+    {
+        $flash = $this->getFlash($order->title, $user);
+        $flash['hn'] = $order->patient->hn;
+        $flash['main-menu-links']->prepend(['icon' => 'slack-hash', 'label' => 'Discussion', 'type' => '#', 'route' => '#discussion', 'can' => true]);
+        $flash['main-menu-links']->prepend(['icon' => 'slack-hash', 'label' => 'Prescription', 'type' => '#', 'route' => '#prescription', 'can' => true]);
+        $flash['main-menu-links']->prepend(['icon' => 'slack-hash', 'label' => 'Predialysis', 'type' => '#', 'route' => '#predialysis-evaluation', 'can' => true]);
+        $flash['main-menu-links']->prepend(['icon' => 'slack-hash', 'label' => 'Special requests', 'type' => '#', 'route' => '#special-requests', 'can' => true]);
+        $flash['breadcrumbs'] = $this->getBreadcrumbs([
+            ['label' => 'Case Record', 'route' => route('procedures.acute-hemodialysis.edit', app(Hashids::class)->encode($order->case_record_id))],
+        ]);
+        $flash['action-menu'] = [$this->getSubscriptionActionMenu($order, $user)];
+
+        return $flash;
     }
 }

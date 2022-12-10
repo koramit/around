@@ -26,8 +26,18 @@ return new class extends Migration
                 'auto_unsubscribe_to_channel' => false,
             ]));
             $table->unsignedSmallInteger('division_id')->default(2);
+            $table->foreign('division_id')->references('id')->on('divisions');
             $table->boolean('active')->default(true);
             $table->rememberToken();
+            $table->timestamps();
+        });
+
+        Schema::create('registry_user', function (Blueprint $table) {
+            $table->primary(['user_id', 'registry_id']);
+            $table->unsignedInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->unsignedSmallInteger('registry_id');
+            $table->foreign('registry_id')->references('id')->on('registries');
             $table->timestamps();
         });
 
@@ -36,6 +46,7 @@ return new class extends Migration
             $table->string('name', 80)->unique();
             $table->string('label', 80)->nullable();
             $table->unsignedSmallInteger('registry_id')->nullable();
+            $table->foreign('registry_id')->references('id')->on('registries');
             $table->timestamps();
         });
 
@@ -44,20 +55,25 @@ return new class extends Migration
             $table->string('name', 80)->unique();
             $table->string('label', 80)->nullable();
             $table->unsignedSmallInteger('registry_id')->nullable();
+            $table->foreign('registry_id')->references('id')->on('registries');
             $table->timestamps();
         });
 
         Schema::create('ability_role', function (Blueprint $table) {
             $table->primary(['ability_id', 'role_id']);
             $table->unsignedSmallInteger('ability_id');
+            $table->foreign('ability_id')->references('id')->on('abilities');
             $table->unsignedSmallInteger('role_id');
+            $table->foreign('role_id')->references('id')->on('roles');
             $table->timestamps();
         });
 
         Schema::create('role_user', function (Blueprint $table) {
             $table->primary(['user_id', 'role_id']);
             $table->unsignedInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users');
             $table->unsignedSmallInteger('role_id');
+            $table->foreign('role_id')->references('id')->on('roles');
             $table->timestamps();
         });
     }

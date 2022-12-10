@@ -13,8 +13,6 @@ class Registry extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
-
     public function patients(): BelongsToMany
     {
         return $this->belongsToMany(Patient::class);

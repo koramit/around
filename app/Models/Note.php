@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 /**
  * App\Models\Note
@@ -20,12 +21,11 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
  * @property-read string $place_name
  * @property-read string $attending_name
  * @property-read string $author_name
+ * @property-read string $title
  */
 class Note extends Model
 {
     use HasFactory, PKHashable;
-
-    protected $guarded = [];
 
     protected $casts = [
         'form' => AsArrayObject::class,
@@ -77,6 +77,11 @@ class Note extends Model
     public function comments(): MorphMany
     {
         return $this->morphMany(Comment::class, 'commentable');
+    }
+
+    public function subscription(): MorphOne
+    {
+        return $this->morphOne(Subscription::class, 'subscribable');
     }
 
     protected function title(): Attribute
@@ -193,6 +198,15 @@ class Note extends Model
                 ->limit(1)
                 ->latest(),
         ]);
+    }
+
+    public function scopeMetaSearchTerms($query, $search)
+    {
+        $iLike = config('database.iLike');
+        $query->when($search ?? null, function ($query, $search) use ($iLike) {
+            $query->where('meta->name', $iLike, $search.'%')
+                ->orWhere('meta->hn', $iLike, $search.'%');
+        });
     }
 
     public function genTitle(?string $dateNote = null): string

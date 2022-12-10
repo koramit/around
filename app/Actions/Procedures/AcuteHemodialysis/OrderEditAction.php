@@ -2,23 +2,23 @@
 
 namespace App\Actions\Procedures\AcuteHemodialysis;
 
+use App\Extensions\Auth\AvatarUser;
 use App\Models\Notes\AcuteHemodialysisOrderNote;
 use App\Models\Resources\Ward;
+use App\Models\User;
 use App\Traits\AcuteHemodialysis\OrderFormConfigsShareable;
-use App\Traits\AvatarLinkable;
-use App\Traits\Subscribable;
-use Hashids\Hashids;
 
 class OrderEditAction extends AcuteHemodialysisAction
 {
-    use OrderFormConfigsShareable, Subscribable, AvatarLinkable;
+    use OrderFormConfigsShareable;
 
-    public function __invoke(string $hashedKey, mixed $user): array
+    public function __invoke(string $hashedKey, User|AvatarUser $user): array
     {
         if (($link = $this->shouldLinkAvatar()) !== false) {
             return $link;
         }
 
+        /** @var AcuteHemodialysisOrderNote $note */
         $note = AcuteHemodialysisOrderNote::query()->withPlaceName(Ward::class)->findByUnhashKey($hashedKey)->firstOrFail();
 
         if ($user->cannot('edit', $note)) {
@@ -31,25 +31,17 @@ class OrderEditAction extends AcuteHemodialysisAction
             'copy' => ! $note->meta['submitted'],
         ];
 
-        $flash = [
-            'page-title' => 'Acute '.$note->meta['dialysis_type'].' '.$note->patient->profile['first_name'].' @ '.$note->date_note->format('d M Y'),
-            'hn' => $note->patient->hn,
-            'main-menu-links' => [
-                ['icon' => 'slack-hash', 'label' => 'Prescription', 'type' => '#', 'route' => '#prescription', 'can' => true],
-                ['icon' => 'slack-hash', 'label' => 'Predialysis', 'type' => '#', 'route' => '#predialysis-evaluation', 'can' => true],
-                ['icon' => 'slack-hash', 'label' => 'Monitoring', 'type' => '#', 'route' => '#monitoring', 'can' => true],
-                ['icon' => 'slack-hash', 'label' => 'Discussion', 'type' => '#', 'route' => '#discussion', 'can' => true],
-                ['icon' => 'patient', 'label' => 'Patients', 'route' => route('patients'), 'can' => true],
-                ['icon' => 'clinic', 'label' => 'Clinics', 'route' => route('clinics'), 'can' => true],
-                ['icon' => 'procedure', 'label' => 'Procedures', 'route' => route('procedures.index'), 'can' => true],
+        $flash = $this->initOrderFlash($note, $user);
+        // @TODO: add cancel action
+        $flash['action-menu'] = [
+            [
+                'as' => 'button',
+                'icon' => 'paper-plain',
+                'name' => 'submit',
+                'label' => 'Submit',
+                'can' => $user->can('submit', $note),
             ],
-            'action-menu' => [
-                ['icon' => 'paper-plain', 'action' => 'submit', 'label' => 'Submit', 'can' => $user->can('submit', $note)],
-                $this->getSubscriptionActionMenu($note, $user),
-            ],
-            'breadcrumbs' => $this->getBreadcrumbs([
-                ['label' => 'Case Record', 'route' => route('procedures.acute-hemodialysis.edit', app(Hashids::class)->encode($note->case_record_id))],
-            ]),
+            $this->getSubscriptionActionMenu($note, $user),
         ];
 
         if (! $can['update']) {
@@ -67,7 +59,7 @@ class OrderEditAction extends AcuteHemodialysisAction
             'flash' => $flash,
             'formConfigs' => $this->FORM_CONFIGS + [
                 'serology' => $this->getSerology($note->caseRecord->form->toArray()),
-                'endpoints' => [
+                'routes' => [
                     'update' => route('procedures.acute-hemodialysis.orders.update', $note->hashed_key),
                     'submit' => route('procedures.acute-hemodialysis.orders.submit', $note->hashed_key),
                     'reschedule' => route('procedures.acute-hemodialysis.orders.reschedule', $note->hashed_key),

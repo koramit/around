@@ -14,13 +14,13 @@
             <div class="relative">
                 <input
                     type="text"
-                    class="form-input"
+                    class="form-input form-scroll-mt"
                     @input="search"
                     :id="name"
                     :name="name"
                     ref="input"
                     :value="modelValue"
-                    :class="{ 'border-red-400 text-red-400': error }"
+                    :class="{ '!border-red-400 !text-red-400': error }"
                     :disabled="disabled"
                 >
                 <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2">

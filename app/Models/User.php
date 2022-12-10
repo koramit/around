@@ -29,7 +29,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @property bool $auto_subscribe_to_channel
  * @property bool $mute_notification
  * @property bool $notify_approval_result
- * @property string $registry_names
+ * @property Collection $registry_names
  * @property string $avatar_token
  */
 class User extends Authenticatable
@@ -174,7 +174,7 @@ class User extends Authenticatable
         );
     }
 
-    /** @alias string $registry_names*/
+    /** @alias $registry_names*/
     protected function registryNames(): Attribute
     {
         return Attribute::make(
@@ -239,12 +239,12 @@ class User extends Authenticatable
     protected function cacheAbilities(string $key, string $field)
     {
         return cache()->remember($key, config('session.lifetime') * 60, function () use ($field) {
-            unset($this->roles); // reload for new role
+            $this->refresh(); // reload for new role
 
             // if unique() is not activated then the output is an array
             // but the output is an associated array so, provide
             // flatten() to guarantee output always an array
-            return $this->roles->map->abilities->flatten()->pluck($field)->unique()->flatten();
+            return $this->roles()->with('abilities')->get()->map->abilities->flatten()->pluck($field)->unique()->flatten();
         });
     }
 
@@ -254,6 +254,7 @@ class User extends Authenticatable
         cache()->forget("uid-$this->id-role-names");
         cache()->forget("uid-$this->id-role-labels");
         cache()->forget("uid-$this->id-abilities-id");
+        cache()->forget("uid-$this->id-registry-names");
     }
 
     public function subscribe(int $subscriptionId)

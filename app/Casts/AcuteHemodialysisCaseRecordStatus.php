@@ -18,5 +18,6 @@ class AcuteHemodialysisCaseRecordStatus implements NoteStatusCast, CastsAttribut
 /**  4 */ 'dismissed', // discharged OPD case
 /**  5 */ 'completed',
 /**  6 */ 'expired', // auto cancel - idle 2 weeks or discharged without performed order
+/**  7 */ 'edited',
     ];
 }

@@ -355,7 +355,9 @@ namespace App\Models{
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Comment[] $comments
  * @property-read int|null $comments_count
  * @property-read \App\Models\Resources\Patient|null $patient
+ * @property-read \App\Models\Subscription|null $subscription
  * @method static \Illuminate\Database\Eloquent\Builder|Note findByUnhashKey(string $hashed)
+ * @method static \Illuminate\Database\Eloquent\Builder|Note metaSearchTerms($search)
  * @method static \Illuminate\Database\Eloquent\Builder|Note newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Note newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Note query()
@@ -414,10 +416,12 @@ namespace App\Models\Notes{
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Comment[] $comments
  * @property-read int|null $comments_count
  * @property-read \App\Models\Resources\Patient|null $patient
+ * @property-read \App\Models\Subscription|null $subscription
  * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisOrderNote activeStatuses()
  * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisOrderNote dialysisDate($dateRef)
  * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisOrderNote dialysisTypeLike($type)
  * @method static \Illuminate\Database\Eloquent\Builder|Note findByUnhashKey(string $hashed)
+ * @method static \Illuminate\Database\Eloquent\Builder|Note metaSearchTerms($search)
  * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisOrderNote newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisOrderNote newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisOrderNote performedStatuses()
@@ -443,6 +447,231 @@ namespace App\Models\Notes{
  * @method static \Illuminate\Database\Eloquent\Builder|Note withPlaceName($className)
  */
 	class AcuteHemodialysisOrderNote extends \Eloquent {}
+}
+
+namespace App\Models\Notes{
+/**
+ * App\Models\Notes\KidneyTransplantAdditionTissueTypingNote
+ *
+ * @property int $id
+ * @property int $case_record_id
+ * @property int $note_type_id
+ * @property int|null $attending_staff_id
+ * @property string|null $place_type
+ * @property int|null $place_id
+ * @property mixed $meta
+ * @property mixed $form
+ * @property mixed|null $report
+ * @property string|null $status
+ * @property \Illuminate\Support\Carbon $date_note
+ * @property int $author_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ResourceActionLog[] $actionLogs
+ * @property-read int|null $action_logs_count
+ * @property-read \App\Models\Resources\Person|null $attendingStaff
+ * @property-read \App\Models\User|null $author
+ * @property-read \App\Models\Registries\KidneyTransplantHLATypingCaseRecord $caseRecord
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\DocumentChangeRequest[] $changeRequests
+ * @property-read int|null $change_requests_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Comment[] $comments
+ * @property-read int|null $comments_count
+ * @property-read \App\Models\Resources\Patient|null $patient
+ * @property-read \App\Models\Subscription|null $subscription
+ * @method static \Illuminate\Database\Eloquent\Builder|Note findByUnhashKey(string $hashed)
+ * @method static \Illuminate\Database\Eloquent\Builder|Note metaSearchTerms($search)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantAdditionTissueTypingNote newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantAdditionTissueTypingNote newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantAdditionTissueTypingNote query()
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantAdditionTissueTypingNote whereAttendingStaffId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantAdditionTissueTypingNote whereAuthorId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantAdditionTissueTypingNote whereCaseRecordId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantAdditionTissueTypingNote whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantAdditionTissueTypingNote whereDateNote($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantAdditionTissueTypingNote whereForm($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantAdditionTissueTypingNote whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantAdditionTissueTypingNote whereMeta($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantAdditionTissueTypingNote whereNoteTypeId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantAdditionTissueTypingNote wherePlaceId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantAdditionTissueTypingNote wherePlaceType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantAdditionTissueTypingNote whereReport($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantAdditionTissueTypingNote whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantAdditionTissueTypingNote whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Note withAttendingName()
+ * @method static \Illuminate\Database\Eloquent\Builder|Note withAuthorName()
+ * @method static \Illuminate\Database\Eloquent\Builder|Note withAuthorUsername()
+ * @method static \Illuminate\Database\Eloquent\Builder|Note withPlaceName($className)
+ */
+	class KidneyTransplantAdditionTissueTypingNote extends \Eloquent {}
+}
+
+namespace App\Models\Notes{
+/**
+ * App\Models\Notes\KidneyTransplantCrossmatchNote
+ *
+ * @property int $id
+ * @property int $case_record_id
+ * @property int $note_type_id
+ * @property int|null $attending_staff_id
+ * @property string|null $place_type
+ * @property int|null $place_id
+ * @property mixed $meta
+ * @property mixed $form
+ * @property mixed|null $report
+ * @property string|null $status
+ * @property \Illuminate\Support\Carbon $date_note
+ * @property int $author_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ResourceActionLog[] $actionLogs
+ * @property-read int|null $action_logs_count
+ * @property-read \App\Models\Resources\Person|null $attendingStaff
+ * @property-read \App\Models\User|null $author
+ * @property-read \App\Models\Registries\KidneyTransplantHLATypingCaseRecord $caseRecord
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\DocumentChangeRequest[] $changeRequests
+ * @property-read int|null $change_requests_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Comment[] $comments
+ * @property-read int|null $comments_count
+ * @property-read \App\Models\Resources\Patient|null $patient
+ * @property-read \App\Models\Subscription|null $subscription
+ * @method static \Illuminate\Database\Eloquent\Builder|Note findByUnhashKey(string $hashed)
+ * @method static \Illuminate\Database\Eloquent\Builder|Note metaSearchTerms($search)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantCrossmatchNote newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantCrossmatchNote newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantCrossmatchNote query()
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantCrossmatchNote whereAttendingStaffId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantCrossmatchNote whereAuthorId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantCrossmatchNote whereCaseRecordId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantCrossmatchNote whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantCrossmatchNote whereDateNote($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantCrossmatchNote whereForm($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantCrossmatchNote whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantCrossmatchNote whereMeta($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantCrossmatchNote whereNoteTypeId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantCrossmatchNote wherePlaceId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantCrossmatchNote wherePlaceType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantCrossmatchNote whereReport($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantCrossmatchNote whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantCrossmatchNote whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Note withAttendingName()
+ * @method static \Illuminate\Database\Eloquent\Builder|Note withAuthorName()
+ * @method static \Illuminate\Database\Eloquent\Builder|Note withAuthorUsername()
+ * @method static \Illuminate\Database\Eloquent\Builder|Note withPlaceName($className)
+ */
+	class KidneyTransplantCrossmatchNote extends \Eloquent {}
+}
+
+namespace App\Models\Notes{
+/**
+ * App\Models\Notes\KidneyTransplantHLATypingNote
+ *
+ * @property int $id
+ * @property int $case_record_id
+ * @property int $note_type_id
+ * @property int|null $attending_staff_id
+ * @property string|null $place_type
+ * @property int|null $place_id
+ * @property mixed $meta
+ * @property mixed $form
+ * @property mixed|null $report
+ * @property string|null $status
+ * @property \Illuminate\Support\Carbon $date_note
+ * @property int $author_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ResourceActionLog[] $actionLogs
+ * @property-read int|null $action_logs_count
+ * @property-read \App\Models\Resources\Person|null $attendingStaff
+ * @property-read \App\Models\User|null $author
+ * @property-read \App\Models\Registries\KidneyTransplantHLATypingCaseRecord $caseRecord
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\DocumentChangeRequest[] $changeRequests
+ * @property-read int|null $change_requests_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Comment[] $comments
+ * @property-read int|null $comments_count
+ * @property-read \App\Models\Resources\Patient|null $patient
+ * @property-read \App\Models\Subscription|null $subscription
+ * @method static \Illuminate\Database\Eloquent\Builder|Note findByUnhashKey(string $hashed)
+ * @method static \Illuminate\Database\Eloquent\Builder|Note metaSearchTerms($search)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantHLATypingNote newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantHLATypingNote newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantHLATypingNote query()
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantHLATypingNote whereAttendingStaffId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantHLATypingNote whereAuthorId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantHLATypingNote whereCaseRecordId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantHLATypingNote whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantHLATypingNote whereDateNote($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantHLATypingNote whereForm($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantHLATypingNote whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantHLATypingNote whereMeta($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantHLATypingNote whereNoteTypeId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantHLATypingNote wherePlaceId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantHLATypingNote wherePlaceType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantHLATypingNote whereReport($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantHLATypingNote whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantHLATypingNote whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Note withAttendingName()
+ * @method static \Illuminate\Database\Eloquent\Builder|Note withAuthorName()
+ * @method static \Illuminate\Database\Eloquent\Builder|Note withAuthorUsername()
+ * @method static \Illuminate\Database\Eloquent\Builder|Note withPlaceName($className)
+ */
+	class KidneyTransplantHLATypingNote extends \Eloquent {}
+}
+
+namespace App\Models\Notes{
+/**
+ * App\Models\Notes\KidneyTransplantHLATypingReportNote
+ *
+ * @property int $id
+ * @property int $case_record_id
+ * @property int $note_type_id
+ * @property int|null $attending_staff_id
+ * @property string|null $place_type
+ * @property int|null $place_id
+ * @property mixed $meta
+ * @property mixed $form
+ * @property mixed|null $report
+ * @property string|null $status
+ * @property \Illuminate\Support\Carbon $date_note
+ * @property int $author_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ResourceActionLog[] $actionLogs
+ * @property-read int|null $action_logs_count
+ * @property-read \App\Models\Resources\Person|null $attendingStaff
+ * @property-read \App\Models\User|null $author
+ * @property-read \App\Models\Registries\KidneyTransplantHLATypingCaseRecord $caseRecord
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\DocumentChangeRequest[] $changeRequests
+ * @property-read int|null $change_requests_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Comment[] $comments
+ * @property-read int|null $comments_count
+ * @property-read \App\Models\Resources\Patient|null $patient
+ * @property-read \App\Models\Subscription|null $subscription
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantHLATypingReportNote filterStatus($status)
+ * @method static \Illuminate\Database\Eloquent\Builder|Note findByUnhashKey(string $hashed)
+ * @method static \Illuminate\Database\Eloquent\Builder|Note metaSearchTerms($search)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantHLATypingReportNote newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantHLATypingReportNote newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantHLATypingReportNote query()
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantHLATypingReportNote whereAttendingStaffId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantHLATypingReportNote whereAuthorId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantHLATypingReportNote whereCaseRecordId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantHLATypingReportNote whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantHLATypingReportNote whereDateNote($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantHLATypingReportNote whereForm($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantHLATypingReportNote whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantHLATypingReportNote whereMeta($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantHLATypingReportNote whereNoteTypeId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantHLATypingReportNote wherePlaceId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantHLATypingReportNote wherePlaceType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantHLATypingReportNote whereReport($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantHLATypingReportNote whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantHLATypingReportNote whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Note withAttendingName()
+ * @method static \Illuminate\Database\Eloquent\Builder|Note withAuthorName()
+ * @method static \Illuminate\Database\Eloquent\Builder|Note withAuthorUsername()
+ * @method static \Illuminate\Database\Eloquent\Builder|Note withPlaceName($className)
+ */
+	class KidneyTransplantHLATypingReportNote extends \Eloquent {}
 }
 
 namespace App\Models\Registries{
@@ -491,6 +720,47 @@ namespace App\Models\Registries{
  * @method static \Illuminate\Database\Query\Builder|AcuteHemodialysisCaseRecord withoutTrashed()
  */
 	class AcuteHemodialysisCaseRecord extends \Eloquent {}
+}
+
+namespace App\Models\Registries{
+/**
+ * App\Models\Registries\KidneyTransplantHLATypingCaseRecord
+ *
+ * @property int $id
+ * @property int $patient_id
+ * @property int $registry_id
+ * @property mixed $meta
+ * @property mixed $form
+ * @property int $status
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ResourceActionLog[] $actionLogs
+ * @property-read int|null $action_logs_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Comment[] $comments
+ * @property-read int|null $comments_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Note[] $notes
+ * @property-read int|null $notes_count
+ * @property-read \App\Models\Resources\Patient $patient
+ * @method static \Illuminate\Database\Eloquent\Builder|CaseRecord findByUnhashKey(string $hashed)
+ * @method static \Illuminate\Database\Eloquent\Builder|CaseRecord metaSearchTerms($search)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantHLATypingCaseRecord newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantHLATypingCaseRecord newQuery()
+ * @method static \Illuminate\Database\Query\Builder|KidneyTransplantHLATypingCaseRecord onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantHLATypingCaseRecord query()
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantHLATypingCaseRecord whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantHLATypingCaseRecord whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantHLATypingCaseRecord whereForm($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantHLATypingCaseRecord whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantHLATypingCaseRecord whereMeta($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantHLATypingCaseRecord wherePatientId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantHLATypingCaseRecord whereRegistryId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantHLATypingCaseRecord whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantHLATypingCaseRecord whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|KidneyTransplantHLATypingCaseRecord withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|KidneyTransplantHLATypingCaseRecord withoutTrashed()
+ */
+	class KidneyTransplantHLATypingCaseRecord extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -866,7 +1136,7 @@ namespace App\Models{
  * @property bool $auto_subscribe_to_channel
  * @property bool $mute_notification
  * @property bool $notify_approval_result
- * @property string $registry_names
+ * @property Collection $registry_names
  * @property string $avatar_token
  * @property int $id
  * @property string $name

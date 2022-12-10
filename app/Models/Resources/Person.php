@@ -13,8 +13,6 @@ class Person extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
-
     protected array $positions = [
         '',
         'physician',
@@ -41,14 +39,14 @@ class Person extends Model
 
     public function scopeFilter($query, $filters)
     {
-        $ilike = config('database.ilike');
+        $iLike = config('database.iLike');
 
         $query->when($filters['position'] ?? null, function ($query, $position) {
             $query->where('position', $position);
         })->when($filters['division_id'] ?? null, function ($query, $division_id) {
             $query->where('division_id', $division_id);
         })
-        ->where('name', $ilike, '%'.$filters['search'].'%')
+        ->where('name', $iLike, '%'.$filters['search'].'%')
         ->where('active', true);
     }
 

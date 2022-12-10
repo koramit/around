@@ -32,7 +32,11 @@
             <label
                 :for="item.value+'-'+name"
                 v-text="item.label"
-                class="ml-4 w-full block cursor-pointer"
+                class="w-full block cursor-pointer"
+                :class="{
+                    'ml-1': narrow,
+                    'ml-4': !narrow,
+                }"
             />
         </div>
         <p
@@ -58,6 +62,7 @@ const props = defineProps({
     error: { type: String, default: '' },
     allowReset: { type:Boolean },
     allowOther: { type:Boolean },
+    narrow: { type:Boolean },
 });
 
 const selected = ref(props.modelValue);

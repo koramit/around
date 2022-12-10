@@ -2,14 +2,14 @@
 
 namespace App\Actions\Procedures;
 
-use App\Models\Resources\Registry;
 use App\Traits\AvatarLinkable;
 use App\Traits\FlashDataGeneratable;
 use App\Traits\HomePageSelectable;
+use App\Traits\RegistryGroupRouteQueryable;
 
 class ProcedureIndexAction
 {
-    use FlashDataGeneratable, HomePageSelectable, AvatarLinkable;
+    use FlashDataGeneratable, HomePageSelectable, AvatarLinkable, RegistryGroupRouteQueryable;
 
     public function __invoke(mixed $user, string $routeName)
     {
@@ -17,22 +17,11 @@ class ProcedureIndexAction
             return $link;
         }
 
-        $procedureNameRoute = cache()->rememberForever('procedure-name-route', function () {
-            return Registry::query()
-                ->where('route', 'like', 'procedures.%')
-                ->get()
-                ->transform(fn (Registry $r) => [
-                    'name' => $r->name,
-                    'route' => $r->route,
-                ]);
-        });
-
         if ($user->registry_names->count() === 0) {
             abort(403);
         }
 
-        $procedures = $procedureNameRoute->filter(fn ($r) => $user->registry_names->contains($r['name']))->values();
-
+        $procedures = $this->getRoutesByRegistryTypeAndUser(registryType: 'procedures', user: $user);
         if ($procedures->count() === 0) {
             abort(403);
         }

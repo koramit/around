@@ -3,23 +3,21 @@
 namespace App\Actions\Procedures\AcuteHemodialysis;
 
 use App\Actions\Resources\PatientRecentlyAdmissionAction;
+use App\Extensions\Auth\AvatarUser;
 use App\Managers\Resources\AdmissionManager;
 use App\Models\Notes\AcuteHemodialysisOrderNote;
-use App\Traits\AvatarLinkable;
-use App\Traits\Subscribable;
+use App\Models\User;
 use ArrayObject;
-use Hashids\Hashids;
 
 class OrderShowAction extends AcuteHemodialysisAction
 {
-    use Subscribable, AvatarLinkable;
-
-    public function __invoke(string $hashedKey, mixed $user): array
+    public function __invoke(string $hashedKey, User|AvatarUser $user): array
     {
         if (($link = $this->shouldLinkAvatar()) !== false) {
             return $link;
         }
 
+        /** @var AcuteHemodialysisOrderNote $order */
         $order = AcuteHemodialysisOrderNote::query()
                     ->withAuthorName()
                     ->withPlaceName('App\Models\Resources\Ward')
@@ -31,25 +29,7 @@ class OrderShowAction extends AcuteHemodialysisAction
             abort(403);
         }
 
-        $flash = [
-            'page-title' => 'Acute '.$order->meta['dialysis_type'].' '.$order->patient->profile['first_name'].' @ '.$order->date_note->format('d M Y'),
-            'hn' => $order->patient->hn,
-            'main-menu-links' => [
-                ['icon' => 'slack-hash', 'label' => 'Special requests', 'type' => '#', 'route' => '#special-requests', 'can' => true],
-                ['icon' => 'slack-hash', 'label' => 'Predialysis', 'type' => '#', 'route' => '#predialysis-evaluation', 'can' => true],
-                ['icon' => 'slack-hash', 'label' => 'Prescription', 'type' => '#', 'route' => '#prescription', 'can' => true],
-                ['icon' => 'slack-hash', 'label' => 'Discussion', 'type' => '#', 'route' => '#discussion', 'can' => true],
-                ['icon' => 'patient', 'label' => 'Patients', 'route' => route('patients'), 'can' => true],
-                ['icon' => 'clinic', 'label' => 'Clinics', 'route' => route('clinics'), 'can' => true],
-                ['icon' => 'procedure', 'label' => 'Procedures', 'route' => route('procedures.index'), 'can' => true],
-            ],
-            'action-menu' => [
-                $this->getSubscriptionActionMenu($order, $user),
-            ],
-            'breadcrumbs' => $this->getBreadcrumbs([
-                ['label' => 'Case Record', 'route' => route('procedures.acute-hemodialysis.edit', app(Hashids::class)->encode($order->case_record_id))],
-            ]),
-        ];
+        $flash = $this->initOrderFlash($order, $user);
 
         if ($order->status === 'draft' || $order->status === 'scheduling') {
             $flash['message'] = [

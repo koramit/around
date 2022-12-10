@@ -2,17 +2,18 @@
 
 namespace App\Actions\Procedures\AcuteHemodialysis;
 
+use App\Extensions\Auth\AvatarUser;
 use App\Models\DocumentChangeRequests\AcuteHemodialysisSlotRequest;
 use App\Models\Notes\AcuteHemodialysisOrderNote;
+use App\Models\User;
 use App\Traits\AcuteHemodialysis\OrderShareValidatable;
-use App\Traits\AvatarLinkable;
 use App\Traits\HomePageSelectable;
 
 class SlotRequestIndexAction extends AcuteHemodialysisAction
 {
-    use OrderShareValidatable, HomePageSelectable, AvatarLinkable;
+    use OrderShareValidatable, HomePageSelectable;
 
-    public function __invoke(mixed $user, string $routeName): array
+    public function __invoke(User|AvatarUser $user, string $routeName): array
     {
         if (($link = $this->shouldLinkAvatar()) !== false) {
             return $link;
@@ -31,33 +32,39 @@ class SlotRequestIndexAction extends AcuteHemodialysisAction
                 $actions = collect([
                     [
                         'label' => 'Approve',
-                        'type' => 'button',
+                        'as' => 'button',
                         'icon' => 'check-circle',
                         'theme' => 'success',
-                        'href' => route('procedures.acute-hemodialysis.slot-requests.approve', $request->hashed_key),
-                        'callback' => 'approve-request',
+                        'route' => route('procedures.acute-hemodialysis.slot-requests.approve', $request->hashed_key),
+                        'name' => 'approve-request',
                         'can' => $user->can('approve', $request),
                     ],
                     [
                         'label' => 'Disapprove',
-                        'type' => 'button',
+                        'as' => 'button',
                         'icon' => 'times-circle',
                         'theme' => 'danger',
-                        'href' => route('procedures.acute-hemodialysis.slot-requests.approve', $request->hashed_key),
-                        'callback' => 'disapprove-request',
-                        'confirm_text' => 'Disapprove '.$request->change_request_text,
-                        'confirm_heading' => 'HN '.$changeable->meta['hn'].' '.$changeable->meta['name'],
+                        'route' => route('procedures.acute-hemodialysis.slot-requests.approve', $request->hashed_key),
+                        'name' => 'disapprove-request',
+                        'config' => [
+                            'heading' => 'HN '.$changeable->meta['hn'].' '.$changeable->meta['name'],
+                            'confirmText' => 'Disapprove '.$request->change_request_text,
+                            'requireReason' => true,
+                        ],
                         'can' => $user->can('approve', $request),
                     ],
                     [
                         'label' => 'Cancel',
-                        'type' => 'button',
+                        'as' => 'button',
                         'icon' => 'trash',
                         'theme' => 'warning',
-                        'href' => route('procedures.acute-hemodialysis.slot-requests.cancel', $request->hashed_key),
-                        'callback' => 'cancel-request',
-                        'confirm_text' => 'Cancel '.$request->change_request_text,
-                        'confirm_heading' => 'HN '.$changeable->meta['hn'].' '.$changeable->meta['name'],
+                        'route' => route('procedures.acute-hemodialysis.slot-requests.cancel', $request->hashed_key),
+                        'name' => 'cancel-request',
+                        'config' => [
+                            'heading' => 'HN '.$changeable->meta['hn'].' '.$changeable->meta['name'],
+                            'confirmText' => 'Cancel '.$request->change_request_text,
+                            'requireReason' => true,
+                        ],
                         'can' => $user->can('cancel', $request),
                     ],
                 ])->filter(fn ($action) => $action['can'])->values()->all();
@@ -72,16 +79,13 @@ class SlotRequestIndexAction extends AcuteHemodialysisAction
                 ];
             });
 
+        $flash = $this->getFlash('Acute Hemodialysis - Slot Request', $user);
+        $flash['navs'] = $this->NAVS;
+        $flash['action-menu'][] = $this->getSetHomePageActionMenu($routeName, $user->home_page);
+
         return [
             'requests' => $requests,
-            'flash' => [
-                'page-title' => 'Acute Hemodialysis - Slot Request',
-                'main-menu-links' => $this->MENU,
-                'navs' => $this->NAVS,
-                'action-menu' => [
-                    $this->getSetHomePageActionMenu($routeName, $user->home_page),
-                ],
-            ],
+            'flash' => $flash,
             'endpoints' => [
                 'resources_api_wards' => route('resources.api.wards'),
                 'resources_api_staffs' => route('resources.api.people'),

@@ -5,15 +5,15 @@ namespace App\Actions\Procedures\AcuteHemodialysis;
 use App\Models\Registries\AcuteHemodialysisCaseRecord as CaseRecord;
 use App\Models\Resources\Admission;
 use App\Models\Resources\Patient;
-use App\Models\Subscription;
 use App\Rules\AnExists;
 use App\Rules\HnExists;
 use App\Traits\AvatarLinkable;
+use App\Traits\CaseRecordFinishable;
 use Illuminate\Support\Facades\Validator;
 
 class CaseRecordStoreAction extends AcuteHemodialysisAction
 {
-    use AvatarLinkable;
+    use AvatarLinkable, CaseRecordFinishable;
 
     protected float $CRF_VERSION = 1.0;
 
@@ -88,34 +88,16 @@ class CaseRecordStoreAction extends AcuteHemodialysisAction
             }
         }
         $caseRecord->form = $form;
-        $now = now()->format('M j y');
         $caseRecord->meta = [
             'version' => $this->CRF_VERSION,
             'hn' => $patient->hn,
             'an' => $an,
             'name' => $patient->first_name,
-            'title' => "Acute Hemodialysis Case : HN $patient->hn $patient->first_name : $now",
             'ward_admit' => null,
         ];
         $caseRecord->save();
-
-        $caseRecord->actionLogs()->create([
-            'actor_id' => $user->id,
-            'action' => 'create',
-        ]);
-
-        if ($patient->registries()->where('registry_id', $this->REGISTRY_ID)->count() === 0) {
-            $patient->registries()->attach($this->REGISTRY_ID);
-        }
-
-        $sub = Subscription::query()->create([
-            'subscribable_type' => $caseRecord::class,
-            'subscribable_id' => $caseRecord->id,
-        ]);
-
-        if ($user->auto_subscribe_to_channel) {
-            $user->subscriptions()->attach($sub->id);
-        }
+        $caseRecord->update(['meta->title' => $caseRecord->genTitle()]);
+        $this->finishing($caseRecord, $patient, $user, $this->REGISTRY_ID);
 
         return ['key' => $caseRecord->hashed_key];
     }

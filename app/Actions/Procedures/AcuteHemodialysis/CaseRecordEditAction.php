@@ -2,18 +2,19 @@
 
 namespace App\Actions\Procedures\AcuteHemodialysis;
 
+use App\Extensions\Auth\AvatarUser;
 use App\Managers\Resources\AdmissionManager;
 use App\Models\Registries\AcuteHemodialysisCaseRecord;
 use App\Models\Resources\Admission;
 use App\Models\Resources\Ward;
+use App\Models\User;
 use App\Traits\AcuteHemodialysis\CaseRecordShareValidatable;
 use App\Traits\AcuteHemodialysis\OrderShareValidatable;
-use App\Traits\AvatarLinkable;
 use App\Traits\Subscribable;
 
 class CaseRecordEditAction extends AcuteHemodialysisAction
 {
-    use OrderShareValidatable, CaseRecordShareValidatable, Subscribable, AvatarLinkable;
+    use OrderShareValidatable, CaseRecordShareValidatable, Subscribable;
 
     protected array $FORM_CONFIGS = [
         'comorbidities' => [
@@ -41,8 +42,9 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
         'opd_consent_form_pathname' => 'procedures/acute-hemodialysis/opd-consent-form',
         'ipd_consent_form_pathname' => 'procedures/acute-hemodialysis/ipd-consent-form',
     ];
+    // @TODO shorten pathname => 'p/a'
 
-    public function __invoke(string $hashed, mixed $user): array
+    public function __invoke(string $hashed, User|AvatarUser $user): array
     {
         /* @TODO view draft & finished note */
         if ($link = $this->shouldLinkAvatar()) {
@@ -67,28 +69,32 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
                 $actions = collect([
                     [
                         'label' => 'Cancel',
-                        'type' => 'button',
+                        'as' => 'button',
                         'icon' => 'trash',
                         'theme' => 'warning',
-                        'href' => route('procedures.acute-hemodialysis.orders.destroy', $order->hashed_key),
-                        'callback' => 'cancel-order',
-                        'confirm_text' => $order->cancel_confirm_text,
+                        'route' => route('procedures.acute-hemodialysis.orders.destroy', $order->hashed_key),
+                        'name' => 'cancel-order',
+                        'config' => [
+                            'heading' => 'Cancel order',
+                            'confirmText' => $order->cancel_confirm_text,
+                            'requireReason' => true,
+                        ],
                         'can' => $user->can('destroy', $order),
                     ],
                     [
                         'label' => 'Edit',
-                        'type' => 'link',
+                        'as' => 'link',
                         'icon' => 'edit',
                         'theme' => 'accent',
-                        'href' => route('procedures.acute-hemodialysis.orders.edit', $order->hashed_key),
+                        'route' => route('procedures.acute-hemodialysis.orders.edit', $order->hashed_key),
                         'can' => $user->can('edit', $order),
                     ],
                     [
                         'label' => 'View',
-                        'type' => 'link',
+                        'as' => 'link',
                         'icon' => 'readme',
                         'theme' => 'accent',
-                        'href' => route('procedures.acute-hemodialysis.orders.show', $order->hashed_key),
+                        'route' => route('procedures.acute-hemodialysis.orders.show', $order->hashed_key),
                         'can' => $user->can('view', $order),
                     ],
                 ])->filter(fn ($action) => $action['can'])->values()->all();
@@ -205,7 +211,7 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
                 'force_complete' => $user->can('complete', $caseRecord)
                     && $user->can('force_complete_case'),
             ],
-            'endpoints' => [
+            'routes' => [
                 'resources_api_wards' => route('resources.api.wards'),
                 'resources_api_staffs' => route('resources.api.people'),
                 'acute_hemodialysis_slot_available' => route('procedures.acute-hemodialysis.slot-available'),
@@ -226,46 +232,50 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
             'comment' => $this->getCommentRoutes($caseRecord),
         ];
 
-        $flash = [
-            'page-title' => 'Acute HD '.$caseRecord->patient->full_name,
-            'hn' => $caseRecord->patient->hn,
-            'main-menu-links' => [
-                ['icon' => 'slack-hash', 'label' => 'Case Record', 'type' => '#', 'route' => '#case-record', 'can' => true],
-                ['icon' => 'slack-hash', 'label' => 'Orders', 'type' => '#', 'route' => '#orders', 'can' => true],
-                ['icon' => 'slack-hash', 'label' => 'Discussion', 'type' => '#', 'route' => '#discussion', 'can' => true],
-                ['icon' => 'patient', 'label' => 'Patients', 'route' => route('patients'), 'can' => true],
-                ['icon' => 'clinic', 'label' => 'Clinics', 'route' => route('clinics'), 'can' => true],
-                ['icon' => 'procedure', 'label' => 'Procedures', 'route' => route('procedures.index'), 'can' => true],
+        $flash = $this->getFlash($caseRecord->title, $user);
+        $flash['hn'] = $caseRecord->patient->hn;
+        $flash['main-menu-links']->prepend(['icon' => 'slack-hash', 'label' => 'Discussion', 'type' => '#', 'route' => '#discussion', 'can' => true]);
+        $flash['main-menu-links']->prepend(['icon' => 'slack-hash', 'label' => 'Orders', 'type' => '#', 'route' => '#orders', 'can' => true]);
+        $flash['main-menu-links']->prepend(['icon' => 'slack-hash', 'label' => 'Case Record', 'type' => '#', 'route' => '#case-record', 'can' => true]);
+
+        $flash['action-menu'] = [
+            [
+                'as' => 'link',
+                'icon' => 'calendar-plus',
+                'label' => 'New order',
+                'route' => route('procedures.acute-hemodialysis.orders.create-shortcut', $caseRecord->hashed_key),
+                'can' => $reservable && $user->can('create_acute_hemodialysis_order'),
             ],
-            'action-menu' => [
-                [
-                    'icon' => 'calendar-plus',
-                    'label' => 'New order',
-                    'route' => route('procedures.acute-hemodialysis.orders.create-shortcut', $caseRecord->hashed_key),
-                    'can' => $reservable && $user->can('create_acute_hemodialysis_order'),
+            [
+                'as' => 'button',
+                'icon' => 'trash',
+                'label' => 'Cancel',
+                'name' => 'cancel-case',
+                'route' => route('procedures.acute-hemodialysis.destroy', $caseRecord->hashed_key),
+                'config' => [
+                    'heading' => 'Cancel Case',
+                    'confirmText' => $caseRecord->title,
+                    'requireReason' => true,
                 ],
-                [
-                    'icon' => 'trash',
-                    'label' => 'Cancel',
-                    'action' => 'cancel-case',
-                    'can' => $user->can('destroy', $caseRecord),
-                ],
-                [
-                    'icon' => 'box-archive',
-                    'label' => 'Complete case',
-                    'action' => 'complete-case',
-                    'can' => $user->can('complete', $caseRecord),
-                ],
-                [
-                    'icon' => 'edit',
-                    'label' => 'Addendum case',
-                    'action' => 'addendum-case',
-                    'can' => $user->can('addendum', $caseRecord),
-                ],
-                $this->getSubscriptionActionMenu($caseRecord, $user),
+                'can' => $user->can('destroy', $caseRecord),
             ],
-            'breadcrumbs' => $this->BREADCRUMBS,
+            [
+                'as' => 'button',
+                'icon' => 'box-archive',
+                'label' => 'Complete case',
+                'name' => 'complete-case',
+                'can' => $user->can('complete', $caseRecord),
+            ],
+            [
+                'as' => 'button',
+                'icon' => 'edit',
+                'label' => 'Addendum case',
+                'name' => 'addendum-case',
+                'can' => $user->can('addendum', $caseRecord),
+            ],
+            $this->getSubscriptionActionMenu($caseRecord, $user),
         ];
+        $flash['breadcrumbs'] = $this->BREADCRUMBS;
 
         return [
             'caseRecordForm' => $form,

@@ -112,7 +112,10 @@ class CaseRecordCompleteAction
                 'message' => "Acute HD case HN {$caseRecord->meta['hn']} {$caseRecord->meta['name']} no any updates provided.",
             ];
         }
-        $caseRecord->update(['form' => $validated]);
+        $caseRecord->update([
+            'form' => $validated,
+            'status' => 'edited',
+        ]);
         $caseRecord->actionLogs()->create([
             'action' => 'change',
             'actor_id' => $userId,

@@ -2,11 +2,12 @@
 
 namespace App\Listeners;
 
+use App\Events\Procedures\AcuteHemodialysis\AcuteHemodialysisOrderNoteUpdating;
 use App\Jobs\AutoUnsubscribeToChannel;
 
 class HandleChangeToInactiveStatus
 {
-    public function handle(mixed $event): void
+    public function handle(AcuteHemodialysisOrderNoteUpdating $event): void
     {
         $old = $event->subscribable->getOriginal();
         $new = $event->subscribable->getAttributes();
@@ -19,6 +20,6 @@ class HandleChangeToInactiveStatus
             return;
         }
 
-        AutoUnsubscribeToChannel::dispatchAfterResponse($event->subscription);
+        AutoUnsubscribeToChannel::dispatchAfterResponse($event->subscribable->subscription);
     }
 }

@@ -5,8 +5,8 @@
             :key="key"
         >
             <InertiaLink
-                v-if="action.type === 'link'"
-                :href="action.href"
+                v-if="action.as === 'link'"
+                :href="action.route"
                 class="block w-full text-left px-4 py-2"
             >
                 <span class="flex items-center space-x-2">
@@ -18,7 +18,7 @@
                 </span>
             </InertiaLink>
             <button
-                v-else
+                v-else-if="action.as === 'button'"
                 :key="key"
                 class="block w-full text-left px-4 py-2"
                 @click="$emit('action-clicked', action)"

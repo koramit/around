@@ -150,5 +150,5 @@ return [
 
     'th_collation' => env('DB_CONNECTION') === 'pgsql' ? 'th-x-icu' : null,
 
-    'ilike' => env('DB_CONNECTION') === 'pgsql' ? 'ilike' : 'like',
+    'iLike' => env('DB_CONNECTION') === 'pgsql' ? 'ilike' : 'like',
 ];

@@ -21,7 +21,7 @@
                 :readonly="readonly"
                 :value="modelValue"
                 class="form-input border-r-0 rounded-r-none form-scroll-mt"
-                :class="{ 'border-red-400': error }"
+                :class="{ '!border-red-400 !text-red-400': error }"
                 :disabled="disabled"
             >
             <div class="w-auto flex items-center px-2 border-2 border-gray-200 rounded shadow-sm border-l-0 rounded-l-none bg-gray-50">
@@ -49,7 +49,7 @@
             :readonly="readonly"
             :value="modelValue"
             class="form-input form-scroll-mt"
-            :class="{ 'border-red-400 text-red-400': error }"
+            :class="{ '!border-red-400 !text-red-400': error }"
             :disabled="disabled"
         >
         <div

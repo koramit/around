@@ -6,7 +6,6 @@ use App\Models\Resources\Patient;
 use App\Traits\PKHashable;
 use Illuminate\Database\Eloquent\Casts\AsArrayObject;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -14,11 +13,10 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /** @property-read string $hashed_key */
+/** @property-read string $title */
 class CaseRecord extends Model
 {
-    use HasFactory, PKHashable, SoftDeletes;
-
-    protected $guarded = [];
+    use PKHashable, SoftDeletes;
 
     protected $casts = [
         'form' => AsArrayObject::class,
@@ -66,10 +64,10 @@ class CaseRecord extends Model
 
     public function scopeMetaSearchTerms($query, $search)
     {
-        $ilike = config('database.ilike');
-        $query->when($search ?? null, function ($query, $search) use ($ilike) {
-            $query->where('meta->name', $ilike, $search.'%')
-                ->orWhere('meta->hn', $ilike, $search.'%');
+        $iLike = config('database.iLike');
+        $query->when($search ?? null, function ($query, $search) use ($iLike) {
+            $query->where('meta->name', $iLike, $search.'%')
+                ->orWhere('meta->hn', $iLike, $search.'%');
         });
     }
 }
