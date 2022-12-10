@@ -8,9 +8,9 @@
             :key="key"
         >
             <button
-                v-if="action.action !== undefined"
+                v-if="action.as === 'button'"
                 class="flex items-center group py-2 text-primary"
-                @click="$emit(action.type ?? 'action-clicked', action.action)"
+                @click="buttonClicked(action)"
             >
                 <IconVector
                     :name="action.icon"
@@ -24,10 +24,10 @@
                 </span>
             </button>
             <InertiaLink
+                v-else-if="action.as === 'link'"
                 class="flex items-center group py-2 outline-none truncate text-primary"
                 :href="action.route"
-                v-else-if="action.route !== undefined"
-                @click="$emit('link-clicked')"
+                @click="$emit('hide-mobile-menu')"
             >
                 <IconVector
                     :name="action.icon"
@@ -44,10 +44,49 @@
     </div>
 </template>
 <script setup>
-import { InertiaLink } from '@inertiajs/inertia-vue3';
+import {InertiaLink, usePage} from '@inertiajs/inertia-vue3';
+import {useActionStore} from '../../functions/useActionStore.js';
 import IconVector from './IconVector.vue';
-defineEmits(['action-clicked', 'link-clicked', 'subscribe-clicked', 'set-home-page-clicked', 'bookmark-clicked']);
+
+const emits = defineEmits(['hide-mobile-menu']);
 defineProps({
     zenMode: { type: Boolean }
 });
+const preDefinedActions = ['subscribe-clicked', 'set-home-page-clicked', 'bookmark-clicked'];
+const {setActionStore, resetActionStore} = useActionStore();
+
+const buttonClicked = (action) => {
+    if (! preDefinedActions.includes(action.name)) {
+        resetActionStore();
+        setActionStore(action);
+        emits('hide-mobile-menu');
+        return;
+    }
+
+    switch (action.name) {
+    case 'subscribe-clicked':
+        window.axios
+            .post(action.config.route, action.config)
+            .then(res => {
+                let index = usePage().props.value.flash.actionMenu.findIndex(a => a.name === 'subscribe-clicked');
+                usePage().props.value.flash.actionMenu[index].label = res.data.label;
+                usePage().props.value.flash.actionMenu[index].icon = res.data.icon;
+                usePage().props.value.flash.actionMenu[index].config.subscribed = !usePage().props.value.flash.actionMenu[index].config.subscribed;
+            });
+        break;
+    case 'set-home-page-clicked':
+        window.axios
+            .patch(action.config.route, {home_page: action.config.route_name})
+            .then(() => {
+                let index = usePage().props.value.flash.actionMenu.findIndex(a => a.name === 'set-home-page-clicked');
+                usePage().props.value.flash.actionMenu.splice(index, 1);
+            });
+        break;
+    /*case 'bookmark-clicked':
+        emits['bookmark-clicked']();
+        break;*/
+    default:
+        return;
+    }
+};
 </script>

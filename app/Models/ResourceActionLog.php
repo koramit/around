@@ -4,15 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Casts\AsArrayObject;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class ResourceActionLog extends Model
 {
-    use HasFactory;
-
     protected $guarded = [];
 
     protected $casts = [
@@ -45,6 +42,8 @@ class ResourceActionLog extends Model
 /** 19 */'revoke', // role
 /** 20 */'discharge', // case
 /** 21 */'export', // case
+/** 22 */'publish', // note
+/** 23 */'delete', // case, note
 
     ];
 

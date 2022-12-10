@@ -32,7 +32,7 @@ class OrderShowAction extends AcuteHemodialysisAction
         }
 
         $flash = [
-            'page-title' => 'Acute '.$order->meta['dialysis_type'].' '.$order->patient->profile['first_name'].' @ '.$order->date_note->format('d M Y'),
+            'page-title' => $order->title, //'Acute '.$order->meta['dialysis_type'].' '.$order->patient->profile['first_name'].' @ '.$order->date_note->format('d M Y'),
             'hn' => $order->patient->hn,
             'main-menu-links' => [
                 ['icon' => 'slack-hash', 'label' => 'Special requests', 'type' => '#', 'route' => '#special-requests', 'can' => true],

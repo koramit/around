@@ -77,6 +77,10 @@ class HandleInertiaRequests extends Middleware
                 'name' => '',
                 'payload' => null,
             ],
+            'form' => [
+                'state' => null,
+                'error' => null,
+            ],
         ]);
     }
 }

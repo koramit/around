@@ -251,7 +251,6 @@ class OrderStoreAction extends AcuteHemodialysisAction
         }
         $zombieHours = $this->zombieHours($validated['date_note']);
 
-        $dateNote = now()->create($validated['date_note']);
         $note = new AcuteHemodialysisOrderNote();
         $note->case_record_id = $caseRecord->id;
         $note->attending_staff_id = cache()->pull($personKeyCache)->id;
@@ -274,7 +273,6 @@ class OrderStoreAction extends AcuteHemodialysisAction
             'extra_slot' => $extraSlot,
             'covid_case' => $validated['covid_case'],
             'submitted' => false,
-            'title' => "Acute Hemodialysis Order : HN $patient->hn $patient->first_name : {$validated['dialysis_type']} {$dateNote->format('M j y')}",
         ];
         $note->author_id = $user->id;
         $note->save();
@@ -283,6 +281,8 @@ class OrderStoreAction extends AcuteHemodialysisAction
             'subscribable_type' => $note::class,
             'subscribable_id' => $note->id,
         ]);
+
+        $note->update(['meta->title' => $note->genTitle()]);
 
         if ($user->auto_subscribe_to_channel) {
             $user->subscriptions()->attach($sub->id);

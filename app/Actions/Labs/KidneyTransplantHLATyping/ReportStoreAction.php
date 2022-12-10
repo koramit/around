@@ -2,6 +2,7 @@
 
 namespace App\Actions\Labs\KidneyTransplantHLATyping;
 
+use App\Models\Notes\KidneyTransplantAdditionTissueTypingNote;
 use App\Models\Notes\KidneyTransplantCrossmatchNote;
 use App\Models\Notes\KidneyTransplantHLATypingNote;
 use App\Models\Notes\KidneyTransplantHLATypingReportNote;
@@ -10,13 +11,13 @@ use App\Models\Resources\Patient;
 use App\Models\Subscription;
 use App\Models\User;
 use App\Rules\HnExists;
-use App\Traits\AvatarLinkable;
+use App\Traits\CaseRecordFinishable;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
 class ReportStoreAction extends ReportAction
 {
-    use AvatarLinkable;
+    use CaseRecordFinishable;
 
     public function __invoke(array $data, mixed $user)
     {
@@ -29,8 +30,9 @@ class ReportStoreAction extends ReportAction
             'hn' => ['required', 'digits:8', new HnExists()],
             'date_serum' => ['required', 'date'],
             'donor_hn' => ['nullable', 'digits:8', new HnExists()],
-            'request_hla' => ['required', 'bool', 'accepted_if:request_cxm,false'],
-            'request_cxm' => ['required', 'bool', 'accepted_if:request_hla,false'],
+            'request_hla' => ['required', 'bool', Rule::requiredIf(! $data['request_cxm'] && ! $data['request_addition_tissue'])],
+            'request_cxm' => ['required', 'bool', Rule::requiredIf(! $data['request_hla'] && ! $data['request_addition_tissue'])],
+            'request_addition_tissue' => ['required', Rule::requiredIf(! $data['request_hla'] && ! $data['request_cxm'])],
         ]);
 
         $patient = Patient::query()->findByHashedKey($validated['hn'])->first();
@@ -38,7 +40,7 @@ class ReportStoreAction extends ReportAction
             ? Patient::query()->findByHashedKey($validated['donor_hn'])->first()
             : null;
 
-        // if not case yet then create one
+        // if no case yet then create one
         $patientCaseRecord = $this->findOrCreateCaseRecord($patient, $user);
         $donorCaseRecord = $donor
             ? $this->findOrCreateCaseRecord($donor, $user)
@@ -53,6 +55,7 @@ class ReportStoreAction extends ReportAction
                 $donorHLANote = $this->createNote($donorCaseRecord, $patient, $user, 'hla', $validated['date_serum']);
             }
         }
+
         // if cxm then create cxm note
         $patientCXMNote = null;
         $donorCXMNote = null;
@@ -60,6 +63,28 @@ class ReportStoreAction extends ReportAction
             $patientCXMNote = $this->createNote($patientCaseRecord, $patient, $user, 'cxm', $validated['date_serum']);
             if ($donor) {
                 $donorCXMNote = $this->createNote($donorCaseRecord, $patient, $user, 'cxm', $validated['date_serum']);
+            }
+        }
+
+        // if addition tissue then create addition tissue note
+        $patientAdditionTissueTypingNote = null;
+        $donorAdditionTissueTypingNote = null;
+        if ($validated['request_addition_tissue']) {
+            $patientAdditionTissueTypingNote = $this->createNote(
+                $patientCaseRecord,
+                $patient,
+                $user,
+                'addition_tissue_typing',
+                $validated['date_serum']
+            );
+            if ($donor) {
+                $donorAdditionTissueTypingNote = $this->createNote(
+                    $donorCaseRecord,
+                    $patient,
+                    $user,
+                    'addition_tissue_typing',
+                    $validated['date_serum']
+                );
             }
         }
 
@@ -74,6 +99,8 @@ class ReportStoreAction extends ReportAction
         $form['approver'] = null;
         $form['recipient_is'] = null;
         $form['donor_is'] = null;
+        $form['scanned_report'] = null;
+        $form['remark'] = null;
         $report->form = $form;
         $report->meta = [
             'hn' => $patient->hn,
@@ -82,10 +109,13 @@ class ReportStoreAction extends ReportAction
             'donor_name' => $donor?->first_name,
             'version' => 1.0,
             'request_hla' => $validated['request_hla'],
+            'request_addition_tissue' => $validated['request_addition_tissue'],
             'request_cxm' => $validated['request_cxm'],
             'patient_hla_note_key' => $patientHLANote?->hashed_key,
+            'patient_addition_tissue_typing_note_key' => $patientAdditionTissueTypingNote?->hashed_key,
             'patient_cxm_note_key' => $patientCXMNote?->hashed_key,
             'donor_hla_note_key' => $donorHLANote?->hashed_key,
+            'donor_addition_tissue_typing_note_key' => $donorAdditionTissueTypingNote?->hashed_key,
             'donor_cxm_note_key' => $donorCXMNote?->hashed_key,
         ];
         $report->author_id = $user->id;
@@ -117,8 +147,7 @@ class ReportStoreAction extends ReportAction
         if ($caseRecord = CaseRecord::query()
             ->where('status', 1) // active
             ->where('patient_id', $patient->id)
-            ->first()){
-
+            ->first()) {
             return $caseRecord;
         }
 
@@ -126,35 +155,18 @@ class ReportStoreAction extends ReportAction
         $caseRecord->patient_id = $patient->id;
         $caseRecord->form = [];
         $caseRecord->meta = [
-            'version' => 1.0,// $this->CRF_VERSION,
+            'version' => 1.0, // $this->CRF_VERSION,
             'hn' => $patient->hn,
             'name' => $patient->first_name,
-            'title' => "Pre KT Case : HN $patient->hn $patient->first_name",
         ];
         $caseRecord->save();
-
-        $caseRecord->actionLogs()->create([
-            'actor_id' => $user->id,
-            'action' => 'create',
-        ]);
-
-        if ($patient->registries()->where('registry_id', $this->REGISTRY_ID)->count() === 0) {
-            $patient->registries()->attach($this->REGISTRY_ID);
-        }
-
-        $sub = Subscription::query()->create([
-            'subscribable_type' => $caseRecord::class,
-            'subscribable_id' => $caseRecord->id,
-        ]);
-
-        if ($user->auto_subscribe_to_channel) {
-            $user->subscriptions()->attach($sub->id);
-        }
+        $caseRecord->update(['meta->title' => $caseRecord->genTitle()]);
+        $this->finishing($caseRecord, $patient, $user, $this->REGISTRY_ID);
 
         return $caseRecord;
     }
 
-    protected function createNote(CaseRecord $caseRecord, Patient $patient, User $user, string $noteType, string $dateNote): null|KidneyTransplantHLATypingNote|KidneyTransplantCrossmatchNote
+    protected function createNote(CaseRecord $caseRecord, Patient $patient, User $user, string $noteType, string $dateNote): null|KidneyTransplantHLATypingNote|KidneyTransplantCrossmatchNote|KidneyTransplantAdditionTissueTypingNote
     {
         $data = [
             'case_record_id' => $caseRecord->id,
@@ -165,7 +177,7 @@ class ReportStoreAction extends ReportAction
                 'hn' => $patient->hn,
                 'name' => $patient->first_name,
                 'version' => 1.0,
-            ]
+            ],
         ];
         if ($noteType === 'hla') {
             $data['form'] = [
@@ -192,12 +204,13 @@ class ReportStoreAction extends ReportAction
             $note = KidneyTransplantHLATypingNote::query()->create($data);
         } elseif ($noteType === 'cxm') {
             $data['form'] = [
+                'date_cross_matching' => null,
                 't_lymphocyte_cdc_neat_rt' => null,
                 't_lymphocyte_cdc_neat_37_degree_celsius' => null,
                 't_lymphocyte_cdc_dtt_rt' => null,
                 't_lymphocyte_cdc_dtt_37_degree_celsius' => null,
                 't_lymphocyte_cdc_ahg_neat_rt' => null,
-                't_lymphocyte_cdc_ahg_ddt_rt' => null,
+                't_lymphocyte_cdc_ahg_dtt_rt' => null,
                 'b_lymphocyte_cdc_neat_37_degree_celsius' => null,
                 'b_lymphocyte_cdc_dtt_37_degree_celsius' => null,
                 'b_lymphocyte_cdc_ahg_neat_37_degree_celsius' => null,
@@ -206,6 +219,19 @@ class ReportStoreAction extends ReportAction
                 'b_lymphocyte_crossmatch' => null,
             ];
             $note = KidneyTransplantCrossmatchNote::query()->create($data);
+        } elseif ($noteType === 'addition_tissue_typing') {
+            $data['form'] = [
+                'date_addition_tissue_typing' => null,
+                'tissue_typing_dqa1' => null,
+                'tissue_typing_dqa2' => null,
+                'tissue_typing_dpa1' => null,
+                'tissue_typing_dpa2' => null,
+                'tissue_typing_dpb1' => null,
+                'tissue_typing_dpb2' => null,
+                'tissue_typing_mica1' => null,
+                'tissue_typing_mica2' => null,
+            ];
+            $note = KidneyTransplantAdditionTissueTypingNote::query()->create($data);
         } else {
             return null;
         }

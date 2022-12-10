@@ -29,9 +29,10 @@ trait Subscribable
         $config = $this->getSubscriptionConfig($channel, $user);
 
         return [
+            'as' => 'button',
             'icon' => $config['subscribed'] ? 'bell-slash' : 'bell',
-            'type' => 'subscribe-clicked',
-            'action' => $config,
+            'name' => 'subscribe-clicked',
+            'config' => $config,
             'label' => $config['subscribed'] ? 'Unsubscribe' : 'Subscribe',
             'can' => true,
         ];

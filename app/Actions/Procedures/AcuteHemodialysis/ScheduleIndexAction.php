@@ -122,6 +122,7 @@ class ScheduleIndexAction extends AcuteHemodialysisAction
                 'in_unit_dialysis_types' => $this->IN_UNIT,
                 'out_unit_dialysis_types' => $this->OUT_UNIT,
                 'patient_types' => $this->PATIENT_TYPES,
+                'hd_unit_ward' => 'ไตเทียม (Hemodialysis Unit)',
                 'covid' => [
                     'route_lab' => route('resources.api.covid-lab'),
                     'route_vaccine' => route('resources.api.covid-vaccine'),

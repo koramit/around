@@ -2,27 +2,23 @@
 
 namespace App\Actions\Labs\KidneyTransplantHLATyping;
 
-use App\Models\Notes\KidneyTransplantCrossmatchNote;
-use App\Models\Notes\KidneyTransplantHLATypingNote;
-use App\Models\Notes\KidneyTransplantHLATypingReportNote;
-use App\Traits\AvatarLinkable;
+use App\Extensions\Auth\AvatarUser;
+use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
 class ReportUpdateAction extends ReportAction
 {
-    use AvatarLinkable;
-
-    public function __invoke(string $hashedKey, array $data, mixed $user)
+    public function __invoke(string $hashedKey, array $data, User|AvatarUser $user)
     {
         if ($link = $this->shouldLinkAvatar()) {
             return $link;
         }
 
-        $report = KidneyTransplantHLATypingReportNote::query()->findByUnhashKey($hashedKey)->firstOrFail();
+        $report = $this->getReport($hashedKey);
 
         if ($user->cannot('update', $report)) {
-            abort(403);
+            abort(403, 'You are not allowed to update this report.');
         }
 
         $rules = [
@@ -33,47 +29,43 @@ class ReportUpdateAction extends ReportAction
             'approver' => ['nullable', 'string', 'max:255'],
             'recipient_is' => ['nullable', 'string', Rule::in($this->RECIPIENT_IS_OPTIONS)],
             'donor_is' => ['nullable', 'string', Rule::in($this->DONOR_IS_OPTIONS[$data['recipient_is']] ?? [])],
+            'scanned_report' => ['nullable', 'string', 'max:255'],
+            'remark' => ['nullable', 'string', 'max:512'],
         ];
 
         foreach (['patient', 'donor'] as $type) {
             if ($data["{$type}_hla_note"]) {
-                $rules["{$type}_hla_note"] = ['nullable', 'array'];
+                $rules["{$type}_hla_note"] = ['required', 'array'];
                 $rules["{$type}_hla_note.*"] = ['nullable', 'string', 'max:30'];
                 $rules["{$type}_hla_note.date_hla_typing"] = ['nullable', 'date'];
                 $rules["{$type}_hla_note.abo"] = ['nullable', 'string', Rule::in($this->ABO_OPTIONS)];
                 $rules["{$type}_hla_note.rh"] = ['nullable', 'string', Rule::in($this->RH_OPTIONS)];
             }
             if ($data["{$type}_cxm_note"]) {
-                $rules["{$type}_cxm_note"] = ['nullable', 'array'];
-                $rules["{$type}_cxm_note.*"] = ['nullable', 'string', Rule::in($this->LYMPHOCYTE_CROSSMATCH_OPTIONS)];
+                $rules["{$type}_cxm_note"] = ['required', 'array'];
+                $rules["{$type}_cxm_note.date_cross_matching"] = ['nullable', 'date'];
+                $this->addCrossmatchShareRules($rules, $type);
+            }
+            if ($data["{$type}_addition_tissue_typing_note"]) {
+                $rules["{$type}_addition_tissue_typing_note"] = ['required', 'array'];
+                $rules["{$type}_addition_tissue_typing_note.*"] = ['nullable', 'string', 'max:30'];
+                $rules["{$type}_addition_tissue_typing_note.date_addition_tissue_typing"] = ['nullable', 'date'];
             }
         }
 
         $validated = Validator::validate($data, $rules);
 
         $tempNotes = [];
-        foreach (['patient', 'donor'] as $type) {
-            foreach (['hla', 'cxm'] as $note) {
-                if ($validated["{$type}_{$note}_note"] ?? null) {
-                    $tempNotes["{$type}_{$note}_note"] = $validated["{$type}_{$note}_note"];
-                    unset($validated["{$type}_{$note}_note"]);
-                }
-            }
-        }
+        $reportForm = [];
+        $this->splitForm($validated, $reportForm, $tempNotes);
 
         // update note if there is any change
-        if (array_diff($validated, [...$report->form])) {
-            $report->update(['form' => $validated]);
+        if (count($this->formJsonDiff($report->form, $reportForm))) {
+            $report->update(['form' => $reportForm]);
         }
-        foreach (['patient', 'donor'] as $type) {
-            foreach (['hla', 'cxm'] as $note) {
-                if ($tempNotes["{$type}_{$note}_note"] ?? null) {
-                    $modelClassname = $note === 'hla' ? KidneyTransplantHLATypingNote::class : KidneyTransplantCrossmatchNote::class;
-                    $noteModel = $modelClassname::query()->findByUnhashKey($report->meta["{$type}_{$note}_note_key"])->firstOrFail();
-                    $noteModel->update(['form' => $tempNotes["{$type}_{$note}_note"]]);
-                }
-            }
-        }
+
+        // update sub notes
+        $this->updateSubNotes($tempNotes, $report);
 
         return ['report' => $validated, 'tempNotes' => $tempNotes];
     }

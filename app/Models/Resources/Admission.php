@@ -15,8 +15,6 @@ class Admission extends Model
 {
     use HasFactory, CKHashable;
 
-    protected $guarded = [];
-
     protected string $hashIdName = 'an';
 
     protected $casts = [

@@ -44,7 +44,13 @@ class OrderEditAction extends AcuteHemodialysisAction
                 ['icon' => 'procedure', 'label' => 'Procedures', 'route' => route('procedures.index'), 'can' => true],
             ],
             'action-menu' => [
-                ['icon' => 'paper-plain', 'action' => 'submit', 'label' => 'Submit', 'can' => $user->can('submit', $note)],
+                [
+                    'as' => 'button',
+                    'icon' => 'paper-plain',
+                    'name' => 'submit',
+                    'label' => 'Submit',
+                    'can' => $user->can('submit', $note),
+                ],
                 $this->getSubscriptionActionMenu($note, $user),
             ],
             'breadcrumbs' => $this->getBreadcrumbs([
@@ -67,7 +73,7 @@ class OrderEditAction extends AcuteHemodialysisAction
             'flash' => $flash,
             'formConfigs' => $this->FORM_CONFIGS + [
                 'serology' => $this->getSerology($note->caseRecord->form->toArray()),
-                'endpoints' => [
+                'routes' => [
                     'update' => route('procedures.acute-hemodialysis.orders.update', $note->hashed_key),
                     'submit' => route('procedures.acute-hemodialysis.orders.submit', $note->hashed_key),
                     'reschedule' => route('procedures.acute-hemodialysis.orders.reschedule', $note->hashed_key),

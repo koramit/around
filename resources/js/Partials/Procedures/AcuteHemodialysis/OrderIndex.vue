@@ -104,8 +104,7 @@
 </template>
 
 <script setup>
-import {useForm, usePage} from '@inertiajs/inertia-vue3';
-import { watch } from 'vue';
+import {useActionStore} from '../../../functions/useActionStore.js';
 import IconUserMd from '../../../Components/Helpers/Icons/IconUserMd.vue';
 import DropdownList from '../../../Components/Helpers/DropdownList.vue';
 import IconDoubleDown from '../../../Components/Helpers/Icons/IconDoubleDown.vue';
@@ -115,30 +114,9 @@ defineProps({
     orders: { type: Array, required: true }
 });
 
-watch(
-    () => usePage().props.value.event.fire,
-    (event) => {
-        if (! event) {
-            return;
-        }
-        if (usePage().props.value.event.name === cancelOrderConfirmedEvent) {
-            useForm({reason: usePage().props.value.event.payload})
-                .delete(selectedEndpoint, {
-                    preserveState: false,
-                    onFinish: () => selectedEndpoint = null,
-                });
-        }
-    }
-);
-
-const cancelOrderConfirmedEvent = 'cancel-acute-hd-order-confirmed';
-let selectedEndpoint;
+const { setActionStore, resetActionStore } = useActionStore();
 const handleActionClicked = (action) => {
-    if (action.callback === 'cancel-order') {
-        selectedEndpoint = action.href;
-        usePage().props.value.event.name = 'confirmation-required';
-        usePage().props.value.event.payload = { heading: usePage().props.value.flash.title, confirmText: action.confirm_text, confirmedEvent: cancelOrderConfirmedEvent, requireReason: true };
-        usePage().props.value.event.fire = + new Date();
-    }
+    resetActionStore();
+    setActionStore(action);
 };
 </script>

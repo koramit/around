@@ -29,4 +29,9 @@ class KidneyTransplantHLATypingCaseRecord extends CaseRecord
             );
         });
     }
+
+    public function genTitle(): string
+    {
+        return "HN {$this->patient->hn} {$this->patient->full_name} : KT HLA Typing Lab @ {$this->created_at->format('M j y')}";
+    }
 }

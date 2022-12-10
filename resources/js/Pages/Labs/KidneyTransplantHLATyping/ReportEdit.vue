@@ -1,3 +1,4 @@
+<!--suppress JSValidateTypes, JSUnresolvedFunction -->
 <template>
     <!-- summary  -->
     <h2
@@ -38,7 +39,7 @@
                 name="recipient_is"
                 :options="formConfigs.recipient_is_options"
                 v-model="form.recipient_is"
-                :error="form.errors.recipient_is"
+                :error="$page.props.errors.recipient_is"
             />
             <FormSelect
                 :disabled="!form.recipient_is"
@@ -46,7 +47,7 @@
                 name="donor_is"
                 :options="formConfigs.donor_is_options[form.recipient_is] ?? []"
                 v-model="form.donor_is"
-                :error="form.errors.donor_is"
+                :error="$page.props.errors.donor_is"
             />
         </template>
         <FormInput
@@ -60,8 +61,8 @@
             v-model="form.clinician"
             :endpoint="formConfigs.routes.clinicians"
             :params="formConfigs.routes.clinicians_scope_params"
-            :error="form.errors.clinician"
-            :length-to-start="1"
+            :error="$page.props.errors.clinician"
+            :length-to-start="3"
         />
         <FormDatetime
             label="collection date"
@@ -73,19 +74,19 @@
             label="report date"
             name="date_report"
             v-model="form.date_report"
-            :error="form.errors.date_report"
+            :error="$page.props.errors.date_report"
         />
         <FormInput
             label="report by"
             name="reporter"
             v-model="form.reporter"
-            :error="form.errors.reporter"
+            :error="$page.props.errors.reporter"
         />
         <FormInput
             label="approve by"
             name="approver"
             v-model="form.approver"
-            :error="form.errors.approver"
+            :error="$page.props.errors.approver"
         />
     </div>
     <hr class="border border-dashed my-2 md:my-4 xl:my-8">
@@ -119,6 +120,7 @@
                         label="date test"
                         :name="`${patient}_date_hla_typing`"
                         v-model="form[`${patient}_hla_note`].date_hla_typing"
+                        :error="$page.props.errors[`${patient}_hla_note.date_hla_typing`]"
                     />
                     <div class="grid gap-2 md:grid-cols-2 md:gap-4 xl:gap-6">
                         <FormSelect
@@ -126,12 +128,14 @@
                             :name="`${patient}_abo`"
                             v-model="form[`${patient}_hla_note`].abo"
                             :options="formConfigs.abo_options"
+                            :error="$page.props.errors[`${patient}_hla_note.abo`]"
                         />
                         <FormSelect
                             label="rh"
                             :name="`${patient}_rh`"
                             v-model="form[`${patient}_hla_note`].rh"
                             :options="formConfigs.rh_options"
+                            :error="$page.props.errors[`${patient}_hla_note.rh`]"
                         />
                     </div>
                     <hr class="border border-dashed my-2 md:my-4 xl:my-8">
@@ -210,70 +214,88 @@
                     >
                         {{ patient === 'patient' && meta.donor_hn ? 'recipient' : patient }}
                     </h4>
+                    <FormDatetime
+                        label="date test"
+                        :name="`${patient}_cxm_note.date_cross_matching`"
+                        v-model="form[`${patient}_cxm_note`].date_cross_matching"
+                        :error="$page.props.errors[`${patient}_cxm_note.date_cross_matching`]"
+                    />
                     <label class="form-label italic">t-lymphocyte</label>
-                    <div class="flex space-x-1 md:space-x-2">
-                        <div class="w-4/6 text-center p-1 md:p-2 bg-white rounded">
-                            <label class="form-label">cdc</label>
-                            <div class="flex space-x-1 md:space-x-2">
-                                <div class="w-1/2 text-center p-1 md:p-2 bg-primary rounded">
-                                    <label class="form-label">neat</label>
+                    <div class="md:flex md:space-x-2">
+                        <div class="md:w-4/6 p-1 md:p-2 bg-white rounded">
+                            <label class="form-label text-center">cdc</label>
+                            <div class="md:flex space-y-1 md:space-y-0 md:space-x-2">
+                                <div class="md:w-1/2 p-1 md:p-2 bg-primary rounded">
+                                    <label class="form-label text-center">neat</label>
                                     <div class="flex">
-                                        <FormSelect
+                                        <FormRadio
                                             class="w-1/2"
                                             label="rt"
                                             :name="`${patient}_t_lymphocyte_cdc_neat_rt`"
                                             :options="formConfigs.lymphocyteCrossmatchOptions"
                                             v-model="form[`${patient}_cxm_note`].t_lymphocyte_cdc_neat_rt"
+                                            :allow-reset="true"
+                                            :narrow="true"
                                         />
-                                        <FormSelect
+                                        <FormRadio
                                             class="w-1/2"
                                             label="37℃"
                                             :name="`${patient}_t_lymphocyte_cdc_neat_37_degree_celsius`"
                                             :options="formConfigs.lymphocyteCrossmatchOptions"
                                             v-model="form[`${patient}_cxm_note`].t_lymphocyte_cdc_neat_37_degree_celsius"
+                                            :allow-reset="true"
+                                            :narrow="true"
                                         />
                                     </div>
                                 </div>
-                                <div class="w-1/2 text-center p-1 md:p-2 bg-primary rounded">
-                                    <label class="form-label">dtt</label>
+                                <div class="md:w-1/2 p-1 md:p-2 bg-primary rounded">
+                                    <label class="form-label text-center">dtt</label>
                                     <div class="flex">
-                                        <FormSelect
+                                        <FormRadio
                                             class="w-1/2"
                                             label="rt"
                                             :name="`${patient}_t_lymphocyte_cdc_dtt_rt`"
                                             :options="formConfigs.lymphocyteCrossmatchOptions"
                                             v-model="form[`${patient}_cxm_note`].t_lymphocyte_cdc_dtt_rt"
+                                            :allow-reset="true"
+                                            :narrow="true"
                                         />
-                                        <FormSelect
+                                        <FormRadio
                                             class="w-1/2"
                                             label="37℃"
                                             :name="`${patient}_t_lymphocyte_cdc_dtt_37_degree_celsius`"
                                             :options="formConfigs.lymphocyteCrossmatchOptions"
                                             v-model="form[`${patient}_cxm_note`].t_lymphocyte_cdc_dtt_37_degree_celsius"
+                                            :allow-reset="true"
+                                            :narrow="true"
                                         />
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="w-2/6 text-center p-1 md:p-2 bg-white rounded">
-                            <label class="form-label">cdc - ahg</label>
+                        <div class="mt-4 md:w-2/6 md:mt-0 p-1 md:p-2 bg-white rounded">
+                            <label class="form-label text-center">cdc - ahg</label>
                             <div class="flex space-x-1 md:space-x-2">
-                                <div class="w-1/2 text-center p-1 md:p-2 bg-primary rounded">
-                                    <label class="form-label">neat</label>
-                                    <FormSelect
+                                <div class="w-1/2 p-1 md:p-2 bg-primary rounded">
+                                    <label class="form-label text-center">neat</label>
+                                    <FormRadio
                                         label="rt"
                                         :name="`${patient}_t_lymphocyte_cdc_ahg_neat_rt`"
                                         :options="formConfigs.lymphocyteCrossmatchOptions"
                                         v-model="form[`${patient}_cxm_note`].t_lymphocyte_cdc_ahg_neat_rt"
+                                        :allow-reset="true"
+                                        :narrow="true"
                                     />
                                 </div>
-                                <div class="w-1/2 text-center p-1 md:p-2 bg-primary rounded">
-                                    <label class="form-label">dtt</label>
-                                    <FormSelect
+                                <div class="w-1/2 p-1 md:p-2 bg-primary rounded">
+                                    <label class="form-label text-center">dtt</label>
+                                    <FormRadio
                                         label="rt"
                                         :name="`${patient}_t_lymphocyte_cdc_ahg_dtt_rt`"
                                         :options="formConfigs.lymphocyteCrossmatchOptions"
                                         v-model="form[`${patient}_cxm_note`].t_lymphocyte_cdc_ahg_dtt_rt"
+                                        :allow-reset="true"
+                                        :narrow="true"
                                     />
                                 </div>
                             </div>
@@ -282,50 +304,56 @@
                     <hr class="border border-dashed my-2 md:my-4 xl:my-8">
                     <label class="form-label italic">b-lymphocyte</label>
                     <div class="flex space-x-1 md:space-x-2">
-                        <div class="w-1/2 text-center p-1 md:p-2 bg-white rounded">
-                            <label class="form-label">cdc</label>
-                            <div class="flex space-x-1 md:space-x-2">
-                                <div class="w-1/2 text-center p-1 md:p-2 bg-primary rounded">
-                                    <label class="form-label">neat</label>
-                                    <FormSelect
-                                        class="w-1/2"
+                        <div class="w-1/2 p-1 md:p-2 bg-white rounded">
+                            <label class="form-label text-center">cdc</label>
+                            <div class="md:flex space-y-1 md:space-y-0 md:space-x-2">
+                                <div class="md:w-1/2 p-1 md:p-2 bg-primary rounded">
+                                    <label class="form-label text-center">neat</label>
+                                    <FormRadio
                                         label="37℃"
                                         :name="`${patient}_b_lymphocyte_cdc_neat_37_degree_celsius`"
                                         :options="formConfigs.lymphocyteCrossmatchOptions"
                                         v-model="form[`${patient}_cxm_note`].b_lymphocyte_cdc_neat_37_degree_celsius"
+                                        :allow-reset="true"
+                                        :narrow="true"
                                     />
                                 </div>
-                                <div class="w-1/2 text-center p-1 md:p-2 bg-primary rounded">
-                                    <label class="form-label">dtt</label>
-                                    <FormSelect
-                                        class="w-1/2"
+                                <div class="md:w-1/2 p-1 md:p-2 bg-primary rounded">
+                                    <label class="form-label text-center">dtt</label>
+                                    <FormRadio
                                         label="37℃"
                                         :name="`${patient}_b_lymphocyte_cdc_dtt_37_degree_celsius`"
                                         :options="formConfigs.lymphocyteCrossmatchOptions"
                                         v-model="form[`${patient}_cxm_note`].b_lymphocyte_cdc_dtt_37_degree_celsius"
+                                        :allow-reset="true"
+                                        :narrow="true"
                                     />
                                 </div>
                             </div>
                         </div>
-                        <div class="w-1/2 text-center p-1 md:p-2 bg-white rounded">
-                            <label class="form-label">cdc - ahg</label>
-                            <div class="flex space-x-1 md:space-x-2">
-                                <div class="w-1/2 text-center p-1 md:p-2 bg-primary rounded">
-                                    <label class="form-label">neat</label>
-                                    <FormSelect
+                        <div class="w-1/2 p-1 md:p-2 bg-white rounded">
+                            <label class="form-label text-center">cdc - ahg</label>
+                            <div class="md:flex space-y-1 md:space-y-0 md:space-x-2">
+                                <div class="md:w-1/2 p-1 md:p-2 bg-primary rounded">
+                                    <label class="form-label text-center">neat</label>
+                                    <FormRadio
                                         label="37℃"
                                         :name="`${patient}_b_lymphocyte_cdc_ahg_neat_37_degree_celsius`"
                                         :options="formConfigs.lymphocyteCrossmatchOptions"
                                         v-model="form[`${patient}_cxm_note`].b_lymphocyte_cdc_ahg_neat_37_degree_celsius"
+                                        :allow-reset="true"
+                                        :narrow="true"
                                     />
                                 </div>
-                                <div class="w-1/2 text-center p-1 md:p-2 bg-primary rounded">
-                                    <label class="form-label">dtt</label>
-                                    <FormSelect
+                                <div class="md:w-1/2 p-1 md:p-2 bg-primary rounded">
+                                    <label class="form-label text-center">dtt</label>
+                                    <FormRadio
                                         label="37℃"
-                                        :name="`${patient}_b_lymphocyte_cdc_ahg_dtt_degree_celsius`"
+                                        :name="`${patient}_b_lymphocyte_cdc_ahg_dtt_37_degree_celsius`"
                                         :options="formConfigs.lymphocyteCrossmatchOptions"
-                                        v-model="form[`${patient}_cxm_note`].b_lymphocyte_cdc_ahg_dtt_degree_celsius"
+                                        v-model="form[`${patient}_cxm_note`].b_lymphocyte_cdc_ahg_dtt_37_degree_celsius"
+                                        :allow-reset="true"
+                                        :narrow="true"
                                     />
                                 </div>
                             </div>
@@ -347,16 +375,125 @@
             </div>
         </div>
     </transition>
+    <transition name="slide-fade">
+        <div v-if="meta.request_addition_tissue">
+            <h3 class="form-label mt-4 md:mt-8 xl:mt-16">
+                ADDITION TISSUE TYPING :
+            </h3>
+            <div
+                class="mt-4 gap-2 md:grid-cols-2 md:gap-4 xl:gap-6"
+                :class="{
+                    'grid': meta.donor_hn,
+                }"
+            >
+                <div
+                    v-for="patient in meta.patients"
+                    :key="patient"
+                    class="space-y-2 md:space-y-4"
+                    :class="{
+                        'border-green-400 p-2 md:p-4 rounded-lg border-2': patient === 'patient' && meta.donor_hn,
+                        'border-amber-400 p-2 md:p-4 rounded-lg border-2': patient === 'donor',
+                    }"
+                >
+                    <h4
+                        class="form-label underline"
+                        v-if="meta.donor_hn"
+                    >
+                        {{ meta.donor_hn && patient === 'patient' ? 'recipient' : patient }}
+                    </h4>
+                    <FormDatetime
+                        label="date test"
+                        :name="`${patient}_date_addition_tissue_typing`"
+                        v-model="form[`${patient}_addition_tissue_typing_note`].date_addition_tissue_typing"
+                        :error="$page.props.errors[`${patient}_addition_tissue_typing_note.date_addition_tissue_typing`]"
+                    />
+                    <hr class="border border-dashed my-2 md:my-4 xl:my-8">
+                    <div class="grid gap-2 md:grid-cols-2 md:gap-4 xl:gap-6">
+                        <FormInput
+                            v-for="antigen in formConfigs.additionAntigens"
+                            :key="antigen.name"
+                            :label="antigen.label"
+                            :name="`${patient}_tissue_typing_${antigen.name}`"
+                            v-model="form[`${patient}_addition_tissue_typing_note`][`tissue_typing_${antigen.name}`]"
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </transition>
+    <hr class="border border-dashed my-2 md:my-4 xl:my-8">
+    <FormTextarea
+        label="comments"
+        name="remark"
+        v-model="form.remark"
+    />
+    <hr class="border border-dashed my-2 md:my-4 xl:my-8">
+    <FileUploader
+        label="scanned report"
+        :pathname="formConfigs.upload_pathname"
+        v-model="form.scanned_report"
+        :service-endpoints="formConfigs.routes.upload"
+        :error="$page.props.errors.scanned_report"
+        name="scanned_report"
+    />
+
+    <SpinnerButton
+        :spin="form.processing"
+        v-if="formConfigs.can.update"
+        @click="publish"
+        class="mt-4 md:mt-8 w-full btn-accent"
+    >
+        PUBLISH
+    </SpinnerButton>
+
+    <SpinnerButton
+        :spin="form.processing"
+        v-if="formConfigs.can.addendum"
+        @click="addendum"
+        class="mt-4 md:mt-8 w-full btn-complement"
+    >
+        ADDENDUM
+    </SpinnerButton>
+
+    <SpinnerButton
+        v-if="formConfigs.can.destroy"
+        :spin="form.processing"
+        @click="handleButtonActionClicked('destroy-report')"
+        class="mt-4 md:mt-8 w-full btn-danger"
+    >
+        DELETE
+    </SpinnerButton>
+
+    <SpinnerButton
+        v-if="formConfigs.can.cancel"
+        :spin="form.processing"
+        @click="handleButtonActionClicked('cancel-report')"
+        class="mt-4 md:mt-8 w-full btn-warning"
+    >
+        CANCEL
+    </SpinnerButton>
+
+    <ConfirmFormComposable
+        ref="confirmForm"
+        @confirmed="(reason) => confirmed(reason, handleConfirmedAction)"
+    />
 </template>
 
 <script setup>
+import {defineAsyncComponent, watch} from 'vue';
+import {useForm} from '@inertiajs/inertia-vue3';
+import {useFormAutosave} from '../../../functions/useFormAutosave.js';
+import {useConfirmForm} from '../../../functions/useConfirmForm.js';
+import {useActionStore} from '../../../functions/useActionStore.js';
 import FormInput from '../../../Components/Controls/FormInput.vue';
 import FormSelect from '../../../Components/Controls/FormSelect.vue';
 import FormDatetime from '../../../Components/Controls/FormDatetime.vue';
-import {watch} from 'vue';
-import {useForm} from '@inertiajs/inertia-vue3';
-import debounce from 'lodash/debounce';
 import FormAutocomplete from '../../../Components/Controls/FormAutocomplete.vue';
+import FormTextarea from '../../../Components/Controls/FormTextarea.vue';
+import FormRadio from '../../../Components/Controls/FormRadio.vue';
+import FileUploader from '../../../Components/Controls/FileUploader.vue';
+import SpinnerButton from '../../../Components/Controls/SpinnerButton.vue';
+const ConfirmFormComposable = defineAsyncComponent(() => import('../../../Components/Forms/ConfirmFormComposable.vue'));
 
 const props = defineProps({
     metaData: {type: Object, required: true},
@@ -366,13 +503,13 @@ const props = defineProps({
 
 const meta = {...props.metaData};
 const form = useForm({...props.formData});
-
+const {autosave} = useFormAutosave();
 watch(
-    () => form,
+    () => form.data(),
     (value) => {
-        autosave(value);
+        autosave(value, props.formConfigs.routes.update);
     },
-    {deep: true},
+    {deep: props.formConfigs.can.update},
 );
 
 watch(
@@ -385,15 +522,50 @@ watch(
     }
 );
 
-const autosave = debounce((value) => {
-    window.axios
-        .patch(props.formConfigs.routes.update, {...value.data()})
-        .catch((error) => {
-            console.log(error);
-        });
-}, 2000);
+const {actionStore} = useActionStore();
+let actionStoreName = null;
+watch(
+    () => actionStore.value,
+    (value) => {
+        switch (value.name) {
+        case 'publish-report':
+            publish();
+            break;
+        case 'addendum-report':
+            addendum();
+            break;
+        case 'destroy-report':
+        case 'cancel-report':
+            actionStoreName = value.name;
+            openConfirmForm(value.config);
+            break;
+        default :
+            return;
+        }
+    },
+    {deep: true}
+);
+const handleConfirmedAction = (reason) => {
+    switch (actionStoreName) {
+    case 'destroy-report':
+        destroy(reason);
+        break;
+    case 'cancel-report':
+        cancel(reason);
+        break;
+    default :
+        return;
+    }
+    actionStoreName = null;
+};
+const handleButtonActionClicked = (actionName) => {
+    actionStoreName = actionName;
+    openConfirmForm(props.formConfigs.actions.find(a => a.name === actionName).config);
+};
+const publish = () => form.post(props.formConfigs.routes.publish);
+const addendum = () => form.put(props.formConfigs.routes.addendum);
+const destroy = (reason) => useForm({reason: reason}).delete(props.formConfigs.routes.destroy);
+const cancel = (reason) => useForm({reason: reason}).delete(props.formConfigs.routes.cancel);
+
+const {confirmForm, openConfirmForm, confirmed} = useConfirmForm();
 </script>
-
-<style scoped>
-
-</style>

@@ -18,8 +18,6 @@ class CaseRecord extends Model
 {
     use HasFactory, PKHashable, SoftDeletes;
 
-    protected $guarded = [];
-
     protected $casts = [
         'form' => AsArrayObject::class,
         'meta' => AsArrayObject::class,
@@ -66,10 +64,10 @@ class CaseRecord extends Model
 
     public function scopeMetaSearchTerms($query, $search)
     {
-        $ilike = config('database.ilike');
-        $query->when($search ?? null, function ($query, $search) use ($ilike) {
-            $query->where('meta->name', $ilike, $search.'%')
-                ->orWhere('meta->hn', $ilike, $search.'%');
+        $iLike = config('database.iLike');
+        $query->when($search ?? null, function ($query, $search) use ($iLike) {
+            $query->where('meta->name', $iLike, $search.'%')
+                ->orWhere('meta->hn', $iLike, $search.'%');
         });
     }
 }

@@ -2,7 +2,6 @@
 
 namespace App\Actions\Procedures;
 
-use App\Models\Resources\Registry;
 use App\Traits\AvatarLinkable;
 use App\Traits\FlashDataGeneratable;
 use App\Traits\HomePageSelectable;

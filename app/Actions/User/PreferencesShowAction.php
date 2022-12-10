@@ -8,6 +8,7 @@ use App\Models\SocialProvider;
 use App\Models\User;
 use App\Traits\AvatarLinkable;
 use App\Traits\FlashDataGeneratable;
+use Illuminate\Database\Eloquent\Collection;
 
 class PreferencesShowAction
 {
@@ -88,7 +89,7 @@ class PreferencesShowAction
     }
 
     // event based notification
-    protected function getEventBasedNotifications(User $user)
+    protected function getEventBasedNotifications(User $user): Collection
     {
         $subscribedEvents = $user->subscriptions()
             ->where('subscribable_type', EventBasedNotification::class)
@@ -108,19 +109,21 @@ class PreferencesShowAction
             ])->groupBy('registry');
     }
 
-    protected function getChannelBasedNotifications(User $user)
+    protected function getChannelBasedNotifications(User $user): Collection
     {
         return $user->subscriptions()
             ->with('subscribable:id,meta')
             ->where('subscribable_type', '<>', EventBasedNotification::class)
             ->get()
             ->transform(function ($s) {
-                $data = explode(' : ', $s->subscribable->title);
-
                 return [
                     'id' => $s->hashed_key,
-                    'label' => "$data[1] $data[2]",
-                    'type' => ($data[0]),
+                    'label' => $s->subscribable->title,
+                    'type' => match ($s->subscribable_type) {
+                        'App\Models\Registries\AcuteHemodialysisCaseRecord' => 'Acute Hemodialysis Case',
+                        'App\Models\Notes\AcuteHemodialysisOrderNote' => 'Acute Hemodialysis Order',
+                        default => 'ungrouped',
+                    },
                     'subscribed' => true,
                 ];
             })

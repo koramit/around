@@ -1,7 +1,7 @@
 <template>
-    <Head>
+    <InertiaHead>
         <title>{{ $page.props.flash.title }}</title>
-    </Head>
+    </InertiaHead>
     <!-- main container, flex makes its children extend full h -->
     <div class="md:h-screen md:flex md:flex-col">
         <!-- this is navbar, with no shrink (fixed width) -->
@@ -26,7 +26,7 @@
                     />
                 </button>
                 <!-- title display on mobile -->
-                <div class="text-primary flex text-sm md:hidden">
+                <div class="text-primary flex items-center text-sm md:hidden">
                     <span
                         class="sm:hidden"
                         v-html="$page.props.flash.title.replace(':', '<br>')"
@@ -35,6 +35,10 @@
                     <CopyToClipboardButton
                         v-if="$page.props.flash.hn"
                         :text="$page.props.flash.hn"
+                    />
+                    <IconCircleNotch
+                        v-if="formState.state === 'saving'"
+                        class="ml-4 w-4 h-4 animate-spin"
                     />
                 </div>
                 <!-- hamburger menu on mobile -->
@@ -56,11 +60,15 @@
             >
                 <!-- title display on desktop -->
                 <div class="mr-4 w-full flex justify-between items-center">
-                    <div class="flex">
+                    <div class="flex items-center">
                         <span>{{ $page.props.flash.title }}</span>
                         <CopyToClipboardButton
                             v-if="$page.props.flash.hn"
                             :text="$page.props.flash.hn"
+                        />
+                        <IconCircleNotch
+                            v-if="formState.state === 'saving'"
+                            class="ml-4 w-4 h-4 text-complement animate-spin"
                         />
                     </div>
                     <div class="text-complement">
@@ -195,12 +203,7 @@
                     </div>
                     <hr class="my-4">
                     <MainMenu @click="mobileMenuVisible = false" />
-                    <ActionMenu
-                        @action-clicked="actionClicked"
-                        @link-clicked="mobileMenuVisible = false"
-                        @subscribe-clicked="subscribeClicked"
-                        @set-home-page-clicked="setHomePageClicked"
-                    />
+                    <ActionMenu @hide-mobile-menu="mobileMenuVisible = false" />
                 </div>
             </div>
         </header>
@@ -215,12 +218,7 @@
                 }"
             >
                 <MainMenu :zen-mode="zenMode" />
-                <ActionMenu
-                    :zen-mode="zenMode"
-                    @action-clicked="actionClicked"
-                    @subscribe-clicked="subscribeClicked"
-                    @set-home-page-clicked="setHomePageClicked"
-                />
+                <ActionMenu :zen-mode="zenMode" />
             </aside>
             <!-- this is main page -->
             <div
@@ -235,7 +233,11 @@
             >
                 <!-- breadcrumbs -->
                 <nav
-                    class="flex mb-4 md:mb-0 py-2 md:pb-8 bg-primary z-10 sticky top-14 sm:top-10 md:top-0"
+                    class="flex mb-4 md:mb-0 py-2 md:pb-8 bg-primary z-10 sticky md:top-0"
+                    :class="{
+                        'top-14 sm:top-10': $page.props.flash.title.split(':').length > 1,
+                        'top-10': $page.props.flash.title.split(':').length === 1,
+                    }"
                     v-if="$page.props.flash.breadcrumbs.length"
                 >
                     <menu class="flex justify-between">
@@ -296,8 +298,8 @@
                         <a
                             :href="`#${name}`"
                             class="block"
-                            v-for="(name, key) in Object.keys($page.props.errors)"
-                            :key="key"
+                            v-for="name in Object.keys($page.props.errors)"
+                            :key="name"
                             @click.prevent="smoothScroll(`#${name}`)"
                         >{{ $page.props.errors[name] }}</a>
                     </div>
@@ -326,16 +328,14 @@
             </div>
         </main>
     </div>
-
-    <!-- confirm form -->
-    <ConfirmForm ref="confirmForm" />
 </template>
 
 <script setup>
-import { Head, InertiaLink, usePage } from '@inertiajs/inertia-vue3';
+import { InertiaHead, InertiaLink } from '@inertiajs/inertia-vue3';
 import { pageRoutines } from '../../functions/pageRoutines.js';
-import { defineAsyncComponent, nextTick, onMounted, ref, watch } from 'vue';
+import {onMounted, ref} from 'vue';
 import { useInPageLinkHelpers } from '../../functions/useInPageLinkHelpers.js';
+import {useFormAutosave} from '../../functions/useFormAutosave.js';
 import DropdownList from '../../Components/Helpers/DropdownList.vue';
 import MainMenu from '../../Components/Helpers/MainMenu.vue';
 import ActionMenu from '../../Components/Helpers/ActionMenu.vue';
@@ -343,44 +343,16 @@ import IconHamburger from '../../Components/Helpers/Icons/IconHamburger.vue';
 import IconChevronCircleDown from '../../Components/Helpers/Icons/IconChevronCircleDown.vue';
 import AlertMessage from '../Helpers/AlertMessage.vue';
 import CopyToClipboardButton from '../Controls/CopyToClipboardButton.vue';
-const ConfirmForm  = defineAsyncComponent(() => import('../Forms/ConfirmForm.vue'));
+import IconCircleNotch from '../Helpers/Icons/IconCircleNotch.vue';
+
+const props = defineProps({
+    user: {type: Object, required: true},
+});
 
 pageRoutines();
 const mobileMenuVisible = ref(false);
-const zenMode = ref(Boolean(usePage().props.value.user?.preferences.appearance.zenMode ?? false));
-
-const actionClicked = (action) => {
-    mobileMenuVisible.value = false;
-    nextTick(() => {
-        setTimeout(() => {
-            usePage().props.value.event.payload = action;
-            usePage().props.value.event.name = 'action-clicked';
-            usePage().props.value.event.fire = + new Date();
-        }, 300); // equal to animate duration
-    });
-};
-
-const subscribeClicked = (resource) => {
-    window.axios
-        .post(resource.route, resource)
-        .then(res => {
-            let index = usePage().props.value.flash.actionMenu.findIndex(action => action.type === 'subscribe-clicked');
-            usePage().props.value.flash.actionMenu[index].label = res.data.label;
-            usePage().props.value.flash.actionMenu[index].icon = res.data.icon;
-            usePage().props.value.flash.actionMenu[index].action.subscribed = !usePage().props.value.flash.actionMenu[index].action.subscribed;
-        });
-};
-
-const setHomePageClicked = (resource) => {
-    window.axios
-        .patch(resource.route, {home_page: resource.name})
-        .then(() => {
-            let index = usePage().props.value.flash.actionMenu.findIndex(action => action.type === 'set-home-page-clicked');
-            usePage().props.value.flash.actionMenu.splice(index, 1);
-        });
-};
-
-let fontScaleIndex = usePage().props.value.user?.preferences.appearance.fontScaleIndex ?? 3;
+const zenMode = ref(Boolean(props.user?.preferences.appearance.zenMode ?? false));
+let fontScaleIndex = props.user?.preferences.appearance.fontScaleIndex ?? 3;
 let fontScales = [67, 80, 90, 100];
 const scaleFont = (mode) => {
     fontScaleIndex = mode === 'up' ? (fontScaleIndex+1) : (fontScaleIndex-1);
@@ -392,6 +364,7 @@ const scaleFont = (mode) => {
 
     document.querySelector('html').style.fontSize = fontScales[fontScaleIndex] + '%';
 };
+
 onMounted(() => {
     let vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
     if (vw >= 768) { // md breakpoint
@@ -399,23 +372,7 @@ onMounted(() => {
     }
 });
 
-const confirmForm = ref(null);
-
-watch (
-    () => usePage().props.value.event.fire,
-    (event) => {
-        if (! event) {
-            return;
-        }
-        if (usePage().props.value.event.name === 'confirmation-required') {
-            nextTick(() => {
-                setTimeout(() => {
-                    confirmForm.value.open(usePage().props.value.event.payload);
-                }, 300); // equal to animate duration
-            });
-        }
-    }
-);
+const { formState } = useFormAutosave();
 
 const { isUrl, smoothScroll } = useInPageLinkHelpers();
 </script>

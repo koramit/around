@@ -25,8 +25,6 @@ class Note extends Model
 {
     use HasFactory, PKHashable;
 
-    protected $guarded = [];
-
     protected $casts = [
         'form' => AsArrayObject::class,
         'meta' => AsArrayObject::class,
@@ -193,6 +191,15 @@ class Note extends Model
                 ->limit(1)
                 ->latest(),
         ]);
+    }
+
+    public function scopeMetaSearchTerms($query, $search)
+    {
+        $iLike = config('database.iLike');
+        $query->when($search ?? null, function ($query, $search) use ($iLike) {
+            $query->where('meta->name', $iLike, $search.'%')
+                ->orWhere('meta->hn', $iLike, $search.'%');
+        });
     }
 
     public function genTitle(?string $dateNote = null): string

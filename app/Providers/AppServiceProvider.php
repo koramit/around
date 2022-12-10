@@ -6,6 +6,11 @@ use App\Contracts\AuthenticationAPI;
 use App\Contracts\CovidInfoAPI;
 use App\Contracts\PatientAPI;
 use Hashids\Hashids;
+use Illuminate\Database\Connection;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Events\QueryExecuted;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Sanctum\Sanctum;
 
@@ -36,6 +41,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Model::unguard();
+
+        Model::preventLazyLoading(! $this->app->isProduction());
+
+        Model::preventAccessingMissingAttributes(! $this->app->isProduction());
+
+        DB::whenQueryingForLongerThan(2000, function (Connection $connection, QueryExecuted $event) {
+            Log::warning("Database queries exceeded 2 seconds on {$connection->getName()} : $event->sql");
+        });
     }
 }

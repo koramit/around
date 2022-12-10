@@ -3,27 +3,29 @@
 namespace App\Extensions\Auth;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Collection;
 
 class AvatarUser extends Authenticatable
 {
-    private $avatar_token;
+    private string $avatar_token;
 
-    private $password;
+    private string $password;
 
-    public $profile;
+    public array $profile;
 
-    public $login;
+    public string $login;
 
-    public $name;
+    public string $name;
 
-    public $home_page;
+    public string $home_page;
 
-    public $abilities;
+    public Collection $abilities;
 
-    public $preferences;
+    public array $preferences;
 
     public function __construct($user)
     {
+        parent::__construct();
         $this->avatar_token = $user['avatar_token'];
         $this->login = $user['login'];
         $this->name = $user['name'];
@@ -34,34 +36,36 @@ class AvatarUser extends Authenticatable
         $this->preferences = $user['preferences'];
     }
 
-    public function getAuthIdentifierName()
+    public function getAuthIdentifierName(): string
     {
         return 'avatar_token';
     }
 
-    public function getAuthIdentifier()
+    public function getAuthIdentifier(): mixed
     {
         return $this->avatar_token;
     }
 
-    public function getAuthPassword()
+    public function getAuthPassword(): string
     {
         return $this->password;
     }
 
-    public function getRememberToken()
+    public function getRememberToken(): string
+    {
+        return '';
+    }
+
+    public function setRememberToken($value): void
     {
     }
 
-    public function setRememberToken($value)
+    public function getRememberTokenName(): string
     {
+        return '';
     }
 
-    public function getRememberTokenName()
-    {
-    }
-
-    public function toArray()
+    public function toArray(): array
     {
         return [
             'profile' => $this->profile,

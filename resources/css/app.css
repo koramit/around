@@ -34,6 +34,14 @@
         @apply bg-complement active:bg-complement-darker hover:bg-primary-darker hover:text-complement disabled:text-white disabled:bg-complement;
     }
 
+    .btn-danger {
+        @apply bg-red-600 active:bg-red-700 hover:bg-red-400 hover:text-complement disabled:text-white disabled:bg-red-400;
+    }
+
+    .btn-warning {
+        @apply bg-yellow-600 active:bg-yellow-700 hover:bg-yellow-400 hover:text-complement disabled:text-white disabled:bg-yellow-400;
+    }
+
     /* form */
     .form-label {
         @apply block uppercase tracking-wide text-complement text-xs lg:text-base font-semibold mb-2 truncate;
