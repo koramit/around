@@ -10,11 +10,12 @@ use App\Models\User;
 use App\Traits\AvatarLinkable;
 use App\Traits\FirstNameAware;
 use App\Traits\FlashDataGeneratable;
+use App\Traits\Subscribable;
 use Hashids\Hashids;
 
 class AcuteHemodialysisAction
 {
-    use FirstNameAware, FlashDataGeneratable, AvatarLinkable;
+    use FirstNameAware, FlashDataGeneratable, AvatarLinkable, Subscribable;
 
     protected int $REGISTRY_ID;
 

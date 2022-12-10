@@ -7,11 +7,10 @@ use App\Models\Notes\AcuteHemodialysisOrderNote;
 use App\Models\Resources\Ward;
 use App\Models\User;
 use App\Traits\AcuteHemodialysis\OrderFormConfigsShareable;
-use App\Traits\Subscribable;
 
 class OrderEditAction extends AcuteHemodialysisAction
 {
-    use OrderFormConfigsShareable, Subscribable;
+    use OrderFormConfigsShareable;
 
     public function __invoke(string $hashedKey, User|AvatarUser $user): array
     {

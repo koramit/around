@@ -7,13 +7,10 @@ use App\Extensions\Auth\AvatarUser;
 use App\Managers\Resources\AdmissionManager;
 use App\Models\Notes\AcuteHemodialysisOrderNote;
 use App\Models\User;
-use App\Traits\Subscribable;
 use ArrayObject;
 
 class OrderShowAction extends AcuteHemodialysisAction
 {
-    use Subscribable;
-
     public function __invoke(string $hashedKey, User|AvatarUser $user): array
     {
         if (($link = $this->shouldLinkAvatar()) !== false) {
