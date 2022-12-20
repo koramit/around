@@ -44,6 +44,7 @@ class HandleInertiaRequests extends Middleware
             'routeHome' => fn () => route(($request->user()?->home_page) ?? 'home'),
             'routePreferences' => fn () => route('preferences'),
             'routeManageUser' => fn () => route('users.index'),
+            'routeJournal' => fn () => route('journal'),
             'routeSupport' => fn () => [route('support-tickets.index'), route('feedback.index')],
             'routeLogout' => fn () => route('logout'),
             'flash' => [

@@ -7,6 +7,7 @@ use App\Http\Controllers\ChatBotController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InAppBrowsingRedirectController;
+use App\Http\Controllers\JournalController;
 use App\Http\Controllers\LocalizationController;
 use App\Http\Controllers\MagicLinkController;
 use App\Http\Controllers\PreferenceController;
@@ -164,3 +165,10 @@ Route::get('in-app-browsing-redirect/{token}', InAppBrowsingRedirectController::
 Route::get('magic-link', MagicLinkController::class)
     ->middleware(['no-in-app-allow', 'signed'])
     ->name('magic-link');
+
+Route::get('journal', [JournalController::class, 'index'])
+    ->middleware(['auth', 'can:create_acute_hemodialysis_order', 'page-transition', 'locale', 'no-in-app-allow'])
+    ->name('journal');
+Route::get('journal/show', [JournalController::class, 'show'])
+    ->middleware(['auth', 'can:create_acute_hemodialysis_order'])
+    ->name('journal.show');
