@@ -56,11 +56,12 @@ class PreferencesShowAction
                 'items_per_page' => $user->preferences['items_per_page'],
                 'font_scale_index' => $user->preferences['font_scale_index'],
             ],
+            // @todo: remove this after migrate to postgreSQL
             'notification' => [
-                'mute' => $user->preferences['mute'],
-                'notify_approval_result' => $user->preferences['notify_approval_result'],
-                'auto_subscribe_to_channel' => $user->preferences['auto_subscribe_to_channel'],
-                'auto_unsubscribe_to_channel' => $user->preferences['auto_unsubscribe_to_channel'],
+                'mute' => $user->preferences['mute'] ?? false,
+                'notify_approval_result' => $user->preferences['notify_approval_result'] ?? true,
+                'auto_subscribe_to_channel' => $user->preferences['auto_subscribe_to_channel'] ?? false,
+                'auto_unsubscribe_to_channel' => $user->preferences['auto_unsubscribe_to_channel'] ?? false,
             ],
         ];
 
