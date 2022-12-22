@@ -178,6 +178,6 @@ Route::get('nephflix', [NephflixController::class, 'index'])
     ->middleware(['auth', 'can:create_acute_hemodialysis_order', 'page-transition', 'locale', 'no-in-app-allow'])
     ->name('nephflix');
 
-Route::get('nephflix/show', [NephflixController::class, 'show'])
+Route::get('nephflix/{hashedKey}', [NephflixController::class, 'show'])
     ->middleware(['auth', 'can:create_acute_hemodialysis_order', 'page-transition', 'locale', 'no-in-app-allow'])
     ->name('nephflix.show');
