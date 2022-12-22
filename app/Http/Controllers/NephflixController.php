@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Traits\CSVLoader;
+use Hashids\Hashids;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -14,12 +15,13 @@ class NephflixController extends Controller
 
     public function __construct()
     {
-        $this->episodes = collect($this->loadCSV(storage_path('app/seeders/asnonline.csv')))->map(fn ($e) => [
+        $hasher = app(Hashids::class);
+        $this->episodes = collect($this->loadCSV(storage_path('app/seeders/asnonline.csv')))->map(fn ($e, $i) => [
             'title' => "{$e['serie']}/{$e['season']}/{$e['episode']}",
             'episode' => $e['episode'],
             'speakers' => $e['speakers'],
             'asset' => $e['url'],
-            'route' => route('nephflix.show', ['ep' => $e['episode']])
+            'route' => route('nephflix.show', $hasher->encode($i)),
         ]);
     }
 
@@ -36,24 +38,16 @@ class NephflixController extends Controller
         ]);
     }
 
-    public function show()
+    public function show(string $hashedKey)
     {
-        $episode = request()->input('ep');
-
-        if (!$episode) {
+        if (!$episode = $this->episodes[app(Hashids::class)->decode($hashedKey)[0]] ?? null) {
             abort(404);
         }
 
-        $index = $this->episodes->search(fn ($e, $i) => $e['episode'] === $episode);
-
-        if ($index === false) {
-            abort(404);
-        }
-
-        session()->flash('page-title', $this->episodes[$index]['episode']);
+        session()->flash('page-title', $episode['episode']);
 
         return Inertia::render('Nephflix/NephflixShow', [
-            'episode' => $this->episodes[$index],
+            'episode' => $episode,
             'baseUrl' => route('home'),
         ]);
     }
