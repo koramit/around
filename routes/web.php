@@ -10,6 +10,7 @@ use App\Http\Controllers\InAppBrowsingRedirectController;
 use App\Http\Controllers\JournalController;
 use App\Http\Controllers\LocalizationController;
 use App\Http\Controllers\MagicLinkController;
+use App\Http\Controllers\NephflixController;
 use App\Http\Controllers\PreferenceController;
 use App\Http\Controllers\SocialProviderController;
 use App\Http\Controllers\SubscriptionController;
@@ -172,3 +173,11 @@ Route::get('journal', [JournalController::class, 'index'])
 Route::get('journal/show', [JournalController::class, 'show'])
     ->middleware(['auth', 'can:create_acute_hemodialysis_order'])
     ->name('journal.show');
+
+Route::get('nephflix', [NephflixController::class, 'index'])
+    ->middleware(['auth', 'can:create_acute_hemodialysis_order', 'page-transition', 'locale', 'no-in-app-allow'])
+    ->name('nephflix');
+
+Route::get('nephflix/show', [NephflixController::class, 'show'])
+    ->middleware(['auth', 'can:create_acute_hemodialysis_order', 'page-transition', 'locale', 'no-in-app-allow'])
+    ->name('nephflix.show');
