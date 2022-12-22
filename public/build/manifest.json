@@ -1,6 +1,6 @@
 {
   "resources/js/app.js": {
-    "file": "assets/app.188a3521.js",
+    "file": "assets/app.2bf59bb9.js",
     "src": "resources/js/app.js",
     "isEntry": true,
     "dynamicImports": [
@@ -12,6 +12,8 @@
       "resources/js/Pages/ChatBot/ProviderIndex.vue",
       "resources/js/Pages/Guest/NoBotAllow.vue",
       "resources/js/Pages/Guest/TermsAndPolicies.vue",
+      "resources/js/Pages/Nephflix/NephflixIndex.vue",
+      "resources/js/Pages/Nephflix/NephflixShow.vue",
       "resources/js/Pages/Procedures/MainIndex.vue",
       "resources/js/Pages/User/FeedbackPage.vue",
       "resources/js/Pages/User/ManageUser.vue",
@@ -28,7 +30,7 @@
       "resources/js/Pages/Procedures/AcuteHemodialysis/SlotRequestIndex.vue"
     ],
     "css": [
-      "assets/app.835c0d6e.css"
+      "assets/app.333ef45f.css"
     ],
     "assets": [
       "assets/slobsterv28neilzcirqoswsqx9zo-mm4mwwjxnqa.92e8917f.woff2",
@@ -53,54 +55,54 @@
     ]
   },
   "resources/js/Pages/JournalPage.vue": {
-    "file": "assets/JournalPage.f3c17eab.js",
+    "file": "assets/JournalPage.b937af2c.js",
     "src": "resources/js/Pages/JournalPage.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_FormInput.8acb6125.js",
+      "_FormInput.9b901fe8.js",
       "resources/js/app.js"
     ]
   },
-  "_FormInput.8acb6125.js": {
-    "file": "assets/FormInput.8acb6125.js",
+  "_FormInput.9b901fe8.js": {
+    "file": "assets/FormInput.9b901fe8.js",
     "imports": [
       "resources/js/app.js"
     ]
   },
   "resources/js/Pages/User.vue": {
-    "file": "assets/User.9ea305bc.js",
+    "file": "assets/User.e6ef3eea.js",
     "src": "resources/js/Pages/User.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_useManageLocale.b25a97ff.js",
+      "_useManageLocale.56d1fde8.js",
       "resources/js/app.js"
     ]
   },
-  "_useManageLocale.b25a97ff.js": {
-    "file": "assets/useManageLocale.b25a97ff.js",
+  "_useManageLocale.56d1fde8.js": {
+    "file": "assets/useManageLocale.56d1fde8.js",
     "imports": [
       "resources/js/app.js"
     ]
   },
   "resources/js/Pages/Welcome.vue": {
-    "file": "assets/Welcome.5baae0c0.js",
+    "file": "assets/Welcome.6f928b15.js",
     "src": "resources/js/Pages/Welcome.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_useManageLocale.b25a97ff.js",
+      "_useManageLocale.56d1fde8.js",
       "resources/js/app.js"
     ]
   },
   "resources/js/Pages/Auth/LoginForm.vue": {
-    "file": "assets/LoginForm.1b8f8876.js",
+    "file": "assets/LoginForm.156f757f.js",
     "src": "resources/js/Pages/Auth/LoginForm.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
       "_logo.06377e43.js",
-      "_FormInput.8acb6125.js",
-      "_SpinnerButton.56782f69.js",
-      "_IconLine.02f36ad5.js"
+      "_FormInput.9b901fe8.js",
+      "_SpinnerButton.f8de5a92.js",
+      "_IconLine.01838886.js"
     ],
     "css": [
       "assets/LoginForm.9ef79dec.css"
@@ -112,48 +114,48 @@
       "assets/logo.af357d67.png"
     ]
   },
-  "_SpinnerButton.56782f69.js": {
-    "file": "assets/SpinnerButton.56782f69.js",
+  "_SpinnerButton.f8de5a92.js": {
+    "file": "assets/SpinnerButton.f8de5a92.js",
     "imports": [
       "resources/js/app.js"
     ]
   },
-  "_IconLine.02f36ad5.js": {
-    "file": "assets/IconLine.02f36ad5.js",
+  "_IconLine.01838886.js": {
+    "file": "assets/IconLine.01838886.js",
     "imports": [
       "resources/js/app.js"
     ]
   },
   "resources/js/Pages/Auth/RegisterForm.vue": {
-    "file": "assets/RegisterForm.cf950193.js",
+    "file": "assets/RegisterForm.3654c4af.js",
     "src": "resources/js/Pages/Auth/RegisterForm.vue",
     "isDynamicEntry": true,
     "imports": [
       "_logo.06377e43.js",
       "resources/js/app.js",
-      "_FormCheckbox.ada4ed44.js",
-      "_FormInput.8acb6125.js",
-      "_SpinnerButton.56782f69.js"
+      "_FormCheckbox.f0ee6024.js",
+      "_FormInput.9b901fe8.js",
+      "_SpinnerButton.f8de5a92.js"
     ]
   },
-  "_FormCheckbox.ada4ed44.js": {
-    "file": "assets/FormCheckbox.ada4ed44.js",
+  "_FormCheckbox.f0ee6024.js": {
+    "file": "assets/FormCheckbox.f0ee6024.js",
     "imports": [
       "resources/js/app.js"
     ]
   },
   "resources/js/Pages/ChatBot/ProviderIndex.vue": {
-    "file": "assets/ProviderIndex.a13cf3a3.js",
+    "file": "assets/ProviderIndex.1ade7309.js",
     "src": "resources/js/Pages/ChatBot/ProviderIndex.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_FormInput.8acb6125.js",
-      "_SpinnerButton.56782f69.js"
+      "_FormInput.9b901fe8.js",
+      "_SpinnerButton.f8de5a92.js"
     ]
   },
   "resources/js/Pages/Guest/NoBotAllow.vue": {
-    "file": "assets/NoBotAllow.284216a7.js",
+    "file": "assets/NoBotAllow.6bab463c.js",
     "src": "resources/js/Pages/Guest/NoBotAllow.vue",
     "isDynamicEntry": true,
     "imports": [
@@ -161,15 +163,38 @@
     ]
   },
   "resources/js/Pages/Guest/TermsAndPolicies.vue": {
-    "file": "assets/TermsAndPolicies.4a0aecf5.js",
+    "file": "assets/TermsAndPolicies.a20f2e2e.js",
     "src": "resources/js/Pages/Guest/TermsAndPolicies.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js"
     ]
   },
+  "resources/js/Pages/Nephflix/NephflixIndex.vue": {
+    "file": "assets/NephflixIndex.b8680d95.js",
+    "src": "resources/js/Pages/Nephflix/NephflixIndex.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "_FormInput.9b901fe8.js",
+      "resources/js/app.js"
+    ]
+  },
+  "resources/js/Pages/Nephflix/NephflixShow.vue": {
+    "file": "assets/NephflixShow.45bb3546.js",
+    "src": "resources/js/Pages/Nephflix/NephflixShow.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/app.js"
+    ],
+    "css": [
+      "assets/NephflixShow.e8276638.css"
+    ],
+    "assets": [
+      "assets/nephflix-cover.a793627d.png"
+    ]
+  },
   "resources/js/Pages/Procedures/MainIndex.vue": {
-    "file": "assets/MainIndex.db7274c2.js",
+    "file": "assets/MainIndex.bcdc2c0e.js",
     "src": "resources/js/Pages/Procedures/MainIndex.vue",
     "isDynamicEntry": true,
     "imports": [
@@ -177,77 +202,77 @@
     ]
   },
   "resources/js/Pages/User/FeedbackPage.vue": {
-    "file": "assets/FeedbackPage.2908d9a2.js",
+    "file": "assets/FeedbackPage.5ae611c5.js",
     "src": "resources/js/Pages/User/FeedbackPage.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_FormTextarea.32a74366.js",
-      "_PaginationNav.0bbc84ef.js"
+      "_FormTextarea.75424464.js",
+      "_PaginationNav.a6c9e52a.js"
     ]
   },
-  "_FormTextarea.32a74366.js": {
-    "file": "assets/FormTextarea.32a74366.js",
+  "_FormTextarea.75424464.js": {
+    "file": "assets/FormTextarea.75424464.js",
     "imports": [
       "resources/js/app.js"
     ]
   },
-  "_PaginationNav.0bbc84ef.js": {
-    "file": "assets/PaginationNav.0bbc84ef.js",
+  "_PaginationNav.a6c9e52a.js": {
+    "file": "assets/PaginationNav.a6c9e52a.js",
     "imports": [
       "resources/js/app.js"
     ]
   },
   "resources/js/Pages/User/ManageUser.vue": {
-    "file": "assets/ManageUser.28a7323f.js",
+    "file": "assets/ManageUser.28af5c98.js",
     "src": "resources/js/Pages/User/ManageUser.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_DisplayData.84d38bc0.js",
-      "_FormCheckbox.ada4ed44.js",
-      "_IconDoubleRight.c6ec4793.js",
-      "_SpinnerButton.56782f69.js",
-      "_PaginationNav.0bbc84ef.js",
-      "_SearchIndex.5da66987.js",
-      "_pickBy.ce5eea16.js",
-      "_throttle.17d6c507.js"
+      "_DisplayData.cd092204.js",
+      "_FormCheckbox.f0ee6024.js",
+      "_IconDoubleRight.f6d2d421.js",
+      "_SpinnerButton.f8de5a92.js",
+      "_PaginationNav.a6c9e52a.js",
+      "_SearchIndex.fbde73a0.js",
+      "_pickBy.d2bc33f2.js",
+      "_throttle.5a4c6c4e.js"
     ]
   },
-  "_DisplayData.84d38bc0.js": {
-    "file": "assets/DisplayData.84d38bc0.js",
+  "_DisplayData.cd092204.js": {
+    "file": "assets/DisplayData.cd092204.js",
     "imports": [
       "resources/js/app.js"
     ]
   },
-  "_IconDoubleRight.c6ec4793.js": {
-    "file": "assets/IconDoubleRight.c6ec4793.js",
+  "_IconDoubleRight.f6d2d421.js": {
+    "file": "assets/IconDoubleRight.f6d2d421.js",
     "imports": [
       "resources/js/app.js"
     ]
   },
-  "_SearchIndex.5da66987.js": {
-    "file": "assets/SearchIndex.5da66987.js",
+  "_SearchIndex.fbde73a0.js": {
+    "file": "assets/SearchIndex.fbde73a0.js",
     "imports": [
       "resources/js/app.js",
-      "_pickBy.ce5eea16.js",
-      "_throttle.17d6c507.js"
+      "_pickBy.d2bc33f2.js",
+      "_throttle.5a4c6c4e.js"
     ]
   },
-  "_pickBy.ce5eea16.js": {
-    "file": "assets/pickBy.ce5eea16.js",
+  "_pickBy.d2bc33f2.js": {
+    "file": "assets/pickBy.d2bc33f2.js",
     "imports": [
       "resources/js/app.js"
     ]
   },
-  "_throttle.17d6c507.js": {
-    "file": "assets/throttle.17d6c507.js",
+  "_throttle.5a4c6c4e.js": {
+    "file": "assets/throttle.5a4c6c4e.js",
     "imports": [
       "resources/js/app.js"
     ]
   },
   "resources/js/Pages/User/MyDesk.vue": {
-    "file": "assets/MyDesk.683ab518.js",
+    "file": "assets/MyDesk.74e92289.js",
     "src": "resources/js/Pages/User/MyDesk.vue",
     "isDynamicEntry": true,
     "imports": [
@@ -255,70 +280,70 @@
     ]
   },
   "resources/js/Pages/User/PreferencePage.vue": {
-    "file": "assets/PreferencePage.e19e597f.js",
+    "file": "assets/PreferencePage.63a07f0f.js",
     "src": "resources/js/Pages/User/PreferencePage.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_FormRadio.191fb4d9.js",
-      "_IconLine.02f36ad5.js",
-      "_FormCheckbox.ada4ed44.js"
+      "_FormRadio.680d49dd.js",
+      "_IconLine.01838886.js",
+      "_FormCheckbox.f0ee6024.js"
     ],
     "css": [
       "assets/PreferencePage.338a050b.css"
     ]
   },
-  "_FormRadio.191fb4d9.js": {
-    "file": "assets/FormRadio.191fb4d9.js",
+  "_FormRadio.680d49dd.js": {
+    "file": "assets/FormRadio.680d49dd.js",
     "imports": [
       "resources/js/app.js"
     ]
   },
   "resources/js/Pages/User/SupportTicket.vue": {
-    "file": "assets/SupportTicket.ad08ecaa.js",
+    "file": "assets/SupportTicket.0a1b1693.js",
     "src": "resources/js/Pages/User/SupportTicket.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_FormTextarea.32a74366.js",
-      "_PaginationNav.0bbc84ef.js"
+      "_FormTextarea.75424464.js",
+      "_PaginationNav.a6c9e52a.js"
     ]
   },
   "resources/js/Pages/Labs/KidneyTransplantHLATyping/ReportEdit.vue": {
-    "file": "assets/ReportEdit.375a9398.js",
+    "file": "assets/ReportEdit.6a4acef6.js",
     "src": "resources/js/Pages/Labs/KidneyTransplantHLATyping/ReportEdit.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_useConfirmForm.0c601200.js",
-      "_FormInput.8acb6125.js",
-      "_FormSelect.86efa578.js",
-      "_FormDatetime.f2e631b4.js",
-      "_FormAutocomplete.9dfa89fd.js",
-      "_FormTextarea.32a74366.js",
-      "_FormRadio.191fb4d9.js",
-      "_IconEyes.fa9c1cc7.js",
-      "_SpinnerButton.56782f69.js",
-      "_throttle.17d6c507.js"
+      "_useConfirmForm.da58abf3.js",
+      "_FormInput.9b901fe8.js",
+      "_FormSelect.cd22764b.js",
+      "_FormDatetime.bab8c4da.js",
+      "_FormAutocomplete.7c3d9abe.js",
+      "_FormTextarea.75424464.js",
+      "_FormRadio.680d49dd.js",
+      "_IconEyes.006b5b02.js",
+      "_SpinnerButton.f8de5a92.js",
+      "_throttle.5a4c6c4e.js"
     ],
     "dynamicImports": [
       "resources/js/Components/Forms/ConfirmFormComposable.vue"
     ]
   },
-  "_useConfirmForm.0c601200.js": {
-    "file": "assets/useConfirmForm.0c601200.js",
+  "_useConfirmForm.da58abf3.js": {
+    "file": "assets/useConfirmForm.da58abf3.js",
     "imports": [
       "resources/js/app.js"
     ]
   },
-  "_FormSelect.86efa578.js": {
-    "file": "assets/FormSelect.86efa578.js",
+  "_FormSelect.cd22764b.js": {
+    "file": "assets/FormSelect.cd22764b.js",
     "imports": [
       "resources/js/app.js"
     ]
   },
-  "_FormDatetime.f2e631b4.js": {
-    "file": "assets/FormDatetime.f2e631b4.js",
+  "_FormDatetime.bab8c4da.js": {
+    "file": "assets/FormDatetime.bab8c4da.js",
     "imports": [
       "resources/js/app.js"
     ],
@@ -326,59 +351,59 @@
       "assets/FormDatetime.4fa81c03.css"
     ]
   },
-  "_FormAutocomplete.9dfa89fd.js": {
-    "file": "assets/FormAutocomplete.9dfa89fd.js",
+  "_FormAutocomplete.7c3d9abe.js": {
+    "file": "assets/FormAutocomplete.7c3d9abe.js",
     "imports": [
       "resources/js/app.js",
-      "_throttle.17d6c507.js"
+      "_throttle.5a4c6c4e.js"
     ]
   },
-  "_IconEyes.fa9c1cc7.js": {
-    "file": "assets/IconEyes.fa9c1cc7.js",
+  "_IconEyes.006b5b02.js": {
+    "file": "assets/IconEyes.006b5b02.js",
     "imports": [
       "resources/js/app.js"
     ]
   },
   "resources/js/Pages/Labs/KidneyTransplantHLATyping/ReportIndex.vue": {
-    "file": "assets/ReportIndex.9b730821.js",
+    "file": "assets/ReportIndex.e519aa98.js",
     "src": "resources/js/Pages/Labs/KidneyTransplantHLATyping/ReportIndex.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_useConfirmForm.0c601200.js",
-      "_IconDoubleDown.a7c7c63c.js",
+      "_useConfirmForm.da58abf3.js",
+      "_IconDoubleDown.8ec76d18.js",
       "resources/js/Components/Forms/ConfirmFormComposable.vue",
-      "_ModalDialog.df6f82d6.js",
-      "_FormInput.8acb6125.js",
-      "_FormDatetime.f2e631b4.js",
-      "_FormRadio.191fb4d9.js",
-      "_FormCheckbox.ada4ed44.js",
-      "_PaginationNav.0bbc84ef.js",
-      "_SearchIndex.5da66987.js",
-      "_SpinnerButton.56782f69.js",
-      "_pickBy.ce5eea16.js",
-      "_throttle.17d6c507.js"
+      "_ModalDialog.c4bc820b.js",
+      "_FormInput.9b901fe8.js",
+      "_FormDatetime.bab8c4da.js",
+      "_FormRadio.680d49dd.js",
+      "_FormCheckbox.f0ee6024.js",
+      "_PaginationNav.a6c9e52a.js",
+      "_SearchIndex.fbde73a0.js",
+      "_SpinnerButton.f8de5a92.js",
+      "_pickBy.d2bc33f2.js",
+      "_throttle.5a4c6c4e.js"
     ]
   },
-  "_IconDoubleDown.a7c7c63c.js": {
-    "file": "assets/IconDoubleDown.a7c7c63c.js",
+  "_IconDoubleDown.8ec76d18.js": {
+    "file": "assets/IconDoubleDown.8ec76d18.js",
     "imports": [
       "resources/js/app.js"
     ]
   },
   "resources/js/Components/Forms/ConfirmFormComposable.vue": {
-    "file": "assets/ConfirmFormComposable.cfba1905.js",
+    "file": "assets/ConfirmFormComposable.c47b11a3.js",
     "src": "resources/js/Components/Forms/ConfirmFormComposable.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_FormInput.8acb6125.js",
-      "_SpinnerButton.56782f69.js",
-      "_ModalDialog.df6f82d6.js",
+      "_FormInput.9b901fe8.js",
+      "_SpinnerButton.f8de5a92.js",
+      "_ModalDialog.c4bc820b.js",
       "resources/js/app.js"
     ]
   },
-  "_ModalDialog.df6f82d6.js": {
-    "file": "assets/ModalDialog.df6f82d6.js",
+  "_ModalDialog.c4bc820b.js": {
+    "file": "assets/ModalDialog.c4bc820b.js",
     "imports": [
       "resources/js/app.js"
     ],
@@ -387,92 +412,92 @@
     ]
   },
   "resources/js/Pages/Procedures/AcuteHemodialysis/CaseEdit.vue": {
-    "file": "assets/CaseEdit.60c45d83.js",
+    "file": "assets/CaseEdit.04aa4950.js",
     "src": "resources/js/Pages/Procedures/AcuteHemodialysis/CaseEdit.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_FormSelectOther.875524ab.js",
-      "_useConfirmForm.0c601200.js",
-      "_FormInput.8acb6125.js",
-      "_FormRadio.191fb4d9.js",
-      "_FormCheckbox.ada4ed44.js",
-      "_FormDatetime.f2e631b4.js",
-      "_CommentSection.25d50332.js",
-      "_IconEyes.fa9c1cc7.js",
-      "_IconUserMd.6d3771e9.js",
-      "_IconDoubleDown.a7c7c63c.js",
-      "_FallbackSpinner.4850b28b.js",
-      "_SpinnerButton.56782f69.js",
-      "_ModalDialog.df6f82d6.js",
-      "_FormTextarea.32a74366.js"
+      "_FormSelectOther.3d8a92a8.js",
+      "_useConfirmForm.da58abf3.js",
+      "_FormInput.9b901fe8.js",
+      "_FormRadio.680d49dd.js",
+      "_FormCheckbox.f0ee6024.js",
+      "_FormDatetime.bab8c4da.js",
+      "_CommentSection.23ffa8fd.js",
+      "_IconEyes.006b5b02.js",
+      "_IconUserMd.c3aa1a56.js",
+      "_IconDoubleDown.8ec76d18.js",
+      "_FallbackSpinner.3c6fcba2.js",
+      "_SpinnerButton.f8de5a92.js",
+      "_ModalDialog.c4bc820b.js",
+      "_FormTextarea.75424464.js"
     ],
     "dynamicImports": [
       "resources/js/Components/Forms/ConfirmFormComposable.vue"
     ]
   },
-  "_FormSelectOther.875524ab.js": {
-    "file": "assets/FormSelectOther.875524ab.js",
+  "_FormSelectOther.3d8a92a8.js": {
+    "file": "assets/FormSelectOther.3d8a92a8.js",
     "imports": [
       "resources/js/app.js",
-      "_FormInput.8acb6125.js",
-      "_ModalDialog.df6f82d6.js"
+      "_FormInput.9b901fe8.js",
+      "_ModalDialog.c4bc820b.js"
     ]
   },
-  "_FallbackSpinner.4850b28b.js": {
-    "file": "assets/FallbackSpinner.4850b28b.js",
+  "_FallbackSpinner.3c6fcba2.js": {
+    "file": "assets/FallbackSpinner.3c6fcba2.js",
     "imports": [
       "resources/js/app.js"
     ]
   },
-  "_CommentSection.25d50332.js": {
-    "file": "assets/CommentSection.25d50332.js",
+  "_CommentSection.23ffa8fd.js": {
+    "file": "assets/CommentSection.23ffa8fd.js",
     "imports": [
       "resources/js/app.js",
-      "_FormTextarea.32a74366.js",
-      "_SpinnerButton.56782f69.js",
-      "_FormCheckbox.ada4ed44.js",
-      "_IconEyes.fa9c1cc7.js"
+      "_FormTextarea.75424464.js",
+      "_SpinnerButton.f8de5a92.js",
+      "_FormCheckbox.f0ee6024.js",
+      "_IconEyes.006b5b02.js"
     ]
   },
-  "_IconUserMd.6d3771e9.js": {
-    "file": "assets/IconUserMd.6d3771e9.js",
+  "_IconUserMd.c3aa1a56.js": {
+    "file": "assets/IconUserMd.c3aa1a56.js",
     "imports": [
       "resources/js/app.js"
     ]
   },
   "resources/js/Pages/Procedures/AcuteHemodialysis/CaseIndex.vue": {
-    "file": "assets/CaseIndex.53bed121.js",
+    "file": "assets/CaseIndex.3b2c15c4.js",
     "src": "resources/js/Pages/Procedures/AcuteHemodialysis/CaseIndex.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_SearchIndex.5da66987.js",
-      "_IconDoubleRight.c6ec4793.js",
-      "_IconUserMd.6d3771e9.js",
-      "_PaginationNav.0bbc84ef.js",
-      "_pickBy.ce5eea16.js",
-      "_throttle.17d6c507.js"
+      "_SearchIndex.fbde73a0.js",
+      "_IconDoubleRight.f6d2d421.js",
+      "_IconUserMd.c3aa1a56.js",
+      "_PaginationNav.a6c9e52a.js",
+      "_pickBy.d2bc33f2.js",
+      "_throttle.5a4c6c4e.js"
     ],
     "dynamicImports": [
       "resources/js/Components/Forms/SearchAdmission.vue"
     ]
   },
   "resources/js/Pages/Procedures/AcuteHemodialysis/OrderEdit.vue": {
-    "file": "assets/OrderEdit.28b0aa7b.js",
+    "file": "assets/OrderEdit.aae419f5.js",
     "src": "resources/js/Pages/Procedures/AcuteHemodialysis/OrderEdit.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_FormInput.8acb6125.js",
-      "_FormCheckbox.ada4ed44.js",
-      "_FormSelect.86efa578.js",
-      "_FormTextarea.32a74366.js",
-      "_SpinnerButton.56782f69.js",
-      "_FormDatetime.f2e631b4.js",
-      "_CommentSection.25d50332.js",
-      "_SerologyInfo.fe5ca8a7.js",
-      "_IconEyes.fa9c1cc7.js"
+      "_FormInput.9b901fe8.js",
+      "_FormCheckbox.f0ee6024.js",
+      "_FormSelect.cd22764b.js",
+      "_FormTextarea.75424464.js",
+      "_SpinnerButton.f8de5a92.js",
+      "_FormDatetime.bab8c4da.js",
+      "_CommentSection.23ffa8fd.js",
+      "_SerologyInfo.22c66b56.js",
+      "_IconEyes.006b5b02.js"
     ],
     "dynamicImports": [
       "resources/js/Partials/Procedures/AcuteHemodialysis/HDForm.vue",
@@ -480,161 +505,161 @@
       "resources/js/Partials/Procedures/AcuteHemodialysis/SLEDDForm.vue",
       "resources/js/Partials/Procedures/AcuteHemodialysis/TPEForm.vue",
       "resources/js/Partials/Procedures/AcuteHemodialysis/DialysisSlot.vue",
-      "_WardSlot.f0d40e8c.js"
+      "_WardSlot.140302fc.js"
     ]
   },
-  "_SerologyInfo.fe5ca8a7.js": {
-    "file": "assets/SerologyInfo.fe5ca8a7.js",
+  "_SerologyInfo.22c66b56.js": {
+    "file": "assets/SerologyInfo.22c66b56.js",
     "imports": [
       "resources/js/app.js"
     ]
   },
   "resources/js/Pages/Procedures/AcuteHemodialysis/OrderShow.vue": {
-    "file": "assets/OrderShow.5d570cef.js",
+    "file": "assets/OrderShow.950d9809.js",
     "src": "resources/js/Pages/Procedures/AcuteHemodialysis/OrderShow.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_FallbackSpinner.4850b28b.js",
-      "_DisplayData.84d38bc0.js",
-      "_SpinnerButton.56782f69.js",
-      "_FormCheckbox.ada4ed44.js",
-      "_FormDatetime.f2e631b4.js",
-      "_CommentSection.25d50332.js",
-      "_SerologyInfo.fe5ca8a7.js",
-      "_FormTextarea.32a74366.js",
-      "_IconEyes.fa9c1cc7.js"
+      "_FallbackSpinner.3c6fcba2.js",
+      "_DisplayData.cd092204.js",
+      "_SpinnerButton.f8de5a92.js",
+      "_FormCheckbox.f0ee6024.js",
+      "_FormDatetime.bab8c4da.js",
+      "_CommentSection.23ffa8fd.js",
+      "_SerologyInfo.22c66b56.js",
+      "_FormTextarea.75424464.js",
+      "_IconEyes.006b5b02.js"
     ]
   },
   "resources/js/Pages/Procedures/AcuteHemodialysis/ScheduleIndex.vue": {
-    "file": "assets/ScheduleIndex.b92380f1.js",
+    "file": "assets/ScheduleIndex.5fe45687.js",
     "src": "resources/js/Pages/Procedures/AcuteHemodialysis/ScheduleIndex.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_FormDatetime.f2e631b4.js",
+      "_FormDatetime.bab8c4da.js",
       "resources/js/Partials/Procedures/AcuteHemodialysis/DialysisSlot.vue",
-      "_WardSlot.f0d40e8c.js",
+      "_WardSlot.140302fc.js",
       "resources/js/app.js",
-      "_throttle.17d6c507.js",
-      "_FormAutocomplete.9dfa89fd.js",
-      "_FormSelect.86efa578.js",
-      "_FormRadio.191fb4d9.js",
-      "_SpinnerButton.56782f69.js",
-      "_FormCheckbox.ada4ed44.js",
-      "_FallbackSpinner.4850b28b.js",
-      "_IconUserMd.6d3771e9.js",
-      "_pickBy.ce5eea16.js"
+      "_throttle.5a4c6c4e.js",
+      "_FormAutocomplete.7c3d9abe.js",
+      "_FormSelect.cd22764b.js",
+      "_FormRadio.680d49dd.js",
+      "_SpinnerButton.f8de5a92.js",
+      "_FormCheckbox.f0ee6024.js",
+      "_FallbackSpinner.3c6fcba2.js",
+      "_IconUserMd.c3aa1a56.js",
+      "_pickBy.d2bc33f2.js"
     ]
   },
   "resources/js/Partials/Procedures/AcuteHemodialysis/DialysisSlot.vue": {
-    "file": "assets/DialysisSlot.2ab3976a.js",
+    "file": "assets/DialysisSlot.5cdfca29.js",
     "src": "resources/js/Partials/Procedures/AcuteHemodialysis/DialysisSlot.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_WardSlot.f0d40e8c.js",
-      "_IconUserMd.6d3771e9.js"
+      "_WardSlot.140302fc.js",
+      "_IconUserMd.c3aa1a56.js"
     ]
   },
-  "_WardSlot.f0d40e8c.js": {
-    "file": "assets/WardSlot.f0d40e8c.js",
+  "_WardSlot.140302fc.js": {
+    "file": "assets/WardSlot.140302fc.js",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_IconUserMd.6d3771e9.js"
+      "_IconUserMd.c3aa1a56.js"
     ]
   },
   "resources/js/Pages/Procedures/AcuteHemodialysis/SlotRequestIndex.vue": {
-    "file": "assets/SlotRequestIndex.fedc1805.js",
+    "file": "assets/SlotRequestIndex.8a3d36b8.js",
     "src": "resources/js/Pages/Procedures/AcuteHemodialysis/SlotRequestIndex.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_useConfirmForm.0c601200.js",
-      "_IconDoubleDown.a7c7c63c.js",
-      "_IconUserMd.6d3771e9.js",
-      "_PaginationNav.0bbc84ef.js"
+      "_useConfirmForm.da58abf3.js",
+      "_IconDoubleDown.8ec76d18.js",
+      "_IconUserMd.c3aa1a56.js",
+      "_PaginationNav.a6c9e52a.js"
     ],
     "dynamicImports": [
       "resources/js/Components/Forms/ConfirmFormComposable.vue"
     ]
   },
   "resources/js/Components/Forms/SearchAdmission.vue": {
-    "file": "assets/SearchAdmission.cc1aa96b.js",
+    "file": "assets/SearchAdmission.206c087b.js",
     "src": "resources/js/Components/Forms/SearchAdmission.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_ModalDialog.df6f82d6.js",
-      "_FormInput.8acb6125.js",
-      "_SpinnerButton.56782f69.js"
+      "_ModalDialog.c4bc820b.js",
+      "_FormInput.9b901fe8.js",
+      "_SpinnerButton.f8de5a92.js"
     ]
   },
   "resources/js/Partials/Procedures/AcuteHemodialysis/HDForm.vue": {
-    "file": "assets/HDForm.e5aca823.js",
+    "file": "assets/HDForm.a020864e.js",
     "src": "resources/js/Partials/Procedures/AcuteHemodialysis/HDForm.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_FormCheckbox.ada4ed44.js",
-      "_FormInput.8acb6125.js",
-      "_FormSelect.86efa578.js",
-      "_FormSelectOther.875524ab.js",
-      "_FormRadio.191fb4d9.js",
-      "_IconCopy.1bb27c6a.js",
-      "_ModalDialog.df6f82d6.js"
+      "_FormCheckbox.f0ee6024.js",
+      "_FormInput.9b901fe8.js",
+      "_FormSelect.cd22764b.js",
+      "_FormSelectOther.3d8a92a8.js",
+      "_FormRadio.680d49dd.js",
+      "_IconCopy.d8846689.js",
+      "_ModalDialog.c4bc820b.js"
     ]
   },
-  "_IconCopy.1bb27c6a.js": {
-    "file": "assets/IconCopy.1bb27c6a.js",
+  "_IconCopy.d8846689.js": {
+    "file": "assets/IconCopy.d8846689.js",
     "imports": [
       "resources/js/app.js"
     ]
   },
   "resources/js/Partials/Procedures/AcuteHemodialysis/HFForm.vue": {
-    "file": "assets/HFForm.bd9623f5.js",
+    "file": "assets/HFForm.56ed7cc5.js",
     "src": "resources/js/Partials/Procedures/AcuteHemodialysis/HFForm.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_FormCheckbox.ada4ed44.js",
-      "_FormInput.8acb6125.js",
-      "_FormSelect.86efa578.js",
-      "_FormRadio.191fb4d9.js",
-      "_FormSelectOther.875524ab.js",
-      "_IconCopy.1bb27c6a.js",
-      "_ModalDialog.df6f82d6.js"
+      "_FormCheckbox.f0ee6024.js",
+      "_FormInput.9b901fe8.js",
+      "_FormSelect.cd22764b.js",
+      "_FormRadio.680d49dd.js",
+      "_FormSelectOther.3d8a92a8.js",
+      "_IconCopy.d8846689.js",
+      "_ModalDialog.c4bc820b.js"
     ]
   },
   "resources/js/Partials/Procedures/AcuteHemodialysis/SLEDDForm.vue": {
-    "file": "assets/SLEDDForm.328fbc99.js",
+    "file": "assets/SLEDDForm.e7ffc461.js",
     "src": "resources/js/Partials/Procedures/AcuteHemodialysis/SLEDDForm.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_FormCheckbox.ada4ed44.js",
-      "_FormInput.8acb6125.js",
-      "_FormTextarea.32a74366.js",
-      "_FormSelect.86efa578.js",
-      "_FormRadio.191fb4d9.js",
-      "_FormSelectOther.875524ab.js",
-      "_IconCopy.1bb27c6a.js",
-      "_ModalDialog.df6f82d6.js"
+      "_FormCheckbox.f0ee6024.js",
+      "_FormInput.9b901fe8.js",
+      "_FormTextarea.75424464.js",
+      "_FormSelect.cd22764b.js",
+      "_FormRadio.680d49dd.js",
+      "_FormSelectOther.3d8a92a8.js",
+      "_IconCopy.d8846689.js",
+      "_ModalDialog.c4bc820b.js"
     ]
   },
   "resources/js/Partials/Procedures/AcuteHemodialysis/TPEForm.vue": {
-    "file": "assets/TPEForm.b2fcc546.js",
+    "file": "assets/TPEForm.3db0f3bd.js",
     "src": "resources/js/Partials/Procedures/AcuteHemodialysis/TPEForm.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_FormCheckbox.ada4ed44.js",
-      "_FormInput.8acb6125.js",
-      "_FormSelect.86efa578.js",
-      "_FormRadio.191fb4d9.js",
-      "_FormSelectOther.875524ab.js",
-      "_IconCopy.1bb27c6a.js",
-      "_ModalDialog.df6f82d6.js"
+      "_FormCheckbox.f0ee6024.js",
+      "_FormInput.9b901fe8.js",
+      "_FormSelect.cd22764b.js",
+      "_FormRadio.680d49dd.js",
+      "_FormSelectOther.3d8a92a8.js",
+      "_IconCopy.d8846689.js",
+      "_ModalDialog.c4bc820b.js"
     ]
   }
 }
