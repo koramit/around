@@ -10,6 +10,10 @@ class JournalController extends Controller
     public function index()
     {
         session()->flash('page-title', 'Journal');
+        session()->flash('navs', [
+            ['label' => 'Journal', 'route' => route('journal')],
+            ['label' => 'Nephflix', 'route' => route('nephflix')],
+        ]);
 
         return Inertia::render('JournalPage', [
             'files' => cache()->remember('journal_files', now()->addWeek(), function () {
