@@ -181,3 +181,13 @@ Route::get('nephflix', [NephflixController::class, 'index'])
 Route::get('nephflix/{hashedKey}', [NephflixController::class, 'show'])
     ->middleware(['auth', 'can:create_acute_hemodialysis_order', 'page-transition', 'locale', 'no-in-app-allow'])
     ->name('nephflix.show');
+
+Route::get('clear-club-cache', function () {
+    cache()->forget('asnonline-episodes');
+    cache()->forget('journal-files');
+
+    return [
+        'journal-files' => cache('journal-files'),
+        'asnonline-episodes' => cache('asnonline-episodes'),
+    ];
+});
