@@ -15,14 +15,17 @@ class NephflixController extends Controller
 
     public function __construct()
     {
-        $hasher = app(Hashids::class);
-        $this->episodes = collect($this->loadCSV(storage_path('app/seeders/asnonline.csv')))->map(fn ($e, $i) => [
-            'title' => "{$e['serie']}/{$e['season']}/{$e['episode']}",
-            'episode' => $e['episode'],
-            'speakers' => $e['speakers'],
-            'asset' => $e['url'],
-            'route' => route('nephflix.show', $hasher->encode($i)),
-        ]);
+        $this->episodes = cache()->rememberForever('asnonline-episodes', function () {
+            $hasher = app(Hashids::class);
+
+            return collect($this->loadCSV(storage_path('app/seeders/asnonline.csv')))->map(fn ($e, $i) => [
+                'title' => "{$e['serie']}/{$e['season']}/{$e['episode']}",
+                'episode' => $e['episode'],
+                'speakers' => $e['speakers'],
+                'asset' => $e['url'],
+                'route' => route('nephflix.show', $hasher->encode($i)),
+            ]);
+        });
     }
 
     public function index()

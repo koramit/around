@@ -16,7 +16,7 @@ class JournalController extends Controller
         ]);
 
         return Inertia::render('JournalPage', [
-            'files' => cache()->remember('journal_files', now()->addWeek(), function () {
+            'files' => cache()->rememberForever('journal-files', function () {
                 return Storage::disk('s3')->allFiles('f/j');
             }),
         ]);
