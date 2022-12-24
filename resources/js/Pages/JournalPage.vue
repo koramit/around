@@ -11,7 +11,7 @@
             class="py-1 px-2 bg-white rounded"
         >
             <span
-                v-html="file.replace('f/j/NephSAP/', '').replace(new RegExp(search, 'i'), `<span class='bg-complement text-white'>${search}</span>`)"
+                v-html="file.replace('f/j/', '').replace(new RegExp(search, 'i'), `<span class='bg-complement text-white'>${search}</span>`)"
             />
             {{ }}
 
