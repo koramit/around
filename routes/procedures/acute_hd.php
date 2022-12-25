@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Procedures\AcuteHemodialysis\CaseRecordCompleteController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\CaseRecordController;
+use App\Http\Controllers\Procedures\AcuteHemodialysis\CaseRecordExportController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\CreateOrderShortcutController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\DialysisSessionController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\IdleCaseController;
@@ -38,6 +39,9 @@ Route::post('/{hashedKey}/complete', CaseRecordCompleteController::class)
     ->name('complete');
 Route::put('/{hashedKey}/addendum', CaseRecordCompleteController::class)
     ->name('addendum');
+Route::get('/export', CaseRecordExportController::class)
+    ->can('force_complete_case')
+    ->name('export');
 
 // schedule
 Route::get('/schedule', ScheduleController::class)

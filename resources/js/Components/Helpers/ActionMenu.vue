@@ -40,6 +40,23 @@
                     {{ action.label }}
                 </div>
             </InertiaLink>
+            <a
+                v-else-if="action.as === 'a'"
+                class="flex items-center group py-2 outline-none truncate text-primary"
+                :href="action.route"
+                @click="$emit('hide-mobile-menu')"
+            >
+                <IconVector
+                    :name="action.icon"
+                    class="w-4 h-4 group-hover:text-accent transition-colors duration-200 ease-in-out"
+                />
+                <div
+                    class="ml-2 group-hover:text-accent transition-colors duration-200 ease-in-out"
+                    v-if="!zenMode"
+                >
+                    {{ action.label }}
+                </div>
+            </a>
         </template>
     </div>
 </template>

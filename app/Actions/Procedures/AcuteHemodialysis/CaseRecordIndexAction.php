@@ -72,6 +72,14 @@ class CaseRecordIndexAction extends AcuteHemodialysisAction
         $flash = $this->getFlash('Acute Hemodialysis - Cases', $user);
         $flash['navs'] = $this->NAVS;
         $flash['action-menu'][] = $this->getSetHomePageActionMenu($routeName, $user->home_page);
+        $flash['action-menu'][] = [
+            'label' => 'Export',
+            'as' => 'a',
+            'icon' => 'file-excel',
+            'theme' => 'accent',
+            'route' => route('procedures.acute-hemodialysis.export', $filters),
+            'can' => $user->can('force_complete_case'),
+        ];
 
         return [
             'cases' => $cases,
