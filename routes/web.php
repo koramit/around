@@ -192,17 +192,3 @@ Route::get('clear-club-cache', function () {
         'asnonline-episodes' => cache('asnonline-episodes'),
     ];
 });
-
-Route::get('add-club-member-role', function () {
-    $a = App\Models\Ability::create(['name' => 'view_any_club_resources']);
-    $r = App\Models\Role::create(['name' => 'club_member']);
-    $r->abilities()->attach($a->id);
-
-    $ids = App\Models\Role::whereName('acute_hemodialysis_fellow')->first()->users()->pluck('id');
-    $ids[] = 2;
-    foreach (App\Models\User::whereIn('id', $ids)->get() as $user) {
-        $user->assignRole($r);
-    }
-
-    return 'done';
-});
