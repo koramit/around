@@ -71,6 +71,7 @@ class HandleInertiaRequests extends Middleware
                         'manage_user' => $request->user()->can('authorize_user'),
                         'config_preferences' => $request->user()->can('config_preferences'),
                         'get_support' => false, // $request->user()->can('get_support'),
+                        'view_any_club_resources' => $request->user()->can('view_any_club_resources'),
                     ],
                 ] : null,
             'event' => [

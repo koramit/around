@@ -120,7 +120,7 @@
                             <InertiaLink
                                 class="block w-full text-left px-6 py-2 hover:bg-complement-darker hover:text-primary transition-colors duration-200 ease-out"
                                 :href="$page.props.routeJournal"
-                                v-if="!isUrl($page.props.routeJournal) && $page.props.user?.can.config_preferences"
+                                v-if="!isUrl($page.props.routeJournal) && $page.props.user?.can.view_any_club_resources"
                             >
                                 {{ __('Journal') }}
                             </InertiaLink>
@@ -187,7 +187,7 @@
                         <InertiaLink
                             class="block py-1"
                             :href="$page.props.routeJournal"
-                            v-if="!isUrl($page.props.routeJournal) && $page.props.user?.can.config_preferences"
+                            v-if="!isUrl($page.props.routeJournal) && $page.props.user?.can.view_any_club_resources"
                         >
                             {{ __('Journal') }}
                         </InertiaLink>

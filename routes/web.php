@@ -39,6 +39,7 @@ Route::middleware(['auth'])->group(function () {
         ->middleware(['can:config_preferences', 'page-transition', 'locale', 'no-in-app-allow'])
         ->name('preferences');
     Route::patch('/preferences', [PreferenceController::class, 'update'])->name('preferences.update');
+    // @TODO: remove view_any_patients ability from participant role before implementing this
     Route::get('/patients', function () {
         return 'patients';
     })->can('view_any_patients')->name('patients');
@@ -168,18 +169,18 @@ Route::get('magic-link', MagicLinkController::class)
     ->name('magic-link');
 
 Route::get('journal', [JournalController::class, 'index'])
-    ->middleware(['auth', 'can:create_acute_hemodialysis_order', 'page-transition', 'locale', 'no-in-app-allow'])
+    ->middleware(['auth', 'can:view_any_club_resources', 'page-transition', 'locale', 'no-in-app-allow'])
     ->name('journal');
 Route::get('journal/show', [JournalController::class, 'show'])
-    ->middleware(['auth', 'can:create_acute_hemodialysis_order'])
+    ->middleware(['auth', 'can:view_any_club_resources'])
     ->name('journal.show');
 
 Route::get('nephflix', [NephflixController::class, 'index'])
-    ->middleware(['auth', 'can:create_acute_hemodialysis_order', 'page-transition', 'locale', 'no-in-app-allow'])
+    ->middleware(['auth', 'can:view_any_club_resources', 'page-transition', 'locale', 'no-in-app-allow'])
     ->name('nephflix');
 
 Route::get('nephflix/{hashedKey}', [NephflixController::class, 'show'])
-    ->middleware(['auth', 'can:create_acute_hemodialysis_order', 'page-transition', 'locale', 'no-in-app-allow'])
+    ->middleware(['auth', 'can:view_any_club_resources', 'page-transition', 'locale', 'no-in-app-allow'])
     ->name('nephflix.show');
 
 Route::get('clear-club-cache', function () {
@@ -190,4 +191,18 @@ Route::get('clear-club-cache', function () {
         'journal-files' => cache('journal-files'),
         'asnonline-episodes' => cache('asnonline-episodes'),
     ];
+});
+
+Route::get('add-club-member-role', function () {
+    $a = App\Models\Ability::create(['name' => 'view_any_club_resources']);
+    $r = App\Models\Role::create(['name' => 'club_member']);
+    $r->abilities()->attach($a->id);
+
+    $ids = App\Models\Role::whereName('acute_hemodialysis_fellow')->first()->users()->pluck('id');
+    $ids[] = 2;
+    foreach (App\Models\User::whereIn('id', $ids)->get() as $user) {
+        $user->assignRole($r);
+    }
+
+    return 'done';
 });
