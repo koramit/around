@@ -208,18 +208,14 @@ class User extends Authenticatable
         );
     }
 
-    public function assignRole(mixed $role): void
+    public function assignRole(Role $role): void
     {
-        if (is_string($role)) {
-            $role = Role::query()->where('name', $role)->firstOrCreate(['name' => $role]);
-        }
-
         $this->roles()->syncWithoutDetaching($role);
 
-        unset($this->roles); // reload for new role
-        cache()->put("uid-$this->id-abilities", $this->roles->map->abilities->flatten()->pluck('name')->unique(), config('session.lifetime') * 60);
-        cache()->put("uid-$this->id-role-names", $this->roles->pluck('name'), config('session.lifetime') * 60);
-        cache()->put("uid-$this->id-role-labels", $this->roles->pluck('label'), config('session.lifetime') * 60);
+        $roles = $this->roles()->with('abilities')->get();
+        cache()->put("uid-$this->id-abilities", $roles->map->abilities->flatten()->pluck('name')->unique(), config('session.lifetime') * 60);
+        cache()->put("uid-$this->id-role-names", $roles->pluck('name'), config('session.lifetime') * 60);
+        cache()->put("uid-$this->id-role-labels", $roles->pluck('label'), config('session.lifetime') * 60);
     }
 
     public function hasAbility(string|int $ability): bool
