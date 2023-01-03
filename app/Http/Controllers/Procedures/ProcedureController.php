@@ -12,6 +12,13 @@ class ProcedureController extends Controller
 {
     use AppLayoutSessionFlashable;
 
+    public function __construct(Request $request)
+    {
+        if (! $request->wantsJson()) {
+            $this->middleware(['page-transition', 'locale', 'no-in-app-allow']);
+        }
+    }
+
     public function __invoke(Request $request)
     {
         $user = $request->user();

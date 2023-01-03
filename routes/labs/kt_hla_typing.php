@@ -5,6 +5,10 @@ use App\Http\Controllers\Labs\KidneyTransplantHLATyping\ReportController;
 use App\Http\Controllers\Labs\KidneyTransplantHLATyping\ReportPublishController;
 use Illuminate\Support\Facades\Route;
 
+// cases
+Route::get('/', function () {
+    return redirect()->route('labs.kt-hla-typing.reports.index');
+})->name('index');
 // reports
 Route::get('/reports', [ReportController::class, 'index'])
     ->name('reports.index');

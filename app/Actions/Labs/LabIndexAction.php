@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Actions\Procedures;
+namespace App\Actions\Labs;
 
 use App\Extensions\Auth\AvatarUser;
 use App\Models\User;
@@ -9,9 +9,9 @@ use App\Traits\FlashDataGeneratable;
 use App\Traits\HomePageSelectable;
 use App\Traits\RegistryGroupRouteQueryable;
 
-class ProcedureIndexAction
+class LabIndexAction
 {
-    use FlashDataGeneratable, HomePageSelectable, AvatarLinkable, RegistryGroupRouteQueryable;
+    use AvatarLinkable, RegistryGroupRouteQueryable, FlashDataGeneratable, HomePageSelectable;
 
     public function __invoke(User|AvatarUser $user, string $routeName)
     {
@@ -23,17 +23,17 @@ class ProcedureIndexAction
             abort(403);
         }
 
-        $procedures = $this->getRoutesByRegistryTypeAndUser(registryType: 'procedures', user: $user);
-        if ($procedures->count() === 0) {
+        $labs = $this->getRoutesByRegistryTypeAndUser(registryType: 'labs', user: $user);
+        if ($labs->count() === 0) {
             abort(403);
         }
 
         $redirectTo = null;
-        if ($procedures->count() === 1) {
-            $redirectTo = $procedures[0]['route'];
+        if ($labs->count() === 1) {
+            $redirectTo = $labs[0]['route'];
         }
 
-        $flash = $this->getFlash(__('Procedures'), $user);
+        $flash = $this->getFlash(__('Labs'), $user);
         $flash['action-menu'] = [$this->getSetHomePageActionMenu($routeName, $user->home_page)];
 
         return [
