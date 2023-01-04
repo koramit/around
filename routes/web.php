@@ -117,6 +117,13 @@ Route::middleware(['auth'])
         require __DIR__.'/labs.php';
     });
 
+Route::middleware(['auth'])
+    ->prefix('wards')
+    ->name('wards.')
+    ->group(function () {
+        require __DIR__.'/wards.php';
+    });
+
 // subscription
 Route::middleware(['auth'])
     ->prefix('subscriptions')

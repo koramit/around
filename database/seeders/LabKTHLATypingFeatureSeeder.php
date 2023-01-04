@@ -34,8 +34,8 @@ class LabKTHLATypingFeatureSeeder extends Seeder
         // new registry
         $registry = Registry::query()->create([
             'name' => 'kt_hla_typing',
-            'label' => 'Kidney Transplant HLA Typing Lab', // just for the old schema
-            'label_eng' => 'Kidney Transplant HLA Typing Lab', // just for the old schema
+            // 'label' => 'Kidney Transplant HLA Typing Lab', // just for the old schema
+            // 'label_eng' => 'Kidney Transplant HLA Typing Lab', // just for the old schema
             'route' => 'labs.kt-hla-typing.index',
             'division_id' => Division::query()->where('name_en_short', 'nephrology')->first()->id,
         ]);
