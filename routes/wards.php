@@ -7,8 +7,8 @@ Route::get('/', WardController::class)
     ->name('index');
 
 // KT ward registry
-Route::prefix('kt-ward-registry')
-    ->name('kt-ward-registry.')
+Route::prefix('kt-admission')
+    ->name('kt-admission.')
     ->group(function () {
-        require __DIR__.'/wards/kt_ward_registry.php';
+        require __DIR__.'/wards/kt_admission.php';
     });

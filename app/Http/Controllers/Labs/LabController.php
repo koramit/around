@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Labs;
 
-use App\Actions\Labs\LabIndexAction;
+use App\Actions\MainRegistryTypeIndexAction;
 use App\Http\Controllers\Controller;
 use App\Traits\AppLayoutSessionFlashable;
 use Illuminate\Http\Request;
@@ -21,8 +21,11 @@ class LabController extends Controller
 
     public function __invoke(Request $request)
     {
-        $user = $request->user();
-        $data = (new LabIndexAction())($user, $request->route()->getName());
+        $data = (new MainRegistryTypeIndexAction(
+            registryType: 'labs',
+            user:  $request->user(),
+            routeName: $request->route()->getName()
+        ))();
 
         if ($request->wantsJson()) {
             return $data;

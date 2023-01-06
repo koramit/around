@@ -27,7 +27,7 @@ class LabKTHLATypingFeatureSeeder extends Seeder
          * 3. Add new abilities and roles
          * 4. Clear ability-registry-user related cache
          * 5. Attach new abilities to root role
-         * 6. Attach new registry to root user
+         * 6. Attach new registry and role to related users
          * 7. Add new actions to ResourceActionLog if needed
          */
 
@@ -87,8 +87,6 @@ class LabKTHLATypingFeatureSeeder extends Seeder
 
         // clear ability-registry-user related cache
         cache()->forget('ability-registry-map');
-        cache()->forget('clinics-index-route-names');
-        cache()->forget('procedures-index-route-names');
         cache()->forget('labs-index-route-names');
 
         // attach coordinator role to existing acute hemodialysis staffs

@@ -10,6 +10,17 @@
  */
 
 
+namespace App\Extensions\Auth{
+/**
+ * App\Extensions\Auth\AvatarUser
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder|AvatarUser newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|AvatarUser newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|AvatarUser query()
+ */
+	class AvatarUser extends \Eloquent {}
+}
+
 namespace App\Models{
 /**
  * App\Models\Ability
@@ -40,7 +51,7 @@ namespace App\Models{
 /**
  * App\Models\CaseRecord
  *
- * @property-read string $hashed_key
+ * @property-read string $title
  * @property int $id
  * @property int $patient_id
  * @property int $registry_id
@@ -331,6 +342,7 @@ namespace App\Models{
  * @property-read string $place_name
  * @property-read string $attending_name
  * @property-read string $author_name
+ * @property-read string $title
  * @property int $id
  * @property int $case_record_id
  * @property int $note_type_id
@@ -720,6 +732,47 @@ namespace App\Models\Registries{
  * @method static \Illuminate\Database\Query\Builder|AcuteHemodialysisCaseRecord withoutTrashed()
  */
 	class AcuteHemodialysisCaseRecord extends \Eloquent {}
+}
+
+namespace App\Models\Registries{
+/**
+ * App\Models\Registries\KidneyTransplantAdmissionCaseRecord
+ *
+ * @property int $id
+ * @property int $patient_id
+ * @property int $registry_id
+ * @property mixed $meta
+ * @property mixed $form
+ * @property int $status
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ResourceActionLog[] $actionLogs
+ * @property-read int|null $action_logs_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Comment[] $comments
+ * @property-read int|null $comments_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Note[] $notes
+ * @property-read int|null $notes_count
+ * @property-read \App\Models\Resources\Patient $patient
+ * @method static \Illuminate\Database\Eloquent\Builder|CaseRecord findByUnhashKey(string $hashed)
+ * @method static \Illuminate\Database\Eloquent\Builder|CaseRecord metaSearchTerms($search)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantAdmissionCaseRecord newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantAdmissionCaseRecord newQuery()
+ * @method static \Illuminate\Database\Query\Builder|KidneyTransplantAdmissionCaseRecord onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantAdmissionCaseRecord query()
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantAdmissionCaseRecord whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantAdmissionCaseRecord whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantAdmissionCaseRecord whereForm($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantAdmissionCaseRecord whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantAdmissionCaseRecord whereMeta($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantAdmissionCaseRecord wherePatientId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantAdmissionCaseRecord whereRegistryId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantAdmissionCaseRecord whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantAdmissionCaseRecord whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|KidneyTransplantAdmissionCaseRecord withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|KidneyTransplantAdmissionCaseRecord withoutTrashed()
+ */
+	class KidneyTransplantAdmissionCaseRecord extends \Eloquent {}
 }
 
 namespace App\Models\Registries{

@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return redirect()->route('labs.kt-hla-typing.reports.index');
 })->name('index');
+
 // reports
 Route::get('/reports', [ReportController::class, 'index'])
     ->name('reports.index');

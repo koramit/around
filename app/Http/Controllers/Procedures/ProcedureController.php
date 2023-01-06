@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Procedures;
 
-use App\Actions\Procedures\ProcedureIndexAction;
+use App\Actions\MainRegistryTypeIndexAction;
 use App\Http\Controllers\Controller;
 use App\Traits\AppLayoutSessionFlashable;
 use Illuminate\Http\Request;
@@ -21,8 +21,11 @@ class ProcedureController extends Controller
 
     public function __invoke(Request $request)
     {
-        $user = $request->user();
-        $data = (new ProcedureIndexAction())($user, $request->route()->getName());
+        $data = (new MainRegistryTypeIndexAction(
+            registryType: 'procedures',
+            user:  $request->user(),
+            routeName: $request->route()->getName()
+        ))();
 
         if ($request->wantsJson()) {
             return $data;
