@@ -3,35 +3,34 @@
         <ModalDialog
             ref="modal"
             width-mode="form-cols-1"
-            @closed="resetAdmission"
+            @closed="Object.keys(form).map(k => form[k] = null)"
         >
             <template #header>
                 <div class="font-semibold text-complement">
-                    {{ heading }}
+                    Search Admission
                 </div>
             </template>
             <template #body>
                 <div class="py-4 my-2 md:py-6 md:my-4 border-t border-b border-accent-darker">
                     <FormInput
+                        label="an"
                         name="an"
-                        :label="mode"
-                        v-model="an"
-                        pattern="\d*"
-                        type="number"
+                        v-model="form.an"
+                        type="tel"
+                        :error="errors.an"
                         ref="anInput"
-                        :error="anError"
                         @keydown.enter="searchAdmission"
                     />
                     <SpinnerButton
                         :spin="busy"
                         class="btn-complement w-full mt-2"
                         @click="searchAdmission"
-                        :disabled="!an.length"
+                        :disabled="!form.an?.length"
                     >
                         SEARCH
                     </SpinnerButton>
                     <hr class="my-4 md:my-6">
-                    <span class="form-label block">{{ dataLabel }}</span>
+                    <span class="form-label block">admission data</span>
                     <div
                         v-if="!admission.hn"
                         class="bg-white rounded shadow p-2 lg:p-4 text-sm"
@@ -59,6 +58,17 @@
                             <span class="text-complement uppercase font-semibold">{{ key.replaceAll('_', ' ') }} : </span> {{ admission[key] }}
                         </p>
                     </div>
+                    <transition name="slide-fade">
+                        <div v-if="admission.hn">
+                            <hr class="my-4 md:my-6">
+                            <FormRadio
+                                label="reason for admission"
+                                v-model="form.reason_for_admission"
+                                name="reason_for_admission"
+                                :options="admitReasons"
+                            />
+                        </div>
+                    </transition>
                 </div>
             </template>
             <template #footer>
@@ -66,9 +76,9 @@
                     <button
                         class="btn btn-accent"
                         @click="confirm"
-                        :disabled="!admission.hn"
+                        :disabled="!admission.an || !form.reason_for_admission"
                     >
-                        {{ confirmLabel }}
+                        Confirm
                     </button>
                 </div>
             </template>
@@ -77,99 +87,74 @@
 </template>
 
 <script setup>
-import ModalDialog from '../Helpers/ModalDialog.vue';
-import FormInput from '../Controls/FormInput.vue';
-import SpinnerButton from '../Controls/SpinnerButton.vue';
-import { computed, nextTick, reactive, ref } from 'vue';
+import ModalDialog from '../../Components/Helpers/ModalDialog.vue';
+import {nextTick, reactive, ref} from 'vue';
+import FormInput from '../../Components/Controls/FormInput.vue';
+import SpinnerButton from '../../Components/Controls/SpinnerButton.vue';
+import FormRadio from '../../Components/Controls/FormRadio.vue';
 
 const props = defineProps({
-    heading: { type: String, default: 'Search Admission'},
-    confirmLabel: { type: String, default: 'CONFIRM'},
-    mode: { type: String, default: 'an' },
     serviceEndpoint: { type: String, required: true },
+    admitReasons: { type: Array, default: () => ['KT', 'Complication'] },
 });
-
 const emits = defineEmits(['confirmed']);
 
 const modal = ref(null);
 const anInput = ref(null);
-const an = ref('');
-const anError = ref('');
 const busy = ref(false);
+const form = reactive({
+    an: null,
+    hn: null,
+    reason_for_admission: null,
+});
 const admission = reactive({
-    an: '',
-    hn: '',
-    name: '',
-    gender: '',
-    age: '',
-    ward_admit: '',
-    admitted_at: '',
-    discharged_at: '',
+    an: null,
+    hn: null,
+    name: null,
+    gender: null,
+    age: null,
+    ward_admit: null,
+    admitted_at: null,
+    discharged_at: null,
+});
+const errors = reactive({
+    an: null,
 });
 
-const dataLabel = computed(() => {
-    if (admission.admitted_at) {
-        return  admission.discharged_at
-            ? 'latest admission'
-            : 'active admission';
-    }
-
-    if (admission.hn) {
-        return 'patient data';
-    }
-
-    return null;
-});
-
-const searchAdmission = () => {
+function searchAdmission() {
     busy.value = true;
-    anError.value = '';
-    admission.hn = '';
+    errors.an = null;
+    Object.keys(admission).map(k => admission[k] = null);
 
     window.axios
-        .post(props.serviceEndpoint, {key: an.value})
-        .then(response => {
-            if (! response.data.hn) {
-                anError.value = 'Patient not found';
+        .post(props.serviceEndpoint, {key: form.an})
+        .then((response) => {
+            if (! response.data.found) {
+                errors.an = response.data.message;
                 return;
             }
 
-            if (! response.data.found || response.data.discharged_at) {
-                anError.value = 'No active admission';
-            }
-
-            if (props.mode === 'hn') {
-                admission.location = response.data.location;
-            }
-
-            admission.hn = response.data.hn;
-            admission.an = response.data.an;
-            admission.name = response.data.name;
-            admission.gender = response.data.gender;
-            admission.age = response.data.age;
-            admission.ward_admit = response.data.ward_admit;
-            admission.admitted_at = response.data.admitted_at;
-            admission.discharged_at = response.data.discharged_at;
-        }).catch(error => {
+            Object.keys(admission).map(k => admission[k] = response.data[k]);
+        })
+        .catch((error) => {
             console.log(error);
-        }).finally(() => busy.value = false);
-};
+        })
+        .finally(() => {
+            busy.value = false;
+        });
+}
 
-const resetAdmission = () => {
-    an.value = '';
-    anError.value = '';
-    admission.hn = '';
-};
-
-const open = () => {
+function open() {
     modal.value.open();
+    Object.keys(admission).map(k => admission[k] = null);
     nextTick(() => anInput.value.focus());
-};
+}
 
-const confirm = () => {
+function confirm() {
+    form.an = admission.an;
+    form.hn = admission.hn;
+    emits('confirmed', {...form});
     modal.value.close();
-    emits('confirmed', { hn: admission.hn, an: admission.an});
-};
-
+}
 defineExpose({ open });
 </script>

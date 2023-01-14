@@ -2,18 +2,19 @@
 
 namespace App\Actions\Procedures\AcuteHemodialysis;
 
+use App\Extensions\Auth\AvatarUser;
 use App\Models\Registries\AcuteHemodialysisCaseRecord as CaseRecord;
 use App\Models\Resources\Admission;
 use App\Models\Resources\Patient;
+use App\Models\User;
 use App\Rules\AnExists;
 use App\Rules\HnExists;
-use App\Traits\AvatarLinkable;
 use App\Traits\CaseRecordFinishable;
 use Illuminate\Support\Facades\Validator;
 
 class CaseRecordStoreAction extends AcuteHemodialysisAction
 {
-    use AvatarLinkable, CaseRecordFinishable;
+    use CaseRecordFinishable;
 
     protected float $CRF_VERSION = 1.0;
 
@@ -62,7 +63,7 @@ class CaseRecordStoreAction extends AcuteHemodialysisAction
         'cause_of_dead' => null,
     ];
 
-    public function __invoke(array $data, mixed $user): array
+    public function __invoke(array $data, User|AvatarUser $user): array
     {
         if ($link = $this->shouldLinkAvatar()) {
             return $link;

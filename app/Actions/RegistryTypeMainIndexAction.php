@@ -9,7 +9,7 @@ use App\Traits\FlashDataGeneratable;
 use App\Traits\HomePageSelectable;
 use App\Traits\RegistryGroupRouteQueryable;
 
-class MainRegistryTypeIndexAction
+class RegistryTypeMainIndexAction
 {
     use AvatarLinkable, RegistryGroupRouteQueryable, FlashDataGeneratable, HomePageSelectable;
 

@@ -199,3 +199,7 @@ Route::get('clear-club-cache', function () {
         'asnonline-episodes' => cache('asnonline-episodes'),
     ];
 });
+
+Route::get('/tap', function () {
+    return request()->all();
+});

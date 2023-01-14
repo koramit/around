@@ -94,6 +94,33 @@ class Admission extends Model
         );
     }
 
+    protected function lengthOfStay(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                if (! $this->encountered_at || ! $this->dismissed_at) {
+                    return null;
+                }
+
+                $losInMinutes = $this->encountered_at->diffInMinutes($this->dismissed_at);
+                // 1440 minutes in a day, more than 360 minutes count a day
+                if ($losInMinutes >= 1440) {
+                    $losInDays = (int) floor($losInMinutes / 1440);
+                    $remains = $losInMinutes % 1440;
+                    if ($remains > 360) {
+                        $losInDays++;
+                    }
+
+                    return $losInDays;
+                } elseif ($losInMinutes > 360) {
+                    return 1;
+                }
+
+                return 0;
+            },
+        );
+    }
+
     public function scopeWithPlaceName($query)
     {
         $query->addSelect([

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Labs;
 
-use App\Actions\MainRegistryTypeIndexAction;
+use App\Actions\RegistryTypeMainIndexAction;
 use App\Http\Controllers\Controller;
 use App\Traits\AppLayoutSessionFlashable;
 use Illuminate\Http\Request;
@@ -21,7 +21,7 @@ class LabController extends Controller
 
     public function __invoke(Request $request)
     {
-        $data = (new MainRegistryTypeIndexAction(
+        $data = (new RegistryTypeMainIndexAction(
             registryType: 'labs',
             user:  $request->user(),
             routeName: $request->route()->getName()

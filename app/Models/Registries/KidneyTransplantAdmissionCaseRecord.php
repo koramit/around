@@ -2,10 +2,12 @@
 
 namespace App\Models\Registries;
 
+use App\Models\CaseRecord;
 use App\Models\Resources\Registry;
 use Illuminate\Database\Eloquent\Builder;
 
-class KidneyTransplantAdmissionCaseRecord extends \App\Models\CaseRecord
+/** @property-read string $hashed_key */
+class KidneyTransplantAdmissionCaseRecord extends CaseRecord
 {
     protected $table = 'case_records';
 
@@ -27,5 +29,11 @@ class KidneyTransplantAdmissionCaseRecord extends \App\Models\CaseRecord
                 )
             );
         });
+    }
+
+    public function genTitle(): string
+    {
+        $caseType = strtoupper($this->meta['reason_for_admission']);
+        return "HN {$this->meta['hn']} {$this->patient->full_name} : $caseType ADMISSION @ AN {$this->meta['an']}";
     }
 }
