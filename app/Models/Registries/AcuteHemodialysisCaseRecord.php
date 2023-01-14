@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /** @property string $discussion_route */
+/** @property-read string $hashed_key */
 class AcuteHemodialysisCaseRecord extends CaseRecord
 {
     protected $table = 'case_records';
@@ -83,7 +84,7 @@ class AcuteHemodialysisCaseRecord extends CaseRecord
 
     public function genTitle(): string
     {
-        return "Acute Hemodialysis Case : HN {$this->meta['hn']} {$this->meta['name']} : {$this->created_at->format('M j y')}";
+        return "HN {$this->meta['hn']} {$this->patient->full_name} : Acute Hemodialysis Case @ {$this->created_at->format('M j y')}";
     }
 
     /** @alias $discussion_route */

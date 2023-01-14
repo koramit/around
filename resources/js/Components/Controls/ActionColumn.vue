@@ -5,9 +5,9 @@
             :key="key"
         >
             <InertiaLink
-                v-if="action.type === 'link'"
-                :href="action.href"
-                class="md:m-2 flex items-center group"
+                v-if="action.as === 'link'"
+                :href="action.route"
+                class="md:m-1 flex items-center group"
                 :class="{'m-2': actions.length > 1}"
             >
                 <span
@@ -19,10 +19,9 @@
                         class="w-4 h-4"
                     />
                 </span>
-                <!--{{ action.label }}-->
             </InertiaLink>
             <button
-                v-else
+                v-else-if="action.as === 'button'"
                 :key="key"
                 class="md:m-2 flex items-center group"
                 :class="{'m-2': actions.length > 1}"
@@ -37,7 +36,6 @@
                         class="w-4 h-4"
                     />
                 </span>
-                <!--{{ action.label }}-->
             </button>
         </template>
     </div>

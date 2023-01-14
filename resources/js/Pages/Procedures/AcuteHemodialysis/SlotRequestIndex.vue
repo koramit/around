@@ -28,7 +28,7 @@
                         <ActionColumn
                             v-if="request.actions.length"
                             :actions="request.actions"
-                            @action-clicked="handleActionClicked"
+                            @action-clicked="handleButtonActionClicked"
                         />
                         <div
                             v-else
@@ -61,14 +61,14 @@
                         <template #dropdown>
                             <ActionDropdown
                                 :actions="request.actions"
-                                @action-clicked="handleActionClicked"
+                                @action-clicked="handleButtonActionClicked"
                             />
                         </template>
                     </DropdownList>
                     <ActionColumn
                         v-else-if="request.actions.length === 1"
                         :actions="request.actions"
-                        @action-clicked="handleActionClicked"
+                        @action-clicked="handleButtonActionClicked"
                     />
                 </div>
                 <div class="my-2 p-2 bg-gray-100 rounded space-y-2">
@@ -90,18 +90,25 @@
 
         <!--pagination-->
         <PaginationNav :links="requests.links" />
+
+        <ConfirmFormComposable
+            ref="confirmForm"
+            @confirmed="(reason) => confirmed(reason, handleConfirmedAction)"
+        />
     </div>
 </template>
 
 <script setup>
-import {useForm, usePage} from '@inertiajs/inertia-vue3';
-import {watch} from 'vue';
+import {useForm} from '@inertiajs/inertia-vue3';
+import {defineAsyncComponent} from 'vue';
+import {useConfirmForm} from '../../../functions/useConfirmForm.js';
 import ActionColumn from '../../../Components/Controls/ActionColumn.vue';
 import ActionDropdown from '../../../Components/Controls/ActionDropdown.vue';
 import DropdownList from '../../../Components/Helpers/DropdownList.vue';
 import IconDoubleDown from '../../../Components/Helpers/Icons/IconDoubleDown.vue';
 import IconUserMd from '../../../Components/Helpers/Icons/IconUserMd.vue';
 import PaginationNav from '../../../Components/Helpers/PaginationNav.vue';
+const ConfirmFormComposable = defineAsyncComponent(() => import('../../../Components/Forms/ConfirmFormComposable.vue'));
 
 defineProps({
     requests: { type: Object, required: true },
@@ -109,46 +116,40 @@ defineProps({
     endpoints: { type: Object, required: true },
 });
 
-const showConfirm = (payload) => {
-    usePage().props.value.event.name = 'confirmation-required';
-    usePage().props.value.event.payload = payload;
-    usePage().props.value.event.fire = + new Date();
-};
-
-const handleActionClicked = (action) => {
-    if (action.callback === 'approve-request') {
-        useForm({approve: true}).patch(action.href);
-    } else if (action.callback === 'disapprove-request') {
+const { confirmForm, openConfirmForm, confirmed } = useConfirmForm();
+let selectedAction = null;
+const handleButtonActionClicked = (action) => {
+    switch (action.name) {
+    case 'approve-request':
+        useForm({approve: true}).patch(action.route);
+        break;
+    case 'disapprove-request':
+    case 'cancel-request':
+        openConfirmForm(action.config);
         selectedAction = {...action};
-        showConfirm({heading: action.confirm_heading, confirmText: action.confirm_text, confirmedEvent: disapproveRequestConfirmedEvent, requireReason: true});
-    } else if (action.callback === 'cancel-request') {
-        selectedAction = {...action};
-        showConfirm({heading: action.confirm_heading, confirmText: action.confirm_text, confirmedEvent: cancelRequestConfirmedEvent, requireReason: true});
+        break;
+    default:
+        return;
     }
 };
-
-const disapproveRequestConfirmedEvent = 'disapprove-acute-hemodialysis-slot-request';
-const cancelRequestConfirmedEvent = 'cancel-acute-hemodialysis-slot-request';
-let selectedAction;
-watch(
-    () => usePage().props.value.event.fire,
-    (event) => {
-        if (! event) {
-            return;
-        }
-        if (usePage().props.value.event.name === disapproveRequestConfirmedEvent) {
-            useForm({approve: false, reason: usePage().props.value.event.payload})
-                .patch(selectedAction.href, {
-                    preserveState: false,
-                    onFinish: () => selectedAction = null,
-                });
-        } else if (usePage().props.value.event.name === cancelRequestConfirmedEvent) {
-            useForm({reason: usePage().props.value.event.payload})
-                .delete(selectedAction.href, {
-                    preserveState: false,
-                    onFinish: () => selectedAction = null,
-                });
-        }
+const handleConfirmedAction = (reason) => {
+    switch (selectedAction.name) {
+    case 'disapprove-request':
+        useForm({approve: false, reason: reason})
+            .patch(selectedAction.route, {
+                preserveState: false,
+                onFinish: () => selectedAction = null,
+            });
+        break;
+    case 'cancel-request':
+        useForm({reason: reason})
+            .delete(selectedAction.route, {
+                preserveState: false,
+                onFinish: () => selectedAction = null,
+            });
+        break;
+    default:
+        return;
     }
-);
+};
 </script>

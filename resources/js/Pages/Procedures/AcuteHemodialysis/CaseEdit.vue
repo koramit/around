@@ -392,14 +392,22 @@
         ref="selectOtherInput"
         @closed="selectOtherClosed"
     />
+
+    <ConfirmFormComposable
+        ref="confirmForm"
+        @confirmed="reason => confirmed(reason, handleConfirmedAction)"
+    />
 </template>
 
 <!--suppress JSIncompatibleTypesComparison -->
 <script setup>
-import {useForm, usePage} from '@inertiajs/inertia-vue3';
-import {nextTick, onMounted, reactive, ref, watch} from 'vue';
+import {useForm} from '@inertiajs/inertia-vue3';
+import {defineAsyncComponent, nextTick, onMounted, reactive, ref, watch} from 'vue';
 import {useSelectOther} from '../../../functions/useSelectOther.js';
-import debounce from 'lodash/debounce';
+import {useInPageLinkHelpers} from '../../../functions/useInPageLinkHelpers';
+import {useFormAutosave} from '../../../functions/useFormAutosave.js';
+import {useConfirmForm} from '../../../functions/useConfirmForm.js';
+import {useActionStore} from '../../../functions/useActionStore.js';
 import FormInput from '../../../Components/Controls/FormInput.vue';
 import FormRadio from '../../../Components/Controls/FormRadio.vue';
 import FormCheckbox from '../../../Components/Controls/FormCheckbox.vue';
@@ -407,11 +415,11 @@ import FormDatetime from '../../../Components/Controls/FormDatetime.vue';
 import ImageUploader from '../../../Components/Controls/ImageUploader.vue';
 import FormSelectOther from '../../../Components/Controls/FormSelectOther.vue';
 import OrderIndex from '../../../Partials/Procedures/AcuteHemodialysis/OrderIndex.vue';
-import {useInPageLinkHelpers} from '../../../functions/useInPageLinkHelpers';
 import CovidInfo from '../../../Components/Helpers/CovidInfo.vue';
 import FallbackSpinner from '../../../Components/Helpers/FallbackSpinner.vue';
 import CommentSection from '../../../Components/Forms/CommentSection.vue';
 import SpinnerButton from '../../../Components/Controls/SpinnerButton.vue';
+const ConfirmFormComposable = defineAsyncComponent(() => import('../../../Components/Forms/ConfirmFormComposable.vue'));
 
 const props = defineProps({
     caseRecordForm: { type: Object, required: true },
@@ -426,20 +434,22 @@ const form = useForm({...props.caseRecordForm});
 const reset = {
     previous_crrt: true,
 };
+
+const {autosave} = useFormAutosave();
 watch (
-    () => form,
-    (val) => {
-        if (!val.previous_crrt && !reset.previous_crrt) {
-            val.date_start_crrt = null;
-            val.date_end_crrt = null;
+    () => form.data(),
+    (value) => {
+        if (!value.previous_crrt && !reset.previous_crrt) {
+            value.date_start_crrt = null;
+            value.date_end_crrt = null;
             reset.previous_crrt = true;
-        } else if (val.previous_crrt) {
+        } else if (value.previous_crrt) {
             reset.previous_crrt = false;
         }
 
-        autosave();
+        autosave(value, configs.routes.update);
     },
-    { deep: true }
+    { deep: configs.can.update }
 );
 watch(
     () => form.indications.initiate_chronic_hd,
@@ -468,17 +478,6 @@ watch(
         }
     }
 );
-const autosave = debounce(function () {
-    if (!configs.can.update) {
-        return;
-    }
-
-    window.axios
-        .patch(configs.endpoints.update, form.data())
-        .catch(error => {
-            console.log(error);
-        });
-}, 2000);
 const insurance = ref(null);
 if (form.insurance && !configs.insurances.includes(form.insurance)) {
     configs.insurances.push(form.insurance);
@@ -498,42 +497,32 @@ watch (
 );
 const { selectOtherInput, selectOther, selectOtherClosed } = useSelectOther();
 
-const cancelCaseConfirmedEvent = 'cancel-acute-hd-case-confirmed';
-const complete = () => form.post(configs.endpoints.case_complete, {
-    onStart: () => configs.can.update = false,
-    onError: () => configs.can.update = true,
-});
-const addendum = () => form.put(configs.endpoints.case_addendum, {
-    onStart: () => configs.can.update = false,
-    onError: () => configs.can.update = true,
-});
-const forceComplete = () => {
-    form.transform(data => ({...data, force: true})).post(configs.endpoints.case_complete, {
-        onStart: () => configs.can.update = false,
-        onError: () => configs.can.update = true,
-    });
-};
-watch (
-    () => usePage().props.value.event.fire,
-    (event) => {
-        if (! event) {
-            return;
-        }
+const complete = () => form.post(configs.routes.case_complete);
+const addendum = () => form.put(configs.routes.case_addendum);
+const forceComplete = () => form.transform(data => ({...data, force: true}))
+    .post(configs.routes.case_complete);
 
-        if (usePage().props.value.event.name === 'action-clicked') {
-            let action = usePage().props.value.event.payload;
-            if (action === 'cancel-case') {
-                usePage().props.value.event.name = 'confirmation-required';
-                usePage().props.value.event.payload = { heading: usePage().props.value.flash.title, confirmText: 'Cancel this Acute HD case', confirmedEvent: cancelCaseConfirmedEvent, requireReason: true };
-                usePage().props.value.event.fire = + new Date();
-            } else if (action === 'complete-case') {
-                complete();
-            }  else if (action === 'addendum-case') {
-                addendum();
-            }
-        } else if (usePage().props.value.event.name === cancelCaseConfirmedEvent) {
-            useForm({reason: usePage().props.value.event.payload})
-                .delete(configs.endpoints.case_destroy);
+const handleConfirmedAction = (reason) => {
+    useForm({reason: reason})
+        .delete(actionStore.value.route);
+};
+
+const {confirmForm, openConfirmForm, confirmed} = useConfirmForm();
+const {actionStore} = useActionStore();
+watch(
+    () => actionStore.value,
+    (value) => {
+        switch (value.name) {
+        case 'complete-case':
+            complete();
+            break;
+        case 'addendum-case':
+            addendum();
+            break;
+        case 'cancel-case':
+        case 'cancel-order':
+            openConfirmForm(value.config);
+            break;
         }
     }
 );

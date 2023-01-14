@@ -22,6 +22,15 @@ return new class extends Migration
             $table->boolean('alive')->default(true);
             $table->timestamps();
         });
+
+        Schema::create('patient_registry', function (Blueprint $table) {
+            $table->primary(['patient_id', 'registry_id']);
+            $table->unsignedInteger('patient_id');
+            $table->foreign('patient_id')->references('id')->on('patients');
+            $table->unsignedSmallInteger('registry_id');
+            $table->foreign('registry_id')->references('id')->on('registries');
+            $table->timestamps();
+        });
     }
 
     /**

@@ -16,15 +16,26 @@
                 name="covid_case"
                 v-model="form.covid_case"
             />
-            <FormAutocomplete
-                label="dialysis at"
-                name="dialysis_at"
-                v-model="form.dialysis_at"
-                :endpoint="configs.routes.resources_api_wards"
-                :error="form.errors.dialysis_at"
-                :length-to-start="1"
-                :disabled="wardDisabled"
+            <label
+                for="dialysis_at"
+                class="form-label"
+            >dialysis at :</label>
+            <FormCheckbox
+                v-if="!wardDisabled"
+                :label="configs.hd_unit_ward"
+                v-model="dialysisAtHDUnit"
             />
+            <transition name="slide-fade">
+                <FormAutocomplete
+                    v-if="!dialysisAtHDUnit"
+                    name="dialysis_at"
+                    v-model="form.dialysis_at"
+                    :endpoint="configs.routes.resources_api_wards"
+                    :error="form.errors.dialysis_at"
+                    :length-to-start="1"
+                    :disabled="wardDisabled"
+                />
+            </transition>
             <FormSelect
                 label="dialysis type"
                 name="dialysis_type"
@@ -111,6 +122,17 @@ const props = defineProps({
     configs: {type: Object, required: true},
 });
 
+const dialysisAtHDUnit = ref(false);
+watch(
+    () => dialysisAtHDUnit.value,
+    (value) => {
+        if (!value && form.dialysis_at === props.configs.covid_ward) {
+            return;
+        }
+        form.dialysis_at = value ? props.configs.hd_unit_ward : null;
+    }
+);
+
 const form = useForm({
     case_key: null,
     attending_staff: null,
@@ -137,7 +159,6 @@ watch(
         let data = val.split('|');
         covid.cid = data[2];
         covid.hn = data[1];
-        console.log(covid);
     }
 );
 onMounted(() => {
@@ -202,6 +223,7 @@ watch(
         wardDisabled.value = val;
         if (val) {
             form.dialysis_at = props.configs.covid_ward;
+            dialysisAtHDUnit.value = false;
         } else {
             form.dialysis_at = null;
         }

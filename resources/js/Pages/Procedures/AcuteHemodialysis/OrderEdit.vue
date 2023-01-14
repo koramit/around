@@ -85,8 +85,8 @@
                         :disabled="order.date_note === configs.date_note || !reservedSlots.available"
                         @click="
                             order.date_note !== configs.today
-                                ? order.patch(configs.endpoints.reschedule, { onFinish: ensureConfigsRefreshAfterCall })
-                                : order.patch(configs.endpoints.today_slot_request, { onFinish: ensureConfigsRefreshAfterCall })
+                                ? order.patch(configs.routes.reschedule, { onFinish: ensureConfigsRefreshAfterCall })
+                                : order.patch(configs.routes.today_slot_request, { onFinish: ensureConfigsRefreshAfterCall })
                         "
                     >
                         {{ order.date_note === configs.today || configs.date_note === configs.today ? 'REQUEST RESCHEDULE' : 'RESCHEDULE' }}
@@ -110,7 +110,7 @@
                         class="block w-full text-center btn btn-accent"
                         :spin="order.processing"
                         :disabled="!order.swap_with || order.swap_with === configs.swap_code"
-                        @click="order.patch(configs.endpoints.swap, { onFinish: ensureConfigsRefreshAfterCall })"
+                        @click="order.patch(configs.routes.swap, { onFinish: ensureConfigsRefreshAfterCall })"
                     >
                         {{ order.swap_with !== configs.swap_code ? 'SWAP' : '🙄🙄🙄' }}
                     </SpinnerButton>
@@ -133,7 +133,6 @@
             <HDForm
                 v-model="form.hd"
                 :form-configs="formConfigs"
-                @autosave="autosave"
                 @copy-previous-order="copyPreviousOrder"
             />
         </div>
@@ -144,7 +143,6 @@
             <HFForm
                 v-model="form.hf"
                 :form-configs="formConfigs"
-                @autosave="autosave"
                 @copy-previous-order="copyPreviousOrder"
             />
         </div>
@@ -155,7 +153,6 @@
             <SLEDDForm
                 v-model="form.sledd"
                 :form-configs="formConfigs"
-                @autosave="autosave"
                 @copy-previous-order="copyPreviousOrder"
             />
         </div>
@@ -166,7 +163,6 @@
             <TPEForm
                 v-model="form.tpe"
                 :form-configs="formConfigs"
-                @autosave="autosave"
                 @copy-previous-order="copyPreviousOrder"
             />
         </div>
@@ -388,9 +384,10 @@
 </template>
 
 <script setup>
-import { useForm, usePage } from '@inertiajs/inertia-vue3';
+import { useForm } from '@inertiajs/inertia-vue3';
 import { nextTick, reactive, watch, ref, onMounted, defineAsyncComponent } from 'vue';
-import debounce from 'lodash/debounce';
+import {useFormAutosave} from '../../../functions/useFormAutosave.js';
+import {useActionStore} from '../../../functions/useActionStore.js';
 import FormInput from '../../../Components/Controls/FormInput.vue';
 import FormCheckbox from '../../../Components/Controls/FormCheckbox.vue';
 import FormSelect from '../../../Components/Controls/FormSelect.vue';
@@ -409,7 +406,6 @@ const TPEForm = defineAsyncComponent(() => import('../../../Partials/Procedures/
 const DialysisSlot = defineAsyncComponent(() => import('../../../Partials/Procedures/AcuteHemodialysis/DialysisSlot.vue'));
 const WardSlot = defineAsyncComponent(() => import('../../../Partials/Procedures/AcuteHemodialysis/WardSlot.vue'));
 
-
 const props = defineProps({
     orderForm: { type: Object, required: true },
     formConfigs: { type: Object, required: true },
@@ -418,8 +414,9 @@ const configs = reactive({...props.formConfigs});
 /** @member {Object} */
 const form = useForm({...props.orderForm});
 
+const {autosave} = useFormAutosave();
 watch (
-    () => form,
+    () => form.data(),
     (val) => {
         // reset predialysis_evaluations
         if (val.hemodynamic.stable) {
@@ -454,40 +451,26 @@ watch (
             val.monitor.other = null;
         }
 
-        autosave();
+        autosave(form.data(), configs.routes.update);
     },
-    { deep: true }
+    { deep: configs.can.update }
 );
 
-const autosave = debounce(function () {
-    if (!configs.can.update) {
-        return;
-    }
-    window.axios
-        .patch(configs.endpoints.update, form.data())
-        .catch(error => {
-            console.log(error);
-        });
-}, 3000);
+const submit = () =>form.patch(configs.routes.submit);
 
-const submit = () => form.patch(configs.endpoints.submit, {
-    onStart: () => configs.can.update = false,
-    onError: () => configs.can.update = true,
-});
-watch (
-    () => usePage().props.value.event.fire,
-    (event) => {
-        if (! event) {
+const {actionStore} = useActionStore();
+watch(
+    () => actionStore.value,
+    (value) => {
+        switch (value.name) {
+        case 'submit':
+            submit();
+            break;
+        default:
             return;
         }
-
-        if (usePage().props.value.event.name === 'action-clicked') {
-            let action = usePage().props.value.event.payload;
-            if (action === 'submit') {
-                nextTick(submit);
-            }
-        }
-    }
+    },
+    { deep: true }
 );
 
 // Reschedule
@@ -507,7 +490,7 @@ const reservedSlots = reactive({
     reply: '',
 });
 const checkSlot = () => window.axios
-    .post(configs.endpoints.acute_hemodialysis_slot_available, {
+    .post(configs.routes.acute_hemodialysis_slot_available, {
         dialysis_type: order.dialysis_type,
         dialysis_at: order.dialysis_at,
         date_note: order.date_note,
@@ -539,7 +522,7 @@ const copying = ref(false);
 const showNoPreviousOrder = ref(false);
 const copyPreviousOrder = () => {
     window.axios
-        .patch(configs.endpoints.copy)
+        .patch(configs.routes.copy)
         .then(res => {
             if (!res.data.found) {
                 showNoPreviousOrder.value = true;

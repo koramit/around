@@ -47,7 +47,7 @@
                             </div>
                             <div
                                 v-else-if="form.patient_type === 'Recipient with LD'"
-                                class="space-y-2"
+                                class="space-y-2 md:space-y-0 md:grid grid-cols-2 gap-4"
                             >
                                 <FormInput
                                     label="recipient hn"
@@ -86,11 +86,16 @@
                             />
                             <div>
                                 <label class="form-label">Cause of investigation</label>
-                                <div class="grid grid-cols-2 gap-x-2 md:gap-x-4">
+                                <div class="sm:grid-cols-2 gap-x-2">
                                     <FormCheckbox
                                         label="HLA typing"
                                         name="request_hla"
                                         v-model="form.request_hla"
+                                    />
+                                    <FormCheckbox
+                                        label="Addition Tissue Typing"
+                                        name="request_addition_tissue"
+                                        v-model="form.request_addition_tissue"
                                     />
                                     <FormCheckbox
                                         label="Crossmatch"
@@ -140,6 +145,7 @@ const form = reactive({
     donor_error: null,
     request_hla: false,
     request_cxm: false,
+    request_addition_tissue: false,
 });
 
 const modal = ref(null);
@@ -186,12 +192,14 @@ const invalidForm = computed(() => {
         return true;
     }
     if (form.patient_type === 'Patient') {
-        return !form.patient_name || !form.date_serum || (!form.request_cxm && !form.request_hla);
+        return !form.patient_name
+            || !form.date_serum
+            || (!form.request_cxm && !form.request_hla && !form.request_addition_tissue);
     }
 
     return !form.patient_name
         || !form.date_serum
-        || (!form.request_cxm && !form.request_hla)
+        || (!form.request_cxm && !form.request_hla && !form.request_addition_tissue)
         || !form.donor_name;
 });
 const confirm = () => {

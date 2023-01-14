@@ -17,6 +17,8 @@ class DatabaseSeeder extends Seeder
             AbilitiesTableSeeder::class,
             AcuteHemodialysisAbilityRoleSeeder::class,
             AcuteHemodialysisEventNotificationSeeder::class,
+            LabKTHLATypingFeatureSeeder::class,
+            KTAdmissionWardRegisterSeeder::class,
         ]);
     }
 }

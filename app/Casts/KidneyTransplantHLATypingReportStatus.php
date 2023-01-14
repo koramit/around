@@ -12,8 +12,10 @@ class KidneyTransplantHLATypingReportStatus implements CastsAttributes, NoteStat
 
     protected array $statuses = [
         '',
-        /**  1 */'draft',
-        /**  2 */'approved',
-        /**  3 */'canceled',
+/**  1 */'draft',
+/**  2 */'published',
+/**  3 */'deleted',
+/**  4 */'edited',
+/**  5 */'canceled',
     ];
 }

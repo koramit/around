@@ -53,9 +53,10 @@ class KidneyTransplantHLATypingReportNote extends Note
     {
         return Attribute::make(
             get: function () {
-                $request = $this->meta['request_hla'] ? 'HLA ':null;
-                $request .= ($this->meta['request_cxm'] ? 'CXM ':null);
-                $request .= ($this->meta['donor_hn'] ? 'with LD ':null);
+                $request = $this->meta['request_hla'] ? 'HLA ' : null;
+                $request .= ($this->meta['request_cxm'] ? 'CXM ' : null);
+                $request .= ($this->meta['request_addition_tissue'] ? 'ADDITION ' : null);
+                $request .= ($this->meta['donor_hn'] ? 'with LD ' : null);
 
                 return trim($request);
             }
@@ -65,5 +66,20 @@ class KidneyTransplantHLATypingReportNote extends Note
     public function genTitle(?string $dateNote = null): string
     {
         return "HN {$this->patient->hn} {$this->patient->full_name} : $this->request Report {$this->date_note->format('M j Y')}";
+    }
+
+    public function scopeFilterStatus($query, $status)
+    {
+        $caster = new KidneyTransplantHLATypingReportStatus();
+        $statuses = $status && $status !== 'all'
+            ? [$caster->getCode($status)]
+            : [
+                $caster->getCode('draft'),
+                $caster->getCode('published'),
+                $caster->getCode('edited'),
+                $caster->getCode('canceled'),
+            ];
+
+        $query->whereIn('status', $statuses);
     }
 }

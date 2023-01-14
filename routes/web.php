@@ -7,8 +7,10 @@ use App\Http\Controllers\ChatBotController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InAppBrowsingRedirectController;
+use App\Http\Controllers\JournalController;
 use App\Http\Controllers\LocalizationController;
 use App\Http\Controllers\MagicLinkController;
+use App\Http\Controllers\NephflixController;
 use App\Http\Controllers\PreferenceController;
 use App\Http\Controllers\SocialProviderController;
 use App\Http\Controllers\SubscriptionController;
@@ -37,6 +39,7 @@ Route::middleware(['auth'])->group(function () {
         ->middleware(['can:config_preferences', 'page-transition', 'locale', 'no-in-app-allow'])
         ->name('preferences');
     Route::patch('/preferences', [PreferenceController::class, 'update'])->name('preferences.update');
+    // @TODO: remove view_any_patients ability from participant role before implementing this
     Route::get('/patients', function () {
         return 'patients';
     })->can('view_any_patients')->name('patients');
@@ -114,6 +117,13 @@ Route::middleware(['auth'])
         require __DIR__.'/labs.php';
     });
 
+Route::middleware(['auth'])
+    ->prefix('wards')
+    ->name('wards.')
+    ->group(function () {
+        require __DIR__.'/wards.php';
+    });
+
 // subscription
 Route::middleware(['auth'])
     ->prefix('subscriptions')
@@ -164,3 +174,32 @@ Route::get('in-app-browsing-redirect/{token}', InAppBrowsingRedirectController::
 Route::get('magic-link', MagicLinkController::class)
     ->middleware(['no-in-app-allow', 'signed'])
     ->name('magic-link');
+
+Route::get('journal', [JournalController::class, 'index'])
+    ->middleware(['auth', 'can:view_any_club_resources', 'page-transition', 'locale', 'no-in-app-allow'])
+    ->name('journal');
+Route::get('journal/show', [JournalController::class, 'show'])
+    ->middleware(['auth', 'can:view_any_club_resources'])
+    ->name('journal.show');
+
+Route::get('nephflix', [NephflixController::class, 'index'])
+    ->middleware(['auth', 'can:view_any_club_resources', 'page-transition', 'locale', 'no-in-app-allow'])
+    ->name('nephflix');
+
+Route::get('nephflix/{hashedKey}', [NephflixController::class, 'show'])
+    ->middleware(['auth', 'can:view_any_club_resources', 'page-transition', 'locale', 'no-in-app-allow'])
+    ->name('nephflix.show');
+
+Route::get('clear-club-cache', function () {
+    cache()->forget('asnonline-episodes');
+    cache()->forget('journal-files');
+
+    return [
+        'journal-files' => cache('journal-files'),
+        'asnonline-episodes' => cache('asnonline-episodes'),
+    ];
+});
+
+Route::get('/tap', function () {
+    return request()->all();
+});

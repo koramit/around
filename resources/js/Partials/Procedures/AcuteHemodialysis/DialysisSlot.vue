@@ -17,7 +17,8 @@
                     'flex items-center': !slot.available,
                     'text-primary bg-green-400 p-8': slot.available,
                     'text-complement-darker bg-amber-400': slot.status !== undefined && slot.status === 'scheduling',
-                    'text-primary bg-complement': slot.status !== undefined && (slot.status === 'started' || slot.status === 'finished'),
+                    'text-primary bg-rose-900 animate-pulse': slot.status !== undefined && slot.status === 'started',
+                    'text-primary bg-complement': slot.status !== undefined && slot.status === 'finished',
                     'text-primary bg-red-400': slot.status !== undefined && slot.status !== 'scheduling' && slot.status !== 'started' && slot.status !== 'finished',
                     'border-4 border-white border-dashed': slot.extra_slot
                 }"

@@ -13,13 +13,37 @@ class KidneyTransplantHLATypingReportNotePolicy
 
     public function view(User $user, KidneyTransplantHLATypingReportNote $kidneyTransplantHLATypingReportNote): Response|bool
     {
-        //
+        return true;
     }
 
-    public function update(User $user, KidneyTransplantHLATypingReportNote $report): Response|bool
+    public function edit(User $user, KidneyTransplantHLATypingReportNote $report): bool
     {
-        return $report->author_id === $user->id // and not published
-            ? Response::allow()
-            : Response::deny('You are not allowed to update this report.');
+        return $report->author_id === $user->id && $report->status === 'draft';
+    }
+
+    public function update(User $user, KidneyTransplantHLATypingReportNote $report): bool
+    {
+        return $this->edit($user, $report);
+    }
+
+    public function destroy(User $user, KidneyTransplantHLATypingReportNote $report): bool
+    {
+        return $this->edit($user, $report);
+    }
+
+    public function publish(User $user, KidneyTransplantHLATypingReportNote $report): bool
+    {
+        return $this->edit($user, $report);
+    }
+
+    public function addendum(User $user, KidneyTransplantHLATypingReportNote $report): bool
+    {
+        return $user->can('addendum_kt_hla_typing_report')
+            && collect(['published', 'edited'])->contains($report->status);
+    }
+
+    public function cancel(User $user, KidneyTransplantHLATypingReportNote $report): bool
+    {
+        return $this->addendum($user, $report);
     }
 }

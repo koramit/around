@@ -9,14 +9,12 @@ class Ward extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
-
     public function scopeSearch($query, $search)
     {
-        $ilike = config('database.ilike');
-        $query->where('name', $ilike, '%'.$search.'%')
-            ->orWhere('name_short', $ilike, '%'.$search.'%')
-            ->orWhere('name_ref', $ilike, '%'.$search.'%')
+        $iLike = config('database.iLike');
+        $query->where('name', $iLike, '%'.$search.'%')
+            ->orWhere('name_short', $iLike, '%'.$search.'%')
+            ->orWhere('name_ref', $iLike, '%'.$search.'%')
             ->where('active', true);
     }
 }

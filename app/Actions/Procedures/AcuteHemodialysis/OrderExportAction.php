@@ -2,11 +2,11 @@
 
 namespace App\Actions\Procedures\AcuteHemodialysis;
 
+use App\Extensions\Auth\AvatarUser;
 use App\Models\Notes\AcuteHemodialysisOrderNote;
 use App\Models\Resources\Admission;
 use App\Models\Resources\Registry;
-use App\Traits\AvatarLinkable;
-use App\Traits\FirstNameAware;
+use App\Models\User;
 use Hashids\Hashids;
 use Illuminate\Database\Eloquent\Collection;
 use OpenSpout\Common\Exception\InvalidArgumentException;
@@ -18,15 +18,13 @@ use Rap2hpoutre\FastExcel\SheetCollection;
 
 class OrderExportAction extends AcuteHemodialysisAction
 {
-    use FirstNameAware, AvatarLinkable;
-
     /**
      * @throws WriterNotOpenedException
      * @throws IOException
      * @throws UnsupportedTypeException
      * @throws InvalidArgumentException
      */
-    public function __invoke(string $dateNote, mixed $user)
+    public function __invoke(string $dateNote, User|AvatarUser $user)
     {
         if (($link = $this->shouldLinkAvatar()) !== false) {
             return $link;
@@ -78,6 +76,15 @@ class OrderExportAction extends AcuteHemodialysisAction
         ]);
 
         $sheets = new SheetCollection(['hd_hf_sledd' => $hdALike, 'tpe' => $tpe, 'hd+tpe' => $hdTpe]);
+        $registry = Registry::query()->find($this->REGISTRY_ID);
+        $registry->actionLogs()->create([
+            'actor_id' => $user->id,
+            'action' => 'export',
+            'payload' => [
+                'report' => 'orders',
+                'config' => ['date_ref' => $dateNote],
+            ],
+        ]);
 
         return (new FastExcel($sheets))->download("acute_hd_order_$dateNote.xlsx");
     }

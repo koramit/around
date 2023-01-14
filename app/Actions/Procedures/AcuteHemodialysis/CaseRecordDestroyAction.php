@@ -24,6 +24,8 @@ class CaseRecordDestroyAction
             abort(403);
         }
 
+        //@TODO also cancel active order and its request
+
         $caseRecord->update(['status' => 'canceled']);
         $caseRecord->actionLogs()->create([
             'action' => 'cancel',

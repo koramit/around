@@ -23,6 +23,9 @@ class Kernel extends ConsoleKernel
         $schedule->command('acute-hd:assign-an')->timezone('Asia/Bangkok')->at('23:32');
         /* @TODO auto unsubscribe from inactive channel */
         /* @TODO refactor command as Job interface */
+
+        /* Admission */
+        $schedule->command('admission:update')->timezone('Asia/Bangkok')->at('06:00');
     }
 
     protected function commands(): void

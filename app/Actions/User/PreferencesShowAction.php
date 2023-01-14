@@ -8,6 +8,7 @@ use App\Models\SocialProvider;
 use App\Models\User;
 use App\Traits\AvatarLinkable;
 use App\Traits\FlashDataGeneratable;
+use Illuminate\Database\Eloquent\Collection;
 
 class PreferencesShowAction
 {
@@ -55,11 +56,12 @@ class PreferencesShowAction
                 'items_per_page' => $user->preferences['items_per_page'],
                 'font_scale_index' => $user->preferences['font_scale_index'],
             ],
+            // @todo: remove this after migrate to postgreSQL
             'notification' => [
-                'mute' => $user->preferences['mute'],
-                'notify_approval_result' => $user->preferences['notify_approval_result'],
-                'auto_subscribe_to_channel' => $user->preferences['auto_subscribe_to_channel'],
-                'auto_unsubscribe_to_channel' => $user->preferences['auto_unsubscribe_to_channel'],
+                'mute' => $user->preferences['mute'] ?? false,
+                'notify_approval_result' => $user->preferences['notify_approval_result'] ?? true,
+                'auto_subscribe_to_channel' => $user->preferences['auto_subscribe_to_channel'] ?? false,
+                'auto_unsubscribe_to_channel' => $user->preferences['auto_unsubscribe_to_channel'] ?? false,
             ],
         ];
 
@@ -88,7 +90,7 @@ class PreferencesShowAction
     }
 
     // event based notification
-    protected function getEventBasedNotifications(User $user)
+    protected function getEventBasedNotifications(User $user): Collection
     {
         $subscribedEvents = $user->subscriptions()
             ->where('subscribable_type', EventBasedNotification::class)
@@ -108,19 +110,21 @@ class PreferencesShowAction
             ])->groupBy('registry');
     }
 
-    protected function getChannelBasedNotifications(User $user)
+    protected function getChannelBasedNotifications(User $user): Collection
     {
         return $user->subscriptions()
             ->with('subscribable:id,meta')
             ->where('subscribable_type', '<>', EventBasedNotification::class)
             ->get()
             ->transform(function ($s) {
-                $data = explode(' : ', $s->subscribable->title);
-
                 return [
                     'id' => $s->hashed_key,
-                    'label' => "$data[1] $data[2]",
-                    'type' => ($data[0]),
+                    'label' => $s->subscribable->title,
+                    'type' => match ($s->subscribable_type) {
+                        'App\Models\Registries\AcuteHemodialysisCaseRecord' => 'Acute Hemodialysis Case',
+                        'App\Models\Notes\AcuteHemodialysisOrderNote' => 'Acute Hemodialysis Order',
+                        default => 'ungrouped',
+                    },
                     'subscribed' => true,
                 ];
             })

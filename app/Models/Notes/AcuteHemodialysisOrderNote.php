@@ -107,7 +107,7 @@ class AcuteHemodialysisOrderNote extends Note
             ? now()->create($dateNote)
             : $this->date_note;
 
-        return "Acute Hemodialysis Order : HN {$this->meta['hn']} {$this->meta['name']} : {$this->meta['dialysis_type']} {$dateNote->format('M j y')}";
+        return "HN {$this->meta['hn']} {$this->patient->full_name} : Acute {$this->meta['dialysis_type']} {$dateNote->format('M j y')}";
     }
 
     /** @alias $edit_route */

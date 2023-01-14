@@ -2,18 +2,19 @@
 
 namespace App\Actions\Procedures\AcuteHemodialysis;
 
+use App\Extensions\Auth\AvatarUser;
 use App\Models\Registries\AcuteHemodialysisCaseRecord;
+use App\Models\User;
 use App\Traits\AcuteHemodialysis\OrderShareValidatable;
 use App\Traits\AcuteHemodialysis\SlotCountable;
-use App\Traits\AvatarLinkable;
 use App\Traits\HomePageSelectable;
 use Illuminate\Support\Facades\Validator;
 
 class ScheduleIndexAction extends AcuteHemodialysisAction
 {
-    use SlotCountable, OrderShareValidatable, HomePageSelectable, AvatarLinkable;
+    use SlotCountable, OrderShareValidatable, HomePageSelectable;
 
-    public function __invoke(array $data, mixed $user, string $routeName): array
+    public function __invoke(array $data, User|AvatarUser $user, string $routeName): array
     {
         if (($link = $this->shouldLinkAvatar()) !== false) {
             return $link;
@@ -95,15 +96,12 @@ class ScheduleIndexAction extends AcuteHemodialysisAction
             }
         }
 
+        $flash = $this->getFlash('Acute Hemodialysis - Schedule', $user);
+        $flash['navs'] = $this->NAVS;
+        $flash['action-menu'][] = $this->getSetHomePageActionMenu($routeName, $user->home_page);
+
         return [
-            'flash' => [
-                'page-title' => 'Acute Hemodialysis - Schedule',
-                'main-menu-links' => $this->MENU,
-                'navs' => $this->NAVS,
-                'action-menu' => [
-                    $this->getSetHomePageActionMenu($routeName, $user->home_page),
-                ],
-            ],
+            'flash' => $flash,
             'slots' => $slots,
             'query' => $validated,
             'configs' => [
@@ -122,6 +120,7 @@ class ScheduleIndexAction extends AcuteHemodialysisAction
                 'in_unit_dialysis_types' => $this->IN_UNIT,
                 'out_unit_dialysis_types' => $this->OUT_UNIT,
                 'patient_types' => $this->PATIENT_TYPES,
+                'hd_unit_ward' => 'ไตเทียม (Hemodialysis Unit)',
                 'covid' => [
                     'route_lab' => route('resources.api.covid-lab'),
                     'route_vaccine' => route('resources.api.covid-vaccine'),

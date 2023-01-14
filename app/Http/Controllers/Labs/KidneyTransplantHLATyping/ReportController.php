@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Labs\KidneyTransplantHLATyping;
 
+use App\Actions\Labs\KidneyTransplantHLATyping\ReportDestroyAction;
 use App\Actions\Labs\KidneyTransplantHLATyping\ReportEditAction;
 use App\Actions\Labs\KidneyTransplantHLATyping\ReportIndexAction;
 use App\Actions\Labs\KidneyTransplantHLATyping\ReportStoreAction;
 use App\Actions\Labs\KidneyTransplantHLATyping\ReportUpdateAction;
 use App\Http\Controllers\Controller;
-use App\Models\Notes\KidneyTransplantHLATypingReportNote;
 use App\Traits\AppLayoutSessionFlashable;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -66,5 +66,20 @@ class ReportController extends Controller
     public function update(string $hashedKey, Request $request)
     {
         return (new ReportUpdateAction())($hashedKey, $request->all(), $request->user());
+    }
+
+    public function destroy(string $hashedKey, Request $request)
+    {
+        $data = (new ReportDestroyAction())($hashedKey, $request->user());
+
+        if ($request->wantsJson()) {
+            return $data;
+        }
+
+        if (isset($data['message'])) {
+            session()->flash(key: 'message', value: $data['message']);
+        }
+
+        return redirect()->route('labs.kt-hla-typing.reports.index');
     }
 }

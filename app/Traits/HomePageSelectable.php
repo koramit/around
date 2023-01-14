@@ -15,9 +15,10 @@ trait HomePageSelectable
         }
 
         return [
+            'as' => 'button',
             'icon' => 'house',
-            'type' => 'set-home-page-clicked',
-            'action' => ['name' => $routeName, 'route' => route('preferences.update')],
+            'name' => 'set-home-page-clicked',
+            'config' => ['route_name' => $routeName, 'route' => route('preferences.update')],
             'label' => 'Set as Home page',
             'can' => true,
         ];

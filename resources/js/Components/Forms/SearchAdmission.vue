@@ -139,11 +139,11 @@ const searchAdmission = () => {
             }
 
             if (props.mode === 'hn') {
-                admission.an = response.data.an;
                 admission.location = response.data.location;
             }
 
             admission.hn = response.data.hn;
+            admission.an = response.data.an;
             admission.name = response.data.name;
             admission.gender = response.data.gender;
             admission.age = response.data.age;

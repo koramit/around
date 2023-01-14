@@ -2,17 +2,17 @@
 
 namespace App\Actions\Procedures\AcuteHemodialysis;
 
+use App\Extensions\Auth\AvatarUser;
 use App\Models\Notes\AcuteHemodialysisOrderNote;
 use App\Models\Registries\AcuteHemodialysisCaseRecord;
-use App\Traits\AvatarLinkable;
-use App\Traits\FlashDataGeneratable;
+use App\Models\User;
 use App\Traits\HomePageSelectable;
 
 class CaseRecordIndexAction extends AcuteHemodialysisAction
 {
-    use HomePageSelectable, AvatarLinkable, FlashDataGeneratable;
+    use HomePageSelectable;
 
-    public function __invoke(array $filters, mixed $user, string $routeName = 'home'): array
+    public function __invoke(array $filters, User|AvatarUser $user, string $routeName = 'home'): array
     {
         if ($link = $this->shouldLinkAvatar()) {
             return $link;
@@ -22,7 +22,7 @@ class CaseRecordIndexAction extends AcuteHemodialysisAction
             ->select(['id', 'patient_id', 'status'])
             ->with(['patient:id,profile,hn', 'orders' => fn ($query) => $query->select(['id', 'case_record_id', 'author_id', 'status', 'meta', 'date_note'])
                     ->withAuthorName()
-                    ->slotoccupiedStatuses()
+                    ->slotOccupiedStatuses()
                     ->orderByDesc('date_note'),
             ])->filterStatus($filters['scope'] ?? null)
             ->metaSearchTerms($filters['search'] ?? null)
@@ -72,6 +72,14 @@ class CaseRecordIndexAction extends AcuteHemodialysisAction
         $flash = $this->getFlash('Acute Hemodialysis - Cases', $user);
         $flash['navs'] = $this->NAVS;
         $flash['action-menu'][] = $this->getSetHomePageActionMenu($routeName, $user->home_page);
+        $flash['action-menu'][] = [
+            'label' => 'Export',
+            'as' => 'a',
+            'icon' => 'file-excel',
+            'theme' => 'accent',
+            'route' => route('procedures.acute-hemodialysis.export', $filters),
+            'can' => $user->can('force_complete_case'),
+        ];
 
         return [
             'cases' => $cases,

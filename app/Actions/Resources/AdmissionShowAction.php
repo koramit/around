@@ -24,6 +24,7 @@ class AdmissionShowAction
         return [
             'found' => true,
             'hn' => $admission['admission']->patient->hn,
+            'an' => $admission['admission']->an,
             'name' => $admission['admission']->patient->full_name,
             'gender' => $admission['admission']->patient->gender,
             'age' => $admission['admission']->patient_age_at_encounter_text,
