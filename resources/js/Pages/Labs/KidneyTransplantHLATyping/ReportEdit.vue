@@ -160,24 +160,6 @@
                             v-model="form[`${patient}_hla_note`][`hla_typing_class_ii_${antigen.name}`]"
                         />
                     </div>
-                    <div class="grid gap-2 md:grid-cols-3 md:gap-4 xl:gap-6">
-                        <FormInput
-                            v-for="antigen in formConfigs.classIIAntigens.filter(a => a.group === 2)"
-                            :key="antigen.name"
-                            :label="antigen.label"
-                            :name="`${patient}_hla_typing_class_ii_${antigen.name}`"
-                            v-model="form[`${patient}_hla_note`][`hla_typing_class_ii_${antigen.name}`]"
-                        />
-                    </div>
-                    <div class="grid gap-2 md:grid-cols-2 md:gap-4 xl:gap-6">
-                        <FormInput
-                            v-for="antigen in formConfigs.classIIAntigens.filter(a => a.group === 3)"
-                            :key="antigen.name"
-                            :label="antigen.label"
-                            :name="`${patient}_hla_typing_class_ii_${antigen.name}`"
-                            v-model="form[`${patient}_hla_note`][`hla_typing_class_ii_${antigen.name}`]"
-                        />
-                    </div>
                     <hr class="border border-dashed my-2 md:my-4 xl:my-8">
                     <FormInput
                         label="hla mismatch"
