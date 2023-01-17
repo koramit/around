@@ -44,7 +44,7 @@ import {nextTick, ref} from 'vue';
 import ModalDialog from '../Helpers/ModalDialog.vue';
 import SpinnerButton from '../Controls/SpinnerButton.vue';
 import FormInput from '../Controls/FormInput.vue';
-import { usePage } from '@inertiajs/inertia-vue3';
+import { usePage } from '@inertiajs/vue3';
 
 const heading = ref(null);
 const confirmText = ref(null);
@@ -67,9 +67,9 @@ const open = (options) => {
 };
 
 const confirmed = () => {
-    usePage().props.value.event.payload = reason.value;
-    usePage().props.value.event.name = confirmedEvent;
-    usePage().props.value.event.fire = + new Date();
+    LinkusePage().props.event.payload = reason.value;
+    LinkusePage().props.event.name = confirmedEvent;
+    LinkusePage().props.event.fire = + new Date();
     modal.value.close();
 
     reason.value = null;

@@ -1,7 +1,7 @@
 <template>
-    <InertiaHead>
+    <Head>
         <title>{{ $page.props.flash.title }}</title>
-    </InertiaHead>
+    </Head>
     <!-- main container, flex makes its children extend full h -->
     <div class="md:h-screen md:flex md:flex-col">
         <!-- this is navbar, with no shrink (fixed width) -->
@@ -96,49 +96,49 @@
                     </template>
                     <template #dropdown>
                         <div class="mt-2 py-0 overflow-hidden shadow-xl bg-complement text-white cursor-pointer rounded text-sm whitespace-nowrap">
-                            <InertiaLink
+                            <Link
                                 class="block w-full text-left px-6 py-2 hover:bg-complement-darker hover:text-primary transition-colors duration-200 ease-out"
                                 :href="$page.props.routeHome"
                                 v-if="!isUrl($page.props.routeHome)"
                             >
                                 {{ __('Home') }}
-                            </InertiaLink>
-                            <InertiaLink
+                            </Link>
+                            <Link
                                 class="block w-full text-left px-6 py-2 hover:bg-complement-darker hover:text-primary transition-colors duration-200 ease-out"
                                 :href="$page.props.routeMyDesk"
                                 v-if="!isUrl($page.props.routeMyDesk)"
                             >
                                 {{ __('My Desk') }}
-                            </InertiaLink>
-                            <InertiaLink
+                            </Link>
+                            <Link
                                 class="block w-full text-left px-6 py-2 hover:bg-complement-darker hover:text-primary transition-colors duration-200 ease-out"
                                 :href="$page.props.routePreferences"
                                 v-if="!isUrl($page.props.routePreferences) && $page.props.user?.can.config_preferences"
                             >
                                 {{ __('Preferences') }}
-                            </InertiaLink>
-                            <InertiaLink
+                            </Link>
+                            <Link
                                 class="block w-full text-left px-6 py-2 hover:bg-complement-darker hover:text-primary transition-colors duration-200 ease-out"
                                 :href="$page.props.routeJournal"
                                 v-if="!isUrl($page.props.routeJournal) && $page.props.user?.can.view_any_club_resources"
                             >
                                 {{ __('Journal') }}
-                            </InertiaLink>
-                            <InertiaLink
+                            </Link>
+                            <Link
                                 class="block w-full text-left px-6 py-2 hover:bg-complement-darker hover:text-primary transition-colors duration-200 ease-out"
                                 :href="$page.props.routeManageUser"
                                 v-if="!isUrl($page.props.routeManageUser) && $page.props.user?.can.manage_user"
                             >
                                 {{ __('Manage User') }}
-                            </InertiaLink>
-                            <InertiaLink
+                            </Link>
+                            <Link
                                 class="block w-full text-left px-6 py-2 hover:bg-complement-darker hover:text-primary transition-colors duration-200 ease-out"
                                 :href="$page.props.routeSupport[0]"
                                 v-if="!isUrl($page.props.routeSupport) && $page.props.user?.can.get_support"
                             >
                                 {{ __('Support') }}
-                            </InertiaLink>
-                            <InertiaLink
+                            </Link>
+                            <Link
                                 class="block w-full text-left px-6 py-2 hover:bg-complement-darker hover:text-primary transition-colors duration-200 ease-out"
                                 :href="$page.props.routeLogout"
                                 method="delete"
@@ -146,7 +146,7 @@
                                 type="button"
                             >
                                 {{ __('Logout') }}
-                            </InertiaLink>
+                            </Link>
                         </div>
                     </template>
                 </DropdownList>
@@ -163,49 +163,49 @@
                         @click="mobileMenuVisible = false"
                     >
                         <span class="inline-block py-1 text-white">{{ $page.props.user?.name }}</span>
-                        <InertiaLink
+                        <Link
                             class="block py-1"
                             :href="$page.props.routeHome"
                             v-if="!isUrl($page.props.routeHome)"
                         >
                             {{ __('Home') }}
-                        </InertiaLink>
-                        <InertiaLink
+                        </Link>
+                        <Link
                             class="block py-1"
                             :href="$page.props.routeMyDesk"
                             v-if="!isUrl($page.props.routeMyDesk)"
                         >
                             {{ __('My Desk') }}
-                        </InertiaLink>
-                        <InertiaLink
+                        </Link>
+                        <Link
                             class="block py-1"
                             :href="$page.props.routePreferences"
                             v-if="!isUrl($page.props.routePreferences) && $page.props.user?.can.config_preferences"
                         >
                             {{ __('Preferences') }}
-                        </InertiaLink>
-                        <InertiaLink
+                        </Link>
+                        <Link
                             class="block py-1"
                             :href="$page.props.routeJournal"
                             v-if="!isUrl($page.props.routeJournal) && $page.props.user?.can.view_any_club_resources"
                         >
                             {{ __('Journal') }}
-                        </InertiaLink>
-                        <InertiaLink
+                        </Link>
+                        <Link
                             class="block py-1"
                             :href="$page.props.routeManageUser"
                             v-if="!isUrl($page.props.routeManageUser) && $page.props.user?.can.manage_user"
                         >
                             {{ __('Manage user') }}
-                        </InertiaLink>
-                        <InertiaLink
+                        </Link>
+                        <Link
                             class="block py-1"
                             :href="$page.props.routeSupport[0]"
                             v-if="!isUrl($page.props.routeSupport) && $page.props.user?.can.get_support"
                         >
                             {{ __('Support') }}
-                        </InertiaLink>
-                        <InertiaLink
+                        </Link>
+                        <Link
                             class="block py-1"
                             :href="$page.props.routeLogout"
                             method="delete"
@@ -213,7 +213,7 @@
                             type="button"
                         >
                             {{ __('Logout') }}
-                        </InertiaLink>
+                        </Link>
                     </div>
                     <hr class="my-4">
                     <MainMenu @click="mobileMenuVisible = false" />
@@ -260,12 +260,12 @@
                             v-for="(link, key) in $page.props.flash.breadcrumbs"
                             :key="key"
                         >
-                            <InertiaLink
+                            <Link
                                 :href="link.route"
                                 class="whitespace-nowrap"
                             >
                                 {{ link.label }}
-                            </InertiaLink>
+                            </Link>
                             <span
                                 v-if="key !== ($page.props.flash.breadcrumbs.length - 1)"
                                 class="px-4 text-primary-darker font-semibold"
@@ -283,7 +283,7 @@
                             v-for="link in $page.props.flash.navs"
                             :key="link.route"
                         >
-                            <InertiaLink
+                            <Link
                                 :href="link.route"
                                 class="block py-1 px-2 md:py-2 md:px-4 rounded-3xl bg-primary transition-colors duration-300"
                                 preserve-state
@@ -293,7 +293,7 @@
                                 }"
                             >
                                 {{ link.label }}
-                            </InertiaLink>
+                            </Link>
                         </li>
                     </menu>
                 </nav>
@@ -345,7 +345,7 @@
 </template>
 
 <script setup>
-import { InertiaHead, InertiaLink } from '@inertiajs/inertia-vue3';
+import { Head, Link } from '@inertiajs/vue3';
 import { pageRoutines } from '../../functions/pageRoutines.js';
 import {onMounted, ref} from 'vue';
 import { useInPageLinkHelpers } from '../../functions/useInPageLinkHelpers.js';

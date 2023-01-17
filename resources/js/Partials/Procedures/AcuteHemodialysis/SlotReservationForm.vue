@@ -108,7 +108,7 @@
 
 <script setup>
 import FormAutocompleteKeyValue from '../../../Components/Controls/FormAutocompleteKeyValue.vue';
-import {useForm} from '@inertiajs/inertia-vue3';
+import {useForm} from '@inertiajs/vue3';
 import FormAutocomplete from '../../../Components/Controls/FormAutocomplete.vue';
 import FormSelect from '../../../Components/Controls/FormSelect.vue';
 import FormRadio from '../../../Components/Controls/FormRadio.vue';

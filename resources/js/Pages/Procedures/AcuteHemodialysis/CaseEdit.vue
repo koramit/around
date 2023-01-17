@@ -401,7 +401,7 @@
 
 <!--suppress JSIncompatibleTypesComparison -->
 <script setup>
-import {useForm} from '@inertiajs/inertia-vue3';
+import {useForm} from '@inertiajs/vue3';
 import {defineAsyncComponent, nextTick, onMounted, reactive, ref, watch} from 'vue';
 import {useSelectOther} from '../../../functions/useSelectOther.js';
 import {useInPageLinkHelpers} from '../../../functions/useInPageLinkHelpers';

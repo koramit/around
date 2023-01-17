@@ -481,7 +481,7 @@
 
 <script setup>
 import {defineAsyncComponent, watch} from 'vue';
-import {useForm} from '@inertiajs/inertia-vue3';
+import {useForm} from '@inertiajs/vue3';
 import {useFormAutosave} from '../../../functions/useFormAutosave.js';
 import {useConfirmForm} from '../../../functions/useConfirmForm.js';
 import {useActionStore} from '../../../functions/useActionStore.js';

@@ -23,12 +23,12 @@
         class="bg-white rounded shadow my-2 md:my-4 p-2 md:p-4"
     >
         {{ caseRecord.title }}
-        <InertiaLink
+        <Link
             :href="caseRecord.route"
             class="btn btn-complement"
         >
             edit
-        </InertiaLink>
+        </Link>
     </div>
 
     <!-- create new case -->
@@ -43,7 +43,7 @@
 <script setup>
 import {defineAsyncComponent, reactive, ref} from 'vue';
 import SearchIndex from '../../../Components/Controls/SearchIndex.vue';
-import {InertiaLink, useForm} from '@inertiajs/inertia-vue3';
+import {Link, useForm} from '@inertiajs/vue3';
 const CreateForm = defineAsyncComponent(() => import('../../../Partials/KidneyTransplantAdmission/CreateForm.vue'));
 
 const props = defineProps({

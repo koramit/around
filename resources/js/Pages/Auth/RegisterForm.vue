@@ -72,10 +72,10 @@
 </template>
 
 <script setup>
-import { useForm } from '@inertiajs/inertia-vue3';
-import FormCheckbox from '@/Components/Controls/FormCheckbox.vue';
-import FormInput from '@/Components/Controls/FormInput.vue';
-import SpinnerButton from '@/Components/Controls/SpinnerButton.vue';
+import { useForm } from '@inertiajs/vue3';
+import FormCheckbox from '../../Components/Controls/FormCheckbox.vue';
+import FormInput from '../../Components/Controls/FormInput.vue';
+import SpinnerButton from '../../Components/Controls/SpinnerButton.vue';
 import { computed, nextTick, onMounted, ref } from 'vue';
 
 const props = defineProps({
