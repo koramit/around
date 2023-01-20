@@ -34,4 +34,7 @@ Route::middleware('auth')->group(function () {
         ->name('social-link.create');
     Route::get('social-link/{provider}/callback', [SocialLinkController::class, 'store'])
         ->name('social-link.store');
+
+    Route::put('extends-session', [AuthenticatedSessionController::class, 'update'])
+        ->name('extends-session');
 });
