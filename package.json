@@ -5,6 +5,7 @@
         "build": "vite build"
     },
     "devDependencies": {
+        "@inertiajs/vue3": "^1.0.0",
         "@vitejs/plugin-vue": "^2.3.3",
         "autoprefixer": "^10.4.7",
         "autosize": "^5.0.1",
@@ -21,8 +22,5 @@
         "vite": "^2.9.13",
         "vite-plugin-full-reload": "^1.0.1",
         "vue": "^3.2.33"
-    },
-    "dependencies": {
-        "@inertiajs/vue3": "^1.0.0"
     }
 }
