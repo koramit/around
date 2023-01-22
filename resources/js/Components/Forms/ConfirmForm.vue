@@ -67,9 +67,9 @@ const open = (options) => {
 };
 
 const confirmed = () => {
-    LinkusePage().props.event.payload = reason.value;
-    LinkusePage().props.event.name = confirmedEvent;
-    LinkusePage().props.event.fire = + new Date();
+    usePage().props.event.payload = reason.value;
+    usePage().props.event.name = confirmedEvent;
+    usePage().props.event.fire = + new Date();
     modal.value.close();
 
     reason.value = null;

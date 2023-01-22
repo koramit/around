@@ -73,23 +73,23 @@ const replying = () => {
 
     nextTick(() => {
         setTimeout(() => {
-            LinkusePage().props.event.payload = comment.id;
-            LinkusePage().props.event.name = 'comment-recursive-reply-active';
-            LinkusePage().props.event.fire = + new Date();
+            usePage().props.event.payload = comment.id;
+            usePage().props.event.name = 'comment-recursive-reply-active';
+            usePage().props.event.fire = + new Date();
         }, 300); // equal to animate duration
         replyInput.value.focus();
     });
 };
 watch(
-    () => LinkusePage().props.event.fire,
+    () => usePage().props.event.fire,
     (event) => {
         if (! event) {
             return;
         }
-        if (LinkusePage().props.event.name === 'comment-recursive-reply-active') {
+        if (usePage().props.event.name === 'comment-recursive-reply-active') {
             if (
                 showReplyForm.value
-                && comment.id !== LinkusePage().props.event.payload
+                && comment.id !== usePage().props.event.payload
             ) {
                 showReplyForm.value = false;
             }

@@ -43,5 +43,5 @@ defineProps({
     configs: {type: Object, required: true}
 });
 
-const mode = ref(LinkusePage().props.user.preferences.discussion_mode);
+const mode = ref(usePage().props.user.preferences.discussion_mode);
 </script>

@@ -34,7 +34,7 @@
             v-model="form.nephrologist"
             :endpoint="configs.routes.people"
             :params="configs.routes.nephrologists_scope"
-            :error="form.errors.nephrologist"
+            :error="$page.props.errors.nephrologist"
             :length-to-start="3"
         />
         <FormAutocomplete
@@ -43,22 +43,20 @@
             v-model="form.surgeon"
             :endpoint="configs.routes.people"
             :params="configs.routes.surgeons_scope"
-            :error="form.errors.surgeon"
+            :error="$page.props.errors.surgeon"
             :length-to-start="3"
         />
-        <!--input date off drain using FormDatetime-->
         <FormDatetime
             name="date_off_drain"
             label="date off drain"
             v-model="form.date_off_drain"
-            :error="form.errors.date_off_drain"
+            :error="$page.props.errors.date_off_drain"
         />
-        <!--input date off foley -->
         <FormDatetime
             name="date_off_foley"
             label="date off foley"
             v-model="form.date_off_foley"
-            :error="form.errors.date_off_foley"
+            :error="$page.props.errors.date_off_foley"
         />
         <FormSelect
             label="medical scheme"
@@ -89,6 +87,39 @@
             :readonly="true"
         />
     </div>
+    <h3 class="form-label mt-4 md:mt-8 xl:mt-16">
+        transfer :
+    </h3>
+    <hr class="border border-dashed my-2 md:my-4 xl:my-8">
+    <FormCheckbox
+        label="Patient transferred"
+        name="patient_transferred"
+        v-model="form.patient_transferred"
+    />
+    <Transition name="slide-fade">
+        <div v-if="form.patient_transferred">
+            <label class="mt-2 md:mt-4 form-label">
+                Transfer to :
+            </label>
+            <div class="grid gap-2 md:gap-4 md:block md:space-y-0 md:space-x-4">
+                <button
+                    v-for="(ward, key) in configs.common_transfer_wards"
+                    :key="key"
+                    class="text-left"
+                    @click="form.patient_transferred_to = ward"
+                >
+                    <span class="italic underline text-accent">{{ ward }}</span>
+                </button>
+            </div>
+            <FormAutocomplete
+                class="mt-2 md:mt-4"
+                name="patient_transferred_to"
+                v-model="form.patient_transferred_to"
+                :endpoint="configs.routes.wards"
+                :error="$page.props.errors.patient_transferred_to"
+            />
+        </div>
+    </Transition>
 
     <h2 class="form-label text-lg italic text-complement mt-4 md:mt-8 xl:mt-16 scroll-mt-16 md:scroll-mt-8">
         CLINICAL DATA
@@ -99,9 +130,11 @@
         <FormSelect
             label="cause of esrd"
             name="cause_of_esrd"
-            :options="configs.esrd_causes"
+            v-model="form.cause_of_esrd"
+            :options="configs.cause_of_esrd_options"
             :allow-other="true"
             :error="$page.props.errors.cause_of_esrd"
+            ref="causeOfEsrdInput"
         />
         <div>
             <label class="form-label">donor type :</label>
@@ -181,17 +214,17 @@
     <div class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8">
         <FormInput
             label="class i (%)"
-            name="pra_class_i"
-            v-model="form.pra_class_i"
+            name="pra_class_i_percent"
+            v-model="form.pra_class_i_percent"
             type="number"
-            :error="$page.props.errors.pra_class_i"
+            :error="$page.props.errors.pra_class_i_percent"
         />
         <FormInput
             label="class ii (%)"
-            name="pra_class_ii"
-            v-model="form.pra_class_ii"
+            name="pra_class_ii_percent"
+            v-model="form.pra_class_ii_percent"
             type="number"
-            :error="$page.props.errors.pra_class_ii"
+            :error="$page.props.errors.pra_class_ii_percent"
         />
     </div>
     <h3 class="form-label mt-4 md:mt-8 xl:mt-16">
@@ -200,7 +233,8 @@
     <hr class="border border-dashed my-2 md:my-4 xl:my-8">
     <div
         class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8"
-        v-for="crossmatch in configs.crossmatches"
+        v-for="(crossmatch, key) in configs.crossmatches"
+        :key="key"
     >
         <FormRadio
             :label="crossmatch.label"
@@ -212,152 +246,167 @@
         />
         <FormInput
             :label="`specify ${crossmatch.label} positive`"
-            :name="`${crossmatch.name}_positive_specify`"
-            v-model="form[`${crossmatch.name}_positive_specify`]"
-            :error="$page.props.errors[`${crossmatch.name}_positive_specify`]"
+            :name="`${crossmatch.name}_positive_specification`"
+            v-model="form[`${crossmatch.name}_positive_specification`]"
+            :error="$page.props.errors[`${crossmatch.name}_positive_specification`]"
             :disabled="form[crossmatch.name] !== 'positive'"
         />
     </div>
-    <!--    <FormInput
-        label="crossmatch"
-        name="crossmatch"
-        v-model="form.crossmatch"
-        :error="$page.props.errors.crossmatch"
-    />-->
-    <h3 class="form-label mt-4 md:mt-8 xl:mt-16">
+    <h3
+        id="clinical_data_attachments"
+        class="form-label mt-4 md:mt-8 xl:mt-16 scroll-mt-16 md:scroll-mt-8"
+    >
         attachments :
     </h3>
     <hr class="border border-dashed my-2 md:my-4 xl:my-8">
-    <ImageUploader
-        v-for="index in 3"
-        :key="index"
-        :name="`clinical_data_attachment_${index}`"
-        v-model="form[`clinical_data_attachment_${index}`]"
+    <MultiImageUploader
         :service-endpoints="configs.routes.upload"
         :pathname="configs.attachment_upload_pathname"
-        :label="`clinical data attachment#${index}`"
+        name="clinical_data_attachments"
+        v-model="form.clinical_data_attachments"
     />
     <h2 class="form-label text-lg italic text-complement mt-4 md:mt-8 xl:mt-16 scroll-mt-16 md:scroll-mt-8">
         COMORBIDITIES
     </h2>
     <hr class="my-4 border-b border-accent">
-    <div
-        class="grid gap-2 md:gap-4 grid-cols-2 xl:gap-8 mb-2 md:mb-4"
-        v-for="(comorbidity, key) in configs.comorbid_a"
-        :key="key"
-    >
-        <FormCheckbox
-            :name="comorbidity.name"
-            :label="comorbidity.label"
-            v-model="form.comorbidities[comorbidity.name]"
-        />
-        <FormDatetime
-            :name="`date_${comorbidity.name}`"
-            v-model="form.comorbidities[`date_${comorbidity.name}`]"
-            :error="$page.props.errors[`date_${comorbidity.name}`]"
-            :placeholder="`Date of ${comorbidity.label}`"
-        />
-    </div>
-    <div class="grid gap-2 md:gap-4 grid-cols-2 xl:gap-8 mb-2 md:mb-4">
-        <FormCheckbox
-            name="HT"
-            label="HT"
-            v-model="form.comorbidities.HT"
-        />
-        <FormDatetime
-            name="date_HT"
-            v-model="form.comorbidities.date_HT"
-            :error="$page.props.errors.date_HT"
-            placeholder="Date of HT"
-        />
-    </div>
-    <div class="grid gap-2 md:gap-4 grid-cols-2 xl:gap-8 mb-2 md:mb-4">
-        <FormCheckbox
-            name="on_HT_medication"
-            label="On HT Medication"
-            v-model="form.comorbidities.HT"
-        />
-        <div class="space-y-2 md:space-y-4">
-            <FormDatetime
-                name="date_on_HT_medication"
-                v-model="form.comorbidities.date_on_HT_medication"
-                :error="$page.props.errors.date_on_HT_medication"
-                placeholder="Date start HT medication"
-            />
-            <FormInput
-                name="HT_medication"
-                v-model="form.comorbidities.HT_medication"
-                :error="$page.props.errors.HT_medication"
-                placeholder="HT medication"
-            />
+    <FormCheckbox
+        label="None"
+        name="comorbid_none"
+        v-model="form.comorbidities.none"
+        :toggler="true"
+    />
+    <Transition name="slide-fade">
+        <div
+            class="mt-2 md:mt-4"
+            v-if="!form.comorbidities.none"
+        >
+            <div
+                class="grid gap-2 md:gap-4 grid-cols-2 xl:gap-8 mb-2 md:mb-4"
+                v-for="(comorbidity, key) in configs.comorbid_a"
+                :key="key"
+            >
+                <FormCheckbox
+                    :name="comorbidity.name"
+                    :label="comorbidity.label"
+                    v-model="form.comorbidities[comorbidity.name]"
+                />
+                <FormDatetime
+                    :name="`date_${comorbidity.name}`"
+                    v-model="form.comorbidities[`date_${comorbidity.name}`]"
+                    :error="$page.props.errors[`date_${comorbidity.name}`]"
+                    :placeholder="`Date of ${comorbidity.label}`"
+                    :disabled="!form.comorbidities[comorbidity.name]"
+                />
+            </div>
+            <div class="grid gap-2 md:gap-4 grid-cols-2 xl:gap-8 mb-2 md:mb-4">
+                <FormCheckbox
+                    name="HT"
+                    label="HT"
+                    v-model="form.comorbidities.HT"
+                />
+                <FormDatetime
+                    name="date_HT"
+                    v-model="form.comorbidities.date_HT"
+                    :error="$page.props.errors.date_HT"
+                    placeholder="Date of HT"
+                    :disabled="!form.comorbidities.HT"
+                />
+            </div>
+            <div class="grid gap-2 md:gap-4 grid-cols-2 xl:gap-8 mb-2 md:mb-4">
+                <FormCheckbox
+                    name="on_HT_medication"
+                    label="On HT Medication"
+                    v-model="form.comorbidities.on_HT_medication"
+                />
+                <div class="space-y-2 md:space-y-4">
+                    <FormDatetime
+                        name="date_start_HT_medication"
+                        v-model="form.comorbidities.date_start_HT_medication"
+                        :error="$page.props.errors.date_start_HT_medication"
+                        placeholder="Date start HT medication"
+                        :disabled="!form.comorbidities.on_HT_medication"
+                    />
+                    <FormInput
+                        name="HT_medication"
+                        v-model="form.comorbidities.HT_medication"
+                        :error="$page.props.errors.HT_medication"
+                        placeholder="HT medication"
+                        :disabled="!form.comorbidities.on_HT_medication"
+                    />
+                </div>
+            </div>
+            <div class="grid gap-2 md:gap-4 grid-cols-2 xl:gap-8 mb-2 md:mb-4">
+                <FormCheckbox
+                    name="DM"
+                    label="DM"
+                    v-model="form.comorbidities.DM"
+                />
+                <FormDatetime
+                    name="date_DM"
+                    v-model="form.comorbidities.date_DM"
+                    :error="$page.props.errors.date_DM"
+                    placeholder="Date of DM"
+                    :disabled="!form.comorbidities.DM"
+                />
+            </div>
+            <div class="grid gap-2 md:gap-4 grid-cols-2 xl:gap-8 mb-2 md:mb-4">
+                <FormCheckbox
+                    name="on_DM_medication"
+                    label="On DM Medication"
+                    v-model="form.comorbidities.on_DM_medication"
+                />
+                <div class="space-y-2 md:space-y-4">
+                    <FormDatetime
+                        name="date_start_DM_medication"
+                        v-model="form.comorbidities.date_start_DM_medication"
+                        :error="$page.props.errors.date_start_DM_medication"
+                        placeholder="Date start DM medication"
+                        :disabled="!form.comorbidities.on_DM_medication"
+                    />
+                    <FormInput
+                        name="DM_medication"
+                        v-model="form.comorbidities.DM_medication"
+                        :error="$page.props.errors.DM_medication"
+                        placeholder="DM medication"
+                        :disabled="!form.comorbidities.on_DM_medication"
+                    />
+                </div>
+            </div>
+            <div
+                class="grid gap-2 md:gap-4 grid-cols-2 xl:gap-8 mb-2 md:mb-4"
+                v-for="(comorbidity, key) in configs.comorbid_b"
+                :key="key"
+            >
+                <FormCheckbox
+                    :name="comorbidity.name"
+                    :label="comorbidity.label"
+                    v-model="form.comorbidities[comorbidity.name]"
+                />
+                <FormDatetime
+                    :name="`date_${comorbidity.name}`"
+                    v-model="form.comorbidities[`date_${comorbidity.name}`]"
+                    :error="$page.props.errors[`date_${comorbidity.name}`]"
+                    :placeholder="`Date of ${comorbidity.label}`"
+                    :disabled="!form.comorbidities[comorbidity.name]"
+                />
+            </div>
+            <div class="grid gap-2 md:gap-4 grid-cols-2 xl:gap-8 mb-2 md:mb-4">
+                <FormSelect
+                    label="smoking"
+                    name="smoking"
+                    v-model="form.comorbidities.smoking"
+                    :options="configs.smoking_options"
+                    :error="$page.props.errors.smoking"
+                />
+                <FormDatetime
+                    label="date start smoking"
+                    name="date_smoking"
+                    v-model="form.comorbidities.date_smoking"
+                    :error="$page.props.errors.date_smoking"
+                />
+            </div>
         </div>
-    </div>
-    <div class="grid gap-2 md:gap-4 grid-cols-2 xl:gap-8 mb-2 md:mb-4">
-        <FormCheckbox
-            name="DM"
-            label="DM"
-            v-model="form.comorbidities.DM"
-        />
-        <FormDatetime
-            name="date_DM"
-            v-model="form.comorbidities.date_DM"
-            :error="$page.props.errors.date_DM"
-            placeholder="Date of DM"
-        />
-    </div>
-    <div class="grid gap-2 md:gap-4 grid-cols-2 xl:gap-8 mb-2 md:mb-4">
-        <FormCheckbox
-            name="on_DM_medication"
-            label="On DM Medication"
-            v-model="form.comorbidities.DM"
-        />
-        <div class="space-y-2 md:space-y-4">
-            <FormDatetime
-                name="date_on_DM_medication"
-                v-model="form.comorbidities.date_on_DM_medication"
-                :error="$page.props.errors.date_on_DM_medication"
-                placeholder="Date start DM medication"
-            />
-            <FormInput
-                name="DM_medication"
-                v-model="form.comorbidities.DM_medication"
-                :error="$page.props.errors.DM_medication"
-                placeholder="DM medication"
-            />
-        </div>
-    </div>
-    <div
-        class="grid gap-2 md:gap-4 grid-cols-2 xl:gap-8 mb-2 md:mb-4"
-        v-for="(comorbidity, key) in configs.comorbid_b"
-        :key="key"
-    >
-        <FormCheckbox
-            :name="comorbidity.name"
-            :label="comorbidity.label"
-            v-model="form.comorbidities[comorbidity.name]"
-        />
-        <FormDatetime
-            :name="`date_${comorbidity.name}`"
-            v-model="form.comorbidities[`date_${comorbidity.name}`]"
-            :error="$page.props.errors[`date_${comorbidity.name}`]"
-            :placeholder="`Date of ${comorbidity.label}`"
-        />
-    </div>
-    <div class="grid gap-2 md:gap-4 grid-cols-2 xl:gap-8 mb-2 md:mb-4">
-        <FormSelect
-            label="smoking"
-            name="smoking"
-            v-model="form.comorbidities.smoking"
-            :options="configs.smoking_options"
-            :error="$page.props.errors.smoking"
-        />
-        <FormDatetime
-            label="date start smoking"
-            name="date_smoking"
-            v-model="form.comorbidities.date_smoking"
-            :error="$page.props.errors.date_smoking"
-        />
-    </div>
+    </Transition>
     <h2 class="form-label text-lg italic text-complement mt-4 md:mt-8 xl:mt-16 scroll-mt-16 md:scroll-mt-8">
         OPERATIVE DATA
     </h2>
@@ -366,30 +415,18 @@
         <div v-if="form.donor_type === 'CD'">
             <div class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8">
                 <FormDatetime
-                    label="date of harvest start"
-                    name="date_harvest_start"
-                    v-model="form.date_harvest"
-                    :error="$page.props.errors.date_harvest_start"
+                    label="harvest start time"
+                    name="datetime_harvest_start"
+                    v-model="form.datetime_harvest_start"
+                    :error="$page.props.errors.datetime_harvest_start"
+                    mode="datetime"
                 />
                 <FormDatetime
-                    label="time of harvest start"
-                    name="time_harvest_start"
-                    v-model="form.time_harvest"
-                    mode="time"
-                    :error="$page.props.errors.time_harvest_start"
-                />
-                <FormDatetime
-                    label="date of harvest finish"
-                    name="date_harvest_finish"
-                    v-model="form.date_harvest"
-                    :error="$page.props.errors.date_harvest_finish"
-                />
-                <FormDatetime
-                    label="time of harvest finish"
-                    name="time_harvest_finish"
-                    v-model="form.time_harvest"
-                    mode="time"
-                    :error="$page.props.errors.time_harvest_finish"
+                    label="harvest finish time"
+                    name="datetime_harvest_finish"
+                    v-model="form.datetime_harvest_finish"
+                    :error="$page.props.errors.datetime_harvest_finish"
+                    mode="datetime"
                 />
             </div>
             <hr class="border border-dashed my-2 md:my-4 xl:my-8">
@@ -397,56 +434,82 @@
     </Transition>
     <div class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8">
         <FormDatetime
-            label="date of operation start"
-            name="date_operation_start"
-            v-model="form.date_operation"
-            :error="$page.props.errors.date_operation_start"
+            label="operation start time"
+            name="datetime_operation_start"
+            v-model="form.datetime_operation_start"
+            mode="datetime"
+            :error="$page.props.errors.datetime_operation_start"
         />
         <FormDatetime
-            label="time of operation start"
-            name="time_operation_start"
-            v-model="form.time_operation"
-            mode="time"
-            :error="$page.props.errors.time_operation_start"
-        />
-        <FormDatetime
-            label="date of operation finish"
-            name="date_operation_finish"
-            v-model="form.date_operation"
-            :error="$page.props.errors.date_operation_finish"
-        />
-        <FormDatetime
-            label="time of operation finish"
-            name="time_operation_finish"
-            v-model="form.time_operation"
-            mode="time"
-            :error="$page.props.errors.time_operation_finish"
+            label="operation finish time"
+            name="datetime_operation_finish"
+            v-model="form.datetime_operation_finish"
+            mode="datetime"
+            :error="$page.props.errors.datetime_operation_finish"
         />
     </div>
     <hr class="border border-dashed my-2 md:my-4 xl:my-8">
     <div class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8">
+        <div>
+            <label class="form-label">
+                cold ischemia time (hr/min) :
+            </label>
+            <div class="flex space-x-2 md:space-x-4">
+                <FormInput
+                    name="cold_ischemic_time_hours"
+                    v-model="form.cold_ischemic_time_hours"
+                    :error="$page.props.errors.cold_ischemic_time_hours"
+                    type="tel"
+                    placeholder="hours"
+                />
+                <FormInput
+                    name="cold_ischemic_time_minutes"
+                    v-model="form.cold_ischemic_time_minutes"
+                    :error="$page.props.errors.cold_ischemic_time_minutes"
+                    type="tel"
+                    placeholder="minutes"
+                />
+            </div>
+        </div>
         <FormInput
+            label="warm ischemia time (min)"
+            name="warm_ischemic_time"
+            v-model="form.warm_ischemic_time"
+            :error="$page.props.errors.warm_ischemic_time"
+            type="tel"
+        />
+        <FormInput
+            label="anastomosis time (min)"
+            name="anastomosis_time_minutes"
+            v-model="form.anastomosis_time_minutes"
+            :error="$page.props.errors.anastomosis_time_minutes"
+            type="tel"
+        />
+    </div>
+    <hr class="border border-dashed my-2 md:my-4 xl:my-8">
+    <div class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8">
+        <FormDatetime
             v-for="(input, key) in configs.operative_data"
             :key="key"
             :name="input.name"
             :label="input.label"
             v-model="form[input.name]"
             :error="$page.props.errors[input.name]"
-            type="tel"
+            mode="datetime"
         />
     </div>
-    <h3 class="form-label mt-4 md:mt-8 xl:mt-16">
+    <h3
+        id="operative_data_attachments"
+        class="form-label mt-4 md:mt-8 xl:mt-16 scroll-mt-16 md:scroll-mt-8"
+    >
         attachments :
     </h3>
     <hr class="border border-dashed my-2 md:my-4 xl:my-8">
-    <ImageUploader
-        v-for="index in 3"
-        :key="index"
-        :name="`operative_data_attachment_${index}`"
-        v-model="form[`operative_data_attachment_${index}`]"
+    <MultiImageUploader
         :service-endpoints="configs.routes.upload"
         :pathname="configs.attachment_upload_pathname"
-        :label="`operative data attachment#${index}`"
+        name="operative_data_attachments"
+        v-model="form.operative_data_attachments"
     />
     <h2 class="form-label text-lg italic text-complement mt-4 md:mt-8 xl:mt-16 scroll-mt-16 md:scroll-mt-8">
         OUTCOMES
@@ -468,16 +531,16 @@
                 >
                     <FormRadio
                         label="dialysis mode"
-                        name="graft_function_dialysis_mode"
-                        v-model="form.graft_function_dialysis_mode"
+                        name="delayed_graft_function_dialysis_mode"
+                        v-model="form.delayed_graft_function_dialysis_mode"
                         :options="configs.dialysis_mode_options"
-                        :error="$page.props.errors.graft_function_dialysis_mode"
+                        :error="$page.props.errors.delayed_graft_function_dialysis_mode"
                     />
                     <FormDatetime
                         label="date of dialysis start"
-                        name="graft_function_date_dialysis_start"
-                        v-model="form.graft_function_date_dialysis"
-                        :error="$page.props.errors.graft_function_date_dialysis_start"
+                        name="date_delayed_graft_function_dialysis_start"
+                        v-model="form.date_delayed_graft_function_dialysis_start"
+                        :error="$page.props.errors.date_delayed_graft_function_dialysis_start"
                     />
                     <div>
                         <label class="form-label">indication for dialysis</label>
@@ -491,9 +554,9 @@
                             :error="$page.props.errors[`graft_function_${field.name}`]"
                         />
                         <FormInput
-                            name="graft_function_dialysis_indication_other"
-                            v-model="form.graft_function_dialysis_indication_other"
-                            :error="$page.props.errors.graft_function_dialysis_indication_other"
+                            name="delayed_graft_function_dialysis_indication_other"
+                            v-model="form.delayed_graft_function_dialysis_indication_other"
+                            :error="$page.props.errors.delayed_graft_function_dialysis_indication_other"
                             placeholder="other indication"
                         />
                     </div>
@@ -515,115 +578,196 @@
         graft biopsy :
     </h3>
     <hr class="border border-dashed my-2 md:my-4 xl:my-8">
-    <button
-        class="btn btn-accent"
-        @click="addBiopsy"
-    >
-        ADD
-    </button>
     <div
-        v-for="(biopsy, key) in form.graft_biopsy"
+        v-for="(biopsy, key) in form.graft_biopsies"
         :key="key"
         class="my-2 md:my-4 space-y-2 md:space-y-4"
     >
         <div class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8">
-            <FormDatetime
-                :label="`date of graft biopsy#${key+1}`"
-                :name="`date_graft_biopsy`"
-                v-model="biopsy.date_graft_biopsy"
-            />
-            <FormSelect
-                :label="`result graft biopsy#${key+1}`"
-                name="graft_biopsy_result"
-                v-model="biopsy.graft_biopsy_result"
-                :options="configs.graft_biopsy_result_options"
-                :allow-other="true"
-            />
-
+            <div class="space-y-2 md:space-y-4">
+                <FormDatetime
+                    :label="`date of biopsy#${key+1}`"
+                    name="date_biopsy"
+                    v-model="biopsy.date_biopsy"
+                />
+                <div>
+                    <label class="form-label">result biopsy#{{ key+1 }} :</label>
+                    <div class="grid grid-cols-2 gap-2 md:gap-4">
+                        <FormCheckbox
+                            v-for="(field, index) in configs.biopsy_result_fields"
+                            :key="index"
+                            :label="field.label"
+                            :name="`biopsy_result_${field.name}_${key}`"
+                            v-model="biopsy[field.name]"
+                        />
+                    </div>
+                    <FormInput
+                        class="mt-2 md:mt-4"
+                        :name="`biopsy_result_other_${key}`"
+                        v-model="biopsy.other_result"
+                        placeholder="other result"
+                    />
+                </div>
+            </div>
             <ImageUploader
                 :label="`attachment biopsy#${key+1}`"
                 :service-endpoints="configs.routes.upload"
                 :pathname="configs.attachment_upload_pathname"
+                v-model="biopsy.attachment"
             />
             <button
-                class="btn btn-danger"
+                class="block"
                 @click="removeBiopsy(key)"
             >
-                REMOVE
+                <IconTrashXMark
+                    class="w-4 h-4 text-red-400"
+                />
             </button>
         </div>
         <hr class="border border-dashed my-2 md:my-4 xl:my-8">
     </div>
+    <button
+        @click="form.graft_biopsies.push(configs.graft_biopsy)"
+    >
+        <IconFileCirclePlus
+            class="w-4 h-4 text-accent"
+        />
+    </button>
     <h2 class="form-label text-lg italic text-complement mt-4 md:mt-8 xl:mt-16 scroll-mt-16 md:scroll-mt-8">
         complications
     </h2>
     <hr class="my-4 border-b border-accent">
-    <div class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8">
-        <div>
-            <label class="form-label">infection :</label>
-            <FormCheckbox
-                v-for="(field, key) in configs.complication_infection_fields"
-                :key="key"
-                :label="field.label"
-                :name="`complication_infection_${field.name}`"
-                v-model="form[`complication_infection_${field.name}`]"
-            />
-            <FormInput
-                name="complication_infection_other"
-                v-model="form.complication_infection_other"
-                placeholder="other infection"
+    <FormCheckbox
+        label="None"
+        name="complications_none"
+        v-model="form.complications.none"
+        :toggler="true"
+    />
+    <Transition name="slide-fade">
+        <div
+            class="my-2 md:my-4 space-y-2 md:space-y-4"
+            v-if="!form.complications.none"
+        >
+            <div class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8">
+                <div>
+                    <label class="form-label">infection :</label>
+                    <FormCheckbox
+                        v-for="(field, key) in configs.complication_infection_fields"
+                        :key="key"
+                        :label="field.label"
+                        :name="`complications_infection_${field.name}`"
+                        v-model="form.complications[field.name]"
+                    />
+                    <FormInput
+                        name="complications_infection_other"
+                        v-model="form.complications.infection_other"
+                        placeholder="other infection"
+                    />
+                </div>
+                <div>
+                    <label class="form-label">hematoma :</label>
+                    <FormCheckbox
+                        label="hematoma"
+                        name="complications_hematoma"
+                        v-model="form.complications.hematoma"
+                    />
+                    <Transition name="slide-fade">
+                        <div
+                            v-if="form.complications.hematoma"
+                            class="border-l-2 border-accent ml-1 md:ml-2 pl-2 md:pl-4"
+                        >
+                            <FormCheckbox
+                                label="blood transfusion"
+                                name="complications_blood_transfusion"
+                                v-model="form.complications.blood_transfusion"
+                            />
+                            <FormInput
+                                label="blood transfusion (unit)"
+                                name="complications_blood_transfusion_unit"
+                                v-model="form.complications.blood_transfusion_unit"
+                                :disabled="!form.complications.blood_transfusion"
+                            />
+                        </div>
+                    </Transition>
+                    <label class="form-label mt-2 md:mt-4 xl:mt-8">vascular :</label>
+                    <FormCheckbox
+                        v-for="(field, key) in configs.complication_vascular_fields"
+                        :key="key"
+                        :label="field.label"
+                        :name="`complications_infection_${field.name}`"
+                        v-model="form.complications[field.name]"
+                    />
+                </div>
+                <div>
+                    <label class="form-label">urological complications :</label>
+                    <FormCheckbox
+                        v-for="(field, key) in configs.complication_urological_fields"
+                        :key="key"
+                        :label="field.label"
+                        :name="`complications_urological_${field.name}`"
+                        v-model="form.complications[field.name]"
+                    />
+                </div>
+                <div>
+                    <label class="form-label">investigations :</label>
+                    <FormCheckbox
+                        v-for="(field, key) in configs.complication_investigation_fields"
+                        :key="key"
+                        :label="field.label"
+                        :name="`complications_investigation_${field.name}`"
+                        v-model="form.complications[field.name]"
+                    />
+                </div>
+            </div>
+
+            <h3
+                id="complication_data_attachments"
+                class="form-label mt-4 md:mt-8 xl:mt-16 scroll-mt-16 md:scroll-mt-8"
+            >
+                attachments :
+            </h3>
+            <hr class="border border-dashed my-2 md:my-4 xl:my-8">
+            <MultiImageUploader
+                :service-endpoints="configs.routes.upload"
+                :pathname="configs.attachment_upload_pathname"
+                name="complication_data_attachments"
+                v-model="form.complications.attachments"
             />
         </div>
-        <div>
-            <label class="form-label">hematoma :</label>
-            <FormCheckbox
-                label="hematoma"
-                name="complication_hematoma"
-                v-model="form.complication_hematoma"
-            />
-            <label class="form-label mt-2 md:mt-4 xl:mt-8">vascular :</label>
-            <FormCheckbox
-                v-for="(field, key) in configs.complication_vascular_fields"
-                :key="key"
-                :label="field.label"
-                :name="`complication_infection_${field.name}`"
-                v-model="form[`complication_infection_${field.name}`]"
-            />
-        </div>
-        <div>
-            <label class="form-label">investications :</label>
-            <FormCheckbox
-                v-for="(field, key) in configs.complication_investigation_fields"
-                :key="key"
-                :label="field.label"
-                :name="`complication_investigation_${field.name}`"
-                v-model="form[`complication_investigation_${field.name}`]"
-            />
-        </div>
-        <div>
-            <label class="form-label">urological complications :</label>
-            <FormCheckbox
-                v-for="(field, key) in configs.complication_urological_fields"
-                :key="key"
-                :label="field.label"
-                :name="`complication_urological_${field.name}`"
-                v-model="form[`complication_urological_${field.name}`]"
-            />
-        </div>
-    </div>
+    </Transition>
+    <h2 class="form-label text-lg italic text-complement mt-4 md:mt-8 xl:mt-16 scroll-mt-16 md:scroll-mt-8">
+        note
+    </h2>
+    <hr class="my-4 border-b border-accent">
+    <FormTextarea
+        name="remarks"
+        v-model="form.remarks"
+    />
+
+    <FormSelectOther
+        :placeholder="selectOther.placeholder"
+        ref="selectOtherInput"
+        @closed="selectOtherClosed"
+    />
 </template>
 
 <script setup>
 import {useForm} from '@inertiajs/vue3';
-import {nextTick, reactive, ref} from 'vue';
+import {defineAsyncComponent, nextTick, reactive, ref, watch} from 'vue';
 import FormAutocomplete from '../../../Components/Controls/FormAutocomplete.vue';
 import FormInput from '../../../Components/Controls/FormInput.vue';
 import FormSelect from '../../../Components/Controls/FormSelect.vue';
 import FormRadio from '../../../Components/Controls/FormRadio.vue';
-import FileUploader from '../../../Components/Controls/FileUploader.vue';
 import FormCheckbox from '../../../Components/Controls/FormCheckbox.vue';
 import FormDatetime from '../../../Components/Controls/FormDatetime.vue';
 import ImageUploader from '../../../Components/Controls/ImageUploader.vue';
+import {useSelectOther} from '../../../functions/useSelectOther.js';
+import FormTextarea from '../../../Components/Controls/FormTextarea.vue';
+import MultiImageUploader from '../../../Components/Controls/MultiImageUploader.vue';
+import IconTrashXMark from '../../../Components/Helpers/Icons/IconTrashXMark.vue';
+import IconFileCirclePlus from '../../../Components/Helpers/Icons/IconFileCirclePlus.vue';
+import IconCheckCircle from '../../../Components/Helpers/Icons/IconCheckCircle.vue';
+const FormSelectOther = defineAsyncComponent(() => import('../../../Components/Controls/FormSelectOther.vue'));
 
 const props = defineProps({
     formData: {type: Object, required: true},
@@ -634,21 +778,47 @@ const form = useForm({...props.formData});
 const configs = reactive({...props.formConfigs});
 
 const insuranceInput = ref(null);
-
-function addBiopsy() {
-    form.graft_biopsy.push({
-        date_graft_biopsy: null,
-        graft_biopsy_result: null,
-        graft_biopsy_attachment: null,
-    });
+if (form.insurance && !configs.insurances.includes(form.insurance)) {
+    configs.insurances.push(form.insurance);
 }
+watch (
+    () => form.insurance,
+    (val) => {
+        if (val !== 'other') {
+            return;
+        }
+
+        selectOther.placeholder = 'Other scheme';
+        selectOther.configs = configs.insurances;
+        selectOther.input = insuranceInput.value;
+        selectOtherInput.value.open();
+    }
+);
+const causeOfEsrdInput = ref(null);
+if (form.cause_of_esrd && !configs.cause_of_esrd_options.includes(form.cause_of_esrd)) {
+    configs.cause_of_esrd_options.push(form.cause_of_esrd);
+}
+watch (
+    () => form.cause_of_esrd,
+    (val) => {
+        if (val !== 'other') {
+            return;
+        }
+
+        selectOther.placeholder = 'Other cause of ESRD';
+        selectOther.configs = configs.cause_of_esrd_options;
+        selectOther.input = causeOfEsrdInput.value;
+        selectOtherInput.value.open();
+    }
+);
+const { selectOtherInput, selectOther, selectOtherClosed } = useSelectOther();
 
 function removeBiopsy(index) {
-    let temp = [...form.graft_biopsy];
+    let temp = [...form.graft_biopsies];
     temp.splice(index, 1);
-    form.graft_biopsy = [];
+    form.graft_biopsies = [];
     nextTick(() => {
-        form.graft_biopsy = temp;
+        form.graft_biopsies = temp;
     });
 }
 </script>

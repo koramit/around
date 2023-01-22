@@ -78,12 +78,12 @@ class CaseRecordStoreAction extends AcuteHemodialysisAction
             return ['key' => $caseRecord->hashed_key];
         }
         $caseRecord = new CaseRecord();
-        $patient = Patient::query()->findByHashedKey($validated['hn'])->first();
+        $patient = Patient::query()->findByHashKey($validated['hn'])->first();
         $caseRecord->patient_id = $patient->id;
         $form = $this->FORM_TEMPLATE;
         $an = null;
         if ($validated['an'] ?? false) {
-            $admission = Admission::query()->findByHashedKey($validated['an'])->first();
+            $admission = Admission::query()->findByHashKey($validated['an'])->first();
             if (! $admission->dismissed_at) { // active admission
                 $an = $admission->an;
             }

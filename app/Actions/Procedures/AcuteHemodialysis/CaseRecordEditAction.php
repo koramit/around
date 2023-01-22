@@ -131,7 +131,7 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
         if ($caseRecord->meta['an']) {
             $admission = $caseRecord->status === 'discharged'
                 ? Admission::query()
-                    ->findByHashedKey($caseRecord->meta['an'])
+                    ->findByHashKey($caseRecord->meta['an'])
                     ->withPlaceName()
                     ->first()
                 : (new AdmissionManager)->manage($caseRecord->meta['an'])['admission'];

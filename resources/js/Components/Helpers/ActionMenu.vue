@@ -85,18 +85,18 @@ const buttonClicked = (action) => {
         window.axios
             .post(action.config.route, action.config)
             .then(res => {
-                let index = LinkusePage().props.flash.actionMenu.findIndex(a => a.name === 'subscribe-clicked');
-                LinkusePage().props.flash.actionMenu[index].label = res.data.label;
-                LinkusePage().props.flash.actionMenu[index].icon = res.data.icon;
-                LinkusePage().props.flash.actionMenu[index].config.subscribed = !LinkusePage().props.flash.actionMenu[index].config.subscribed;
+                let index = usePage().props.flash.actionMenu.findIndex(a => a.name === 'subscribe-clicked');
+                usePage().props.flash.actionMenu[index].label = res.data.label;
+                usePage().props.flash.actionMenu[index].icon = res.data.icon;
+                usePage().props.flash.actionMenu[index].config.subscribed = !usePage().props.flash.actionMenu[index].config.subscribed;
             });
         break;
     case 'set-home-page-clicked':
         window.axios
             .patch(action.config.route, {home_page: action.config.route_name})
             .then(() => {
-                let index = LinkusePage().props.flash.actionMenu.findIndex(a => a.name === 'set-home-page-clicked');
-                LinkusePage().props.flash.actionMenu.splice(index, 1);
+                let index = usePage().props.flash.actionMenu.findIndex(a => a.name === 'set-home-page-clicked');
+                usePage().props.flash.actionMenu.splice(index, 1);
             });
         break;
     /*case 'bookmark-clicked':

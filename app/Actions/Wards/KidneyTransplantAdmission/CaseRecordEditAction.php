@@ -20,29 +20,31 @@ class CaseRecordEditAction extends KidneyTransplantAdmissionAction
 
         $form = $caseRecord->form;
         $form['reason_for_admission'] = $caseRecord->meta['reason_for_admission'];
-        $admission = Admission::query()->findByHashedKey($caseRecord->meta['an'])->first();
+        $admission = Admission::query()->findByHashKey($caseRecord->meta['an'])->first();
         $form['admitted_at'] = $admission->encountered_at->format('d M y');
         $form['discharged_at'] = $admission->dismissed_at?->format('d M y');
         $form['discharge_status'] = $admission->meta['discharge_status'];
         $form['discharge_type'] = $admission->meta['discharge_type'];
-        $form['ward_discharged'] = $admission->place->name;
+        $form['ward_discharged'] = $admission->dismissed_at ? $admission->place->name : null;
         $form['los'] = $admission->length_of_stay;
-        $form['comorbidities'] = [];
         $form['graft_biopsy'] = [];
         $configs = [
             'routes' => [
                 'people' => route('resources.api.people'),
                 'nephrologists_scope' => '&position=8&division_id[]=6&division_id[]=9',
                 'surgeons_scope' => '&position=8&division_id[]=10&division_id[]=11',
+                'wards' => route('resources.api.wards'),
                 'upload' => [
                     'store' => route('uploads.store'),
                     'show' => route('uploads.show'),
+                    'destroy' => route('uploads.destroy'),
                 ],
             ],
             'attachment_upload_pathname' => 'w/k/a',
             'insurances' => ['เบิกจ่ายตรง', 'ประกันสังคม', '30 บาท', 'รัฐวิสาหกิจ'],
+            'common_transfer_wards' => ['หอผู้ป่วยโรคไต สง่า นิลวรางกูร', 'เฉลิมพระเกียรติ ชั้น 7 เหนือ'],
             'donor_types' => ['CD', 'LD'],
-            'esrd_causes' => [
+            'cause_of_esrd_options' => [
                 'Alport', 'Analgesic nephropathy', 'Anti-GBM', 'CGN', 'Chronic pyelonephritis', 'CresenticGN', 'CTIN', 'DM', 'DM type1', 'DM type2', 'FSGS', 'Gout', 'Graft failure', 'HT', 'IgAN', 'IgMN', 'LN', 'Membranous GN', 'Nephrocalcinosis', 'Neurogenic Bladder', 'Obstructive Uropathy', 'Panci immune Glomerulonephritis', 'PKD', 'RAS', 'Reflux nephropathy', 'renal dysplasia', 'RPGN', 'Single Kidney', 'Stone', 'Unknown',
             ],
             'abo_options' => ['A', 'B', 'AB', 'O'],
@@ -67,7 +69,7 @@ class CaseRecordEditAction extends KidneyTransplantAdmissionAction
                 'ลุง' => ['หลาน'],
             ],
             'comorbid_a' => [
-                ['name' => 'acute_MI', 'label' => 'Acute MI'],
+                ['name' => 'acute_mi', 'label' => 'Acute MI'],
                 ['name' => 'unstable_angina', 'label' => 'Unstable Angina'],
                 ['name' => 'CAG', 'label' => 'CAG'],
                 ['name' => 'PTCA', 'label' => 'PTCA'],
@@ -79,8 +81,6 @@ class CaseRecordEditAction extends KidneyTransplantAdmissionAction
                 ['name' => 'amputation', 'label' => 'Amputation'],
                 ['name' => 'CHF', 'label' => 'CHF'],
                 ['name' => 'heart_failure', 'label' => 'Heart failure'],
-                /*['name' => 'HT', 'label' => 'HT'],
-                ['name' => 'HT', 'label' => 'HT'],*/
             ],
             'comorbid_b' => [
                 ['name' => 'COPD', 'label' => 'COPD'],
@@ -90,34 +90,47 @@ class CaseRecordEditAction extends KidneyTransplantAdmissionAction
                 ['name' => 'cirrhosis', 'label' => 'Cirrhosis'],
                 ['name' => 'DLP', 'label' => 'DLP'],
                 ['name' => 'PRCA', 'label' => 'PRCA'],
-                ['name' => 'uric_greater_than_6', 'label' => 'Uric > 6'],
+                ['name' => 'uric_greater_than_six', 'label' => 'Uric > 6'],
                 ['name' => 'on_allopurinol', 'label' => 'On Allopurinol'],
                 ['name' => 'gout', 'label' => 'Gout'],
                 ['name' => 'hyperparathyroidism', 'label' => 'Hyperparathyroidism'],
-                ['name' => 'PTH_greater_than_100', 'label' => 'PTH > 100'],
+                ['name' => 'PTH_grater_than_one_hundred', 'label' => 'PTH > 100'],
             ],
             'smoking_options' => ['smoker', 'ex-smoker', 'non-smoker'],
             'operative_data' => [
-                ['name' => 'CIT', 'label' => 'CIT (MIN)'],
-                ['name' => 'WIT', 'label' => 'WIT (MIN)'],
-                ['name' => 'anastomosis_time', 'label' => 'anastomosis time (MIN)'],
-                ['name' => 'clamp_time', 'label' => 'clamp time (MIN)'],
-                ['name' => 'perfuse_time', 'label' => 'perfuse time (MIN)'],
+                ['name' => 'datetime_clamp_at_donor', 'label' => 'clamp time at donor'],
+                ['name' => 'datetime_perfusion', 'label' => 'perfusion time'],
+                ['name' => 'datetime_remove_from_ice', 'label' => 'remove from ice time'],
+                ['name' => 'datetime_unclamp_all', 'label' => 'unclamp all time'],
             ],
             'crossmatches' => [
-                ['name' => 'crossmatch_CDC', 'label' => 'CDC'],
-                ['name' => 'crossmatch_CDC_AHG', 'label' => 'CDC-AHG'],
-                ['name' => 'crossmatch_flow_CXM', 'label' => 'Flow-CXM'],
+                ['name' => 'crossmatch_cdc', 'label' => 'CDC'],
+                ['name' => 'crossmatch_cdc_ahg', 'label' => 'CDC-AHG'],
+                ['name' => 'crossmatch_flow_cxm', 'label' => 'Flow-CXM'],
             ],
             'crossmatch_options' => ['positive', 'negative'],
             'graft_function_options' => ['immediate graft function ', 'slow graft function', 'delayed graft function', 'primary non-function'],
             'dialysis_mode_options' => ['HD', 'PD'],
             'dialysis_indication_fields' => [
-                ['name' => 'hyper_K', 'label' => 'Hyper K'],
-                ['name' => 'volume_overload', 'label' => 'Volume Overload'],
-                ['name' => 'uremia', 'label' => 'Uremia'],
+                ['name' => 'delayed_graft_function_dialysis_indication_hyper_k', 'label' => 'Hyper K'],
+                ['name' => 'delayed_graft_function_dialysis_indication_volume_overload', 'label' => 'Volume Overload'],
+                ['name' => 'delayed_graft_function_dialysis_indication_uremia', 'label' => 'Uremia'],
             ],
-            'graft_biopsy_result_options' => ['ATN', 'rejection', 'TMA'],
+            'graft_biopsy' => [
+                'ATN' => false,
+                'ATI' => false,
+                'rejection' => false,
+                'TMA' => false,
+                'other_result' => null,
+                'date_biopsy' => null,
+                'attachment' => null,
+            ],
+            'biopsy_result_fields' => [
+                ['name' => 'ATN', 'label' => 'ATN'],
+                ['name' => 'ATI', 'label' => 'ATI'],
+                ['name' => 'rejection', 'label' => 'Rejection'],
+                ['name' => 'TMA', 'label' => 'TMA'],
+            ],
             'complication_infection_fields' => [
                 ['name' => 'UTI', 'label' => 'UTI'],
                 ['name' => 'septicemia', 'label' => 'Septicemia'],
@@ -134,15 +147,13 @@ class CaseRecordEditAction extends KidneyTransplantAdmissionAction
                 ['name' => 'thrombosis_v', 'label' => 'Thrombosis V'],
             ],
             'complication_investigation_fields' => [
-                // Ultrasound // Doppler // CT abdomen // CTA // CTV
                 ['name' => 'ultrasound', 'label' => 'Ultrasound'],
                 ['name' => 'doppler', 'label' => 'Doppler'],
                 ['name' => 'ct_abdomen', 'label' => 'CT abdomen'],
                 ['name' => 'cta', 'label' => 'CTA'],
                 ['name' => 'ctv', 'label' => 'CTV'],
+                ['name' => 'renogram', 'label' => 'renogram'],
             ],
-            // urological complications
-            // Ureter stricture // leakage // urinoma // lymphocele
             'complication_urological_fields' => [
                 ['name' => 'ureter_stricture', 'label' => 'Ureter stricture'],
                 ['name' => 'leakage', 'label' => 'Leakage'],
