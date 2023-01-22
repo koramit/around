@@ -70,7 +70,7 @@ class DeployAcuteHemodialysisCaseRecordValidation extends Command
                             $dischargedAt = $admission['admission']->dismissed_at;
                         }
                     } else {
-                        $admission = Admission::findByHashedKey($an)->first();
+                        $admission = Admission::findByHashKey($an)->first();
                         $dischargedAt = $admission?->dismissed_at;
                     }
                 }

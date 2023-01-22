@@ -31,7 +31,7 @@
                     >
                         <template v-if="slot.type">
                             <div class="w=1/4">
-                                <InertiaLink :href="slot.order_route">
+                                <Link :href="slot.order_route">
                                     <span
                                         class="p-1 md:p-2 rounded-full text-xs font-semibold underline"
                                         :class="{
@@ -39,10 +39,10 @@
                                             'bg-indigo-400 text-white': slot.status === 'submitted'
                                         }"
                                     >{{ slot.type }}</span>
-                                </InertiaLink>
+                                </Link>
                             </div>
                             <div class="w-3/4 mt-1 mt-0 space-x-2 flex items-center">
-                                <InertiaLink
+                                <Link
                                     class="font-semibold text-xs flex items-center"
                                     :href="slot.case_record_route"
                                 >
@@ -55,7 +55,7 @@
                                         class="h-3 w-3 mr-1 text-white"
                                     />
                                     <span class="block py-1 italic truncate underline">{{ slot.patient_name }}</span>
-                                </InertiaLink>
+                                </Link>
                                 <p class="font-semibold text-xs flex items-center">
                                     <IconUserMd
                                         class="h-3 w-3 mr-1 text-white"
@@ -86,7 +86,7 @@
 <script setup>
 import IconPatient from '../../../Components/Helpers/Icons/IconPatient.vue';
 import IconUserMd from '../../../Components/Helpers/Icons/IconUserMd.vue';
-import { InertiaLink } from '@inertiajs/inertia-vue3';
+import { Link } from '@inertiajs/vue3';
 import IconVentilator from '../../../Components/Helpers/Icons/IconVentilator.vue';
 defineProps({
     slots: { type: Object, required: true }

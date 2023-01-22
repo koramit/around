@@ -23,7 +23,7 @@
                     {{ action.label }}
                 </span>
             </button>
-            <InertiaLink
+            <Link
                 v-else-if="action.as === 'link'"
                 class="flex items-center group py-2 outline-none truncate text-primary"
                 :href="action.route"
@@ -39,7 +39,7 @@
                 >
                     {{ action.label }}
                 </div>
-            </InertiaLink>
+            </Link>
             <a
                 v-else-if="action.as === 'a'"
                 class="flex items-center group py-2 outline-none truncate text-primary"
@@ -61,7 +61,7 @@
     </div>
 </template>
 <script setup>
-import {InertiaLink, usePage} from '@inertiajs/inertia-vue3';
+import {Link, usePage} from '@inertiajs/vue3';
 import {useActionStore} from '../../functions/useActionStore.js';
 import IconVector from './IconVector.vue';
 
@@ -85,18 +85,18 @@ const buttonClicked = (action) => {
         window.axios
             .post(action.config.route, action.config)
             .then(res => {
-                let index = usePage().props.value.flash.actionMenu.findIndex(a => a.name === 'subscribe-clicked');
-                usePage().props.value.flash.actionMenu[index].label = res.data.label;
-                usePage().props.value.flash.actionMenu[index].icon = res.data.icon;
-                usePage().props.value.flash.actionMenu[index].config.subscribed = !usePage().props.value.flash.actionMenu[index].config.subscribed;
+                let index = usePage().props.flash.actionMenu.findIndex(a => a.name === 'subscribe-clicked');
+                usePage().props.flash.actionMenu[index].label = res.data.label;
+                usePage().props.flash.actionMenu[index].icon = res.data.icon;
+                usePage().props.flash.actionMenu[index].config.subscribed = !usePage().props.flash.actionMenu[index].config.subscribed;
             });
         break;
     case 'set-home-page-clicked':
         window.axios
             .patch(action.config.route, {home_page: action.config.route_name})
             .then(() => {
-                let index = usePage().props.value.flash.actionMenu.findIndex(a => a.name === 'set-home-page-clicked');
-                usePage().props.value.flash.actionMenu.splice(index, 1);
+                let index = usePage().props.flash.actionMenu.findIndex(a => a.name === 'set-home-page-clicked');
+                usePage().props.flash.actionMenu.splice(index, 1);
             });
         break;
     /*case 'bookmark-clicked':

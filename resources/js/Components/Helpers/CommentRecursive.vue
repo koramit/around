@@ -56,7 +56,7 @@ import {nextTick, reactive, ref, watch} from 'vue';
 import FormTextarea from '../Controls/FormTextarea.vue';
 import FormCheckbox from '../Controls/FormCheckbox.vue';
 import SpinnerButton from '../Controls/SpinnerButton.vue';
-import {usePage} from '@inertiajs/inertia-vue3';
+import {usePage} from '@inertiajs/vue3';
 
 const props = defineProps({
     propComment: {type: Object, required: true},
@@ -73,23 +73,23 @@ const replying = () => {
 
     nextTick(() => {
         setTimeout(() => {
-            usePage().props.value.event.payload = comment.id;
-            usePage().props.value.event.name = 'comment-recursive-reply-active';
-            usePage().props.value.event.fire = + new Date();
+            usePage().props.event.payload = comment.id;
+            usePage().props.event.name = 'comment-recursive-reply-active';
+            usePage().props.event.fire = + new Date();
         }, 300); // equal to animate duration
         replyInput.value.focus();
     });
 };
 watch(
-    () => usePage().props.value.event.fire,
+    () => usePage().props.event.fire,
     (event) => {
         if (! event) {
             return;
         }
-        if (usePage().props.value.event.name === 'comment-recursive-reply-active') {
+        if (usePage().props.event.name === 'comment-recursive-reply-active') {
             if (
                 showReplyForm.value
-                && comment.id !== usePage().props.value.event.payload
+                && comment.id !== usePage().props.event.payload
             ) {
                 showReplyForm.value = false;
             }

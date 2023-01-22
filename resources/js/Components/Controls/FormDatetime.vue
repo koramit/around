@@ -71,7 +71,15 @@ const flatpickrOptions = {
         // minuteIncrement: 30,
         defaultDate: props.modelValue ?? '',
         onChange: onChange,
-    }
+    },
+    datetime: {
+        enableTime: true,
+        dateFormat: props.format + ' H:i',
+        time_24hr: true,
+        minuteIncrement: 1,
+        defaultDate: props.modelValue ?? '',
+        onChange: onChange,
+    },
 };
 
 if (props.options !== undefined) {

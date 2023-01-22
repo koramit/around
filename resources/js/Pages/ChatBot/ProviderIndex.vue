@@ -152,7 +152,7 @@
 import { reactive, ref} from 'vue';
 import FormInput from '../../Components/Controls/FormInput.vue';
 import SpinnerButton from '../../Components/Controls/SpinnerButton.vue';
-import {Inertia} from '@inertiajs/inertia';
+import { router } from '@inertiajs/vue3';
 import CopyToClipboardButton from '../../Components/Controls/CopyToClipboardButton.vue';
 
 const props = defineProps({
@@ -226,14 +226,14 @@ const editProvider = (provider) => {
 const formProviderClick = () => {
     spin.value = true;
     if (formMode.value === 'add') {
-        Inertia.post(props.configs.routes.providers_store, lineProviderForm, {
+        router.post(props.configs.routes.providers_store, lineProviderForm, {
             onFinish: () => { spin.value = false; },
             onSuccess: () => {
                 formMode.value = 'edit';
             },
         });
     } else if (formMode.value === 'edit') {
-        Inertia.patch(selectedProvider.routes.update, lineProviderForm, {
+        router.patch(selectedProvider.routes.update, lineProviderForm, {
             preserveState: true,
             onFinish: () => { spin.value = false; },
         });
@@ -286,14 +286,14 @@ const spin = ref(false);
 const formBotClick = () => {
     spin.value = true;
     if (formMode.value === 'add') {
-        Inertia.post(selectedProvider.routes.bots_store, lineBotForm, {
+        router.post(selectedProvider.routes.bots_store, lineBotForm, {
             onFinish: () => { spin.value = false; },
             onSuccess: () => {
                 formMode.value = 'edit';
             },
         });
     } else if (formMode.value === 'edit') {
-        Inertia.patch(selectedBot.routes.update, lineBotForm, {
+        router.patch(selectedBot.routes.update, lineBotForm, {
             preserveState: true,
             onFinish: () => { spin.value = false; },
         });

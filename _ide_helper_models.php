@@ -859,7 +859,7 @@ namespace App\Models\Resources{
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Resources\Patient $patient
  * @property-read \App\Models\Resources\Ward $place
- * @method static \Illuminate\Database\Eloquent\Builder|Admission findByHashedKey(string $plain)
+ * @method static \Illuminate\Database\Eloquent\Builder|Admission findByHashKey(string $plain)
  * @method static \Illuminate\Database\Eloquent\Builder|Admission newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Admission newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Admission query()
@@ -947,7 +947,7 @@ namespace App\Models\Resources{
  * @property-read int|null $notes_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Resources\Registry[] $registries
  * @property-read int|null $registries_count
- * @method static \Illuminate\Database\Eloquent\Builder|Patient findByHashedKey(string $plain)
+ * @method static \Illuminate\Database\Eloquent\Builder|Patient findByHashKey(string $plain)
  * @method static \Illuminate\Database\Eloquent\Builder|Patient newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Patient newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Patient query()

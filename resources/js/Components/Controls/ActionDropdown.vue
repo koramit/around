@@ -4,7 +4,7 @@
             v-for="(action, key) in actions"
             :key="key"
         >
-            <InertiaLink
+            <Link
                 v-if="action.as === 'link'"
                 :href="action.route"
                 class="block w-full text-left px-4 py-2"
@@ -16,7 +16,7 @@
                     />
                     <span>{{ action.label }}</span>
                 </span>
-            </InertiaLink>
+            </Link>
             <button
                 v-else-if="action.as === 'button'"
                 :key="key"
@@ -36,7 +36,7 @@
 </template>
 
 <script setup>
-import {InertiaLink} from '@inertiajs/inertia-vue3';
+import {Link} from '@inertiajs/vue3';
 import IconVector from '../Helpers/IconVector.vue';
 defineEmits(['action-clicked']);
 defineProps({

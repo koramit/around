@@ -35,9 +35,9 @@ class ReportStoreAction extends ReportAction
             'request_addition_tissue' => ['required', Rule::requiredIf(! $data['request_hla'] && ! $data['request_cxm'])],
         ]);
 
-        $patient = Patient::query()->findByHashedKey($validated['hn'])->first();
+        $patient = Patient::query()->findByHashKey($validated['hn'])->first();
         $donor = ($validated['donor_hn'] ?? null)
-            ? Patient::query()->findByHashedKey($validated['donor_hn'])->first()
+            ? Patient::query()->findByHashKey($validated['donor_hn'])->first()
             : null;
 
         // if no case yet then create one

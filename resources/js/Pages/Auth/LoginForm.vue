@@ -51,7 +51,7 @@
 </template>
 
 <script setup>
-import { useForm } from '@inertiajs/inertia-vue3';
+import { useForm } from '@inertiajs/vue3';
 import { nextTick, onMounted, ref } from 'vue';
 import FormInput from '../../Components/Controls/FormInput.vue';
 import SpinnerButton from '../../Components/Controls/SpinnerButton.vue';

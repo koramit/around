@@ -34,7 +34,7 @@ class AdmissionManager
             }
         }
 
-        $admission = Admission::findByHashedKey($an)->withPlaceName()->first();
+        $admission = Admission::query()->findByHashKey($an)->withPlaceName()->first();
 
         if ($admission) {
             if ($admissionData['found']) { // update
