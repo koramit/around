@@ -2,6 +2,7 @@
 
 namespace App\Models\Registries;
 
+use App\Casts\KidneyTransplantAdmissionCaseRecordStatus;
 use App\Models\CaseRecord;
 use App\Models\Resources\Registry;
 use Illuminate\Database\Eloquent\Builder;
@@ -29,6 +30,14 @@ class KidneyTransplantAdmissionCaseRecord extends CaseRecord
                 )
             );
         });
+    }
+
+    /**
+     * Override.
+     */
+    public function getCasts(): array
+    {
+        return array_merge(parent::getCasts(), ['status' => KidneyTransplantAdmissionCaseRecordStatus::class]);
     }
 
     public function genTitle(): string

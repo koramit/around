@@ -2,8 +2,10 @@
 
 namespace App\Actions\Wards\KidneyTransplantAdmission;
 
+use App\Models\Registries\KidneyTransplantAdmissionCaseRecord;
 use App\Models\Registries\KidneyTransplantAdmissionCaseRecord as CaseRecord;
 use App\Models\Resources\Registry;
+use App\Models\User;
 use App\Traits\AvatarLinkable;
 use App\Traits\FlashDataGeneratable;
 use Illuminate\Database\Eloquent\Builder;
@@ -19,7 +21,31 @@ class KidneyTransplantAdmissionAction
         'admit_reasons' => [
             ['label' => 'Kidney Transplant', 'value' => 'kt'],
             ['label' => 'Complication', 'value' => 'complication'],
-        ]
+        ],
+        'donor_types' => ['CD', 'LD'],
+        'abo_options' => ['A', 'B', 'AB', 'O'],
+        'rh_options' => ['positive', 'negative'],
+        'hla_mismatch_options' => [0,1,2],
+        'crossmatch_options' => ['positive', 'negative'],
+        'male_recipient_is_options' => ['น้อง', 'พี่', 'บุตร', 'สามี', 'บิดา', 'หลาน', 'น้า', 'อา', 'ลุง'],
+        'female_recipient_is_options' => ['น้อง', 'พี่', 'บุตร', 'ภรรยา', 'มารดา',  'หลาน', 'ป้า', 'น้า', 'อา'],
+        'donor_is_options' => [
+            'น้อง' => ['พี่', 'ฝาแฝด'],
+            'พี่' => ['น้อง', 'ฝาแฝด'],
+            'บุตร' => ['บิดา', 'มารดา'],
+            'ภรรยา' => ['สามี'],
+            'สามี' => ['ภรรยา'],
+            'มารดา' => ['บุตร'],
+            'บิดา' => ['บุตร'],
+            'หลาน' => ['ป้า', 'น้า', 'อา', 'ลุง'],
+            'ป้า' => ['หลาน'],
+            'น้า' => ['หลาน'],
+            'อา' => ['หลาน'],
+            'ลุง' => ['หลาน'],
+        ],
+        'smoking_options' => ['smoker', 'ex-smoker', 'never'],
+        'graft_function_options' => ['immediate graft function ', 'slow graft function', 'delayed graft function', 'primary non-function'],
+        'dialysis_mode_options' => ['HD', 'PD'],
     ];
 
     public function __construct()
@@ -39,5 +65,44 @@ class KidneyTransplantAdmissionAction
         return CaseRecord::query()
             ->findByUnhashKey($hashedKey)
             ->firstOrFail();
+    }
+
+    protected function getActionMenu(KidneyTransplantAdmissionCaseRecord $caseRecord, User $user, array $actions = []): array
+    {
+        return collect([
+            [
+                'label' => 'Edit',
+                'as' => 'link',
+                'icon' => 'edit',
+                'theme' => 'accent',
+                'route' => route('wards.kt-admission.edit', $caseRecord->hashed_key),
+                'can' => ($user->can('edit', $caseRecord) || $user->can('addendum', $caseRecord))
+                    && (! count($actions) || in_array('edit', $actions)),
+            ],
+            [
+                'label' => 'Complete',
+                'as' => 'button',
+                'icon' => 'box-archive',
+                'name' => 'complete-case',
+                'route' => route('wards.kt-admission.complete', $caseRecord->hashed_key),
+                'can' => $user->can('update', $caseRecord)
+                    && (! count($actions) || in_array('complete', $actions)),
+            ],
+            [
+                'label' => 'Delete',
+                'as' => 'button',
+                'icon' => 'trash',
+                'theme' => 'danger',
+                'name' => 'destroy-case',
+                'route' => route('wards.kt-admission.destroy', $caseRecord->hashed_key),
+                'config' => [
+                    'heading' => 'Delete Case',
+                    'confirmText' => $caseRecord->title,
+                    'requireReason' => false,
+                ],
+                'can' => $user->can('update', $caseRecord)
+                    && (! count($actions) || in_array('destroy', $actions)),
+            ],
+        ])->filter(fn ($action) => $action['can'])->values()->all();
     }
 }

@@ -14,7 +14,7 @@
             :class="{
                 'border-red-400': error,
                 'border-gray-200': !selected && !error,
-                'opacity-50': selected && selected !== item.value,
+                'opacity-50': selected !== null && selected !== item.value,
                 'border-accent font-normal': selected === item.value && !error,
             }"
         >

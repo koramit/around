@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\Ability;
 use App\Models\Resources\Division;
-use App\Models\Resources\NoteType;
 use App\Models\Resources\Person;
 use App\Models\Resources\Registry;
 use App\Models\Role;
@@ -40,20 +39,14 @@ class KTAdmissionWardRegisterSeeder extends Seeder
 
         // 2. Add new note types if needed
         $timestamps = ['created_at' => now(), 'updated_at' => now()];
-        /*NoteType::query()->insert([
-            ['name' => 'kt_transplantation_admission_note', 'label' => 'Kidney Transplant Transplantation Admission Note'] + $timestamps,
-            ['name' => 'kt_complication_admission_note', 'label' => 'Kidney Transplant Complication Admission Note'] + $timestamps,
-        ]);*/
 
         // 3. Add new abilities and roles
         Ability::query()->insert([
             // cases - index
             ['registry_id' => $registry->id, 'name' => 'view_any_kt_admission_cases'] + $timestamps,
-            /*// notes - index + view
-            ['registry_id' => $registry->id, 'name' => 'view_any_kt_admission_notes'] + $timestamps,*/
-            // notes - create + edit + update + cancel
+            // cases - create + edit + update + cancel
             ['registry_id' => $registry->id, 'name' => 'create_kt_admission_case'] + $timestamps,
-            // notes - addendum
+            // cases - addendum
             ['registry_id' => $registry->id, 'name' => 'addendum_kt_admission_case'] + $timestamps,
         ]);
         $ktWardNurse = Role::query()->create([
@@ -194,6 +187,5 @@ class KTAdmissionWardRegisterSeeder extends Seeder
                 ['name' => 'รศ.นพ. ธวัชชัย ทวีมั่นคงทรัพย์'] + $share,
                 ['name' => 'รศ.นพ. เอกรินทร์ โชติกวาณิชย์'] + $share,
             ]);
-
     }
 }

@@ -271,7 +271,7 @@
     <hr class="my-4 border-b border-accent">
     <FormCheckbox
         label="None"
-        name="comorbid_none"
+        name="comorbidities.none"
         v-model="form.comorbidities.none"
         :toggler="true"
     />
@@ -280,131 +280,154 @@
             class="mt-2 md:mt-4"
             v-if="!form.comorbidities.none"
         >
+            <AlertMessage
+                title="Date diagnosis guideline"
+                message="Pick 15th in case of unknown date. Pick July in case of unknown month"
+            />
             <div
-                class="grid gap-2 md:gap-4 grid-cols-2 xl:gap-8 mb-2 md:mb-4"
+                class="mt-2 md:mt-4"
                 v-for="(comorbidity, key) in configs.comorbid_a"
                 :key="key"
             >
-                <FormCheckbox
-                    :name="comorbidity.name"
-                    :label="comorbidity.label"
-                    v-model="form.comorbidities[comorbidity.name]"
-                />
-                <FormDatetime
-                    :name="`date_${comorbidity.name}`"
-                    v-model="form.comorbidities[`date_${comorbidity.name}`]"
-                    :error="$page.props.errors[`date_${comorbidity.name}`]"
-                    :placeholder="`Date of ${comorbidity.label}`"
-                    :disabled="!form.comorbidities[comorbidity.name]"
-                />
+                <div class="grid gap-2 md:gap-4 grid-cols-2 xl:gap-8 mb-2 md:mb-4 md:pb-4 md:border-b-2 border-dashed">
+                    <FormCheckbox
+                        :name="`comorbidities.${comorbidity.name}`"
+                        :label="comorbidity.label"
+                        v-model="form.comorbidities[comorbidity.name]"
+                    />
+                    <FormDatetime
+                        :name="`comorbidities.date_${comorbidity.name}`"
+                        v-model="form.comorbidities[`date_${comorbidity.name}`]"
+                        :error="$page.props.errors[`comorbidities.date_${comorbidity.name}`]"
+                        :placeholder="`Date of ${comorbidity.label}`"
+                        :disabled="!form.comorbidities[comorbidity.name]"
+                    />
+                </div>
             </div>
-            <div class="grid gap-2 md:gap-4 grid-cols-2 xl:gap-8 mb-2 md:mb-4">
+            <div class="grid gap-2 md:gap-4 grid-cols-2 xl:gap-8 mb-2 md:mb-4 md:pb-4 md:border-b-2 border-dashed">
                 <FormCheckbox
-                    name="HT"
+                    name="comorbidities.HT"
                     label="HT"
                     v-model="form.comorbidities.HT"
                 />
                 <FormDatetime
-                    name="date_HT"
+                    name="comorbidities.date_HT"
                     v-model="form.comorbidities.date_HT"
-                    :error="$page.props.errors.date_HT"
+                    :error="$page.props.errors['comorbidities.date_HT']"
                     placeholder="Date of HT"
                     :disabled="!form.comorbidities.HT"
                 />
             </div>
-            <div class="grid gap-2 md:gap-4 grid-cols-2 xl:gap-8 mb-2 md:mb-4">
+            <div class="grid gap-2 md:gap-4 grid-cols-2 xl:gap-8 mb-2 md:mb-4 md:pb-4 md:border-b-2 border-dashed">
                 <FormCheckbox
-                    name="on_HT_medication"
+                    name="comorbidities.on_HT_medication"
                     label="On HT Medication"
                     v-model="form.comorbidities.on_HT_medication"
                 />
                 <div class="space-y-2 md:space-y-4">
                     <FormDatetime
-                        name="date_start_HT_medication"
+                        name="comorbidities.date_start_HT_medication"
                         v-model="form.comorbidities.date_start_HT_medication"
-                        :error="$page.props.errors.date_start_HT_medication"
+                        :error="$page.props.errors['comorbidities.date_start_HT_medication']"
                         placeholder="Date start HT medication"
                         :disabled="!form.comorbidities.on_HT_medication"
                     />
                     <FormInput
-                        name="HT_medication"
+                        name="comorbidities.HT_medication"
                         v-model="form.comorbidities.HT_medication"
-                        :error="$page.props.errors.HT_medication"
+                        :error="$page.props.errors['comorbidities.HT_medication']"
                         placeholder="HT medication"
                         :disabled="!form.comorbidities.on_HT_medication"
                     />
                 </div>
             </div>
-            <div class="grid gap-2 md:gap-4 grid-cols-2 xl:gap-8 mb-2 md:mb-4">
+            <div class="grid gap-2 md:gap-4 grid-cols-2 xl:gap-8 mb-2 md:mb-4 md:pb-4 md:border-b-2 border-dashed">
                 <FormCheckbox
-                    name="DM"
+                    name="comorbidities.DM"
                     label="DM"
                     v-model="form.comorbidities.DM"
                 />
                 <FormDatetime
-                    name="date_DM"
+                    name="comorbidities.date_DM"
                     v-model="form.comorbidities.date_DM"
-                    :error="$page.props.errors.date_DM"
+                    :error="$page.props.errors['comorbidities.date_DM']"
                     placeholder="Date of DM"
                     :disabled="!form.comorbidities.DM"
                 />
             </div>
-            <div class="grid gap-2 md:gap-4 grid-cols-2 xl:gap-8 mb-2 md:mb-4">
+            <div class="grid gap-2 md:gap-4 grid-cols-2 xl:gap-8 mb-2 md:mb-4 md:pb-4 md:border-b-2 border-dashed">
                 <FormCheckbox
-                    name="on_DM_medication"
+                    name="comorbidities.on_DM_medication"
                     label="On DM Medication"
                     v-model="form.comorbidities.on_DM_medication"
                 />
                 <div class="space-y-2 md:space-y-4">
                     <FormDatetime
-                        name="date_start_DM_medication"
+                        name="comorbidities.date_start_DM_medication"
                         v-model="form.comorbidities.date_start_DM_medication"
-                        :error="$page.props.errors.date_start_DM_medication"
+                        :error="$page.props.errors['comorbidities.date_start_DM_medication']"
                         placeholder="Date start DM medication"
                         :disabled="!form.comorbidities.on_DM_medication"
                     />
                     <FormInput
-                        name="DM_medication"
+                        name="comorbidities.DM_medication"
                         v-model="form.comorbidities.DM_medication"
-                        :error="$page.props.errors.DM_medication"
+                        :error="$page.props.errors['comorbidities.DM_medication']"
                         placeholder="DM medication"
                         :disabled="!form.comorbidities.on_DM_medication"
                     />
                 </div>
             </div>
             <div
-                class="grid gap-2 md:gap-4 grid-cols-2 xl:gap-8 mb-2 md:mb-4"
                 v-for="(comorbidity, key) in configs.comorbid_b"
                 :key="key"
             >
-                <FormCheckbox
-                    :name="comorbidity.name"
-                    :label="comorbidity.label"
-                    v-model="form.comorbidities[comorbidity.name]"
-                />
-                <FormDatetime
-                    :name="`date_${comorbidity.name}`"
-                    v-model="form.comorbidities[`date_${comorbidity.name}`]"
-                    :error="$page.props.errors[`date_${comorbidity.name}`]"
-                    :placeholder="`Date of ${comorbidity.label}`"
-                    :disabled="!form.comorbidities[comorbidity.name]"
-                />
+                <div class="grid gap-2 md:gap-4 grid-cols-2 xl:gap-8 mb-2 md:mb-4 md:pb-4 md:border-b-2 border-dashed">
+                    <FormCheckbox
+                        :name="`comorbidities.${comorbidity.name}`"
+                        :label="comorbidity.label"
+                        v-model="form.comorbidities[comorbidity.name]"
+                    />
+                    <FormDatetime
+                        :name="`comorbidities.date_${comorbidity.name}`"
+                        v-model="form.comorbidities[`date_${comorbidity.name}`]"
+                        :error="$page.props.errors[`comorbidities.date_${comorbidity.name}`]"
+                        :placeholder="`Date of ${comorbidity.label}`"
+                        :disabled="!form.comorbidities[comorbidity.name]"
+                        v-if="comorbidity.name !== 'on_allopurinol'"
+                    />
+                    <FormDatetime
+                        name="comorbidities.date_start_allopurinol"
+                        v-model="form.comorbidities.date_start_allopurinol"
+                        :error="$page.props.errors['comorbidities.date_start_allopurinol']"
+                        placeholder="Date start allopurinol"
+                        :disabled="!form.comorbidities[comorbidity.name]"
+                        v-else
+                    />
+                </div>
             </div>
             <div class="grid gap-2 md:gap-4 grid-cols-2 xl:gap-8 mb-2 md:mb-4">
                 <FormSelect
                     label="smoking"
-                    name="smoking"
+                    name="comorbidities.smoking"
                     v-model="form.comorbidities.smoking"
                     :options="configs.smoking_options"
-                    :error="$page.props.errors.smoking"
+                    :error="$page.props.errors['comorbidities.smoking']"
                 />
                 <FormDatetime
                     label="date start smoking"
-                    name="date_smoking"
-                    v-model="form.comorbidities.date_smoking"
-                    :error="$page.props.errors.date_smoking"
+                    name="comorbidities.date_start_smoking"
+                    v-model="form.comorbidities.date_start_smoking"
+                    :error="$page.props.errors['comorbidities.date_start_smoking']"
+                    :disabled="!form.comorbidities.smoking || form.comorbidities.smoking === 'never'"
                 />
             </div>
+            <FormInput
+                label="other comorbidities"
+                name="comorbidities.comorbidities_other"
+                v-model="form.comorbidities.comorbidities_other"
+                :error="$page.props.errors['comorbidities.comorbidities_other']"
+            />
         </div>
     </Transition>
     <h2 class="form-label text-lg italic text-complement mt-4 md:mt-8 xl:mt-16 scroll-mt-16 md:scroll-mt-8">
@@ -473,9 +496,9 @@
         </div>
         <FormInput
             label="warm ischemia time (min)"
-            name="warm_ischemic_time"
-            v-model="form.warm_ischemic_time"
-            :error="$page.props.errors.warm_ischemic_time"
+            name="warm_ischemic_time_minutes"
+            v-model="form.warm_ischemic_time_minutes"
+            :error="$page.props.errors.warm_ischemic_time_minutes"
             type="tel"
         />
         <FormInput
@@ -549,9 +572,9 @@
                             v-for="(field, key) in configs.dialysis_indication_fields"
                             :key="key"
                             :label="field.label"
-                            :name="`graft_function_${field.name}`"
-                            v-model="form[`graft_function_${field.name}`]"
-                            :error="$page.props.errors[`graft_function_${field.name}`]"
+                            :name="field.name"
+                            v-model="form[field.name]"
+                            :error="$page.props.errors[field.name]"
                         />
                         <FormInput
                             name="delayed_graft_function_dialysis_indication_other"
@@ -565,7 +588,7 @@
             <Transition name="slide-fade">
                 <FormCheckbox
                     v-if="form.graft_function === 'primary non-function'"
-                    class="md:mt-10"
+                    class="md:mt-8 lg:mt-10"
                     label="graft nephrectomy"
                     name="graft_function_graft_nephrectomy"
                     v-model="form.graft_function_graft_nephrectomy"
@@ -639,7 +662,7 @@
     <hr class="my-4 border-b border-accent">
     <FormCheckbox
         label="None"
-        name="complications_none"
+        name="complications.none"
         v-model="form.complications.none"
         :toggler="true"
     />
@@ -655,11 +678,11 @@
                         v-for="(field, key) in configs.complication_infection_fields"
                         :key="key"
                         :label="field.label"
-                        :name="`complications_infection_${field.name}`"
+                        :name="`complications.${field.name}`"
                         v-model="form.complications[field.name]"
                     />
                     <FormInput
-                        name="complications_infection_other"
+                        name="complications.infection_other"
                         v-model="form.complications.infection_other"
                         placeholder="other infection"
                     />
@@ -668,7 +691,7 @@
                     <label class="form-label">hematoma :</label>
                     <FormCheckbox
                         label="hematoma"
-                        name="complications_hematoma"
+                        name="complications.hematoma"
                         v-model="form.complications.hematoma"
                     />
                     <Transition name="slide-fade">
@@ -678,12 +701,12 @@
                         >
                             <FormCheckbox
                                 label="blood transfusion"
-                                name="complications_blood_transfusion"
+                                name="complications.blood_transfusion"
                                 v-model="form.complications.blood_transfusion"
                             />
                             <FormInput
                                 label="blood transfusion (unit)"
-                                name="complications_blood_transfusion_unit"
+                                name="complications.blood_transfusion_unit"
                                 v-model="form.complications.blood_transfusion_unit"
                                 :disabled="!form.complications.blood_transfusion"
                             />
@@ -694,7 +717,7 @@
                         v-for="(field, key) in configs.complication_vascular_fields"
                         :key="key"
                         :label="field.label"
-                        :name="`complications_infection_${field.name}`"
+                        :name="`complications.${field.name}`"
                         v-model="form.complications[field.name]"
                     />
                 </div>
@@ -704,7 +727,7 @@
                         v-for="(field, key) in configs.complication_urological_fields"
                         :key="key"
                         :label="field.label"
-                        :name="`complications_urological_${field.name}`"
+                        :name="`complications.${field.name}`"
                         v-model="form.complications[field.name]"
                     />
                 </div>
@@ -714,7 +737,7 @@
                         v-for="(field, key) in configs.complication_investigation_fields"
                         :key="key"
                         :label="field.label"
-                        :name="`complications_investigation_${field.name}`"
+                        :name="`complications.${field.name}`"
                         v-model="form.complications[field.name]"
                     />
                 </div>
@@ -730,7 +753,7 @@
             <MultiImageUploader
                 :service-endpoints="configs.routes.upload"
                 :pathname="configs.attachment_upload_pathname"
-                name="complication_data_attachments"
+                name="complication.attachments"
                 v-model="form.complications.attachments"
             />
         </div>
@@ -744,10 +767,33 @@
         v-model="form.remarks"
     />
 
+    <SpinnerButton
+        :spin="form.processing"
+        v-if="formConfigs.can.update"
+        @click="complete"
+        class="mt-4 md:mt-8 w-full btn-accent"
+    >
+        COMPLETE
+    </SpinnerButton>
+
+    <SpinnerButton
+        v-if="formConfigs.can.destroy"
+        :spin="form.processing"
+        @click="handleButtonActionClicked('destroy-case')"
+        class="mt-4 md:mt-8 w-full btn-danger"
+    >
+        DELETE
+    </SpinnerButton>
+
     <FormSelectOther
         :placeholder="selectOther.placeholder"
         ref="selectOtherInput"
         @closed="selectOtherClosed"
+    />
+
+    <ConfirmFormComposable
+        ref="confirmForm"
+        @confirmed="(reason) => confirmed(reason, handleConfirmedAction)"
     />
 </template>
 
@@ -766,8 +812,13 @@ import FormTextarea from '../../../Components/Controls/FormTextarea.vue';
 import MultiImageUploader from '../../../Components/Controls/MultiImageUploader.vue';
 import IconTrashXMark from '../../../Components/Helpers/Icons/IconTrashXMark.vue';
 import IconFileCirclePlus from '../../../Components/Helpers/Icons/IconFileCirclePlus.vue';
-import IconCheckCircle from '../../../Components/Helpers/Icons/IconCheckCircle.vue';
+import {useFormAutosave} from '../../../functions/useFormAutosave.js';
+import AlertMessage from '../../../Components/Helpers/AlertMessage.vue';
+import SpinnerButton from '../../../Components/Controls/SpinnerButton.vue';
+import {useConfirmForm} from '../../../functions/useConfirmForm.js';
+import {useActionStore} from '../../../functions/useActionStore.js';
 const FormSelectOther = defineAsyncComponent(() => import('../../../Components/Controls/FormSelectOther.vue'));
+const ConfirmFormComposable = defineAsyncComponent(() => import('../../../Components/Forms/ConfirmFormComposable.vue'));
 
 const props = defineProps({
     formData: {type: Object, required: true},
@@ -777,6 +828,16 @@ const props = defineProps({
 const form = useForm({...props.formData});
 const configs = reactive({...props.formConfigs});
 
+const {autosave} = useFormAutosave();
+watch (
+    () => form.data(),
+    (value) => {
+        autosave(value, configs.routes.update);
+    },
+    {deep: configs.can.update},
+);
+
+const { selectOtherInput, selectOther, selectOtherClosed } = useSelectOther();
 const insuranceInput = ref(null);
 if (form.insurance && !configs.insurances.includes(form.insurance)) {
     configs.insurances.push(form.insurance);
@@ -811,7 +872,39 @@ watch (
         selectOtherInput.value.open();
     }
 );
-const { selectOtherInput, selectOther, selectOtherClosed } = useSelectOther();
+
+watch (
+    () => form.recipient_is,
+    () => {
+        form.donor_is = null;
+    },
+);
+
+watch (
+    () => form.comorbidities,
+    (value) => {
+        Object.keys(value).map((key) => {
+            if (key.includes('date_') || key === 'none' || key === 'comorbidities_other' || value[key] === true) {
+                return;
+            }
+
+            if (key === 'on_HT_medication') {
+                value.date_start_HT_medication = null;
+                value.HT_medication = null;
+            } else if (key === 'on_DM_medication') {
+                value.date_start_DM_medication = null;
+                value.DM_medication = null;
+            } else if (key === 'on_allopurinol') {
+                value.date_start_allopurinol = null;
+            } else if (key === 'smoking') {
+                value.date_start_smoking = null;
+            } else {
+                value[`date_${key}`] = null;
+            }
+        });
+    },
+    {deep: true},
+);
 
 function removeBiopsy(index) {
     let temp = [...form.graft_biopsies];
@@ -820,6 +913,60 @@ function removeBiopsy(index) {
     nextTick(() => {
         form.graft_biopsies = temp;
     });
+}
+
+const {confirmForm, openConfirmForm, confirmed} = useConfirmForm();
+const {actionStore} = useActionStore();
+let actionStoreName = null;
+watch(
+    () => actionStore.value,
+    (value) => {
+        switch (value.name) {
+        case 'complete-case':
+            complete();
+            break;
+        case 'addendum-case':
+            addendum();
+            break;
+        case 'destroy-case':
+        case 'cancel-case':
+            actionStoreName = value.name;
+            openConfirmForm(value.config);
+            break;
+        default :
+            return;
+        }
+    },
+    {deep: true}
+);
+const handleConfirmedAction = (reason) => {
+    switch (actionStoreName) {
+    case 'destroy-case':
+        useForm({reason: reason}).delete(configs.routes.destroy);
+        break;
+    case 'cancel-case':
+        cancel(reason);
+        break;
+    default :
+        return;
+    }
+    actionStoreName = null;
+};
+function complete() {
+    form.post(configs.routes.complete);
+}
+
+function addendum() {
+
+}
+
+function cancel(reason) {
+
+}
+
+function handleButtonActionClicked (actionName) {
+    actionStoreName = actionName;
+    openConfirmForm(props.formConfigs.actions.find(a => a.name === actionName).config);
 }
 </script>
 

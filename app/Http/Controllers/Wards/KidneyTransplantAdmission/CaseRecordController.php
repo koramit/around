@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Wards\KidneyTransplantAdmission;
 
+use App\Actions\Wards\KidneyTransplantAdmission\CaseRecordDestroyAction;
 use App\Actions\Wards\KidneyTransplantAdmission\CaseRecordEditAction;
 use App\Actions\Wards\KidneyTransplantAdmission\CaseRecordIndexAction;
 use App\Actions\Wards\KidneyTransplantAdmission\CaseRecordStoreAction;
+use App\Actions\Wards\KidneyTransplantAdmission\CaseRecordUpdateAction;
 use App\Http\Controllers\Controller;
 use App\Traits\AppLayoutSessionFlashable;
 use Illuminate\Http\Request;
@@ -61,5 +63,22 @@ class CaseRecordController extends Controller
         unset($data['flash']);
 
         return Inertia::render('Wards/KidneyTransplantAdmission/CaseEdit', [...$data]);
+    }
+
+    public function update(string $hashedKey, Request $request)
+    {
+        return (new CaseRecordUpdateAction)(data: $request->all(), hashedKey: $hashedKey, user: $request->user());
+    }
+
+    // destroy case
+    public function destroy($hashedKey, Request $request)
+    {
+        $message = (new CaseRecordDestroyAction)(hashedKey: $hashedKey, user: $request->user());
+
+        if ($request->wantsJson()) {
+            return $message;
+        }
+
+        return redirect()->route('wards.kt-admission.index')->with('message', $message);
     }
 }

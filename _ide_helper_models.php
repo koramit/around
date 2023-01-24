@@ -690,7 +690,7 @@ namespace App\Models\Registries{
 /**
  * App\Models\Registries\AcuteHemodialysisCaseRecord
  *
- * @property string $discussion_route
+ * @property-read string $hashed_key
  * @property int $id
  * @property int $patient_id
  * @property int $registry_id
@@ -738,12 +738,13 @@ namespace App\Models\Registries{
 /**
  * App\Models\Registries\KidneyTransplantAdmissionCaseRecord
  *
+ * @property-read string $hashed_key
  * @property int $id
  * @property int $patient_id
  * @property int $registry_id
  * @property mixed $meta
  * @property mixed $form
- * @property int $status
+ * @property string|null $status
  * @property \Illuminate\Support\Carbon|null $deleted_at
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at

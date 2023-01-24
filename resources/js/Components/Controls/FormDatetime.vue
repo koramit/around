@@ -73,8 +73,10 @@ const flatpickrOptions = {
         onChange: onChange,
     },
     datetime: {
+        altInput: true,
         enableTime: true,
-        dateFormat: props.format + ' H:i',
+        // dateFormat: props.format + ' H:i',
+        altFormat:  props.format + ' H:i',
         time_24hr: true,
         minuteIncrement: 1,
         defaultDate: props.modelValue ?? '',
@@ -112,6 +114,15 @@ const clear = () => {
     // Emit autosave if field name available
     emits('autosave');
 };
+
+watch (
+    () => props.modelValue,
+    (val) => {
+        if (val === null) {
+            clear();
+        }
+    }
+);
 
 defineExpose({ setDate, clear });
 </script>
