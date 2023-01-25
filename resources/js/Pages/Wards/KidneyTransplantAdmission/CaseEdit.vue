@@ -275,6 +275,12 @@
         v-model="form.comorbidities.none"
         :toggler="true"
     />
+    <small
+        class="text-red-400 text-sm scroll-mt-16 md:scroll-mt-8"
+        id="comorbidities.none"
+    >
+        {{ $page.props.errors['comorbidities.none'] }}
+    </small>
     <Transition name="slide-fade">
         <div
             class="mt-2 md:mt-4"
@@ -282,7 +288,7 @@
         >
             <AlertMessage
                 title="Date diagnosis guideline"
-                message="Pick 15th in case of unknown date. Pick July in case of unknown month"
+                message="Pick 15th in case of unknown date. Pick July in case of unknown month."
             />
             <div
                 class="mt-2 md:mt-4"
@@ -403,6 +409,29 @@
                         placeholder="Date start allopurinol"
                         :disabled="!form.comorbidities[comorbidity.name]"
                         v-else
+                    />
+                </div>
+            </div>
+            <div class="grid gap-2 md:gap-4 grid-cols-2 xl:gap-8 mb-2 md:mb-4 md:pb-4 md:border-b-2 border-dashed">
+                <FormCheckbox
+                    name="comorbidities.cancer"
+                    label="Cancer"
+                    v-model="form.comorbidities.cancer"
+                />
+                <div class="space-y-2 md:space-y-4">
+                    <FormDatetime
+                        name="comorbidities.date_cancer"
+                        v-model="form.comorbidities.date_cancer"
+                        :error="$page.props.errors['comorbidities.date_cancer']"
+                        placeholder="Date of cancer"
+                        :disabled="!form.comorbidities.cancer"
+                    />
+                    <FormInput
+                        name="comorbidities.cancer_type"
+                        v-model="form.comorbidities.cancer_type"
+                        :error="$page.props.errors['comorbidities.cancer_type']"
+                        placeholder="cancer type"
+                        :disabled="!form.comorbidities.cancer"
                     />
                 </div>
             </div>
@@ -610,23 +639,29 @@
             <div class="space-y-2 md:space-y-4">
                 <FormDatetime
                     :label="`date of biopsy#${key+1}`"
-                    name="date_biopsy"
+                    :name="`graft_biopsies.${key}.date_biopsy`"
                     v-model="biopsy.date_biopsy"
                 />
                 <div>
                     <label class="form-label">result biopsy#{{ key+1 }} :</label>
-                    <div class="grid grid-cols-2 gap-2 md:gap-4">
+                    <small
+                        class="text-red-400 text-sm scroll-mt-16 md:scroll-mt-8"
+                        :id="`graft_biopsies.${key}.result`"
+                    >
+                        {{ $page.props.errors[`graft_biopsies.${key}.result`] }}
+                    </small>
+                    <div class="mt-2 md:mt-4 grid grid-cols-2 gap-2 md:gap-4">
                         <FormCheckbox
                             v-for="(field, index) in configs.biopsy_result_fields"
                             :key="index"
                             :label="field.label"
-                            :name="`biopsy_result_${field.name}_${key}`"
+                            :name="`graft_biopsies.${key}.result.${field.name}`"
                             v-model="biopsy[field.name]"
                         />
                     </div>
                     <FormInput
                         class="mt-2 md:mt-4"
-                        :name="`biopsy_result_other_${key}`"
+                        :name="`graft_biopsies.${key}.result.other_result`"
                         v-model="biopsy.other_result"
                         placeholder="other result"
                     />
@@ -666,6 +701,9 @@
         v-model="form.complications.none"
         :toggler="true"
     />
+    <small class="text-red-400 text-sm">
+        {{ $page.props.errors['complications.none'] }}
+    </small>
     <Transition name="slide-fade">
         <div
             class="my-2 md:my-4 space-y-2 md:space-y-4"

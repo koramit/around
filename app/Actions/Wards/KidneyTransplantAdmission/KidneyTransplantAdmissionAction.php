@@ -44,8 +44,9 @@ class KidneyTransplantAdmissionAction
             'ลุง' => ['หลาน'],
         ],
         'smoking_options' => ['smoker', 'ex-smoker', 'never'],
-        'graft_function_options' => ['immediate graft function ', 'slow graft function', 'delayed graft function', 'primary non-function'],
+        'graft_function_options' => ['immediate graft function', 'slow graft function', 'delayed graft function', 'primary non-function'],
         'dialysis_mode_options' => ['HD', 'PD'],
+        'attachment_upload_pathname' => 'w/k/a',
     ];
 
     public function __construct()
