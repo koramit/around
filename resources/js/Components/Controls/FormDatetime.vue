@@ -17,7 +17,6 @@
             readonly
             :value="modelValue"
             class="form-input"
-            :class="{ '!border-red-400 !text-red-400': error }"
         >
         <div
             v-if="error"
@@ -31,7 +30,7 @@
 <script setup>
 import 'flatpickr/dist/themes/light.css';
 import flatpickr from 'flatpickr';
-import { onMounted, ref, watch } from 'vue';
+import {onMounted, ref, watch} from 'vue';
 
 const emits = defineEmits(['autosave', 'update:modelValue']);
 
@@ -94,10 +93,34 @@ onMounted(() => {
     fp = flatpickr(input.value, flatpickrOptions[props.mode]);
 });
 
+watch (
+    () => props.modelValue,
+    (val) => {
+        if (val === null) {
+            clear();
+        }
+    }
+);
+
 watch(
     () => props.disabled,
     (val) => {
         fp._input.disabled = val;
+    }
+);
+watch (
+    () => props.error,
+    (val) => {
+        document.getElementById(props.name).querySelectorAll('input')
+            .forEach((input) => {
+                if (val) {
+                    input.classList.add('!border-red-400');
+                    input.classList.add('!text-red-400');
+                } else {
+                    input.classList.remove('!border-red-400');
+                    input.classList.remove('!text-red-400');
+                }
+            });
     }
 );
 const setDate = (date) => {
@@ -114,15 +137,6 @@ const clear = () => {
     // Emit autosave if field name available
     emits('autosave');
 };
-
-watch (
-    () => props.modelValue,
-    (val) => {
-        if (val === null) {
-            clear();
-        }
-    }
-);
 
 defineExpose({ setDate, clear });
 </script>
