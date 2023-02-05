@@ -29,6 +29,7 @@
                 :spin="form.processing"
                 class="btn-accent w-full mt-8"
                 @click="login"
+                :disabled="!form.login || !form.password"
             >
                 {{ __('ENTER') }}
             </SpinnerButton>

@@ -27,9 +27,9 @@ class CaseRecordDestroyAction extends KidneyTransplantAdmissionAction
         ]);
 
         return [
-                'type' => 'info',
-                'title' => 'Case deleted successfully.',
-                'message' => $caseRecord->title,
+            'type' => 'info',
+            'title' => 'Case deleted successfully.',
+            'message' => $caseRecord->title,
         ];
     }
 }

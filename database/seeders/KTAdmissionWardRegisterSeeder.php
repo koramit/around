@@ -44,7 +44,7 @@ class KTAdmissionWardRegisterSeeder extends Seeder
         Ability::query()->insert([
             // cases - index
             ['registry_id' => $registry->id, 'name' => 'view_any_kt_admission_cases'] + $timestamps,
-            // cases - create + edit + update + cancel
+            // cases - create
             ['registry_id' => $registry->id, 'name' => 'create_kt_admission_case'] + $timestamps,
             // cases - addendum
             ['registry_id' => $registry->id, 'name' => 'addendum_kt_admission_case'] + $timestamps,
@@ -61,8 +61,8 @@ class KTAdmissionWardRegisterSeeder extends Seeder
                 ->pluck('id')
             );
         $ktStaff = Role::query()->create([
-            'name' => 'kidney_transplant_staff',
-            'label' => 'Kidney Transplant Staff',
+            'name' => 'kt_admission_staff',
+            'label' => 'Kidney Transplant Admission Staff',
             'registry_id' => $registry->id,
         ]);
         $ktStaff->abilities()

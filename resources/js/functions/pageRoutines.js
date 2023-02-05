@@ -31,7 +31,13 @@ export function pageRoutines() {
                 }
                 window.translations = response.data.translations;
             })
-            .catch(error => console.log(error));
+            .catch(function (error) {
+                if (error.response.status === 419) {
+                    window.location.reload();
+                } else {
+                    console.error(error);
+                }
+            });
     });
 
     onMounted(() => {

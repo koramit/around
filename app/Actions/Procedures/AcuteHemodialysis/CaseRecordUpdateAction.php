@@ -6,7 +6,6 @@ use App\Extensions\Auth\AvatarUser;
 use App\Models\Registries\AcuteHemodialysisCaseRecord as CaseRecord;
 use App\Models\User;
 use App\Traits\AcuteHemodialysis\CaseRecordShareValidatable;
-use App\Traits\AvatarLinkable;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 

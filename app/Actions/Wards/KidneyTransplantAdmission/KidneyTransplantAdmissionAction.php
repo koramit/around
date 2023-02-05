@@ -17,6 +17,8 @@ class KidneyTransplantAdmissionAction
 
     protected int $REGISTRY_ID;
 
+    protected array $BREADCRUMBS;
+
     protected array $CONFIGS = [
         'admit_reasons' => [
             ['label' => 'Kidney Transplant', 'value' => 'kt'],
@@ -25,7 +27,7 @@ class KidneyTransplantAdmissionAction
         'donor_types' => ['CD', 'LD'],
         'abo_options' => ['A', 'B', 'AB', 'O'],
         'rh_options' => ['positive', 'negative'],
-        'hla_mismatch_options' => [0,1,2],
+        'hla_mismatch_options' => [0, 1, 2],
         'crossmatch_options' => ['positive', 'negative'],
         'male_recipient_is_options' => ['น้อง', 'พี่', 'บุตร', 'สามี', 'บิดา', 'หลาน', 'น้า', 'อา', 'ลุง'],
         'female_recipient_is_options' => ['น้อง', 'พี่', 'บุตร', 'ภรรยา', 'มารดา',  'หลาน', 'ป้า', 'น้า', 'อา'],
@@ -44,6 +46,7 @@ class KidneyTransplantAdmissionAction
             'ลุง' => ['หลาน'],
         ],
         'smoking_options' => ['smoker', 'ex-smoker', 'never'],
+        'smoking_types' => ['smoker', 'ex-smoker'],
         'graft_function_options' => ['immediate graft function', 'slow graft function', 'delayed graft function', 'primary non-function'],
         'dialysis_mode_options' => ['HD', 'PD'],
         'attachment_upload_pathname' => 'w/k/a',
@@ -59,6 +62,12 @@ class KidneyTransplantAdmissionAction
             'registry-id-kt_admission',
             fn () => Registry::query()->where('name', 'acute_hd')->first()->id
         );
+
+        $this->BREADCRUMBS = [
+            ['label' => 'Home', 'route' => route('home')],
+            ['label' => 'Wards', 'route' => route('wards.index')],
+            ['label' => 'KT Admission', 'route' => route('wards.kt-admission.index')],
+        ];
     }
 
     protected function getCaseRecord(string $hashedKey): Model|Builder|CaseRecord
@@ -103,6 +112,30 @@ class KidneyTransplantAdmissionAction
                 ],
                 'can' => $user->can('update', $caseRecord)
                     && (! count($actions) || in_array('destroy', $actions)),
+            ],
+            [
+                'label' => 'Addendum',
+                'as' => 'button',
+                'icon' => 'edit',
+                'name' => 'addendum-case',
+                'route' => route('wards.kt-admission.addendum', $caseRecord->hashed_key),
+                'can' => $user->can('addendum', $caseRecord)
+                    && (! count($actions) || in_array('addendum', $actions)),
+            ],
+            [
+                'label' => 'Cancel',
+                'as' => 'button',
+                'icon' => 'trash-x-mark',
+                'theme' => 'warning',
+                'route' => route('wards.kt-admission.cancel', $caseRecord->hashed_key),
+                'name' => 'cancel-case',
+                'config' => [
+                    'heading' => 'Cancel Case',
+                    'confirmText' => $caseRecord->title,
+                    'requireReason' => true,
+                ],
+                'can' => $user->can('cancel', $caseRecord)
+                    && (! count($actions) || in_array('cancel', $actions)),
             ],
         ])->filter(fn ($action) => $action['can'])->values()->all();
     }

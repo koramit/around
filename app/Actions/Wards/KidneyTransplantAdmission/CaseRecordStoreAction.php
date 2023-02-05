@@ -25,6 +25,9 @@ class CaseRecordStoreAction extends KidneyTransplantAdmissionAction
             'date_off_foley' => null,
             'insurance' => null,
             'cost' => null,
+            'tel_no' => null,
+            'alternative_contact' => null,
+            'contact_info_confirmed' => false,
             'patient_transferred' => false,
             'patient_transferred_to' => null,
             'cause_of_esrd' => null,
@@ -107,10 +110,12 @@ class CaseRecordStoreAction extends KidneyTransplantAdmissionAction
                 'date_hyperparathyroidism' => null,
                 'PTH_grater_than_one_hundred' => false,
                 'date_PTH_grater_than_one_hundred' => null,
-                'smoking' => null,
+                'smoking' => false,
                 'date_start_smoking' => null,
+                'smoking_type' => null,
                 'comorbidities_other' => null,
             ],
+            'donor_cd_hospital' => null,
             'datetime_harvest_start' => null,
             'datetime_harvest_finish' => null,
             'datetime_operation_start' => null,
@@ -146,6 +151,10 @@ class CaseRecordStoreAction extends KidneyTransplantAdmissionAction
                 'hematoma' => false,
                 'blood_transfusion' => false,
                 'blood_transfusion_unit' => null,
+                'anemia' => false,
+                'thrombocytopenia' => false,
+                'leukopenia' => false,
+                'prc_transfusion' => false,
                 'stenosis_a' => false,
                 'stenosis_v' => false,
                 'thrombosis_a' => false,
@@ -163,10 +172,43 @@ class CaseRecordStoreAction extends KidneyTransplantAdmissionAction
                 'renogram' => false,
                 'attachments' => [],
             ],
+            'follow_ups' => [],
             'remarks' => null,
         ],
         'complication' => [
-
+            'nephrologist' => null,
+            'surgeon' => null,
+            'insurance' => null,
+            'cost' => null,
+            'tel_no' => null,
+            'alternative_contact' => null,
+            'contact_info_confirmed' => false,
+            'patient_transferred' => false,
+            'patient_transferred_to' => null,
+            'complications' => [
+                'AKI' => false,
+                'metabolic_disturbance' => false,
+                'metabolic_disturbance_specification' => null,
+                'UTI' => false,
+                'pneumonia' => false,
+                'viral_infection' => false,
+                'diarrhea' => false,
+                'infection_other' => null,
+                'treatment_rejection' => false,
+                'desensitization_protocol' => false,
+                'surgical_complication' => false,
+                'surgical_complication_specification' => null,
+                'complications_other' => null,
+                'attachments' => [],
+            ],
+            'angioplasty' => false,
+            'imaging' => false,
+            'imaging_specification' => null,
+            'graft_biopsies' => [],
+            'procedure_data_attachments' => [],
+            'final_diagnosis' => null,
+            'follow_ups' => [],
+            'remarks' => null,
         ],
     ];
 
@@ -181,7 +223,7 @@ class CaseRecordStoreAction extends KidneyTransplantAdmissionAction
             'reason_for_admission' => [
                 'required',
                 'string',
-                Rule::in(collect($this->CONFIGS['admit_reasons'])->pluck('value')->toArray())
+                Rule::in(collect($this->CONFIGS['admit_reasons'])->pluck('value')->toArray()),
             ],
         ]);
 
@@ -193,6 +235,9 @@ class CaseRecordStoreAction extends KidneyTransplantAdmissionAction
         $admission = Admission::query()->findByHashKey($validated['an'])->first();
         $caseRecord->patient_id = $admission->patient_id;
         $caseRecord->form = $this->FORM_TEMPLATE[$validated['reason_for_admission']];
+        $caseRecord->form['tel_no'] = $admission->patient->profile['tel_no'];
+        $caseRecord->form['alternative_contact'] = $admission->patient->profile['alternative_contact'];
+        // @TODO fill nephrologist and surgeon if exists
         $caseRecord->meta = [
             'version' => $this->CRF_VERSION,
             'hn' => $admission->patient->hn,

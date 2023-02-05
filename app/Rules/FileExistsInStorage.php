@@ -14,7 +14,7 @@ class FileExistsInStorage implements Rule
      */
     public function __construct(
         protected string $path,
-    ){
+    ) {
     }
 
     /**
@@ -26,7 +26,7 @@ class FileExistsInStorage implements Rule
      */
     public function passes($attribute, $value): bool
     {
-        return Storage::exists(`$this->path/$value`);
+        return Storage::exists("{$this->path}/$value");
     }
 
     /**

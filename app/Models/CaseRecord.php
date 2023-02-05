@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 /** @property-read string $hashed_key */
 /** @property-read string $title */
+/** @property-read User $creator */
 class CaseRecord extends Model
 {
     use PKHashable, SoftDeletes;

@@ -87,11 +87,11 @@
 </template>
 
 <script setup>
-import ModalDialog from '../../Components/Helpers/ModalDialog.vue';
+import ModalDialog from '../../../Components/Helpers/ModalDialog.vue';
 import {nextTick, reactive, ref} from 'vue';
-import FormInput from '../../Components/Controls/FormInput.vue';
-import SpinnerButton from '../../Components/Controls/SpinnerButton.vue';
-import FormRadio from '../../Components/Controls/FormRadio.vue';
+import FormInput from '../../../Components/Controls/FormInput.vue';
+import SpinnerButton from '../../../Components/Controls/SpinnerButton.vue';
+import FormRadio from '../../../Components/Controls/FormRadio.vue';
 
 const props = defineProps({
     serviceEndpoint: { type: String, required: true },

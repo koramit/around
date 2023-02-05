@@ -17,6 +17,7 @@
             readonly
             :value="modelValue"
             class="form-input"
+            :class="{ '!text-red-400 !border-red-400': error }"
         >
         <div
             v-if="error"
