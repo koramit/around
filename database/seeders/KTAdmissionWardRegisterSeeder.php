@@ -60,12 +60,12 @@ class KTAdmissionWardRegisterSeeder extends Seeder
                 ->select('id')
                 ->pluck('id')
             );
-        $ktStaff = Role::query()->create([
-            'name' => 'kt_admission_staff',
-            'label' => 'Kidney Transplant Admission Staff',
+        $ktFellow = Role::query()->create([
+            'name' => 'kt_admission_fellow',
+            'label' => 'Kidney Transplant Admission Fellow',
             'registry_id' => $registry->id,
         ]);
-        $ktStaff->abilities()
+        $ktFellow->abilities()
             ->attach(Ability::query()
                 ->whereIn('name', [
                     'view_any_kt_admission_cases',
@@ -74,6 +74,11 @@ class KTAdmissionWardRegisterSeeder extends Seeder
                 ->select('id')
                 ->pluck('id')
             );
+        $ktStaff = Role::query()->create([
+            'name' => 'kt_admission_staff',
+            'label' => 'Kidney Transplant Admission Staff',
+            'registry_id' => $registry->id,
+        ]);
 
         // 4. Clear ability-registry-user related cache
         cache()->forget('ability-registry-map');
@@ -87,16 +92,23 @@ class KTAdmissionWardRegisterSeeder extends Seeder
                 ->where('name', 'like', '%_kt_admission_%')
                 ->pluck('id')
         );
+        $root->users()->with('roles')->each(fn (User $user) => $this->toggleRegistryUser($user));
 
         // 6. Attach new registry and roles to related users
         User::query()
             ->with('roles')
             ->whereHas('roles', fn ($query) => $query->where('name', 'acute_hemodialysis_staff'))
-            ->each(function (User $user) use ($ktStaff) {
-                $user->roles()->attach($ktStaff->id);
+            ->each(function (User $user) use ($ktStaff, $ktFellow) {
+                $user->roles()->attach([$ktFellow->id, $ktStaff->id]);
                 $this->toggleRegistryUser($user);
             });
-        $root->users()->with('roles')->each(fn (User $user) => $this->toggleRegistryUser($user));
+        User::query()
+            ->with('roles')
+            ->whereHas('roles', fn ($query) => $query->where('name', 'acute_hemodialysis_fellow'))
+            ->each(function (User $user) use ($ktFellow) {
+                $user->roles()->attach($ktFellow->id);
+                $this->toggleRegistryUser($user);
+            });
 
         // 7. Add new actions to ResourceActionLog if needed
 
