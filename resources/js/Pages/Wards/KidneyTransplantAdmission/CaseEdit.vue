@@ -28,38 +28,36 @@
             name="discharge_type"
             v-model="form.discharge_type"
         />
-        <template v-if="form.reason_for_admission === 'kt'">
-            <FormAutocomplete
-                label="nephrologist"
-                name="nephrologist"
-                v-model="form.nephrologist"
-                :endpoint="configs.routes.people"
-                :params="configs.routes.nephrologists_scope"
-                :error="$page.props.errors.nephrologist"
-                :length-to-start="3"
-            />
-            <FormAutocomplete
-                label="surgeon"
-                name="surgeon"
-                v-model="form.surgeon"
-                :endpoint="configs.routes.people"
-                :params="configs.routes.surgeons_scope"
-                :error="$page.props.errors.surgeon"
-                :length-to-start="3"
-            />
-            <FormDatetime
-                name="date_off_drain"
-                label="date off drain"
-                v-model="form.date_off_drain"
-                :error="$page.props.errors.date_off_drain"
-            />
-            <FormDatetime
-                name="date_off_foley"
-                label="date off foley"
-                v-model="form.date_off_foley"
-                :error="$page.props.errors.date_off_foley"
-            />
-        </template>
+        <FormAutocomplete
+            label="nephrologist"
+            name="nephrologist"
+            v-model="form.nephrologist"
+            :endpoint="configs.routes.people"
+            :params="configs.routes.nephrologists_scope"
+            :error="$page.props.errors.nephrologist"
+            :length-to-start="3"
+        />
+        <FormAutocomplete
+            label="surgeon"
+            name="surgeon"
+            v-model="form.surgeon"
+            :endpoint="configs.routes.people"
+            :params="configs.routes.surgeons_scope"
+            :error="$page.props.errors.surgeon"
+            :length-to-start="3"
+        />
+        <FormDatetime
+            name="date_off_drain"
+            label="date off drain"
+            v-model="form.date_off_drain"
+            :error="$page.props.errors.date_off_drain"
+        />
+        <FormDatetime
+            name="date_off_foley"
+            label="date off foley"
+            v-model="form.date_off_foley"
+            :error="$page.props.errors.date_off_foley"
+        />
 
         <FormSelect
             label="medical scheme"
