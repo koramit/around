@@ -456,7 +456,7 @@ class CaseRecordCompleteAction extends KidneyTransplantAdmissionAction
             $data['comorbidities']['date_hyperparathyroidism'] = null;
             $data['comorbidities']['PTH_grater_than_one_hundred'] = false;
             $data['comorbidities']['date_PTH_grater_than_one_hundred'] = null;
-            $data['comorbidities']['smoking'] = null;
+            $data['comorbidities']['smoking'] = false;
             $data['comorbidities']['date_start_smoking'] = null;
             $data['comorbidities']['comorbidities_other'] = null;
         }
