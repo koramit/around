@@ -224,7 +224,7 @@ class CaseRecordUpdateAction extends KidneyTransplantAdmissionAction
                 'complications.attachments' => ['array'],
                 'angioplasty' => ['boolean'],
                 'imaging' => ['boolean'],
-                'imaging_specification' =>  ['nullable', 'string', 'max:255'],
+                'imaging_specification' => ['nullable', 'string', 'max:255'],
                 'graft_biopsies' => ['array'],
                 'graft_biopsies.*.result' => ['array'],
                 'graft_biopsies.*.result.ATN' => ['boolean'],

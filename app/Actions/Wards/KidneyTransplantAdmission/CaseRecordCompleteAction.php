@@ -352,7 +352,7 @@ class CaseRecordCompleteAction extends KidneyTransplantAdmissionAction
             'complications.attachments.*' => ['required', new FileExistsInStorage('uploads/'.$this->CONFIGS['attachment_upload_pathname'])],
             'angioplasty' => ['boolean'],
             'imaging' => ['boolean'],
-            'imaging_specification' =>  ['nullable', 'required_if:imaging,true', 'string', 'max:255'],
+            'imaging_specification' => ['nullable', 'required_if:imaging,true', 'string', 'max:255'],
             'graft_biopsies' => ['array'],
             'graft_biopsies.*.result' => ['array', new SelectAtLeastOne()],
             'graft_biopsies.*.result.ATN' => ['boolean'],
