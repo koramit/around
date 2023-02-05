@@ -40,7 +40,7 @@
                 >
                     <td
                         v-if="field === 'status'"
-                        class="border-t"
+                        class="px-6 py-4 border-t"
                     >
                         <NoteStatusBadge :status="report.status" />
                     </td>

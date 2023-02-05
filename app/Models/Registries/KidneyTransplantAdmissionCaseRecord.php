@@ -2,6 +2,7 @@
 
 namespace App\Models\Registries;
 
+use App\Casts\KidneyTransplantAdmissionCaseRecordStatus;
 use App\Models\CaseRecord;
 use App\Models\Resources\Registry;
 use Illuminate\Database\Eloquent\Builder;
@@ -31,9 +32,43 @@ class KidneyTransplantAdmissionCaseRecord extends CaseRecord
         });
     }
 
+    /**
+     * Override.
+     */
+    public function getCasts(): array
+    {
+        return array_merge(parent::getCasts(), ['status' => KidneyTransplantAdmissionCaseRecordStatus::class]);
+    }
+
     public function genTitle(): string
     {
         $caseType = strtoupper($this->meta['reason_for_admission']);
+
         return "HN {$this->meta['hn']} {$this->patient->full_name} : $caseType ADMISSION @ AN {$this->meta['an']}";
+    }
+
+    public function scopeFilterStatus($query, $status)
+    {
+        $caster = new KidneyTransplantAdmissionCaseRecordStatus();
+        $statuses = $status && $status !== 'all'
+            ? [$caster->getCode($status)]
+            : [
+                $caster->getCode('draft'),
+                $caster->getCode('completed'),
+                $caster->getCode('edited'),
+                $caster->getCode('canceled'),
+            ];
+
+        $query->whereIn('status', $statuses);
+    }
+
+    public function scopeMetaSearchTerms($query, $search)
+    {
+        $iLike = config('database.iLike');
+        $query->when($search ?? null, function ($query, $search) use ($iLike) {
+            $query->where('meta->name', $iLike, $search.'%')
+                ->orWhere('meta->hn', $iLike, $search.'%')
+                ->orWhere('meta->an', $iLike, $search.'%');
+        });
     }
 }

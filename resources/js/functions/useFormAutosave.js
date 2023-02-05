@@ -19,9 +19,12 @@ export function useFormAutosave() {
             .patch(endpoint, form)
             .then(() => formState.state = 'saved')
             .catch(error => {
-                console.log(error);
+                console.log(error.response);
                 formState.state = 'error';
                 formState.error = error;
+                if (error.response.status === 419) {
+                    window.location.reload();
+                }
             });
     }, 2000);
 

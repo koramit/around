@@ -27,6 +27,7 @@ const theme = computed(() => {
     case 'submitted':
     case 'published':
     case 'approved':
+    case 'completed':
         return 'success';
     case 'canceled':
     case 'deleted':

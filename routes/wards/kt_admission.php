@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Wards\KidneyTransplantAdmission\CaseRecordCancelController;
+use App\Http\Controllers\Wards\KidneyTransplantAdmission\CaseRecordCompleteController;
 use App\Http\Controllers\Wards\KidneyTransplantAdmission\CaseRecordController;
 use Illuminate\Support\Facades\Route;
 
@@ -13,5 +15,19 @@ Route::post('/', [CaseRecordController::class, 'store'])
     ->name('store');
 
 Route::get('/{hashedKey}/edit', [CaseRecordController::class, 'edit'])
-    ->middleware(['can:create_kt_admission_case'])
     ->name('edit');
+
+Route::post('/{hashedKey}/complete', CaseRecordCompleteController::class)
+    ->name('complete');
+
+Route::put('/{hashedKey}/addendum', CaseRecordCompleteController::class)
+    ->name('addendum');
+
+Route::delete('/{hashedKey}/cancel', CaseRecordCancelController::class)
+    ->name('cancel');
+
+Route::patch('/{hashedKey}', [CaseRecordController::class, 'update'])
+    ->name('update');
+
+Route::delete('/{hashedKey}', [CaseRecordController::class, 'destroy'])
+    ->name('destroy');

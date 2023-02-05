@@ -16,18 +16,19 @@ class CaseRecordEditAction extends KidneyTransplantAdmissionAction
 
         $caseRecord = $this->getCaseRecord($hashedKey);
 
-        // @TODO - Check if user can edit this case record
+        if ($user->cannot('edit', $caseRecord) && $user->cannot('addendum', $caseRecord)) {
+            abort(403, 'You are not allowed to edit this case record.');
+        }
 
         $form = $caseRecord->form;
-        $form['reason_for_admission'] = $caseRecord->meta['reason_for_admission'];
         $admission = Admission::query()->findByHashKey($caseRecord->meta['an'])->first();
-        $form['admitted_at'] = $admission->encountered_at->format('d M y');
-        $form['discharged_at'] = $admission->dismissed_at?->format('d M y');
+        $form['reason_for_admission'] = $caseRecord->meta['reason_for_admission'];
+        $form['admitted_at'] = $admission->encountered_at->tz(7)->format('d M y');
+        $form['discharged_at'] = $admission->dismissed_at?->tz(7)->format('d M y');
         $form['discharge_status'] = $admission->meta['discharge_status'];
         $form['discharge_type'] = $admission->meta['discharge_type'];
         $form['ward_discharged'] = $admission->dismissed_at ? $admission->place->name : null;
         $form['los'] = $admission->length_of_stay;
-        $form['graft_biopsy'] = [];
         $configs = [
             'routes' => [
                 'people' => route('resources.api.people'),
@@ -39,35 +40,34 @@ class CaseRecordEditAction extends KidneyTransplantAdmissionAction
                     'show' => route('uploads.show'),
                     'destroy' => route('uploads.destroy'),
                 ],
+                'update' => route('wards.kt-admission.update', $caseRecord->hashed_key),
+                'complete' => route('wards.kt-admission.complete', $caseRecord->hashed_key),
+                'destroy' => route('wards.kt-admission.destroy', $caseRecord->hashed_key),
+                'addendum' => route('wards.kt-admission.addendum', $caseRecord->hashed_key),
+                'cancel' => route('wards.kt-admission.cancel', $caseRecord->hashed_key),
             ],
-            'attachment_upload_pathname' => 'w/k/a',
+            'can' => [
+                'update' => $user->can('update', $caseRecord),
+                'complete' => $user->can('complete', $caseRecord),
+                'destroy' => $user->can('destroy', $caseRecord),
+                'addendum' => $user->can('addendum', $caseRecord),
+                'cancel' => $user->can('cancel', $caseRecord),
+            ],
+            'attachment_upload_pathname' => $this->CONFIGS['attachment_upload_pathname'],
             'insurances' => ['เบิกจ่ายตรง', 'ประกันสังคม', '30 บาท', 'รัฐวิสาหกิจ'],
             'common_transfer_wards' => ['หอผู้ป่วยโรคไต สง่า นิลวรางกูร', 'เฉลิมพระเกียรติ ชั้น 7 เหนือ'],
-            'donor_types' => ['CD', 'LD'],
+            'donor_types' => $this->CONFIGS['donor_types'],
             'cause_of_esrd_options' => [
-                'Alport', 'Analgesic nephropathy', 'Anti-GBM', 'CGN', 'Chronic pyelonephritis', 'CresenticGN', 'CTIN', 'DM', 'DM type1', 'DM type2', 'FSGS', 'Gout', 'Graft failure', 'HT', 'IgAN', 'IgMN', 'LN', 'Membranous GN', 'Nephrocalcinosis', 'Neurogenic Bladder', 'Obstructive Uropathy', 'Panci immune Glomerulonephritis', 'PKD', 'RAS', 'Reflux nephropathy', 'renal dysplasia', 'RPGN', 'Single Kidney', 'Stone', 'Unknown',
+                'Alport', 'Analgesic nephropathy', 'Anti-GBM', 'CGN', 'Chronic pyelonephritis', 'CresenticGN', 'CTIN', 'DM', 'DM type1', 'DM type2', 'FSGS', 'Gout', 'Graft failure', 'HT', 'IgAN', 'IgMN', 'LN', 'Membranous GN', 'Nephrocalcinosis', 'Neurogenic Bladder', 'Obstructive Uropathy', 'Pauci immune Glomerulonephritis', 'PKD', 'RAS', 'Reflux nephropathy', 'Renal dysplasia', 'RPGN', 'Single Kidney', 'Stone', 'Unknown',
             ],
-            'abo_options' => ['A', 'B', 'AB', 'O'],
-            'rh_options' => ['positive', 'negative'],
+            'abo_options' => $this->CONFIGS['abo_options'],
+            'rh_options' => $this->CONFIGS['rh_options'],
             'hla_mismatch_antigens' => ['A', 'B', 'DR', 'DQ'],
-            'hla_mismatch_options' => [0,1,2],
+            'hla_mismatch_options' => $this->CONFIGS['hla_mismatch_options'],
             'recipient_is_options' => $caseRecord->patient->gender === 'male'
-                ? ['น้อง', 'พี่', 'บุตร', 'สามี', 'บิดา', 'หลาน', 'น้า', 'อา', 'ลุง']
-                : ['น้อง', 'พี่', 'บุตร', 'ภรรยา', 'มารดา',  'หลาน', 'ป้า', 'น้า', 'อา'],
-            'donor_is_options' => [
-                'น้อง' => ['พี่'],
-                'พี่' => ['น้อง'],
-                'บุตร' => ['บิดา', 'มารดา'],
-                'ภรรยา' => ['สามี'],
-                'สามี' => ['ภรรยา'],
-                'มารดา' => ['บุตร'],
-                'บิดา' => ['บุตร'],
-                'หลาน' => ['ป้า', 'น้า', 'อา', 'ลุง'],
-                'ป้า' => ['หลาน'],
-                'น้า' => ['หลาน'],
-                'อา' => ['หลาน'],
-                'ลุง' => ['หลาน'],
-            ],
+                ? $this->CONFIGS['male_recipient_is_options']
+                : $this->CONFIGS['female_recipient_is_options'],
+            'donor_is_options' => $this->CONFIGS['donor_is_options'],
             'comorbid_a' => [
                 ['name' => 'acute_mi', 'label' => 'Acute MI'],
                 ['name' => 'unstable_angina', 'label' => 'Unstable Angina'],
@@ -86,7 +86,6 @@ class CaseRecordEditAction extends KidneyTransplantAdmissionAction
                 ['name' => 'COPD', 'label' => 'COPD'],
                 ['name' => 'asthma', 'label' => 'Asthma'],
                 ['name' => 'TB', 'label' => 'TB'],
-                ['name' => 'cancer', 'label' => 'Cancer'],
                 ['name' => 'cirrhosis', 'label' => 'Cirrhosis'],
                 ['name' => 'DLP', 'label' => 'DLP'],
                 ['name' => 'PRCA', 'label' => 'PRCA'],
@@ -96,7 +95,8 @@ class CaseRecordEditAction extends KidneyTransplantAdmissionAction
                 ['name' => 'hyperparathyroidism', 'label' => 'Hyperparathyroidism'],
                 ['name' => 'PTH_grater_than_one_hundred', 'label' => 'PTH > 100'],
             ],
-            'smoking_options' => ['smoker', 'ex-smoker', 'non-smoker'],
+            'smoking_options' => $this->CONFIGS['smoking_options'],
+            'smoking_types' => $this->CONFIGS['smoking_types'],
             'operative_data' => [
                 ['name' => 'datetime_clamp_at_donor', 'label' => 'clamp time at donor'],
                 ['name' => 'datetime_perfusion', 'label' => 'perfusion time'],
@@ -108,20 +108,22 @@ class CaseRecordEditAction extends KidneyTransplantAdmissionAction
                 ['name' => 'crossmatch_cdc_ahg', 'label' => 'CDC-AHG'],
                 ['name' => 'crossmatch_flow_cxm', 'label' => 'Flow-CXM'],
             ],
-            'crossmatch_options' => ['positive', 'negative'],
-            'graft_function_options' => ['immediate graft function ', 'slow graft function', 'delayed graft function', 'primary non-function'],
-            'dialysis_mode_options' => ['HD', 'PD'],
+            'crossmatch_options' => $this->CONFIGS['crossmatch_options'],
+            'graft_function_options' => $this->CONFIGS['graft_function_options'],
+            'dialysis_mode_options' => $this->CONFIGS['dialysis_mode_options'],
             'dialysis_indication_fields' => [
                 ['name' => 'delayed_graft_function_dialysis_indication_hyper_k', 'label' => 'Hyper K'],
                 ['name' => 'delayed_graft_function_dialysis_indication_volume_overload', 'label' => 'Volume Overload'],
                 ['name' => 'delayed_graft_function_dialysis_indication_uremia', 'label' => 'Uremia'],
             ],
             'graft_biopsy' => [
-                'ATN' => false,
-                'ATI' => false,
-                'rejection' => false,
-                'TMA' => false,
-                'other_result' => null,
+                'result' => [
+                    'ATN' => false,
+                    'ATI' => false,
+                    'rejection' => false,
+                    'TMA' => false,
+                    'result_other' => null,
+                ],
                 'date_biopsy' => null,
                 'attachment' => null,
             ],
@@ -140,6 +142,12 @@ class CaseRecordEditAction extends KidneyTransplantAdmissionAction
                 ['name' => 'BK', 'label' => 'BK'],
                 ['name' => 'wound_infection', 'label' => 'Wound infection'],
             ],
+            'complication_hematologic_fields' => [
+                ['name' => 'anemia', 'label' => 'Anemia'],
+                ['name' => 'thrombocytopenia', 'label' => 'Thrombocytopenia'],
+                ['name' => 'leukopenia', 'label' => 'Leukopenia'],
+                ['name' => 'prc_transfusion', 'label' => 'PRC transfusion'],
+            ],
             'complication_vascular_fields' => [
                 ['name' => 'stenosis_a', 'label' => 'Stenosis A'],
                 ['name' => 'stenosis_v', 'label' => 'Stenosis V'],
@@ -150,8 +158,8 @@ class CaseRecordEditAction extends KidneyTransplantAdmissionAction
                 ['name' => 'ultrasound', 'label' => 'Ultrasound'],
                 ['name' => 'doppler', 'label' => 'Doppler'],
                 ['name' => 'ct_abdomen', 'label' => 'CT abdomen'],
-                ['name' => 'cta', 'label' => 'CTA'],
-                ['name' => 'ctv', 'label' => 'CTV'],
+                ['name' => 'CTA', 'label' => 'CTA'],
+                ['name' => 'CTV', 'label' => 'CTV'],
                 ['name' => 'renogram', 'label' => 'renogram'],
             ],
             'complication_urological_fields' => [
@@ -160,10 +168,44 @@ class CaseRecordEditAction extends KidneyTransplantAdmissionAction
                 ['name' => 'urinoma', 'label' => 'Urinoma'],
                 ['name' => 'lymphocele', 'label' => 'Lymphocele'],
             ],
+            'follow_up' => [
+                'date_follow_up' => null,
+                'place' => null,
+                'for' => null,
+                'md' => null,
+            ],
+            'indication_for_admission_infection_fields' => [
+                ['name' => 'UTI', 'label' => 'UTI'],
+                ['name' => 'pneumonia', 'label' => 'Pneumonia'],
+                ['name' => 'viral_infection', 'label' => 'Viral infection'],
+                ['name' => 'diarrhea', 'label' => 'Diarrhea'],
+            ],
         ];
         $flash = $this->getFlash($caseRecord->title, $user);
+        $flash['action-menu'] = $this->getActionMenu(
+            $caseRecord,
+            $user,
+            $caseRecord->status === 'draft'
+                ? ['complete', 'destroy']
+                : ['addendum', 'cancel']
+        );
         $flash['hn'] = $caseRecord->patient->hn;
+        $flash['breadcrumbs'] = $this->BREADCRUMBS;
+        if (! $configs['can']['update']) {
+            $flash['message'] = [
+                'type' => 'warning',
+                'title' => 'Autosave disabled.',
+                'message' => 'Please Addendum to save changes.',
+            ];
+        }
+        $configs['actions'] = $flash['action-menu'];
 
+        if (in_array($caseRecord->status, ['completed', 'edited'])) {
+            $caseRecord->actionLogs()->create([
+                'actor_id' => $user->id,
+                'action' => 'view',
+            ]);
+        }
 
         return [
             'formData' => $form,

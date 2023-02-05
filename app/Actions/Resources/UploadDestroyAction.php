@@ -15,6 +15,6 @@ class UploadDestroyAction
             return $link;
         }
 
-        return [ 'ok' => Storage::delete('uploads/'.$path)];
+        return ['ok' => Storage::delete('uploads/'.$path)];
     }
 }

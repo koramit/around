@@ -14,8 +14,9 @@
             :class="{
                 'border-red-400': error,
                 'border-gray-200': !selected && !error,
-                'opacity-50': selected && selected !== item.value,
+                'opacity-50': selected !== null && selected !== item.value,
                 'border-accent font-normal': selected === item.value && !error,
+                'bg-gray-200': disabled,
             }"
         >
             <div class="text-accent flex items-center">
@@ -27,6 +28,7 @@
                     :name="name"
                     v-model="selected"
                     :checked="item.value === selected"
+                    :disabled="disabled"
                 >
             </div>
             <label
@@ -36,6 +38,7 @@
                 :class="{
                     'ml-1': narrow,
                     'ml-4': !narrow,
+                    'text-gray-400': disabled,
                 }"
             />
         </div>

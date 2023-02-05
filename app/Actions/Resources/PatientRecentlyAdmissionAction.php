@@ -18,11 +18,12 @@ class PatientRecentlyAdmissionAction
         }
 
         $admission = (new AdmissionManager)->manage(key: $hn, recently: true);
-        $stay = (new PatientStayManager)->manage($hn);
+        // @TODO: delete code Stay related
+        /*$stay = (new PatientStayManager)->manage($hn);
         $stayLocation = 'แพทย์เวร ';
         if ($stay['found']) {
             $stayLocation .= (($stay['zone_name'] ?? '').' '.($stay['tag_number'] ?? ''));
-        }
+        }*/
 
         if (! $admission['found']) {
             if (! ($admission['patient']['found'] ?? false)) {
@@ -40,12 +41,13 @@ class PatientRecentlyAdmissionAction
                 'age' => $admission['patient']['dob']
                     ? Carbon::create($admission['patient']['dob'])->diffInYears()
                     : null,
-                'location' => ($stay['found'] ?? false) ? $stayLocation : 'ER ?',
+                'location' => 'แพทย์เวร/ER ?',
+                // 'location' => ($stay['found'] ?? false) ? $stayLocation : 'ER ?',
                 'admitted_at' => null,
             ];
         }
 
-        if ($admission['admission']->dismissed_at && ($stay['found'] ?? false)) {
+        /*if ($admission['admission']->dismissed_at && ($stay['found'] ?? false)) {
             return [
                 'found' => false,
                 'hn' => $admission['admission']->patient->hn,
@@ -55,7 +57,7 @@ class PatientRecentlyAdmissionAction
                 'location' => $stayLocation,
                 'admitted_at' => null,
             ];
-        }
+        }*/
 
         return [
             'found' => true,
