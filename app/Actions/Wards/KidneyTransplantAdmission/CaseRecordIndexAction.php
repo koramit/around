@@ -60,7 +60,7 @@ class CaseRecordIndexAction extends KidneyTransplantAdmissionAction
             'caseRecords' => $cases,
             'filters' => [
                 'search' => $filters['search'] ?? '',
-                'scope' => $filters['scope'] ?? 'active',
+                'scope' => $filters['scope'] ?? 'all',
             ],
             'configs' => [
                 'scopes' => ['all', 'draft', 'completed', 'edited', 'canceled', 'deleted'],
