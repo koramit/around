@@ -1,5 +1,8 @@
 <template>
-    <h2 class="form-label text-lg italic text-complement form-scroll-mt">
+    <h2
+        class="form-label text-lg italic text-complement form-scroll-mt"
+        id="admission-data"
+    >
         ADMISSION DATA
     </h2>
     <hr class="my-4 border-b border-accent">
@@ -144,7 +147,10 @@
         </div>
     </Transition>
     <template v-if="form.reason_for_admission === 'kt'">
-        <h2 class="form-label text-lg italic text-complement mt-4 md:mt-8 xl:mt-16 form-scroll-mt">
+        <h2
+            class="form-label text-lg italic text-complement mt-4 md:mt-8 xl:mt-16 form-scroll-mt"
+            id="clinical-data"
+        >
             CLINICAL DATA
         </h2>
         <hr class="my-4 border-b border-accent">
@@ -290,7 +296,10 @@
         />
         <small class="form-error-block">{{ $page.props.errors.clinical_data_attachments }}</small>
 
-        <h2 class="form-label text-lg italic text-complement mt-4 md:mt-8 xl:mt-16 form-scroll-mt">
+        <h2
+            class="form-label text-lg italic text-complement mt-4 md:mt-8 xl:mt-16 form-scroll-mt"
+            id="comorbidities"
+        >
             COMORBIDITIES
         </h2>
         <hr class="my-4 border-b border-accent">
@@ -502,7 +511,10 @@
                 />
             </div>
         </Transition>
-        <h2 class="form-label text-lg italic text-complement mt-4 md:mt-8 xl:mt-16 form-scroll-mt">
+        <h2
+            class="form-label text-lg italic text-complement mt-4 md:mt-8 xl:mt-16 form-scroll-mt"
+            id="operative-data"
+        >
             OPERATIVE DATA
         </h2>
         <hr class="my-4 border-b border-accent">
@@ -613,7 +625,10 @@
             v-model="form.operative_data_attachments"
         />
         <small class="form-error-block">{{ $page.props.errors.operative_data_attachments }}</small>
-        <h2 class="form-label text-lg italic text-complement mt-4 md:mt-8 xl:mt-16 form-scroll-mt">
+        <h2
+            class="form-label text-lg italic text-complement mt-4 md:mt-8 xl:mt-16 form-scroll-mt"
+            id="outcomes"
+        >
             OUTCOMES
         </h2>
         <hr class="my-4 border-b border-accent">
@@ -696,7 +711,10 @@
             }"
             v-model="form.graft_biopsies"
         />
-        <h2 class="form-label text-lg italic text-complement mt-4 md:mt-8 xl:mt-16 form-scroll-mt">
+        <h2
+            class="form-label text-lg italic text-complement mt-4 md:mt-8 xl:mt-16 form-scroll-mt"
+            id="complications"
+        >
             complications
         </h2>
         <hr class="my-4 border-b border-accent">
@@ -814,7 +832,10 @@
     </template>
 
     <template v-else>
-        <h2 class="form-label text-lg italic text-complement mt-4 md:mt-8 xl:mt-16 form-scroll-mt">
+        <h2
+            class="form-label text-lg italic text-complement mt-4 md:mt-8 xl:mt-16 form-scroll-mt"
+            id="indications"
+        >
             Indication for Admission
         </h2>
         <hr class="my-4 border-b border-accent">
@@ -902,7 +923,10 @@
             v-model="form.complications.attachments"
         />
 
-        <h2 class="form-label text-lg italic text-complement mt-4 md:mt-8 xl:mt-16 form-scroll-mt">
+        <h2
+            class="form-label text-lg italic text-complement mt-4 md:mt-8 xl:mt-16 form-scroll-mt"
+            id="procedures"
+        >
             PROCEDURES
         </h2>
         <hr class="my-4 border-b border-accent">
@@ -955,7 +979,10 @@
             name="procedure_data_attachments"
             v-model="form.procedure_data_attachments"
         />
-        <h2 class="form-label text-lg italic text-complement mt-4 md:mt-8 xl:mt-16 form-scroll-mt">
+        <h2
+            class="form-label text-lg italic text-complement mt-4 md:mt-8 xl:mt-16 form-scroll-mt"
+            id="diagnosis"
+        >
             final diagnosis
         </h2>
         <hr class="my-4 border-b border-accent">

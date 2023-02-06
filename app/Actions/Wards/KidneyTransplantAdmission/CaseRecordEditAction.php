@@ -182,6 +182,21 @@ class CaseRecordEditAction extends KidneyTransplantAdmissionAction
             ],
         ];
         $flash = $this->getFlash($caseRecord->title, $user);
+        if ($caseRecord->meta['reason_for_admission'] === 'kt') {
+            $flash['main-menu-links']->prepend(['icon' => 'slack-hash', 'label' => 'Follow Up', 'type' => '#', 'route' => '#follow_ups', 'can' => true]);
+            $flash['main-menu-links']->prepend(['icon' => 'slack-hash', 'label' => 'Complications', 'type' => '#', 'route' => '#complications', 'can' => true]);
+            $flash['main-menu-links']->prepend(['icon' => 'slack-hash', 'label' => 'Outcomes', 'type' => '#', 'route' => '#outcomes', 'can' => true]);
+            $flash['main-menu-links']->prepend(['icon' => 'slack-hash', 'label' => 'Operative Data', 'type' => '#', 'route' => '#operative-data', 'can' => true]);
+            $flash['main-menu-links']->prepend(['icon' => 'slack-hash', 'label' => 'Comorbidities', 'type' => '#', 'route' => '#comorbidities', 'can' => true]);
+            $flash['main-menu-links']->prepend(['icon' => 'slack-hash', 'label' => 'Clinical Data', 'type' => '#', 'route' => '#clinical-data', 'can' => true]);
+            $flash['main-menu-links']->prepend(['icon' => 'slack-hash', 'label' => 'Admission Data', 'type' => '#', 'route' => '#admission-data', 'can' => true]);
+        } else {
+            $flash['main-menu-links']->prepend(['icon' => 'slack-hash', 'label' => 'Follow Up', 'type' => '#', 'route' => '#follow_ups', 'can' => true]);
+            $flash['main-menu-links']->prepend(['icon' => 'slack-hash', 'label' => 'Diagnosis', 'type' => '#', 'route' => '#diagnosis', 'can' => true]);
+            $flash['main-menu-links']->prepend(['icon' => 'slack-hash', 'label' => 'Procedures', 'type' => '#', 'route' => '#procedures', 'can' => true]);
+            $flash['main-menu-links']->prepend(['icon' => 'slack-hash', 'label' => 'Indications', 'type' => '#', 'route' => '#indications', 'can' => true]);
+            $flash['main-menu-links']->prepend(['icon' => 'slack-hash', 'label' => 'Admission Data', 'type' => '#', 'route' => '#admission-data', 'can' => true]);
+        }
         $flash['action-menu'] = $this->getActionMenu(
             $caseRecord,
             $user,
