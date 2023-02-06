@@ -36,8 +36,8 @@
 </template>
 
 <script setup>
-import FormInput from '@/Components/Controls/FormInput.vue';
-import ModalDialog from '@/Components/Helpers/ModalDialog.vue';
+import FormInput from '../Controls/FormInput.vue';
+import ModalDialog from '../Helpers/ModalDialog.vue';
 import { ref } from 'vue';
 
 defineEmits(['closed']);

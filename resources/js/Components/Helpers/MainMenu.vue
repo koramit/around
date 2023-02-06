@@ -42,7 +42,7 @@
                     {{ link.label }}
                 </div>
             </a>
-            <InertiaLink
+            <Link
                 class="flex items-center group py-2 outline-none truncate"
                 :href="link.route"
                 v-else
@@ -59,13 +59,13 @@
                 >
                     {{ link.label }}
                 </div>
-            </InertiaLink>
+            </Link>
         </template>
     </nav>
 </template>
 
 <script setup>
-import { InertiaLink } from '@inertiajs/inertia-vue3';
+import { Link } from '@inertiajs/vue3';
 import IconVector from '../../Components/Helpers/IconVector.vue';
 import { useInPageLinkHelpers } from '../../functions/useInPageLinkHelpers.js';
 defineProps({

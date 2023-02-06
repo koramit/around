@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /** @property string $discussion_route */
+/** @property-read string $hashed_key */
 class AcuteHemodialysisCaseRecord extends CaseRecord
 {
     protected $table = 'case_records';

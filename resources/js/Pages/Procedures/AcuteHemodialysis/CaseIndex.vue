@@ -221,7 +221,7 @@
 
 <script setup>
 import {defineAsyncComponent, onMounted, reactive, ref} from 'vue';
-import {Link, useForm} from '@inertiajs/inertia-vue3';
+import {Link, useForm} from '@inertiajs/vue3';
 import SearchIndex from '../../../Components/Controls/SearchIndex.vue';
 import IconDoubleRight from '../../../Components/Helpers/Icons/IconDoubleRight.vue';
 import IconUserMd from '../../../Components/Helpers/Icons/IconUserMd.vue';

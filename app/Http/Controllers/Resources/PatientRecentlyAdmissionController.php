@@ -10,6 +10,10 @@ class PatientRecentlyAdmissionController extends Controller
 {
     public function __invoke(Request $request)
     {
+        $request->validate([
+            'key' => ['required', 'string'],
+        ]);
+
         return (new PatientRecentlyAdmissionAction)($request->input('key'));
     }
 }

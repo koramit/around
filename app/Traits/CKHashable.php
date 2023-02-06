@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 
 trait CKHashable
 {
-    public function scopeFindByHashedKey($query, string $plain)
+    public function scopeFindByHashKey($query, string $plain)
     {
         return $query->where($this->hashIdName, app(Hashids::class)->encode($plain));
     }

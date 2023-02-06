@@ -83,7 +83,7 @@ import FormDatetime from '../../../Components/Controls/FormDatetime.vue';
 import DialysisSlot from '../../../Partials/Procedures/AcuteHemodialysis/DialysisSlot.vue';
 import WardSlot from '../../../Partials/Procedures/AcuteHemodialysis/WardSlot.vue';
 import {reactive, watch} from 'vue';
-import { Inertia } from '@inertiajs/inertia';
+import { router } from '@inertiajs/vue3';
 import SlotReservationForm from '../../../Partials/Procedures/AcuteHemodialysis/SlotReservationForm.vue';
 import CovidSlot from '../../../Partials/Procedures/AcuteHemodialysis/CovidSlot.vue';
 import FormCheckbox from '../../../Components/Controls/FormCheckbox.vue';
@@ -107,7 +107,7 @@ watch(
         if (query.full_week !== undefined) {
             query.full_week = 'on';
         }
-        Inertia.get(location.pathname, query, { preserveState: true, preserveScroll: true });
+        router.get(location.pathname, query, { preserveState: true, preserveScroll: true });
     },
     {deep: true}
 );

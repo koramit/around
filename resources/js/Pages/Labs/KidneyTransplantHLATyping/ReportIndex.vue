@@ -40,7 +40,7 @@
                 >
                     <td
                         v-if="field === 'status'"
-                        class="border-t"
+                        class="px-6 py-4 border-t"
                     >
                         <NoteStatusBadge :status="report.status" />
                     </td>
@@ -135,7 +135,7 @@
 
 <script setup>
 import {onMounted, reactive, ref} from 'vue';
-import {useForm} from '@inertiajs/inertia-vue3';
+import {useForm} from '@inertiajs/vue3';
 import {useConfirmForm} from '../../../functions/useConfirmForm.js';
 import ActionColumn from '../../../Components/Controls/ActionColumn.vue';
 import ConfirmFormComposable from '../../../Components/Forms/ConfirmFormComposable.vue';

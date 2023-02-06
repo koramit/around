@@ -17,7 +17,7 @@
             readonly
             :value="modelValue"
             class="form-input"
-            :class="{ '!border-red-400 !text-red-400': error }"
+            :class="{ '!text-red-400 !border-red-400': error }"
         >
         <div
             v-if="error"
@@ -31,7 +31,7 @@
 <script setup>
 import 'flatpickr/dist/themes/light.css';
 import flatpickr from 'flatpickr';
-import { onMounted, ref, watch } from 'vue';
+import {onMounted, ref, watch} from 'vue';
 
 const emits = defineEmits(['autosave', 'update:modelValue']);
 
@@ -71,7 +71,17 @@ const flatpickrOptions = {
         // minuteIncrement: 30,
         defaultDate: props.modelValue ?? '',
         onChange: onChange,
-    }
+    },
+    datetime: {
+        altInput: true,
+        enableTime: true,
+        // dateFormat: props.format + ' H:i',
+        altFormat:  props.format + ' H:i',
+        time_24hr: true,
+        minuteIncrement: 1,
+        defaultDate: props.modelValue ?? '',
+        onChange: onChange,
+    },
 };
 
 if (props.options !== undefined) {
@@ -84,10 +94,34 @@ onMounted(() => {
     fp = flatpickr(input.value, flatpickrOptions[props.mode]);
 });
 
+watch (
+    () => props.modelValue,
+    (val) => {
+        if (val === null) {
+            clear();
+        }
+    }
+);
+
 watch(
     () => props.disabled,
     (val) => {
         fp._input.disabled = val;
+    }
+);
+watch (
+    () => props.error,
+    (val) => {
+        document.getElementById(props.name).querySelectorAll('input')
+            .forEach((input) => {
+                if (val) {
+                    input.classList.add('!border-red-400');
+                    input.classList.add('!text-red-400');
+                } else {
+                    input.classList.remove('!border-red-400');
+                    input.classList.remove('!text-red-400');
+                }
+            });
     }
 );
 const setDate = (date) => {

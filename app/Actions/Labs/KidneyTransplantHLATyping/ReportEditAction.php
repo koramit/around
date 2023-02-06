@@ -55,7 +55,7 @@ class ReportEditAction extends ReportAction
 
         $patient = $report->patient;
         $donor = $report->meta['donor_hn']
-            ? Patient::query()->findByHashedKey($report->meta['donor_hn'])->first()
+            ? Patient::query()->findByHashKey($report->meta['donor_hn'])->first()
             : null;
         $meta = [];
         $meta['patient_hn'] = $patient->hn;

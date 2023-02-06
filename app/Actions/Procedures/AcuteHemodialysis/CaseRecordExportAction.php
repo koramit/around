@@ -30,8 +30,7 @@ class CaseRecordExportAction extends AcuteHemodialysisAction
             ->select(['id', 'patient_id', 'status', 'meta'])
             ->with([
                 'patient:id,profile,hn',
-                'orders' =>
-                    fn ($query) => $query->select(['id', 'case_record_id', 'author_id', 'status', 'meta', 'date_note'])
+                'orders' => fn ($query) => $query->select(['id', 'case_record_id', 'author_id', 'status', 'meta', 'date_note'])
                         ->withAuthorName()
                         ->slotOccupiedStatuses()
                         ->orderByDesc('date_note'),
