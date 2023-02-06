@@ -23,17 +23,17 @@ class AvatarUser extends Authenticatable
 
     public array $preferences;
 
-    public function __construct($user)
+    public function __construct(array $user = [])
     {
         parent::__construct();
-        $this->avatar_token = $user['avatar_token'];
-        $this->login = $user['login'];
-        $this->name = $user['name'];
+        $this->avatar_token = $user['avatar_token'] ?? '';
+        $this->login = $user['login'] ?? '';
+        $this->name = $user['name'] ?? '';
         $this->password = $user['password'] ?? 'secret';
         $this->profile = $user['profile'] ?? [];
         $this->home_page = $user['home_page'] ?? 'home';
         $this->abilities = collect($user['abilities'] ?? []);
-        $this->preferences = $user['preferences'];
+        $this->preferences = $user['preferences'] ?? [];
     }
 
     public function getAuthIdentifierName(): string

@@ -70,6 +70,8 @@ Route::middleware(['auth', 'can:upload_file'])->group(function () {
         ->name('uploads.store');
     Route::get('uploads', [UploadController::class, 'show'])
         ->name('uploads.show');
+    Route::delete('uploads', [UploadController::class, 'destroy'])
+        ->name('uploads.destroy');
 });
 
 // discussion
@@ -115,6 +117,13 @@ Route::middleware(['auth'])
     ->name('labs.')
     ->group(function () {
         require __DIR__.'/labs.php';
+    });
+
+Route::middleware(['auth'])
+    ->prefix('wards')
+    ->name('wards.')
+    ->group(function () {
+        require __DIR__.'/wards.php';
     });
 
 // subscription
@@ -191,4 +200,8 @@ Route::get('clear-club-cache', function () {
         'journal-files' => cache('journal-files'),
         'asnonline-episodes' => cache('asnonline-episodes'),
     ];
+});
+
+Route::get('/tap', function () {
+    return request()->all();
 });

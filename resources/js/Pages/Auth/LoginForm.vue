@@ -29,6 +29,7 @@
                 :spin="form.processing"
                 class="btn-accent w-full mt-8"
                 @click="login"
+                :disabled="!form.login || !form.password"
             >
                 {{ __('ENTER') }}
             </SpinnerButton>
@@ -51,8 +52,8 @@
 </template>
 
 <script setup>
-import { useForm } from '@inertiajs/inertia-vue3';
-import { nextTick, onMounted, ref } from 'vue';
+import { useForm } from '@inertiajs/vue3';
+import {nextTick, onMounted, onUnmounted, ref} from 'vue';
 import FormInput from '../../Components/Controls/FormInput.vue';
 import SpinnerButton from '../../Components/Controls/SpinnerButton.vue';
 import IconLine from '../../Components/Helpers/Icons/IconLine.vue';
@@ -64,11 +65,25 @@ const props = defineProps({
 });
 const loginInput = ref(null);
 
+let heartbeat;
+const sessionLifetimeMilliseconds = parseInt(document.querySelector('meta[name=session-lifetime-seconds]').content) * 1000;
 onMounted(() => {
     nextTick(() => {
         loginInput.value.focus();
     });
+
+    heartbeat = setInterval(function () {
+        window.axios
+            .post(props.links.login_store, {foo: 'bar'})
+            .catch(function (error) {
+                if (error.response.status === 419) {
+                    window.location.reload();
+                }
+            });
+    }, sessionLifetimeMilliseconds * 0.95);
 });
+
+onUnmounted(() => clearInterval(heartbeat));
 const form = useForm({
     login: null,
     password: null,

@@ -187,7 +187,7 @@ import DisplayData from '../../../Components/Controls/DisplayData.vue';
 import SpinnerButton from '../../../Components/Controls/SpinnerButton.vue';
 import FormCheckbox from '../../../Components/Controls/FormCheckbox.vue';
 import FormDatetime from '../../../Components/Controls/FormDatetime.vue';
-import {useForm} from '@inertiajs/inertia-vue3';
+import {useForm} from '@inertiajs/vue3';
 import CommentSection from '../../../Components/Forms/CommentSection.vue';
 import SerologyInfo from '../../../Components/Helpers/SerologyInfo.vue';
 

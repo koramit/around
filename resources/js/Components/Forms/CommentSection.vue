@@ -33,7 +33,7 @@
 </template>
 
 <script setup>
-import {usePage} from '@inertiajs/inertia-vue3';
+import {usePage} from '@inertiajs/vue3';
 import {ref} from 'vue';
 import CommentReplyOriented from './CommentReplyOriented.vue';
 import CommentTimelineOriented from './CommentTimelineOriented.vue';
@@ -43,5 +43,5 @@ defineProps({
     configs: {type: Object, required: true}
 });
 
-const mode = ref(usePage().props.value.user.preferences.discussion_mode);
+const mode = ref(usePage().props.user.preferences.discussion_mode);
 </script>

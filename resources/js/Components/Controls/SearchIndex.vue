@@ -57,7 +57,7 @@ import DropdownList from '../Helpers/DropdownList.vue';
 import pickBy from 'lodash/pickBy';
 import throttle from 'lodash/throttle';
 import { ref, watch } from 'vue';
-import { Inertia } from '@inertiajs/inertia';
+import { router } from '@inertiajs/vue3';
 
 defineEmits(['searchChanged','scopeChanged']);
 
@@ -73,7 +73,7 @@ watch (
     throttle(function (val) {
         let queryParams = pickBy(val);
         queryParams = Object.keys(queryParams).length ? queryParams : { remember: 'forget' };
-        Inertia.get(location.pathname, queryParams, { preserveState: true });
+        router.get(location.pathname, queryParams, { preserveState: true });
     }, 800),
     {deep:true}
 );

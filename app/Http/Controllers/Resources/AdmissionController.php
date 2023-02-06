@@ -10,6 +10,10 @@ class AdmissionController extends Controller
 {
     public function __invoke(Request $request)
     {
+        $request->validate([
+            'key' => ['required', 'string'],
+        ]);
+
         return (new AdmissionShowAction())($request->input('key'));
     }
 }

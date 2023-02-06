@@ -44,7 +44,9 @@ class Person extends Model
         $query->when($filters['position'] ?? null, function ($query, $position) {
             $query->where('position', $position);
         })->when($filters['division_id'] ?? null, function ($query, $division_id) {
-            $query->where('division_id', $division_id);
+            gettype($division_id) === 'array'
+            ? $query->whereIn('division_id', $division_id)
+            : $query->where('division_id', $division_id);
         })
         ->where('name', $iLike, '%'.$filters['search'].'%')
         ->where('active', true);

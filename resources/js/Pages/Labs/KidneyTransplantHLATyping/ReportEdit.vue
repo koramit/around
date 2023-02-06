@@ -90,7 +90,7 @@
         />
     </div>
     <hr class="border border-dashed my-2 md:my-4 xl:my-8">
-    <transition name="slide-fade">
+    <Transition name="slide-fade">
         <div v-if="meta.request_hla">
             <h3 class="form-label mt-4 md:mt-8 xl:mt-16">
                 HLA TYPING :
@@ -169,8 +169,8 @@
                 </div>
             </div>
         </div>
-    </transition>
-    <transition name="slide-fade">
+    </Transition>
+    <Transition name="slide-fade">
         <div v-if="meta.request_cxm">
             <h3 class="form-label mt-4 md:mt-8 xl:mt-16">
                 lymphocyte crossmatch :
@@ -356,8 +356,8 @@
                 </div>
             </div>
         </div>
-    </transition>
-    <transition name="slide-fade">
+    </Transition>
+    <Transition name="slide-fade">
         <div v-if="meta.request_addition_tissue">
             <h3 class="form-label mt-4 md:mt-8 xl:mt-16">
                 ADDITION TISSUE TYPING :
@@ -402,7 +402,7 @@
                 </div>
             </div>
         </div>
-    </transition>
+    </Transition>
     <hr class="border border-dashed my-2 md:my-4 xl:my-8">
     <FormTextarea
         label="comments"
@@ -463,7 +463,7 @@
 
 <script setup>
 import {defineAsyncComponent, watch} from 'vue';
-import {useForm} from '@inertiajs/inertia-vue3';
+import {useForm} from '@inertiajs/vue3';
 import {useFormAutosave} from '../../../functions/useFormAutosave.js';
 import {useConfirmForm} from '../../../functions/useConfirmForm.js';
 import {useActionStore} from '../../../functions/useActionStore.js';

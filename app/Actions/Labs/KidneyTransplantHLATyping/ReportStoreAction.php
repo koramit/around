@@ -48,9 +48,9 @@ class ReportStoreAction extends ReportAction
             return ['key' => $duplicate->hashed_key];
         }
 
-        $patient = Patient::query()->findByHashedKey($validated['hn'])->first();
+        $patient = Patient::query()->findByHashKey($validated['hn'])->first();
         $donor = ($validated['donor_hn'] ?? null)
-            ? Patient::query()->findByHashedKey($validated['donor_hn'])->first()
+            ? Patient::query()->findByHashKey($validated['donor_hn'])->first()
             : null;
 
         // if no case yet then create one

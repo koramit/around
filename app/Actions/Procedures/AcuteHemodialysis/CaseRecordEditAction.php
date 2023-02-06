@@ -51,6 +51,7 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
             return $link;
         }
 
+        /* @var AcuteHemodialysisCaseRecord $caseRecord */
         $caseRecord = AcuteHemodialysisCaseRecord::query()->findByUnhashKey($hashed)->firstOrFail();
 
         // if ($user->cannot('update', $caseRecord)) {
@@ -58,7 +59,6 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
         // }
 
         // HD orders
-        /** @noinspection PhpPossiblePolymorphicInvocationInspection */
         $orders = $caseRecord->orders()
             ->select(['id', 'date_note', 'status', 'author_id', 'place_id', 'meta'])
             ->withAuthorName()
@@ -131,7 +131,7 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
         if ($caseRecord->meta['an']) {
             $admission = $caseRecord->status === 'discharged'
                 ? Admission::query()
-                    ->findByHashedKey($caseRecord->meta['an'])
+                    ->findByHashKey($caseRecord->meta['an'])
                     ->withPlaceName()
                     ->first()
                 : (new AdmissionManager)->manage($caseRecord->meta['an'])['admission'];

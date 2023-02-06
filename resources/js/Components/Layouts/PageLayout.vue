@@ -8,7 +8,7 @@
 </template>
 
 <script setup>
-import { Head } from '@inertiajs/inertia-vue3';
+import { Head } from '@inertiajs/vue3';
 import { pageRoutines } from '../../functions/pageRoutines.js';
 pageRoutines();
 </script>

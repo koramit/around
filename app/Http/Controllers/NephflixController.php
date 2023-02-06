@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Traits\CSVLoader;
 use Hashids\Hashids;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class NephflixController extends Controller
@@ -43,7 +42,7 @@ class NephflixController extends Controller
 
     public function show(string $hashedKey)
     {
-        if (!$episode = $this->episodes[app(Hashids::class)->decode($hashedKey)[0]] ?? null) {
+        if (! $episode = $this->episodes[app(Hashids::class)->decode($hashedKey)[0]] ?? null) {
             abort(404);
         }
 

@@ -384,7 +384,7 @@
 </template>
 
 <script setup>
-import { useForm } from '@inertiajs/inertia-vue3';
+import { useForm } from '@inertiajs/vue3';
 import { nextTick, reactive, watch, ref, onMounted, defineAsyncComponent } from 'vue';
 import {useFormAutosave} from '../../../functions/useFormAutosave.js';
 import {useActionStore} from '../../../functions/useActionStore.js';
