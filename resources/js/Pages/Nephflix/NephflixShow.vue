@@ -36,7 +36,7 @@
 <script setup>
 import Plyr from 'plyr';
 import 'plyr/dist/plyr.css';
-import { onMounted } from 'vue';
+import {onMounted, onUnmounted} from 'vue';
 
 defineProps({
     baseUrl: { type: String, required: true },
@@ -45,5 +45,13 @@ defineProps({
 
 onMounted(() => {
     new Plyr('#player');
+});
+
+const extendSessionFunction = setInterval(() => {
+    window.axios.put('/extends-session');
+}, 1000 * 60 * 5);
+
+onUnmounted(() => {
+    clearInterval(extendSessionFunction);
 });
 </script>

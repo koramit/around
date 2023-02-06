@@ -32,8 +32,21 @@ class ReportStoreAction extends ReportAction
             'donor_hn' => ['nullable', 'digits:8', new HnExists()],
             'request_hla' => ['required', 'bool', Rule::requiredIf(! $data['request_cxm'] && ! $data['request_addition_tissue'])],
             'request_cxm' => ['required', 'bool', Rule::requiredIf(! $data['request_hla'] && ! $data['request_addition_tissue'])],
-            'request_addition_tissue' => ['required', Rule::requiredIf(! $data['request_hla'] && ! $data['request_cxm'])],
+            'request_addition_tissue' => ['required', 'bool', Rule::requiredIf(! $data['request_hla'] && ! $data['request_cxm'])],
         ]);
+
+        $duplicate = KidneyTransplantHLATypingReportNote::query()
+            ->where('date_note', now()->create($validated['date_serum']))
+            ->where('meta->hn', (int) $validated['hn'])
+            ->where('meta->donor_hn', $validated['donor_hn'] ? (int) $validated['donor_hn'] : null)
+            ->where('meta->request_hla', (bool) $validated['request_hla'])
+            ->where('meta->request_cxm', (bool) $validated['request_cxm'])
+            ->where('meta->request_addition_tissue', (bool) $validated['request_addition_tissue'])
+            ->first();
+
+        if ($duplicate) {
+            return ['key' => $duplicate->hashed_key];
+        }
 
         $patient = Patient::query()->findByHashKey($validated['hn'])->first();
         $donor = ($validated['donor_hn'] ?? null)
@@ -194,9 +207,12 @@ class ReportStoreAction extends ReportAction
                 'hla_typing_class_i_bw6' => null,
                 'hla_typing_class_ii_drb11' => null,
                 'hla_typing_class_ii_drb12' => null,
-                'hla_typing_class_ii_drb3' => null,
-                'hla_typing_class_ii_drb4' => null,
-                'hla_typing_class_ii_drb5' => null,
+                'hla_typing_class_ii_drb31' => null,
+                'hla_typing_class_ii_drb32' => null,
+                'hla_typing_class_ii_drb41' => null,
+                'hla_typing_class_ii_drb42' => null,
+                'hla_typing_class_ii_drb51' => null,
+                'hla_typing_class_ii_drb52' => null,
                 'hla_typing_class_ii_dqb11' => null,
                 'hla_typing_class_ii_dqb12' => null,
                 'hla_typing_mismatch' => null,

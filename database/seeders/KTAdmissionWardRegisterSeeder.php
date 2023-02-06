@@ -31,8 +31,8 @@ class KTAdmissionWardRegisterSeeder extends Seeder
         // 1. Add new registry
         $registry = Registry::query()->create([
             'name' => 'kt_admission',
-            // 'label' => 'Kidney Transplant Ward Registry', // just for the old schema
-            // 'label_eng' => 'Kidney Transplant Ward Registry', // just for the old schema
+            'label' => 'Kidney Transplant Ward Registry', // just for the old schema
+            'label_eng' => 'Kidney Transplant Ward Registry', // just for the old schema
             'route' => 'wards.kt-admission.index',
             'division_id' => Division::query()->where('name_en_short', 'nephrology')->first()->id,
         ]);
@@ -106,8 +106,10 @@ class KTAdmissionWardRegisterSeeder extends Seeder
             ->with('roles')
             ->whereHas('roles', fn ($query) => $query->where('name', 'acute_hemodialysis_fellow'))
             ->each(function (User $user) use ($ktFellow) {
-                $user->roles()->attach($ktFellow->id);
-                $this->toggleRegistryUser($user);
+                if ($user->roles->where('name', 'acute_hemodialysis_staff')->isEmpty()) {
+                    $user->roles()->attach($ktFellow->id);
+                    $this->toggleRegistryUser($user);
+                }
             });
 
         // 7. Add new actions to ResourceActionLog if needed
