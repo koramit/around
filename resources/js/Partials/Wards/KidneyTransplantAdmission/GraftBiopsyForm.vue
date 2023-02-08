@@ -56,7 +56,7 @@
             <hr class="border border-dashed my-2 md:my-4 xl:my-8">
         </div>
         <button
-            @click="biopsies.push(configs.graft_biopsy)"
+            @click="biopsies.push({...configs.graft_biopsy})"
         >
             <IconFileCirclePlus
                 class="w-4 h-4 text-accent"
