@@ -705,9 +705,9 @@
             :configs="{
                 routes: configs.routes,
                 attachment_upload_pathname: configs.attachment_upload_pathname,
-                graft_biopsy: configs.graft_biopsy,
-                graft_biopsy_fields: configs.graft_biopsy_fields,
-                biopsy_result_fields: configs.biopsy_result_fields,
+                graft_biopsy: {...configs.graft_biopsy},
+                graft_biopsy_fields: {...configs.graft_biopsy_fields},
+                biopsy_result_fields: {...configs.biopsy_result_fields},
             }"
             v-model="form.graft_biopsies"
         />
@@ -1001,7 +1001,7 @@
     </h3>
     <hr class="border border-dashed my-2 md:my-4 xl:my-8">
     <FollowUpForm
-        :configs="{follow_up: configs.follow_up}"
+        :configs="{follow_up: {...configs.follow_up}}"
         v-model="form.follow_ups"
     />
 
