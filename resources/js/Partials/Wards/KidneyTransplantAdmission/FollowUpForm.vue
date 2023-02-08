@@ -41,7 +41,7 @@
             <hr class="border border-dashed my-2 md:my-4 xl:my-8">
         </div>
         <button
-            @click="followUps.push(configs.follow_up)"
+            @click="followUps.push({...configs.follow_up})"
         >
             <IconFileCirclePlus
                 class="w-4 h-4 text-accent"
