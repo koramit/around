@@ -18,4 +18,13 @@ class KidneyTransplantAdmissionCaseRecordStatus implements CastsAttributes, Note
 /**  4 */'edited',
 /**  5 */'canceled',
     ];
+
+    public function getActiveStatusCodes(): array
+    {
+        return [
+            $this->getCode('draft'),
+            $this->getCode('completed'),
+            $this->getCode('edited'),
+        ];
+    }
 }
