@@ -2,6 +2,7 @@
 
 namespace App\Actions\Wards\KidneyTransplantAdmission;
 
+use App\Casts\KidneyTransplantAdmissionCaseRecordStatus;
 use App\Extensions\Auth\AvatarUser;
 use App\Models\Registries\KidneyTransplantAdmissionCaseRecord as CaseRecord;
 use App\Models\Resources\Admission;
@@ -10,6 +11,7 @@ use App\Rules\AnExists;
 use App\Traits\CaseRecordFinishable;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 
 class CaseRecordStoreAction extends KidneyTransplantAdmissionAction
 {
@@ -227,7 +229,14 @@ class CaseRecordStoreAction extends KidneyTransplantAdmissionAction
             ],
         ]);
 
-        if ($caseRecord = CaseRecord::query()->where('meta->an', $validated['an'])->first()) {
+        if ($caseRecord = CaseRecord::query()
+                ->where('meta->an', $validated['an'])
+                ->whereIn('status', (new KidneyTransplantAdmissionCaseRecordStatus)->getActiveStatusCodes())
+                ->first()) {
+            if ($caseRecord->status === 'draft') {
+                throw ValidationException::withMessages(['an' => "Case record for AN {$validated['an']} already exists in a draft by another user."]);
+            }
+
             return ['key' => $caseRecord->hashed_key];
         }
 
