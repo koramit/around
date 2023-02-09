@@ -195,9 +195,11 @@ class SubHannahAPI implements PatientAPI, AuthenticationAPI, CovidInfoAPI
     protected function makePost(string $route, array $form, int $timeout = 4): array
     {
         $headers = ['app' => config('services.SUBHANNAH_API_NAME'), 'token' => config('services.SUBHANNAH_API_TOKEN')];
-        $options = ['timeout' => $timeout, 'verify' => false];
+        $options = ['verify' => config('services.SUBHANNAH_API_VERIFY')];
         try {
-            $response = Http::withOptions($options)
+            $response = Http::timeout($timeout)
+                            ->retry(3, 200)
+                            ->withOptions($options)
                             ->withHeaders($headers)
                             ->post(config('services.SUBHANNAH_API_URL').$route, $form);
         } catch (Exception $e) {
