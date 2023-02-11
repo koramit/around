@@ -215,7 +215,7 @@ class CaseRecordCompleteAction extends KidneyTransplantAdmissionAction
             'cold_ischemic_time_hours' => ['nullable', Rule::requiredIf(! $data['cold_ischemic_time_minutes']), 'integer', 'min:0', 'max:23'],
             'cold_ischemic_time_minutes' => ['nullable', Rule::requiredIf(! $data['cold_ischemic_time_hours']), 'integer', 'min:0', 'max:59'],
             'warm_ischemic_time_minutes' => ['nullable', 'integer', 'min:1', 'max:59'],
-            'anastomosis_time_minutes' => ['required', 'integer', 'min:1', 'max:59'],
+            'anastomosis_time_minutes' => ['required', 'integer', 'min:1', 'max:120'],
             'datetime_clamp_at_donor' => ['nullable', 'date'],
             'datetime_perfusion' => ['nullable', 'date'],
             'datetime_remove_from_ice' => ['nullable', 'date'],
