@@ -5,6 +5,7 @@ namespace App\Actions\Wards\KidneyTransplantAdmission;
 use App\Extensions\Auth\AvatarUser;
 use App\Models\Resources\Admission;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Casts\ArrayObject;
 
 class CaseRecordEditAction extends KidneyTransplantAdmissionAction
 {
@@ -20,7 +21,7 @@ class CaseRecordEditAction extends KidneyTransplantAdmissionAction
             abort(403, 'You are not allowed to edit this case record.');
         }
 
-        $form = $caseRecord->form;
+        $form = $this->getForm($caseRecord->form);
         $admission = Admission::query()->findByHashKey($caseRecord->meta['an'])->first();
         $form['reason_for_admission'] = $caseRecord->meta['reason_for_admission'];
         $form['admitted_at'] = $admission->encountered_at->tz(7)->format('d M y');
@@ -227,5 +228,18 @@ class CaseRecordEditAction extends KidneyTransplantAdmissionAction
             'formConfigs' => $configs,
             'flash' => $flash,
         ];
+    }
+
+    protected function getForm(ArrayObject $form): ArrayObject
+    {
+        /*check JSON schema due to change request*/
+
+        // CR 2023-03-03 add maintain line check list
+        if (! isset($form['maintain_drain_line'])) {
+            $form['maintain_drain_line'] = false;
+            $form['maintain_foley_line'] = false;
+        }
+
+        return $form;
     }
 }

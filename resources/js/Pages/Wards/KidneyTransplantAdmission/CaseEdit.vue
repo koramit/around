@@ -49,18 +49,34 @@
             :error="$page.props.errors.surgeon"
             :length-to-start="3"
         />
-        <FormDatetime
-            name="date_off_drain"
-            label="date off drain"
-            v-model="form.date_off_drain"
-            :error="$page.props.errors.date_off_drain"
-        />
-        <FormDatetime
-            name="date_off_foley"
-            label="date off foley"
-            v-model="form.date_off_foley"
-            :error="$page.props.errors.date_off_foley"
-        />
+        <div class="space-y-2 md:space-y-4">
+            <FormDatetime
+                name="date_off_drain"
+                label="date off drain"
+                v-model="form.date_off_drain"
+                :error="$page.props.errors.date_off_drain"
+            />
+            <FormCheckbox
+                label="Maintain drain line"
+                name="maintain_drain_line"
+                v-model="form.maintain_drain_line"
+                :error="$page.props.errors.maintain_drain_line"
+            />
+        </div>
+        <div class="space-y-2 md:space-y-4">
+            <FormDatetime
+                name="date_off_foley"
+                label="date off foley"
+                v-model="form.date_off_foley"
+                :error="$page.props.errors.date_off_foley"
+            />
+            <FormCheckbox
+                label="Maintain foley line"
+                name="maintain_foley_line"
+                v-model="form.maintain_foley_line"
+                :error="$page.props.errors.maintain_foley_line"
+            />
+        </div>
 
         <FormSelect
             label="medical scheme"
