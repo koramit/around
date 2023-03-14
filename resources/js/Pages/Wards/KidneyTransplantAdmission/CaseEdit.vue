@@ -49,18 +49,42 @@
             :error="$page.props.errors.surgeon"
             :length-to-start="3"
         />
-        <FormDatetime
-            name="date_off_drain"
-            label="date off drain"
-            v-model="form.date_off_drain"
-            :error="$page.props.errors.date_off_drain"
-        />
-        <FormDatetime
-            name="date_off_foley"
-            label="date off foley"
-            v-model="form.date_off_foley"
-            :error="$page.props.errors.date_off_foley"
-        />
+        <template v-if="form.reason_for_admission === 'kt'">
+            <div class="space-y-2 md:space-y-4">
+                <FormCheckbox
+                    label="Retain Jackson drain"
+                    name="retain_jackson_drain"
+                    v-model="form.retain_jackson_drain"
+                    :error="$page.props.errors.retain_jackson_drain"
+                />
+                <transition name="slide-fade">
+                    <FormDatetime
+                        v-if="!form.retain_jackson_drain"
+                        name="date_off_drain"
+                        label="date off drain"
+                        v-model="form.date_off_drain"
+                        :error="$page.props.errors.date_off_drain"
+                    />
+                </transition>
+            </div>
+            <div class="space-y-2 md:space-y-4">
+                <FormCheckbox
+                    label="Retain foley's catheter"
+                    name="retain_foley_catheter"
+                    v-model="form.retain_foley_catheter"
+                    :error="$page.props.errors.retain_foley_catheter"
+                />
+                <transition name="slide-fade">
+                    <FormDatetime
+                        v-if="!form.retain_foley_catheter"
+                        name="date_off_foley"
+                        label="date off foley"
+                        v-model="form.date_off_foley"
+                        :error="$page.props.errors.date_off_foley"
+                    />
+                </transition>
+            </div>
+        </template>
 
         <FormSelect
             label="medical scheme"

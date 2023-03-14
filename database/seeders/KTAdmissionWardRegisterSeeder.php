@@ -26,13 +26,14 @@ class KTAdmissionWardRegisterSeeder extends Seeder
          * 5. Attach new abilities to root role
          * 6. Attach new registry and role to related users
          * 7. Add new actions to ResourceActionLog if needed
+         * 8. Add new resources if needed
          */
 
         // 1. Add new registry
         $registry = Registry::query()->create([
             'name' => 'kt_admission',
-            'label' => 'Kidney Transplant Ward Registry', // just for the old schema
-            'label_eng' => 'Kidney Transplant Ward Registry', // just for the old schema
+            // 'label' => 'Kidney Transplant Ward Registry', // just for the old schema
+            // 'label_eng' => 'Kidney Transplant Ward Registry', // just for the old schema
             'route' => 'wards.kt-admission.index',
             'division_id' => Division::query()->where('name_en_short', 'nephrology')->first()->id,
         ]);
@@ -114,92 +115,6 @@ class KTAdmissionWardRegisterSeeder extends Seeder
 
         // 7. Add new actions to ResourceActionLog if needed
 
-        // additional items
-        $datetime = now();
-        Division::query()
-            ->insert([
-                [
-                    'name' => 'ภาควิชากุมารเวชศาสตร์',
-                    'name_en' => 'Department of Pediatrics',
-                    'name_en_short' => 'pediatrics',
-                    'department' => 'pediatrics',
-                    'created_at' => $datetime,
-                    'updated_at' => $datetime,
-                ],
-                [
-                    'name' => 'ภาควิชาศัลยศาสตร์',
-                    'name_en' => 'Department of Surgery',
-                    'name_en_short' => 'surgery',
-                    'department' => 'surgery',
-                    'created_at' => $datetime,
-                    'updated_at' => $datetime,
-                ],
-                [
-                    'name' => 'สาขาวิชาโรคไต',
-                    'name_en' => 'Division of Nephrology',
-                    'name_en_short' => 'nephrology',
-                    'department' => 'pediatrics',
-                    'created_at' => $datetime,
-                    'updated_at' => $datetime,
-                ],
-                [
-                    'name' => 'สาขาวิชาศัลยศาสตร์ทั่วไป',
-                    'name_en' => 'Division of General Surgery',
-                    'name_en_short' => 'general surgery',
-                    'department' => 'surgery',
-                    'created_at' => $datetime,
-                    'updated_at' => $datetime,
-                ],
-                [
-                    'name' => 'ศัลยศาสตร์ยูโรวิทยา',
-                    'name_en' => 'Division of Urology',
-                    'name_en_short' => 'urology',
-                    'department' => 'surgery',
-                    'created_at' => $datetime,
-                    'updated_at' => $datetime,
-                ],
-            ]);
-
-        $division = Division::query()->where('name', 'สาขาวิชาโรคไต')->first();
-        $share = [
-            'position' => 8,
-            'division_id' => $division->id,
-            'created_at' => $datetime,
-            'updated_at' => $datetime,
-        ];
-        Person::query()
-            ->insert([
-                ['name' => 'รศ.นพ. อนิรุธ ภัทรากาญจน์'] + $share,
-                ['name' => 'รศ.พญ. นันทวัน ปิยะภาณี'] + $share,
-                ['name' => 'ผศ.พญ. ธนพร ไชยภักดิ์'] + $share,
-                ['name' => 'อ.นพ. ไกรสูรย์ ล้อมจันทร์สุข'] + $share,
-                ['name' => 'พญ. ญาณ์นรินทร์ ธัญสิริพุทธิชัย'] + $share,
-            ]);
-
-        $division = Division::query()->where('name', 'สาขาวิชาศัลยศาสตร์ทั่วไป')->first();
-        $share['division_id'] = $division->id;
-        Person::query()
-            ->insert([
-                ['name' => 'รศ.นพ. ประเวชย์ มหาวิทิตวงศ์'] + $share,
-                ['name' => 'รศ.นพ. เวธิต ดำรงกิตติกุล'] + $share,
-                ['name' => 'ผศ.นพ. ประวัฒน์ โฆสิตะมงคล'] + $share,
-                ['name' => 'ผศ.นพ. ชุติวิชัย โตวิกกัย'] + $share,
-                ['name' => 'อ.นพ. พลสิทธิ์ แสงเสรีสถิตย์'] + $share,
-                ['name' => 'ผศ.นพ. สมชัย ลิ้มศรีจำเริญ'] + $share,
-                ['name' => 'รศ.นพ. ยงยุทธ ศิริวัฒนอักษร'] + $share,
-                ['name' => 'อ.นพ. ชาญวิทย์ อัศวศิริศิลป์'] + $share,
-            ]);
-
-        $division = Division::query()->where('name', 'ศัลยศาสตร์ยูโรวิทยา')->first();
-        $share['division_id'] = $division->id;
-        Person::query()
-            ->insert([
-                ['name' => 'ผศ.นพ. ศิรส จิตประไพ'] + $share,
-                ['name' => 'อ.นพ. ฐิติภัท หาญสมวงศ์'] + $share,
-                ['name' => 'ผศ.นพ. วรัชญ์ วรนิสรากุล'] + $share,
-                ['name' => 'พญ. กานติมา จงจิตอารี'] + $share,
-                ['name' => 'รศ.นพ. ธวัชชัย ทวีมั่นคงทรัพย์'] + $share,
-                ['name' => 'รศ.นพ. เอกรินทร์ โชติกวาณิชย์'] + $share,
-            ]);
+        // 8. Add new resources if needed
     }
 }

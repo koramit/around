@@ -106,11 +106,21 @@ class CaseRecordCompleteAction extends KidneyTransplantAdmissionAction
             ];
         }
 
+        if ($data['retain_jackson_drain'] === 'true') {
+            $data['date_off_drain'] = null;
+        }
+
+        if ($data['retain_foley_catheter'] === 'true') {
+            $data['date_off_foley'] = null;
+        }
+
         return Validator::validate($data, [
             'nephrologist' => ['required', new FieldValueExists('App\Models\Resources\Person', 'name')],
             'surgeon' => ['required', new FieldValueExists('App\Models\Resources\Person', 'name')],
-            'date_off_drain' => ['required', 'date', 'after:datetime_operation_finish'],
-            'date_off_foley' => ['required', 'date', 'after:datetime_operation_finish'],
+            'date_off_drain' => ['required_if:retain_jackson_drain,false', 'date', 'after:datetime_operation_finish'],
+            'retain_jackson_drain' => ['accepted_if:date_off_drain,null'],
+            'date_off_foley' => ['required_if:retain_foley_catheter,false', 'date', 'after:datetime_operation_finish'],
+            'retain_foley_catheter' => ['accepted_if:date_off_foley,null'],
             'insurance' => ['required', 'string', 'max:255'],
             'cost' => ['required', 'numeric', 'min:0'],
             'tel_no' => ['required', 'string', 'min:8', 'max:30'],
@@ -212,10 +222,10 @@ class CaseRecordCompleteAction extends KidneyTransplantAdmissionAction
             'donor_cd_hospital' => ['nullable', 'required_if:donor_type,CD', 'string', 'max:255'],
             'datetime_operation_start' => ['required', 'date', 'after:datetime_admission'],
             'datetime_operation_finish' => ['required', 'date', 'after:datetime_operation_start'],
-            'cold_ischemic_time_hours' => ['nullable', Rule::requiredIf(! $data['cold_ischemic_time_minutes']), 'integer', 'min:0', 'max:23'],
+            'cold_ischemic_time_hours' => ['nullable', Rule::requiredIf(! $data['cold_ischemic_time_minutes']), 'integer', 'min:0', 'max:47'],
             'cold_ischemic_time_minutes' => ['nullable', Rule::requiredIf(! $data['cold_ischemic_time_hours']), 'integer', 'min:0', 'max:59'],
             'warm_ischemic_time_minutes' => ['nullable', 'integer', 'min:1', 'max:59'],
-            'anastomosis_time_minutes' => ['required', 'integer', 'min:1', 'max:59'],
+            'anastomosis_time_minutes' => ['required', 'integer', 'min:1', 'max:120'],
             'datetime_clamp_at_donor' => ['nullable', 'date'],
             'datetime_perfusion' => ['nullable', 'date'],
             'datetime_remove_from_ice' => ['nullable', 'date'],

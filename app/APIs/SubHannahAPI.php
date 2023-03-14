@@ -109,6 +109,20 @@ class SubHannahAPI implements PatientAPI, AuthenticationAPI, CovidInfoAPI
         return $this->handleAdmission($data);
     }
 
+    public function getPatientAdmissions($hn)
+    {
+        $data = $this->makePost('patient-admissions', ['hn' => $hn]);
+
+        if (! $data) { // error: $data = null
+            return [
+                'found' => false,
+                'message' => __('service.failed'),
+            ];
+        }
+
+        return $data;
+    }
+
     public function recentlyAdmission(string $hn): array
     {
         $data = $this->makePost(route: 'patient-recently-admit', form: ['hn' => $hn], timeout: 8);

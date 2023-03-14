@@ -25,7 +25,7 @@ class SocialLoginController extends Controller
         if ($this->provider->platform === 'line') {
             return (new LINELoginAPI($this->provider))->redirect();
         } else {
-            return abort(404);
+            abort(404);
         }
     }
 
@@ -38,7 +38,7 @@ class SocialLoginController extends Controller
                 $socialUser = (new LINELoginAPI($this->provider));
                 $socialUser($request->all());
             } else {
-                return abort(404);
+                abort(404);
             }
         } catch (Exception $e) {
             Log::error($e->getMessage());
