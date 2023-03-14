@@ -83,7 +83,7 @@ class CaseRecordCompleteAction
 
         $validated = Validator::make($data, $rules)->validate();
 
-        if ($caseRecord->status === 'completed') {
+        if (in_array($caseRecord->status, ['completed', 'edited'])) {
             return $this->addendum($caseRecord, $validated, $user->id);
         }
 
