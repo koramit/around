@@ -43,7 +43,7 @@ class CaseRecordCompleteAction extends KidneyTransplantAdmissionAction
             ? $this->validateAdmitForTransplant($data, $caseRecord)
             : $this->validateAdmitForComplication($data);
 
-        if ($caseRecord->status === 'completed') {
+        if (in_array($caseRecord->status, ['completed', 'edited'])) {
             return $this->addendum($caseRecord, $validated, $user->id);
         }
 
