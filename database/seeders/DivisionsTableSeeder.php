@@ -65,6 +65,46 @@ class DivisionsTableSeeder extends Seeder
                 'created_at' => $datetime,
                 'updated_at' => $datetime,
             ],
+            [
+                'name' => 'ภาควิชากุมารเวชศาสตร์',
+                'name_en' => 'Department of Pediatrics',
+                'name_en_short' => 'pediatrics',
+                'department' => 'pediatrics',
+                'created_at' => $datetime,
+                'updated_at' => $datetime,
+            ],
+            [
+                'name' => 'ภาควิชาศัลยศาสตร์',
+                'name_en' => 'Department of Surgery',
+                'name_en_short' => 'surgery',
+                'department' => 'surgery',
+                'created_at' => $datetime,
+                'updated_at' => $datetime,
+            ],
+            [
+                'name' => 'สาขาวิชาโรคไต',
+                'name_en' => 'Division of Nephrology',
+                'name_en_short' => 'nephrology',
+                'department' => 'pediatrics',
+                'created_at' => $datetime,
+                'updated_at' => $datetime,
+            ],
+            [
+                'name' => 'สาขาวิชาศัลยศาสตร์ทั่วไป',
+                'name_en' => 'Division of General Surgery',
+                'name_en_short' => 'general surgery',
+                'department' => 'surgery',
+                'created_at' => $datetime,
+                'updated_at' => $datetime,
+            ],
+            [
+                'name' => 'ศัลยศาสตร์ยูโรวิทยา',
+                'name_en' => 'Division of Urology',
+                'name_en_short' => 'urology',
+                'department' => 'surgery',
+                'created_at' => $datetime,
+                'updated_at' => $datetime,
+            ],
         ]);
     }
 }

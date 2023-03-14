@@ -43,7 +43,7 @@ class CaseRecordCompleteAction extends KidneyTransplantAdmissionAction
             ? $this->validateAdmitForTransplant($data, $caseRecord)
             : $this->validateAdmitForComplication($data);
 
-        if ($caseRecord->status === 'completed') {
+        if (in_array($caseRecord->status, ['completed', 'edited'])) {
             return $this->addendum($caseRecord, $validated, $user->id);
         }
 
@@ -106,11 +106,21 @@ class CaseRecordCompleteAction extends KidneyTransplantAdmissionAction
             ];
         }
 
+        if ($data['retain_jackson_drain'] === 'true') {
+            $data['date_off_drain'] = null;
+        }
+
+        if ($data['retain_foley_catheter'] === 'true') {
+            $data['date_off_foley'] = null;
+        }
+
         return Validator::validate($data, [
             'nephrologist' => ['required', new FieldValueExists('App\Models\Resources\Person', 'name')],
             'surgeon' => ['required', new FieldValueExists('App\Models\Resources\Person', 'name')],
-            'date_off_drain' => ['required', 'date', 'after:datetime_operation_finish'],
-            'date_off_foley' => ['required', 'date', 'after:datetime_operation_finish'],
+            'date_off_drain' => ['required_if:retain_jackson_drain,false', 'date', 'after:datetime_operation_finish'],
+            'retain_jackson_drain' => ['accepted_if:date_off_drain,null'],
+            'date_off_foley' => ['required_if:retain_foley_catheter,false', 'date', 'after:datetime_operation_finish'],
+            'retain_foley_catheter' => ['accepted_if:date_off_foley,null'],
             'insurance' => ['required', 'string', 'max:255'],
             'cost' => ['required', 'numeric', 'min:0'],
             'tel_no' => ['required', 'string', 'min:8', 'max:30'],

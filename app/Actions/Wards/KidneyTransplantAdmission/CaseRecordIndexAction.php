@@ -26,6 +26,7 @@ class CaseRecordIndexAction extends KidneyTransplantAdmissionAction
             ->with(['patient', 'actionLogs' => fn ($q) => $q->where('action', 1)])
             ->filterStatus($filters['scope'] ?? null)
             ->metaSearchTerms($filters['search'] ?? null)
+            ->orderBy('meta->an', 'desc')
             ->paginate($user->items_per_page)
             ->withQueryString()
             ->through(function ($case) use ($user, &$ans) {
