@@ -49,34 +49,42 @@
             :error="$page.props.errors.surgeon"
             :length-to-start="3"
         />
-        <div class="space-y-2 md:space-y-4">
-            <FormDatetime
-                name="date_off_drain"
-                label="date off drain"
-                v-model="form.date_off_drain"
-                :error="$page.props.errors.date_off_drain"
-            />
-            <FormCheckbox
-                label="Maintain drain line"
-                name="maintain_drain_line"
-                v-model="form.maintain_drain_line"
-                :error="$page.props.errors.maintain_drain_line"
-            />
-        </div>
-        <div class="space-y-2 md:space-y-4">
-            <FormDatetime
-                name="date_off_foley"
-                label="date off foley"
-                v-model="form.date_off_foley"
-                :error="$page.props.errors.date_off_foley"
-            />
-            <FormCheckbox
-                label="Maintain foley line"
-                name="maintain_foley_line"
-                v-model="form.maintain_foley_line"
-                :error="$page.props.errors.maintain_foley_line"
-            />
-        </div>
+        <template v-if="form.reason_for_admission === 'kt'">
+            <div class="space-y-2 md:space-y-4">
+                <FormCheckbox
+                    label="Retain Jackson drain"
+                    name="retain_jackson_drain"
+                    v-model="form.retain_jackson_drain"
+                    :error="$page.props.errors.retain_jackson_drain"
+                />
+                <transition name="slide-fade">
+                    <FormDatetime
+                        v-if="!form.retain_jackson_drain"
+                        name="date_off_drain"
+                        label="date off drain"
+                        v-model="form.date_off_drain"
+                        :error="$page.props.errors.date_off_drain"
+                    />
+                </transition>
+            </div>
+            <div class="space-y-2 md:space-y-4">
+                <FormCheckbox
+                    label="Retain foley's catheter"
+                    name="retain_foley_catheter"
+                    v-model="form.retain_foley_catheter"
+                    :error="$page.props.errors.retain_foley_catheter"
+                />
+                <transition name="slide-fade">
+                    <FormDatetime
+                        v-if="!form.retain_foley_catheter"
+                        name="date_off_foley"
+                        label="date off foley"
+                        v-model="form.date_off_foley"
+                        :error="$page.props.errors.date_off_foley"
+                    />
+                </transition>
+            </div>
+        </template>
 
         <FormSelect
             label="medical scheme"

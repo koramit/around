@@ -24,9 +24,9 @@ class CaseRecordStoreAction extends KidneyTransplantAdmissionAction
             'nephrologist' => null,
             'surgeon' => null,
             'date_off_drain' => null,
-            'maintain_drain_line' => false,
+            'retain_jackson_drain' => false, // CR 2023-03-03 add retain line check list
             'date_off_foley' => null,
-            'maintain_foley_line' => false,
+            'retain_foley_catheter' => false, // CR 2023-03-03 add retain line check list
             'insurance' => null,
             'cost' => null,
             'tel_no' => null,
