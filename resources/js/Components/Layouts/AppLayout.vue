@@ -285,11 +285,11 @@
                         >
                             <Link
                                 :href="link.route"
-                                class="block py-1 px-2 md:py-2 md:px-4 rounded-3xl bg-primary transition-colors duration-300"
+                                class="block py-1 px-2 md:py-2 md:px-4 rounded-3xl transition-colors duration-300"
                                 preserve-state
                                 :class="{
                                     'bg-accent text-white': isUrl(link.route),
-                                    'hover:bg-primary-darker': !isUrl(link.route),
+                                    'bg-primary hover:bg-primary-darker': !isUrl(link.route),
                                 }"
                             >
                                 {{ link.label }}
