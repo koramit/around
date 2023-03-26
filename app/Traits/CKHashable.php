@@ -9,13 +9,13 @@ trait CKHashable
 {
     public function scopeFindByHashKey($query, string $plain)
     {
-        return $query->where($this->hashIdName, app(Hashids::class)->encode($plain));
+        return $query->where($this->candidateKeyNameToHash, app(Hashids::class)->encode($plain));
     }
 
     protected function hashedKey(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->attributes[$this->hashIdName],
+            get: fn () => $this->attributes[$this->candidateKeyNameToHash],
         )->shouldCache();
     }
 }

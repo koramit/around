@@ -7,7 +7,4 @@ use Illuminate\Database\Eloquent\Model;
 
 class LoginRecord extends Model
 {
-    use HasFactory;
-
-    protected $guarded = [];
 }

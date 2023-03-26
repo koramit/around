@@ -2,7 +2,6 @@
 <html>
 
 <head>
-    <meta name="base-url" content="{{ url('/') }}" />
     {{-- minutes to microseconds --}}
     <meta name="session-lifetime-seconds"
         content="{{ Config::get('session.lifetime') * 60000 }}" />

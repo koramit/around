@@ -6,16 +6,15 @@ use App\Traits\CKHashable;
 use Hashids\Hashids;
 use Illuminate\Database\Eloquent\Casts\AsArrayObject;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /* @property-read string $place_name */
 class Admission extends Model
 {
-    use HasFactory, CKHashable;
+    use CKHashable;
 
-    protected string $hashIdName = 'an';
+    protected string $candidateKeyNameToHash = 'an';
 
     protected $casts = [
         'meta' => AsArrayObject::class,
