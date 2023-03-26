@@ -2,6 +2,7 @@
 
 namespace App\Actions\Procedures\AcuteHemodialysis;
 
+use App\Extensions\Auth\AvatarUser;
 use App\Models\User;
 use App\Rules\FieldValueExists;
 use App\Traits\AcuteHemodialysis\OrderShareValidatable;
@@ -16,7 +17,7 @@ class SlotAvailableAction extends AcuteHemodialysisAction
 
     protected User $user;
 
-    public function __invoke(array $data, mixed $user): array
+    public function __invoke(array $data, User|AvatarUser $user): array
     {
         if (($link = $this->shouldLinkAvatar()) !== false) {
             return $link;
@@ -39,6 +40,8 @@ class SlotAvailableAction extends AcuteHemodialysisAction
          * - นอกไตเทียมทำ sledd ได้วันละ = (6 - (hd4 + (hf+hf))) เคส
          * - นอกเวลาให้ f submit แล้วรอ chief nurse accept
          * - นอกเวลาในแต่ละวันจะทำนอกหรือในไตเทียมเท่านั้น
+         * -----
+         * - COVID-19 case นับเป็น HD 1 เคส ใน slot Unit/Ward แต่แยกแสดงในหน้า schedule 2023/03/26
          */
 
         return str_starts_with($validated['dialysis_at'], 'ไตเทียม')
@@ -49,9 +52,6 @@ class SlotAvailableAction extends AcuteHemodialysisAction
     protected function outUnitSlots(string $dateNote, string $dialysisType): array
     {
         $notes = $this->getNotes(dateNote: $dateNote, user: $this->user, inUnit: false);
-
-        // covid not count
-        $notes = $notes->filter(fn ($n) => ! $n['covid_case'])->values();
 
         $hemoCount = $notes->count()
                         ? $notes->filter(fn ($n) => (str_contains($n['type'], 'HD')) || (str_contains($n['type'], 'HF')))->count()
@@ -90,9 +90,6 @@ class SlotAvailableAction extends AcuteHemodialysisAction
     {
         $orders = $this->getNotes(dateNote: $dateNote, user: $this->user);
 
-        // covid not count
-        $orders = $orders->filter(fn ($n) => ! $n['covid_case'])->values();
-
         $chronic = $orders->filter(fn ($o) => $o['dialysis_at_chronic_unit'])->values();
         if ($chronic->count() !== 0) {
             $orders = $orders->filter(fn ($o) => ! $o['dialysis_at_chronic_unit'])->values();
@@ -102,12 +99,19 @@ class SlotAvailableAction extends AcuteHemodialysisAction
         $available = true;
         $reply = 'ok';
 
-        if (($this->LIMIT_IN_UNIT_SLOTS - $orders->sum('slot_count')) < $requestSlot) {
+        $covidHDCount = $orders->filter(fn ($o) => str_contains($o['type'], 'HD') && $o['covid_case'])->count();
+        if ($covidHDCount >= $this->LIMIT_IN_UNIT_COVID_CASES) {
             $available = false;
-            $reply = 'not enough slots';
-        } elseif (str_contains(strtolower($dialysisType), 'tpe') && $this->tpeCaseCount($dateNote) === $this->LIMIT_TPE_SLOTS) {
-            $available = false;
-            $reply = 'TPE limit has been reached';
+            $reply = 'Acute Unit COVID-19 cases limit has been reached';
+            logger($reply);
+        } else {
+            if (($this->LIMIT_IN_UNIT_SLOTS - $orders->sum('slot_count')) < $requestSlot) {
+                $available = false;
+                $reply = 'not enough slots';
+            } elseif (str_contains(strtolower($dialysisType), 'tpe') && $this->tpeCaseCount($dateNote) === $this->LIMIT_TPE_SLOTS) {
+                $available = false;
+                $reply = 'TPE limit has been reached';
+            }
         }
 
         $sorted = $this->orderInUnitSlot($orders);
