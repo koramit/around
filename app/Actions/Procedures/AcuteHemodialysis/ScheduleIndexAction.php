@@ -50,13 +50,11 @@ class ScheduleIndexAction extends AcuteHemodialysisAction
 
             /** Filter COVID cases */
             $hdUnitCovid = $hdUnit->filter(fn ($order) => $order['covid_case'])->values();
-            $hdUnit = $hdUnit->filter(fn ($order) => ! $order['covid_case'])->values();
             $ordered = $this->orderInUnitSlot($hdUnit);
 
             $ward = $this->getNotes(dateNote: $dateNote, user: $user, inUnit: false);
             /** Filter COVID cases */
             $wardCovid = $ward->filter(fn ($order) => $order['covid_case'])->values();
-            $ward = $ward->filter(fn ($order) => ! $order['covid_case'])->values();
             $availableCount = ($this->LIMIT_OUT_UNIT_CASES - $ward->count());
             for ($i = 1; $i <= $availableCount; $i++) {
                 $ward[] = ['type' => null];
@@ -125,7 +123,6 @@ class ScheduleIndexAction extends AcuteHemodialysisAction
                     'route_lab' => route('resources.api.covid-lab'),
                     'route_vaccine' => route('resources.api.covid-vaccine'),
                 ],
-                'covid_ward' => 'ICU โควิด อัษฎางค์ 10 เหนือ',
                 'covid_dialysis' => ['HD 2 hrs.', 'HD 3 hrs.', 'HD 4 hrs.'],
                 'case' => $caseConfig,
             ],

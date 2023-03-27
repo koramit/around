@@ -226,17 +226,15 @@ class OrderStoreAction extends AcuteHemodialysisAction
         $extraSlot = false;
         $reserveToday = $validated['date_note'] === $this->TODAY;
 
-        if (! $validated['covid_case']) { // Covid case has no limit
-            $ensureSlotAvailable = (new SlotAvailableAction)(data: $validated, user: $user);
-            if (! $ensureSlotAvailable['available']) {
-                if ($reserveToday) {
-                    $extraSlot = true;
-                } else {
-                    throw ValidationException::withMessages(['status' => 'no slot available']);
-                }
-            } elseif (now()->create($validated['date_note'])->is($this->UNIT_DAY_OFF)) {
+        $ensureSlotAvailable = (new SlotAvailableAction)(data: $validated, user: $user);
+        if (! $ensureSlotAvailable['available']) {
+            if ($reserveToday) {
                 $extraSlot = true;
+            } else {
+                throw ValidationException::withMessages(['status' => 'no slot available']);
             }
+        } elseif (now()->create($validated['date_note'])->is($this->UNIT_DAY_OFF)) {
+            $extraSlot = true;
         }
 
         $patient = $caseRecord->patient;

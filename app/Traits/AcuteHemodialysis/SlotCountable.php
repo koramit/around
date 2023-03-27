@@ -17,6 +17,8 @@ trait SlotCountable
 
     protected int $LIMIT_OUT_UNIT_CASES = 6;
 
+    protected int $LIMIT_IN_UNIT_COVID_CASES = 2;
+
     protected function getNotes(string $dateNote, User $user, bool $inUnit = true): \Illuminate\Database\Eloquent\Collection|array
     {
         return AcuteHemodialysisOrderNote::query()

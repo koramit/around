@@ -7,24 +7,22 @@
 import { nextTick, onBeforeMount, onMounted, onUnmounted } from 'vue';
 
 export function pageRoutines() {
-    var lastTimeCheckSessionTimeout = Date.now();
+    let lastTimeCheckSessionTimeout = Date.now();
 
-    const baseUrl = document.querySelector('meta[name=base-url]').content;
-    const endpoint = baseUrl + '/check-timeout';
     const sessionLifetimeSeconds = parseInt(document.querySelector('meta[name=session-lifetime-seconds]').content);
     const checkSessionTimeoutOnFocus = () => {
         let timeDiff = Date.now() - lastTimeCheckSessionTimeout;
         if ((timeDiff) > (sessionLifetimeSeconds)) {
             window.axios
-                .post(endpoint)
+                .post('/check-timeout')
                 .then(() => lastTimeCheckSessionTimeout = Date.now())
-                .catch(() => location.reload());
+                .catch(() => window.location.reload());
         }
     };
 
     onBeforeMount(async () => {
         await window.axios
-            .post(baseUrl + '/translations')
+            .post('/translations')
             .then(response => {
                 if (response.data.translations === false) {
                     return;
@@ -43,6 +41,7 @@ export function pageRoutines() {
     onMounted(() => {
         window.addEventListener('focus', checkSessionTimeoutOnFocus);
 
+        // noinspection JSIgnoredPromiseFromCall
         nextTick(() => {
             const pageLoadingIndicator = document.getElementById('page-loading-indicator');
             if (pageLoadingIndicator) {

@@ -4,6 +4,7 @@ namespace App\Actions\Auth;
 
 use App\Models\LoginRecord;
 use App\Models\User;
+use Illuminate\Support\Facades\Session;
 
 class LogoutRecordAction
 {
@@ -13,13 +14,8 @@ class LogoutRecordAction
             return []; // call api
         }
 
-        if (
-            $login = LoginRecord::query()
-                ->where('user_id', $user->id)
-                ->latest()
-                ->first()
-        ) {
-            $login->touch();
+        if ($loginRecordId = Session::get('login_record_id')) {
+            LoginRecord::query()->find($loginRecordId)->touch();
         }
     }
 }
