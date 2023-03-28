@@ -21,6 +21,8 @@ class NotifyApprovalResult
             return;
         }
 
+        // load requester activeLINEProfile to prevent N+1 query
+        $event->changeRequest->requester->load('activeLINEProfile');
         NotifyRequestApprovalResult::dispatchAfterResponse($event->changeRequest);
     }
 }
