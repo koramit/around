@@ -68,6 +68,12 @@
                 </template>
             </div>
         </TransitionGroup>
+        <div v-if="slots.covid?.length">
+            <label class="form-label my-2 md:my-4">COVID-19 Cases at Acute unit</label>
+            <WardSlot
+                :slots="slots.covid.map(s => ({...s}))"
+            />
+        </div>
         <div v-if="slots.chronic?.length">
             <label class="form-label my-2 md:my-4">Dialysis at Chronic unit</label>
             <WardSlot

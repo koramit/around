@@ -2,7 +2,9 @@
 
 namespace App\Actions\Procedures\AcuteHemodialysis;
 
+use App\Extensions\Auth\AvatarUser;
 use App\Models\Notes\AcuteHemodialysisOrderNote;
+use App\Models\User;
 use App\Traits\AvatarLinkable;
 use Illuminate\Support\Facades\Validator;
 
@@ -10,7 +12,7 @@ class DialysisSessionUpdateAction
 {
     use AvatarLinkable;
 
-    public function __invoke(string $hashedKey, array $data, mixed $user): array
+    public function __invoke(string $hashedKey, array $data, User|AvatarUser $user): array
     {
         if (($link = $this->shouldLinkAvatar()) !== false) {
             return $link;
