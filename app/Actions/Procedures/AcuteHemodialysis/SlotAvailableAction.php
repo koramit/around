@@ -41,7 +41,8 @@ class SlotAvailableAction extends AcuteHemodialysisAction
          * - นอกเวลาให้ f submit แล้วรอ chief nurse accept
          * - นอกเวลาในแต่ละวันจะทำนอกหรือในไตเทียมเท่านั้น
          * -----
-         * - COVID-19 case นับเป็น HD 1 เคส ใน slot Unit/Ward แต่แยกแสดงในหน้า schedule 2023/03/26
+         * - COVID-19 case นับเป็น HD 1 เคส ใน slot Unit/Ward แต่แยกแสดงในหน้า schedule 2023/03/26 -- ปรับตามด้านล่าง
+         * - COVID-19 case ถ้าทำใน Unit แก้เป็นนับ slot แยก โดย limit ที่ 2 cases/day 2023/04/23
          */
 
         return str_starts_with($validated['dialysis_at'], 'ไตเทียม')
@@ -95,15 +96,19 @@ class SlotAvailableAction extends AcuteHemodialysisAction
             $orders = $orders->filter(fn ($o) => ! $o['dialysis_at_chronic_unit'])->values();
         }
 
+        $covid = $orders->filter(fn ($o) => $o['covid_case'])->values();
+        if ($covid->count() !== 0) {
+            $orders = $orders->filter(fn ($o) => ! $o['covid_case'])->values();
+        }
+
         $requestSlot = $this->slotCount($dialysisType);
         $available = true;
         $reply = 'ok';
 
-        $covidHDCount = $orders->filter(fn ($o) => str_contains($o['type'], 'HD') && $o['covid_case'])->count();
-        if ($covidHDCount >= $this->LIMIT_IN_UNIT_COVID_CASES) {
+        // $covidHDCount = $orders->filter(fn ($o) => str_contains($o['type'], 'HD') && $o['covid_case'])->count();
+        if ($covid->count() >= $this->LIMIT_IN_UNIT_COVID_CASES) {
             $available = false;
             $reply = 'Acute Unit COVID-19 cases limit has been reached';
-            logger($reply);
         } else {
             if (($this->LIMIT_IN_UNIT_SLOTS - $orders->sum('slot_count')) < $requestSlot) {
                 $available = false;

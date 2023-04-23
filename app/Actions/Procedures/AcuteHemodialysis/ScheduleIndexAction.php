@@ -50,6 +50,8 @@ class ScheduleIndexAction extends AcuteHemodialysisAction
 
             /** Filter COVID cases */
             $hdUnitCovid = $hdUnit->filter(fn ($order) => $order['covid_case'])->values();
+            $hdUnit = $hdUnit->filter(fn ($order) => ! $order['covid_case'])->values();
+
             $ordered = $this->orderInUnitSlot($hdUnit);
 
             $ward = $this->getNotes(dateNote: $dateNote, user: $user, inUnit: false);
@@ -72,6 +74,7 @@ class ScheduleIndexAction extends AcuteHemodialysisAction
                 'hd_unit' => [
                     'acute' => $ordered,
                     'chronic' => $hdChronicUnit,
+                    'covid' => $hdUnitCovid,
                 ],
                 'ward' => $ward,
                 'date_note' => $dateNote,
