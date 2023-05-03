@@ -11,11 +11,14 @@ trait ChangesComparable
         $old = Arr::dot($old);
         $new = Arr::dot($new);
         $diff = [];
-        foreach ($old as $key => $value) {
-            if ($new[$key] === $value) {
+        foreach ($old as $key => $oldValue) {
+            // In case of array value if the old one is an empty array and the new one is not
+            // then the new one has no top level keys, and we should use null safe operator
+            $newValue = $new[$key] ?? null;
+            if ($newValue === $oldValue) {
                 continue;
             }
-            $diff[$key] = [$value, $new[$key]];
+            $diff[$key] = [$oldValue, $newValue];
         }
 
         return $diff;
