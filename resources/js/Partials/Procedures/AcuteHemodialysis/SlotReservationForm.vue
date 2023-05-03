@@ -21,7 +21,6 @@
                 class="form-label"
             >dialysis at :</label>
             <FormCheckbox
-                v-if="!wardDisabled"
                 :label="configs.hd_unit_ward"
                 v-model="dialysisAtHDUnit"
             />
@@ -33,7 +32,6 @@
                     :endpoint="configs.routes.resources_api_wards"
                     :error="form.errors.dialysis_at"
                     :length-to-start="1"
-                    :disabled="wardDisabled"
                 />
             </transition>
             <FormSelect
@@ -215,20 +213,6 @@ const checkAvailableDates = () => {
         .catch(error => console.log(error))
         .finally(() => checking.value = false);
 };
-
-const wardDisabled = ref(false);
-watch(
-    () => form.covid_case,
-    (val) => {
-        wardDisabled.value = val;
-        if (val) {
-            form.dialysis_at = props.configs.covid_ward;
-            dialysisAtHDUnit.value = false;
-        } else {
-            form.dialysis_at = null;
-        }
-    }
-);
 
 const dialysisTypeOptions = computed(() => {
     if (form.covid_case) {

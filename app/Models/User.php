@@ -78,6 +78,7 @@ class User extends Authenticatable
         return $this->belongsToMany(ChatBot::class)->withTimestamps();
     }
 
+    /** @alias $chatLogs */
     public function chatLogs(): HasMany
     {
         return $this->hasMany(ChatLog::class);

@@ -2,6 +2,7 @@
 
 namespace App\Actions\User;
 
+use App\Extensions\Auth\AvatarUser;
 use App\Models\ChatBot;
 use App\Models\EventBasedNotification;
 use App\Models\SocialProvider;
@@ -14,7 +15,7 @@ class PreferencesShowAction
 {
     use FlashDataGeneratable, AvatarLinkable;
 
-    public function __invoke(mixed $user): array
+    public function __invoke(User|AvatarUser $user): array
     {
         if ($link = $this->shouldLinkAvatar()) {
             return $link;

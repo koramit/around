@@ -10,8 +10,6 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class ResourceActionLog extends Model
 {
-    protected $guarded = [];
-
     protected $casts = [
         'payload' => AsArrayObject::class,
         'performed_at' => 'datetime',

@@ -8,7 +8,6 @@ use App\Traits\CKHashable;
 use Hashids\Hashids;
 use Illuminate\Database\Eloquent\Casts\AsEncryptedArrayObject;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -22,9 +21,9 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
  * */
 class Patient extends Model
 {
-    use HasFactory, CKHashable;
+    use CKHashable;
 
-    protected string $hashIdName = 'hn';
+    protected string $candidateKeyNameToHash = 'hn';
 
     protected $casts = [
         'profile' => AsEncryptedArrayObject::class,

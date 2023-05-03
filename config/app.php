@@ -215,4 +215,5 @@ return [
     'authentication_provider' => env('AUTHENTICATION_PROVIDER', 'App\APIs\SubHannahAPI'),
     'patient_provider' => env('PATIENT_PROVIDER', 'App\APIs\SubHannahAPI'),
     'covid_info_provider' => env('COVID_INFO_PROVIDER', 'App\APIs\SubHannahAPI'),
+    'query_time_threshold' => env('QUERY_TIME_THRESHOLD', 2000), // in milliseconds
 ];

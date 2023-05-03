@@ -52,8 +52,9 @@ class AppServiceProvider extends ServiceProvider
             info("Attempted to lazy load [{$relation}] on model [{$class}].");
         });*/
 
-        DB::whenQueryingForLongerThan(2000, function (Connection $connection, QueryExecuted $event) {
-            Log::warning("Database queries exceeded 2 seconds on {$connection->getName()} : $event->sql");
+        $threshold = config('app.query_time_threshold');
+        DB::whenQueryingForLongerThan($threshold, function (Connection $connection, QueryExecuted $event) use ($threshold) {
+            Log::warning("Database queries exceeded {$threshold} milliseconds on {$connection->getName()} : $event->sql");
         });
     }
 }

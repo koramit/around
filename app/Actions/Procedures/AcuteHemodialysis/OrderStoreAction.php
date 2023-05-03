@@ -2,11 +2,13 @@
 
 namespace App\Actions\Procedures\AcuteHemodialysis;
 
+use App\Extensions\Auth\AvatarUser;
 use App\Managers\Resources\AdmissionManager;
 use App\Models\DocumentChangeRequests\AcuteHemodialysisSlotRequest;
 use App\Models\Notes\AcuteHemodialysisOrderNote;
 use App\Models\Resources\Ward;
 use App\Models\Subscription;
+use App\Models\User;
 use App\Rules\FieldValueExists;
 use App\Rules\HashedKeyIdExists;
 use App\Traits\AcuteHemodialysis\OrderShareValidatable;
@@ -196,7 +198,7 @@ class OrderStoreAction extends AcuteHemodialysisAction
     /**
      * @throws Exception
      */
-    public function __invoke(array $data, mixed $user): array
+    public function __invoke(array $data, User|AvatarUser $user): array
     {
         if (($link = $this->shouldLinkAvatar()) !== false) {
             return $link;
@@ -226,17 +228,15 @@ class OrderStoreAction extends AcuteHemodialysisAction
         $extraSlot = false;
         $reserveToday = $validated['date_note'] === $this->TODAY;
 
-        if (! $validated['covid_case']) { // Covid case has no limit
-            $ensureSlotAvailable = (new SlotAvailableAction)(data: $validated, user: $user);
-            if (! $ensureSlotAvailable['available']) {
-                if ($reserveToday) {
-                    $extraSlot = true;
-                } else {
-                    throw ValidationException::withMessages(['status' => 'no slot available']);
-                }
-            } elseif (now()->create($validated['date_note'])->is($this->UNIT_DAY_OFF)) {
+        $ensureSlotAvailable = (new SlotAvailableAction)(data: $validated, user: $user);
+        if (! $ensureSlotAvailable['available']) {
+            if ($reserveToday) {
                 $extraSlot = true;
+            } else {
+                throw ValidationException::withMessages(['status' => 'no slot available']);
             }
+        } elseif (now()->create($validated['date_note'])->is($this->UNIT_DAY_OFF)) {
+            $extraSlot = true;
         }
 
         $patient = $caseRecord->patient;

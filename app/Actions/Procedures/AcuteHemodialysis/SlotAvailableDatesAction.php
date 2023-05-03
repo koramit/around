@@ -33,11 +33,11 @@ class SlotAvailableDatesAction extends AcuteHemodialysisAction
             $label = $d->format('d M').' | ';
             $label .= ($data['date_note'] === $this->TODAY ? 'Today' : $d->dayName).' | ';
 
-            if ($validated['covid_case']) {
+            $slot = (new SlotAvailableAction)(data: $data, user: $user);
+
+            if ($validated['covid_case'] && $slot['available']) {
                 return ['value' => $d->format('Y-m-d'), 'label' => $label.'Approval needed'];
             }
-
-            $slot = (new SlotAvailableAction)(data: $data, user: $user);
 
             if ($data['date_note'] === $this->TODAY && (! $slot['available'] || $d->is($this->UNIT_DAY_OFF))) {
                 return ['value' => $d->format('Y-m-d'), 'label' => $label.'Approval and extra slot needed'];
