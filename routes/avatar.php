@@ -3,9 +3,11 @@
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\AvatarController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Labs\LabController;
 use App\Http\Controllers\PreferenceController;
 use App\Http\Controllers\Procedures\ProcedureController;
 use App\Http\Controllers\UploadController;
+use App\Http\Controllers\Wards\WardController;
 use Illuminate\Support\Facades\Route;
 
 // auth
@@ -66,4 +68,30 @@ Route::middleware('auth:sanctum')
     ->name('procedures.acute-hemodialysis.')
     ->group(function () {
         require __DIR__.'/procedures/acute_hd.php';
+    });
+
+// labs
+Route::middleware('auth:sanctum')
+    ->get('labs', LabController::class)
+    ->name('labs.index');
+
+// KT HLA Typing
+Route::middleware('auth:sanctum')
+    ->prefix('labs/kt-hla-typing')
+    ->name('labs.kt-hla-typing.')
+    ->group(function () {
+        require __DIR__.'/labs/kt_hla_typing.php';
+    });
+
+// wards
+Route::middleware('auth:sanctum')
+    ->get('wards', WardController::class)
+    ->name('wards.index');
+
+// KT ward registry
+Route::middleware('auth:sanctum')
+    ->prefix('wards/kt-admission')
+    ->name('wards.kt-admission.')
+    ->group(function () {
+        require __DIR__.'/wards/kt_admission.php';
     });
