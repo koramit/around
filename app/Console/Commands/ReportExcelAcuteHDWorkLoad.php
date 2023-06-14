@@ -27,6 +27,7 @@ class ReportExcelAcuteHDWorkLoad extends Command
      * Execute the console command.
      *
      * @return int
+     *
      * @TODO dialysis_at_chronic_unit lost in somepoint
      * @TODO remove extra slot after reschedule if needed
      */

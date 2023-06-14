@@ -19,11 +19,11 @@ class OrderShowAction extends AcuteHemodialysisAction
 
         /** @var AcuteHemodialysisOrderNote $order */
         $order = AcuteHemodialysisOrderNote::query()
-                    ->withAuthorName()
-                    ->withPlaceName('App\Models\Resources\Ward')
-                    ->withAttendingName()
-                    ->findByUnhashKey($hashedKey)
-                    ->firstOrFail();
+            ->withAuthorName()
+            ->withPlaceName('App\Models\Resources\Ward')
+            ->withAttendingName()
+            ->findByUnhashKey($hashedKey)
+            ->firstOrFail();
 
         if ($user->cannot('view', $order)) {
             abort(403);

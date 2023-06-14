@@ -96,8 +96,8 @@ class Note extends Model
     {
         return Attribute::make(
             get: fn () => $this->actionLogs()
-                    ->withActorUsername()
-                    ->oldest('performed_at')
+                ->withActorUsername()
+                ->oldest('performed_at')
                 ->get()
                 ->transform(fn ($log) => [
                     'request_id' => $log->payload['request_id'] ?? null,
@@ -113,19 +113,19 @@ class Note extends Model
     {
         return Attribute::make(
             get: fn () => $this->changeRequests()
-                    ->with([
-                        'requester:id,name',
-                        'actionLogs' => fn ($q) => $q->with('actor:id,name')->latest('performed_at'),
-                    ])->oldest('submitted_at')
-                    ->get()
-                    ->transform(fn ($request) => [
-                        'requester' => $request->requester->name,
-                        'request' => $request->change_request_text,
-                        'status' => $request->status,
-                        'actor' => $request->actionLogs->first()->actor->name,
-                        'at' => $request->actionLogs->first()->performed_at->format('M j H:i'),
-                        'id' => $request->id,
-                    ])
+                ->with([
+                    'requester:id,name',
+                    'actionLogs' => fn ($q) => $q->with('actor:id,name')->latest('performed_at'),
+                ])->oldest('submitted_at')
+                ->get()
+                ->transform(fn ($request) => [
+                    'requester' => $request->requester->name,
+                    'request' => $request->change_request_text,
+                    'status' => $request->status,
+                    'actor' => $request->actionLogs->first()->actor->name,
+                    'at' => $request->actionLogs->first()->performed_at->format('M j H:i'),
+                    'id' => $request->id,
+                ])
         );
     }
 
@@ -133,30 +133,30 @@ class Note extends Model
     {
         return Attribute::make(
             get: fn () => $this->log_list
-                    ->transform(function ($log) {
-                        $data = [
-                            'action' => $log['action'],
-                            'actor' => $log['actor'],
-                            'at' => $log['at'],
-                        ];
-                        if (! $log['request_id']) {
-                            return $data;
-                        }
-                        $key = $this->request_list->search(fn ($r) => $r['id'] === $log['request_id']);
-                        if ($key === false) {
-                            return $data;
-                        }
+                ->transform(function ($log) {
+                    $data = [
+                        'action' => $log['action'],
+                        'actor' => $log['actor'],
+                        'at' => $log['at'],
+                    ];
+                    if (! $log['request_id']) {
+                        return $data;
+                    }
+                    $key = $this->request_list->search(fn ($r) => $r['id'] === $log['request_id']);
+                    if ($key === false) {
+                        return $data;
+                    }
 
-                        return $data + [
-                            'request' => [
-                                'requester' => $this->request_list[$key]['requester'],
-                                'request' => $this->request_list[$key]['request'],
-                                'status' => $this->request_list[$key]['status'],
-                                'actor' => $this->request_list[$key]['actor'],
-                                'at' => $this->request_list[$key]['at'],
-                            ],
-                        ];
-                    })
+                    return $data + [
+                        'request' => [
+                            'requester' => $this->request_list[$key]['requester'],
+                            'request' => $this->request_list[$key]['request'],
+                            'status' => $this->request_list[$key]['status'],
+                            'actor' => $this->request_list[$key]['actor'],
+                            'at' => $this->request_list[$key]['at'],
+                        ],
+                    ];
+                })
         );
     }
 
@@ -164,9 +164,9 @@ class Note extends Model
     {
         $query->addSelect([
             'author_username' => User::select('name')
-                    ->whereColumn('id', 'notes.author_id')
-                    ->limit(1)
-                    ->latest(),
+                ->whereColumn('id', 'notes.author_id')
+                ->limit(1)
+                ->latest(),
         ]);
     }
 
@@ -184,9 +184,9 @@ class Note extends Model
     {
         $query->addSelect([
             'place_name' => $className::select('name')
-                    ->whereColumn('id', 'notes.place_id')
-                    ->limit(1)
-                    ->latest(),
+                ->whereColumn('id', 'notes.place_id')
+                ->limit(1)
+                ->latest(),
         ]);
     }
 

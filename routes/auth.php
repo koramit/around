@@ -26,9 +26,9 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::post('check-timeout', [AuthenticatedSessionController::class, 'update'])
-         ->name('check-timeout');
+        ->name('check-timeout');
     Route::delete('logout', [AuthenticatedSessionController::class, 'destroy'])
-         ->name('logout');
+        ->name('logout');
 
     Route::get('social-link/{provider}', [SocialLinkController::class, 'create'])
         ->name('social-link.create');
