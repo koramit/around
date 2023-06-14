@@ -48,8 +48,8 @@ class Person extends Model
             ? $query->whereIn('division_id', $division_id)
             : $query->where('division_id', $division_id);
         })
-        ->where('name', $iLike, '%'.$filters['search'].'%')
-        ->where('active', true);
+            ->where('name', $iLike, '%'.$filters['search'].'%')
+            ->where('active', true);
     }
 
     protected function position(): Attribute

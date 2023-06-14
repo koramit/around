@@ -239,6 +239,7 @@ class CaseRecordEditAction extends KidneyTransplantAdmissionAction
         if ($case->meta['reason_for_admission'] !== 'kt') {
             /** @var ArrayObject $form */
             $form = $case->form;
+
             return $form;
         }
         if (! isset($case->form['retain_jackson_drain'])) {
@@ -248,6 +249,7 @@ class CaseRecordEditAction extends KidneyTransplantAdmissionAction
 
         /** @var ArrayObject $form */
         $form = $case->form;
+
         return $form;
     }
 }

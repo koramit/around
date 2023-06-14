@@ -25,7 +25,6 @@ class AcuteHemodialysisSeeder extends Seeder
     /**
      * Run the database seeds.
      *
-     * @return void
      *
      * @throws Exception
      */
@@ -76,6 +75,7 @@ class AcuteHemodialysisSeeder extends Seeder
         for ($day = 0; $day <= 3; $day++) { // next 3 days
             if ($dateNote->is((new AcuteHemodialysisAction())->getUnitDayOff())) {
                 $dateNote->addDay();
+
                 continue;
             }
             for ($i = 1; $i <= 11; $i++) { // in unit, 11 HD cases

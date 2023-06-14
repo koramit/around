@@ -64,7 +64,7 @@ class AvatarUserProvider implements UserProvider
          * validation or authentication.
          */
         $response = Http::withHeaders(['token' => $this->providerToken])
-                        ->post($this->providerUrl, $credentials);
+            ->post($this->providerUrl, $credentials);
         $user = $response->json() ?? ['found' => false];
         if (! ($response->ok() && $user['found'])) {
             return null;

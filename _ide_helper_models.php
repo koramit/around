@@ -83,6 +83,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|CaseRecord whereRegistryId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|CaseRecord whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|CaseRecord whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CaseRecord withCreatorName()
  * @method static \Illuminate\Database\Eloquent\Builder|CaseRecord withTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|CaseRecord withoutTrashed()
  */
@@ -728,6 +729,7 @@ namespace App\Models\Registries{
  * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisCaseRecord whereRegistryId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisCaseRecord whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisCaseRecord whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CaseRecord withCreatorName()
  * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisCaseRecord withTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisCaseRecord withoutTrashed()
  */
@@ -771,6 +773,7 @@ namespace App\Models\Registries{
  * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantAdmissionCaseRecord whereRegistryId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantAdmissionCaseRecord whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantAdmissionCaseRecord whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CaseRecord withCreatorName()
  * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantAdmissionCaseRecord withTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantAdmissionCaseRecord withoutTrashed()
  */
@@ -812,6 +815,7 @@ namespace App\Models\Registries{
  * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantHLATypingCaseRecord whereRegistryId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantHLATypingCaseRecord whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantHLATypingCaseRecord whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CaseRecord withCreatorName()
  * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantHLATypingCaseRecord withTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantHLATypingCaseRecord withoutTrashed()
  */

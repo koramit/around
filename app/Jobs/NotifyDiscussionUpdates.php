@@ -32,9 +32,9 @@ class NotifyDiscussionUpdates implements ShouldQueue
                     ->first();
 
                 $subscribers = $sub->subscribers()
-                     ->where('preferences->mute', false)
-                     ->where('subscriber_id', '<>', $c->commentator_id)
-                     ->pluck('id');
+                    ->where('preferences->mute', false)
+                    ->where('subscriber_id', '<>', $c->commentator_id)
+                    ->pluck('id');
 
                 $channel = $sub->subscribable;
 

@@ -23,7 +23,7 @@ class WardController extends Controller
     {
         $data = (new RegistryTypeMainIndexAction(
             registryType: 'wards',
-            user:  $request->user(),
+            user: $request->user(),
             routeName: $request->route()->getName()
         ))();
 

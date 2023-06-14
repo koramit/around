@@ -6,13 +6,12 @@ use App\Extensions\Auth\AvatarUser;
 use App\Models\Registries\KidneyTransplantAdmissionCaseRecord;
 use App\Models\Resources\Admission;
 use App\Models\User;
-use App\Traits\FirstNameAware;
 use App\Traits\HomePageSelectable;
 use Hashids\Hashids;
 
 class CaseRecordIndexAction extends KidneyTransplantAdmissionAction
 {
-    use HomePageSelectable, FirstNameAware;
+    use HomePageSelectable;
 
     public function __invoke(array $filters, User|AvatarUser $user, $routeName = 'home')
     {
@@ -23,7 +22,8 @@ class CaseRecordIndexAction extends KidneyTransplantAdmissionAction
         $ans = [];
         $cases = KidneyTransplantAdmissionCaseRecord::query()
             ->select(['id', 'patient_id', 'status', 'meta'])
-            ->with(['patient', 'actionLogs' => fn ($q) => $q->where('action', 1)])
+            ->with(['patient'])
+            ->withCreatorName()
             ->filterStatus($filters['scope'] ?? null)
             ->metaSearchTerms($filters['search'] ?? null)
             ->orderBy('meta->an', 'desc')
@@ -37,7 +37,7 @@ class CaseRecordIndexAction extends KidneyTransplantAdmissionAction
                     'patient' => explode(':', $case->title)[0],
                     'reason' => strtoupper($case->meta['reason_for_admission']),
                     'status' => $case->status,
-                    'author' => $this->getFirstName($case->creator->full_name),
+                    'author' => $case->creator->first_name,
                     'actions' => $this->getActionMenu($case, $user, ['edit', 'destroy', 'cancel']),
                 ];
             });

@@ -13,6 +13,6 @@ trait InAppBrowsingAware
 
         $agentName = trim($request->header('User-Agent').' '.($agent->isRobot() ? $agent->robot() : ''));
 
-        return  preg_match("/Line\//i", $agentName) || preg_match('/facebook/i', $agentName);
+        return preg_match("/Line\//i", $agentName) || preg_match('/facebook/i', $agentName);
     }
 }

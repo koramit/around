@@ -12,11 +12,11 @@ class KidneyTransplantAdmissionCaseRecordStatus implements CastsAttributes, Note
 
     protected array $statuses = [
         '',
-/**  1 */'draft',
-/**  2 */'completed',
-/**  3 */'deleted',
-/**  4 */'edited',
-/**  5 */'canceled',
+/**  1 */ 'draft',
+/**  2 */ 'completed',
+/**  3 */ 'deleted',
+/**  4 */ 'edited',
+/**  5 */ 'canceled',
     ];
 
     public function getActiveStatusCodes(): array

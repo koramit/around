@@ -57,7 +57,6 @@ trait AvatarLinkable
 
         // handle download file
         $headers = $response->headers();
-        logger($headers);
         if (in_array('Content-Disposition', array_keys($headers))) {
             $attachment = false;
             $filename = null;

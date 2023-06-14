@@ -66,8 +66,8 @@ class Comment extends Model
     {
         return Attribute::make(
             get: fn () => collect(explode("\n", $this->body))
-                            ->transform(fn ($line) => "<p>$line</p>")
-                            ->join(''),
+                ->transform(fn ($line) => "<p>$line</p>")
+                ->join(''),
         );
     }
 }

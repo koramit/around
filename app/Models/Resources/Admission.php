@@ -124,9 +124,9 @@ class Admission extends Model
     {
         $query->addSelect([
             'place_name' => Ward::select('name')
-                            ->whereColumn('ward_id', 'wards.id')
-                            ->latest()
-                            ->limit(1),
+                ->whereColumn('ward_id', 'wards.id')
+                ->latest()
+                ->limit(1),
         ]);
     }
 }

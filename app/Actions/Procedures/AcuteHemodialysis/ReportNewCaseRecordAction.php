@@ -42,10 +42,10 @@ class ReportNewCaseRecordAction extends AcuteHemodialysisAction
             ->with([
                 'patient:id,profile,hn',
                 'orders' => fn ($query) => $query->select(['id', 'case_record_id', 'author_id', 'status', 'meta', 'date_note', 'form'])
-                        ->withAuthorName()
-                        ->withPlaceName(Ward::class)
-                        ->performedStatuses()
-                        ->orderBy('date_note'),
+                    ->withAuthorName()
+                    ->withPlaceName(Ward::class)
+                    ->performedStatuses()
+                    ->orderBy('date_note'),
             ])
             ->get();
 

@@ -212,10 +212,10 @@ class SubHannahAPI implements PatientAPI, AuthenticationAPI, CovidInfoAPI
         $options = ['verify' => config('services.SUBHANNAH_API_VERIFY')];
         try {
             $response = Http::timeout($timeout)
-                            ->retry(3, 200)
-                            ->withOptions($options)
-                            ->withHeaders($headers)
-                            ->post(config('services.SUBHANNAH_API_URL').$route, $form);
+                ->retry(3, 200)
+                ->withOptions($options)
+                ->withHeaders($headers)
+                ->post(config('services.SUBHANNAH_API_URL').$route, $form);
         } catch (Exception $e) {
             Log::error($route.'@hannah '.$e->getMessage());
 
@@ -236,10 +236,6 @@ class SubHannahAPI implements PatientAPI, AuthenticationAPI, CovidInfoAPI
         ];
     }
 
-    /**
-     * @param  array  $data
-     * @return array
-     */
     public function handleAdmission(array $data): array
     {
         $data['patient']['found'] = true;
