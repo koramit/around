@@ -54,7 +54,7 @@ class CaseRecord extends Model
     protected function creator(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->actionLogs()->where('action', 1)->first()?->actor,
+            get: fn () => $this->actionLogs->first()?->actor,
         );
     }
 
@@ -70,5 +70,12 @@ class CaseRecord extends Model
             $query->where('meta->name', $iLike, $search.'%')
                 ->orWhere('meta->hn', $iLike, $search.'%');
         });
+    }
+
+    public function scopeWithCreatorName($query)
+    {
+        $query->with([
+            'actionLogs' => fn ($query) => $query->where('action', 1)->with('actor:id,full_name'),
+        ]);
     }
 }

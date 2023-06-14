@@ -23,7 +23,7 @@ class LabController extends Controller
     {
         $data = (new RegistryTypeMainIndexAction(
             registryType: 'labs',
-            user:  $request->user(),
+            user: $request->user(),
             routeName: $request->route()->getName()
         ))();
 

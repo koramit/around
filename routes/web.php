@@ -24,7 +24,7 @@ require __DIR__.'/auth.php';
 // pages
 Route::get('terms-and-policies', TermsAndPoliciesController::class)
     ->middleware(['locale', 'no-in-app-allow'])
-     ->name('terms');
+    ->name('terms');
 
 // locales
 Route::get('/locale/{locale}', [LocalizationController::class, 'store']);
@@ -85,10 +85,10 @@ Route::middleware(['auth', 'can:comment'])
 // support
 Route::middleware(['auth', 'can:get_support'])->group(function () {
     Route::get('support-tickets', [SupportTicketController::class, 'index'])
-         ->middleware(['page-transition', 'locale', 'no-in-app-allow'])
-         ->name('support-tickets.index');
+        ->middleware(['page-transition', 'locale', 'no-in-app-allow'])
+        ->name('support-tickets.index');
     Route::post('support-tickets', [SupportTicketController::class, 'store'])
-         ->name('support-tickets.store');
+        ->name('support-tickets.store');
     Route::post('support-tickets', [SupportTicketController::class, 'destroy'])
         ->name('support-tickets.destroy');
     Route::get('feedback', [FeedbackController::class, 'index'])

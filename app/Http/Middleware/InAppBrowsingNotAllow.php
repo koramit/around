@@ -22,7 +22,7 @@ class InAppBrowsingNotAllow
 
         $token = Str::random(32);
         cache()->put(
-            key:'in-app-browsing-redirect-token-'.$token,
+            key: 'in-app-browsing-redirect-token-'.$token,
             value: $request->fullUrl(),
             ttl: now()->addMinutes(5)
         );

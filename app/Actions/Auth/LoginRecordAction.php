@@ -31,20 +31,19 @@ class LoginRecordAction
             $type = 0;
         }
 
-        $loginRecord =LoginRecord::query()
-                    ->create([
-                        'ip_address' => $ip,
-                        'device' => $agent->device(),
-                        'type' => $type,
-                        'browser' => $agent->browser(),
-                        'browser_version' => $agent->version($agent->browser()),
-                        'platform' => $agent->platform(),
-                        'platform_version' => $agent->version($agent->platform()),
-                        'robot' => $agent->isRobot() ? $agent->robot() : null,
-                        'user_id' => $user->id,
-                        'provider' => $provider,
-                    ]);
-
+        $loginRecord = LoginRecord::query()
+            ->create([
+                'ip_address' => $ip,
+                'device' => $agent->device(),
+                'type' => $type,
+                'browser' => $agent->browser(),
+                'browser_version' => $agent->version($agent->browser()),
+                'platform' => $agent->platform(),
+                'platform_version' => $agent->version($agent->platform()),
+                'robot' => $agent->isRobot() ? $agent->robot() : null,
+                'user_id' => $user->id,
+                'provider' => $provider,
+            ]);
 
        Session::put(['login_record_id' => $loginRecord->id]);
     }

@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\Ability;
 use App\Models\Resources\Division;
-use App\Models\Resources\Person;
 use App\Models\Resources\Registry;
 use App\Models\Role;
 use App\Models\User;

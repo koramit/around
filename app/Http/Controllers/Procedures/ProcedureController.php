@@ -23,7 +23,7 @@ class ProcedureController extends Controller
     {
         $data = (new RegistryTypeMainIndexAction(
             registryType: 'procedures',
-            user:  $request->user(),
+            user: $request->user(),
             routeName: $request->route()->getName()
         ))();
 

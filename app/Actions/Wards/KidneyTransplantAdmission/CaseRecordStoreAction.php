@@ -232,9 +232,9 @@ class CaseRecordStoreAction extends KidneyTransplantAdmissionAction
         ]);
 
         if ($caseRecord = CaseRecord::query()
-                ->where('meta->an', $validated['an'])
-                ->whereIn('status', (new KidneyTransplantAdmissionCaseRecordStatus)->getActiveStatusCodes())
-                ->first()) {
+            ->where('meta->an', $validated['an'])
+            ->whereIn('status', (new KidneyTransplantAdmissionCaseRecordStatus)->getActiveStatusCodes())
+            ->first()) {
             if ($caseRecord->status === 'draft') {
                 throw ValidationException::withMessages(['an' => "Case record for AN {$validated['an']} already exists in a draft by another user."]);
             }

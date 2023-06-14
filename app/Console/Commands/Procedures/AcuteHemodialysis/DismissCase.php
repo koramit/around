@@ -66,7 +66,7 @@ class DismissCase extends Command
             ])
             ->whereDoesntHave('lastPerformedOrder')
             ->where(fn ($query) => $query->where('created_at', '<', now()->subWeek())
-                    ->orWhere('status', $status->getCode('discharged')))
+                ->orWhere('status', $status->getCode('discharged')))
             ->get()
             ->each(function ($case) {
                 if ($case->meta['an']

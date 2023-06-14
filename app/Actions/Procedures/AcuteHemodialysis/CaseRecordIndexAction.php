@@ -21,9 +21,9 @@ class CaseRecordIndexAction extends AcuteHemodialysisAction
         $cases = AcuteHemodialysisCaseRecord::query()
             ->select(['id', 'patient_id', 'status'])
             ->with(['patient:id,profile,hn', 'orders' => fn ($query) => $query->select(['id', 'case_record_id', 'author_id', 'status', 'meta', 'date_note'])
-                    ->withAuthorName()
-                    ->slotOccupiedStatuses()
-                    ->orderByDesc('date_note'),
+                ->withAuthorName()
+                ->slotOccupiedStatuses()
+                ->orderByDesc('date_note'),
             ])->filterStatus($filters['scope'] ?? null)
             ->metaSearchTerms($filters['search'] ?? null)
             ->orderByDesc(
