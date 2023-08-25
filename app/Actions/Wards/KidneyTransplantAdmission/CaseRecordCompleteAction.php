@@ -117,9 +117,9 @@ class CaseRecordCompleteAction extends KidneyTransplantAdmissionAction
         return Validator::validate($data, [
             'nephrologist' => ['required', new FieldValueExists('App\Models\Resources\Person', 'name')],
             'surgeon' => ['required', new FieldValueExists('App\Models\Resources\Person', 'name')],
-            'date_off_drain' => ['required_if:retain_jackson_drain,false', 'date', 'after:datetime_operation_finish'],
+            'date_off_drain' => ['nullable', 'required_if:retain_jackson_drain,false', 'date', 'after:datetime_operation_finish'],
             'retain_jackson_drain' => ['accepted_if:date_off_drain,null'],
-            'date_off_foley' => ['required_if:retain_foley_catheter,false', 'date', 'after:datetime_operation_finish'],
+            'date_off_foley' => ['nullable', 'required_if:retain_foley_catheter,false', 'date', 'after:datetime_operation_finish'],
             'retain_foley_catheter' => ['accepted_if:date_off_foley,null'],
             'insurance' => ['required', 'string', 'max:255'],
             'cost' => ['required', 'numeric', 'min:0'],
