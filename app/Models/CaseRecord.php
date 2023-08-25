@@ -54,7 +54,7 @@ class CaseRecord extends Model
     protected function creator(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->actionLogs->first()?->actor,
+            get: fn () => $this->actionLogs()->with('actor')->first()?->actor,
         );
     }
 

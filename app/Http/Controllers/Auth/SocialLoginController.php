@@ -50,7 +50,7 @@ class SocialLoginController extends Controller
             return redirect()->route('login')->withErrors(['notice' => 'Please link LINE in preferences menu first.']);
         }
 
-        if (now()->greaterThan(now()->create($user->profile['password_expiration_date']))) {
+        if (!isset($user->profile['password_expiration_date']) || now()->greaterThan(now()->create($user->profile['password_expiration_date'])) ) {
             return redirect()->route('login')->withErrors(['notice' => 'Please login using Siriraj AD to reactivate LINE login.']);
         }
 
