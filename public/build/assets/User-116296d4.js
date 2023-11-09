@@ -1,1 +1,0 @@
-import{u as t,_ as a}from"./useManageLocale-361cd7fd.js";import{b as r,c as o,d as n,t as c,e as l,F as p}from"./app-4c4070f2.js";const u={class:"text-3xl font-semibold underline text-blue-700"},f={__name:"User",props:{trans:{type:Object,default:null}},setup(e){return t(e.trans),(s,m)=>(r(),o(p,null,[n("h1",u,c(s.__("user")),1),l(a)],64))}};export{f as default};
