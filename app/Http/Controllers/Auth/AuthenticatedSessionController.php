@@ -47,6 +47,16 @@ class AuthenticatedSessionController extends Controller
             return $this->storeAvatarUser($validated);
         }
 
+        // check if login is email
+        if (filter_var($validated['login'], FILTER_VALIDATE_EMAIL)) {
+            if (Auth::attempt($validated)) {
+                return redirect()->intended(route(Auth::user()->home_page));
+            }
+            return back()->withErrors([
+                'login' => __('auth.failed'),
+            ]);
+        }
+
         $data = $api->authenticate($validated['login'], $validated['password']);
 
         if (! $data['found']) {
