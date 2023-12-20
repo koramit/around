@@ -122,6 +122,6 @@ class ReportNewCaseRecordAction extends AcuteHemodialysisAction
         });
 
         // return [];
-        return (new FastExcel($report))->download("acute_HD-new_case-{$validated['date_start']}_to_{$validated['date_end']}.xlsx");
+        return (new FastExcel($report))->export(storage_path("acute_HD-new_case-{$validated['date_start']}_to_{$validated['date_end']}.xlsx"));
     }
 }

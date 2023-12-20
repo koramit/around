@@ -12,6 +12,7 @@ class LINEChannel
     /** @TODO optimize query count */
     public function send(mixed $notifiable, Notification $notification): void
     {
+        $notifiable->load('activeLINEProfile');
         if (! $profile = $notifiable->activeLINEProfile) { // get user social profile id
             return;
         }
