@@ -3,6 +3,7 @@
 namespace App\Actions\Procedures\AcuteHemodialysis;
 
 use App\Jobs\Procedures\AcuteHemodialysis\NotifyOrderResubmitToSubscribers;
+use App\Jobs\Procedures\AcuteHemodialysis\ShouldNotifyOrderSubmittedWithoutConsentForm;
 use App\Models\Notes\AcuteHemodialysisOrderNote;
 use App\Rules\AcceptedIfOthersFalsy;
 use App\Traits\AcuteHemodialysis\OrderFormConfigsShareable;
@@ -367,6 +368,7 @@ class OrderSubmitAction extends AcuteHemodialysisAction
         }
         $note->save();
         $this->shouldNotifyResubmit($note);
+        ShouldNotifyOrderSubmittedWithoutConsentForm::dispatchAfterResponse($note);
 
         return [
             'case' => $note->caseRecord->hashed_key,
