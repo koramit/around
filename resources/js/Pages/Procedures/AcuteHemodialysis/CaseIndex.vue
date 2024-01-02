@@ -2,12 +2,29 @@
     <!-- search tool & create case -->
     <div class="flex flex-col-reverse md:flex-row justify-between items-center mb-4">
         <SearchIndex
+            class="lg:hidden"
             :scopes="configs.scopes"
             :form="searchForm"
             @search-changed="(val) => searchForm.search = val"
             @scope-changed="(val) => searchForm.scope = val"
             ref="searchInput"
         />
+        <div class="hidden lg:flex lg:gap-x-2">
+            <SearchIndex
+                :scopes="configs.scopes"
+                :form="searchForm"
+                @search-changed="(val) => searchForm.search = val"
+                @scope-changed="(val) => searchForm.scope = val"
+                ref="searchInput"
+            />
+            <FormSelect
+                class="hidden lg:block lg:w-auto"
+                v-model="searchForm.md"
+                name="md"
+                :options="configs.mdOptions"
+                placeholder="Filter by MD"
+            />
+        </div>
         <button
             v-if="can.create"
             class="btn btn-accent w-full mb-4 md:w-auto md:px-4 md:mb-0"
@@ -16,6 +33,13 @@
             Create New Case
         </button>
     </div>
+    <FormSelect
+        class="mb-4 lg:hidden"
+        v-model="searchForm.md"
+        name="md"
+        :options="configs.mdOptions"
+        placeholder="Filter by MD"
+    />
 
     <!-- table -->
     <div class="bg-white rounded shadow overflow-x-auto hidden md:block">
@@ -229,6 +253,7 @@ import IconEdit from '../../../Components/Helpers/Icons/IconEdit.vue';
 import IconCalendarPlus from '../../../Components/Helpers/Icons/IconCalendarPlus.vue';
 import PaginationNav from '../../../Components/Helpers/PaginationNav.vue';
 import IconReadme from '../../../Components/Helpers/Icons/IconReadme.vue';
+import FormSelect from '../../../Components/Controls/FormSelect.vue';
 
 const SearchAdmission = defineAsyncComponent(() => import('../../../Components/Forms/SearchAdmission.vue'));
 const props = defineProps({
@@ -246,6 +271,7 @@ const newCase = useForm({
 const searchForm = reactive({
     search: props.filters.search,
     scope: props.filters.scope,
+    md: props.filters.md,
 });
 
 const confirmed = (admission) => {

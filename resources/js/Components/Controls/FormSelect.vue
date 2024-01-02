@@ -13,7 +13,6 @@
                 :id="name"
                 :name="name"
                 ref="input"
-                :placeholder="placeholder"
                 :disabled="disabled"
                 :value="modelValue"
                 @change="change"
@@ -24,7 +23,7 @@
                     disabled
                     value=""
                 >
-                    Please select
+                    {{ placeholder ? placeholder : 'Please select' }}
                 </option>
                 <option
                     class="italic text-yellow-500"
