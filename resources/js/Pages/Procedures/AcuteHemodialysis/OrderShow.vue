@@ -1,15 +1,17 @@
 <template>
-    <Transition mode="out-in">
-        <Suspense v-if="configs.covid.hn">
-            <CovidInfo
-                class="mb-4"
-                :configs="configs.covid"
-            />
-            <template #fallback>
-                <FallbackSpinner />
-            </template>
-        </Suspense>
-    </Transition>
+    <div>
+        <Transition mode="out-in">
+            <Suspense v-if="configs.covid.hn">
+                <CovidInfo
+                    class="mb-4"
+                    :configs="configs.covid"
+                />
+                <template #fallback>
+                    <FallbackSpinner />
+                </template>
+            </Suspense>
+        </Transition>
+    </div>
     <!-- serology -->
     <SerologyInfo
         class="mt-4 md:mt-8"

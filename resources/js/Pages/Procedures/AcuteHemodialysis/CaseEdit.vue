@@ -1,15 +1,19 @@
 <template>
-    <Transition mode="out-in">
-        <Suspense v-if="configs.case_status === 'active' && configs.covid.hn && !Object.keys($page.props.errors).length">
-            <CovidInfo
-                class="mb-4"
-                :configs="configs.covid"
-            />
-            <template #fallback>
-                <FallbackSpinner />
-            </template>
-        </Suspense>
-    </Transition>
+    <div>
+        <Transition mode="out-in">
+            <Suspense
+                v-if="configs.case_status === 'active' && configs.covid.hn && !Object.keys($page.props.errors).length"
+            >
+                <CovidInfo
+                    class="mb-4"
+                    :configs="configs.covid"
+                />
+                <template #fallback>
+                    <FallbackSpinner />
+                </template>
+            </Suspense>
+        </Transition>
+    </div>
     <!-- summary  -->
     <h2
         class="form-label text-lg italic text-complement scroll-mt-16 md:scroll-mt-8"
