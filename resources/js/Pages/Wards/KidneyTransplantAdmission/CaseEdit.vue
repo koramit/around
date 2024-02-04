@@ -1078,13 +1078,12 @@
         class="mt-4 md:mt-8 w-full btn-warning"
     >
         CANCEL
-
-
-        <ConfirmFormComposable
-            ref="confirmForm"
-            @confirmed="(reason) => confirmed(reason, handleConfirmedAction)"
-        />
     </spinnerbutton>
+
+    <ConfirmFormComposable
+        ref="confirmForm"
+        @confirmed="(reason) => confirmed(reason, handleConfirmedAction)"
+    />
 </template>
 
 <script setup>
@@ -1235,6 +1234,7 @@ watch(
         case 'destroy-case':
         case 'cancel-case':
             actionStoreName = value.name;
+            console.log(value.config);
             openConfirmForm(value.config);
             break;
         default :
