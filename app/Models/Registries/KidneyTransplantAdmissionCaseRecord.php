@@ -57,6 +57,7 @@ class KidneyTransplantAdmissionCaseRecord extends CaseRecord
                 $caster->getCode('completed'),
                 $caster->getCode('edited'),
                 $caster->getCode('canceled'),
+                $caster->getCode('offed'),
             ];
 
         $query->whereIn('status', $statuses);

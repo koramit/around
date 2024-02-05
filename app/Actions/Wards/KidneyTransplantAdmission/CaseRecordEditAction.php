@@ -47,6 +47,7 @@ class CaseRecordEditAction extends KidneyTransplantAdmissionAction
                 'destroy' => route('wards.kt-admission.destroy', $caseRecord->hashed_key),
                 'addendum' => route('wards.kt-admission.addendum', $caseRecord->hashed_key),
                 'cancel' => route('wards.kt-admission.cancel', $caseRecord->hashed_key),
+                'off' => route('wards.kt-admission.off', $caseRecord->hashed_key),
             ],
             'can' => [
                 'update' => $user->can('update', $caseRecord),
@@ -54,10 +55,11 @@ class CaseRecordEditAction extends KidneyTransplantAdmissionAction
                 'destroy' => $user->can('destroy', $caseRecord),
                 'addendum' => $user->can('addendum', $caseRecord),
                 'cancel' => $user->can('cancel', $caseRecord),
+                'off' => $user->can('off', $caseRecord),
             ],
             'attachment_upload_pathname' => $this->CONFIGS['attachment_upload_pathname'],
             'insurances' => ['เบิกจ่ายตรง', 'ประกันสังคม', '30 บาท', 'รัฐวิสาหกิจ'],
-            'common_transfer_wards' => ['หอผู้ป่วยโรคไต สง่า นิลวรางกูร', 'เฉลิมพระเกียรติ ชั้น 7 เหนือ'],
+            'common_transfer_wards' => ['หอผู้ป่วยโรคไต สง่า นิลวรางกูร', 'เฉลิมพระเกียรติ ชั้น 7 เหนือ', 'เฉลิมพระเกียรติ ชั้น 15', 'อานันทมหิดล ชั้น 3', 'พระศรีฯ 13/2 พิเศษ'],
             'donor_types' => $this->CONFIGS['donor_types'],
             'cause_of_esrd_options' => [
                 'Alport', 'Analgesic nephropathy', 'Anti-GBM', 'CGN', 'Chronic pyelonephritis', 'CresenticGN', 'CTIN', 'DM', 'DM type1', 'DM type2', 'FSGS', 'Gout', 'Graft failure', 'HT', 'IgAN', 'IgMN', 'LN', 'Membranous GN', 'Nephrocalcinosis', 'Neurogenic Bladder', 'Obstructive Uropathy', 'Pauci immune Glomerulonephritis', 'PKD', 'RAS', 'Reflux nephropathy', 'Renal dysplasia', 'RPGN', 'Single Kidney', 'Stone', 'Unknown',
@@ -203,8 +205,8 @@ class CaseRecordEditAction extends KidneyTransplantAdmissionAction
             $caseRecord,
             $user,
             $caseRecord->status === 'draft'
-                ? ['complete', 'destroy']
-                : ['addendum', 'cancel']
+                ? ['complete', 'destroy', 'off']
+                : ['addendum', 'cancel', 'off']
         );
         $flash['hn'] = $caseRecord->patient->hn;
         $flash['breadcrumbs'] = $this->BREADCRUMBS;
@@ -225,7 +227,7 @@ class CaseRecordEditAction extends KidneyTransplantAdmissionAction
         }
 
         return [
-            'formData' => $form,
+            'formData' => [...$form, 'immunosuppressive_drugs_induction' => ['other' => null]],
             'formConfigs' => $configs,
             'flash' => $flash,
         ];

@@ -41,4 +41,9 @@ class KidneyTransplantAdmissionCaseRecordPolicy
     {
         return $this->addendum($user, $caseRecord);
     }
+
+    public function off(User $user, KidneyTransplantAdmissionCaseRecord $caseRecord): bool
+    {
+        return $this->edit($user, $caseRecord) && $caseRecord->meta['reason_for_admission'] === 'kt';
+    }
 }

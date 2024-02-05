@@ -2,7 +2,6 @@
 
 namespace App\Actions\Wards\KidneyTransplantAdmission;
 
-use App\Models\Registries\KidneyTransplantAdmissionCaseRecord;
 use App\Models\Registries\KidneyTransplantAdmissionCaseRecord as CaseRecord;
 use App\Models\Resources\Registry;
 use App\Models\User;
@@ -24,7 +23,7 @@ class KidneyTransplantAdmissionAction
             ['label' => 'Kidney Transplant', 'value' => 'kt'],
             ['label' => 'Complication', 'value' => 'complication'],
         ],
-        'donor_types' => ['CD', 'LD'],
+        'donor_types' => ['CD', 'CD Single kidney', 'CD Dual kidneys','LD'],
         'abo_options' => ['A', 'B', 'AB', 'O'],
         'rh_options' => ['positive', 'negative'],
         'hla_mismatch_options' => [0, 1, 2],
@@ -77,7 +76,7 @@ class KidneyTransplantAdmissionAction
             ->firstOrFail();
     }
 
-    protected function getActionMenu(KidneyTransplantAdmissionCaseRecord $caseRecord, User $user, array $actions = []): array
+    protected function getActionMenu(CaseRecord $caseRecord, User $user, array $actions = []): array
     {
         return collect([
             [
@@ -136,6 +135,21 @@ class KidneyTransplantAdmissionAction
                 ],
                 'can' => $user->can('cancel', $caseRecord)
                     && (! count($actions) || in_array('cancel', $actions)),
+            ],
+            [
+                'label' => 'Off case',
+                'as' => 'button',
+                'icon' => 'trash-x-mark',
+                'theme' => 'warning',
+                'route' => route('wards.kt-admission.off', $caseRecord->hashed_key),
+                'name' => 'off-case',
+                'config' => [
+                    'heading' => 'Off Case',
+                    'confirmText' => $caseRecord->title,
+                    'requireReason' => true,
+                ],
+                'can' => $user->can('off', $caseRecord)
+                    && (! count($actions) || in_array('off', $actions)),
             ],
         ])->filter(fn ($action) => $action['can'])->values()->all();
     }

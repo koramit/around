@@ -17,6 +17,7 @@ class KidneyTransplantAdmissionCaseRecordStatus implements CastsAttributes, Note
 /**  3 */ 'deleted',
 /**  4 */ 'edited',
 /**  5 */ 'canceled',
+/**  6 */ 'offed',
     ];
 
     public function getActiveStatusCodes(): array

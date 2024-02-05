@@ -31,6 +31,7 @@ const theme = computed(() => {
         return 'success';
     case 'canceled':
     case 'deleted':
+    case 'offed':
         return 'dark';
     case 'disapproved':
     case 'scheduling':
