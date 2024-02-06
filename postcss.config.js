@@ -1,4 +1,6 @@
-module.exports = {
+// noinspection JSUnusedGlobalSymbols
+
+export default {
     plugins: {
         tailwindcss: {},
         autoprefixer: {},

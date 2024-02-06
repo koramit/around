@@ -42,6 +42,7 @@ class ResourceActionLog extends Model
 /** 21 */ 'export', // case
 /** 22 */ 'publish', // note
 /** 23 */ 'delete', // case, note
+/** 24 */ 'off', // case
 
     ];
 

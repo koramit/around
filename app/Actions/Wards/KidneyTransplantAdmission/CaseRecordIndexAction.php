@@ -64,7 +64,7 @@ class CaseRecordIndexAction extends KidneyTransplantAdmissionAction
                 'scope' => $filters['scope'] ?? 'all',
             ],
             'configs' => [
-                'scopes' => ['all', 'draft', 'completed', 'edited', 'canceled', 'deleted'],
+                'scopes' => ['all', 'draft', 'completed', 'edited', 'canceled', 'deleted', 'offed'],
                 'admit_reasons' => $this->CONFIGS['admit_reasons'],
                 'admissions' => $admissions,
             ],

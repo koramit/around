@@ -195,7 +195,7 @@
                     class="grid grid-cols-2 gap-4"
                     name="donor_type"
                     v-model="form.donor_type"
-                    :options="configs.donor_types"
+                    :options="form.donor_type === 'CD' ? configs.donor_types : configs.donor_types.filter(type => type !== 'CD')"
                     :error="$page.props.errors.donor_type"
                 />
             </div>
@@ -542,6 +542,59 @@
             OPERATIVE DATA
         </h2>
         <hr class="my-4 border-b border-accent">
+        <FormInput
+            label="donor creatinine before harvest (mg/dl)"
+            name="donor_creatinine_before_harvest"
+            v-model="form.donor_creatinine_before_harvest"
+            :error="$page.props.errors.donor_creatinine_before_harvest"
+            type="tel"
+        />
+        <hr class="border border-dashed my-2 md:my-4 xl:my-8">
+        <label class="form-label">Recipient immunosuppressive drugs induction :</label>
+        <FormCheckbox
+            class="mt-4"
+            label="No immunosuppressive drugs induction"
+            name="immunosuppressive_drugs_induction.none"
+            v-model="form.immunosuppressive_drugs_induction.none"
+            :toggler="true"
+        />
+        <small
+            class="form-error-block"
+            id="immunosuppressive_drugs_induction.none"
+        >
+            {{ $page.props.errors['immunosuppressive_drugs_induction.none'] }}
+        </small>
+        <Transition name="slide-fade">
+            <div
+                class="mt-2 md:mt-4"
+                v-if="!form.immunosuppressive_drugs_induction.none"
+            >
+                <div class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8">
+                    <FormCheckbox
+                        label="Simulect"
+                        name="immunosuppressive_drugs_induction.simulect"
+                        v-model="form.immunosuppressive_drugs_induction.simulect"
+                    />
+                    <FormCheckbox
+                        label="ATG"
+                        name="immunosuppressive_drugs_induction.ATG"
+                        v-model="form.immunosuppressive_drugs_induction.ATG"
+                    />
+                    <FormCheckbox
+                        label="Rituximab"
+                        name="immunosuppressive_drugs_induction.rituximab"
+                        v-model="form.immunosuppressive_drugs_induction.rituximab"
+                    />
+                    <FormInput
+                        placeholder="other induction"
+                        name="immunosuppressive_drugs_induction.induction_other"
+                        v-model="form.immunosuppressive_drugs_induction.induction_other"
+                        :error="$page.props.errors['immunosuppressive_drugs_induction.induction_other']"
+                    />
+                </div>
+            </div>
+        </Transition>
+        <hr class="border border-dashed my-2 md:my-4 xl:my-8">
         <Transition name="slide-fade">
             <div v-if="form.donor_type === 'CD'">
                 <div class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8">
@@ -720,6 +773,13 @@
                     />
                 </Transition>
             </div>
+            <FormInput
+                label="creatinine at discharge (mg/dl)"
+                name="creatinine_at_discharge"
+                v-model="form.creatinine_at_discharge"
+                :error="$page.props.errors.creatinine_at_discharge"
+                type="number"
+            />
         </div>
         <h3 class="form-label mt-4 md:mt-8 xl:mt-16">
             graft biopsy :
@@ -1048,6 +1108,15 @@
     </SpinnerButton>
 
     <SpinnerButton
+        :spin="form.processing"
+        v-if="configs.can.off"
+        @click="handleButtonActionClicked('off-case')"
+        class="mt-4 md:mt-8 w-full btn-complement"
+    >
+        OFF CASE
+    </SpinnerButton>
+
+    <SpinnerButton
         v-if="formConfigs.can.destroy"
         :spin="form.processing"
         @click="handleButtonActionClicked('destroy-case')"
@@ -1078,13 +1147,12 @@
         class="mt-4 md:mt-8 w-full btn-warning"
     >
         CANCEL
-
-
-        <ConfirmFormComposable
-            ref="confirmForm"
-            @confirmed="(reason) => confirmed(reason, handleConfirmedAction)"
-        />
     </spinnerbutton>
+
+    <ConfirmFormComposable
+        ref="confirmForm"
+        @confirmed="(reason) => confirmed(reason, handleConfirmedAction)"
+    />
 </template>
 
 <script setup>
@@ -1234,7 +1302,9 @@ watch(
             break;
         case 'destroy-case':
         case 'cancel-case':
+        case 'off-case':
             actionStoreName = value.name;
+            console.log(value.config);
             openConfirmForm(value.config);
             break;
         default :
@@ -1250,6 +1320,9 @@ const handleConfirmedAction = (reason) => {
         break;
     case 'cancel-case':
         useForm({reason: reason}).delete(configs.routes.cancel);
+        break;
+    case 'off-case':
+        useForm({reason: reason}).delete(configs.routes.off);
         break;
     default :
         return;
