@@ -227,7 +227,7 @@ class CaseRecordEditAction extends KidneyTransplantAdmissionAction
         }
 
         return [
-            'formData' => [...$form, 'immunosuppressive_drugs_induction' => ['other' => null]],
+            'formData' => $form,
             'formConfigs' => $configs,
             'flash' => $flash,
         ];

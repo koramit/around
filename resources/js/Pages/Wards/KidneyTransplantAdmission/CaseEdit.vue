@@ -549,6 +549,8 @@
             :error="$page.props.errors.donor_creatinine_before_harvest"
             type="tel"
         />
+        <hr class="border border-dashed my-2 md:my-4 xl:my-8">
+        <label class="form-label">Recipient immunosuppressive drugs induction :</label>
         <FormCheckbox
             class="mt-4"
             label="No immunosuppressive drugs induction"
@@ -569,9 +571,9 @@
             >
                 <div class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8">
                     <FormCheckbox
-                        label="Simulate"
-                        name="immunosuppressive_drugs_induction.simulate"
-                        v-model="form.immunosuppressive_drugs_induction.simulate"
+                        label="Simulect"
+                        name="immunosuppressive_drugs_induction.simulect"
+                        v-model="form.immunosuppressive_drugs_induction.simulect"
                     />
                     <FormCheckbox
                         label="ATG"
@@ -585,9 +587,9 @@
                     />
                     <FormInput
                         placeholder="other induction"
-                        name="immunosuppressive_drugs_induction.other"
-                        v-model="form.immunosuppressive_drugs_induction.other"
-                        :error="$page.props.errors['immunosuppressive_drugs_induction.other']"
+                        name="immunosuppressive_drugs_induction.induction_other"
+                        v-model="form.immunosuppressive_drugs_induction.induction_other"
+                        :error="$page.props.errors['immunosuppressive_drugs_induction.induction_other']"
                     />
                 </div>
             </div>
