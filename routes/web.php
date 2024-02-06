@@ -1,9 +1,5 @@
 <?php
 
-\Auth::loginUsingId(57);
-
-// Barryvdh\Debugbar\Facades\Debugbar::disable();
-
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\ChatBotController;
 use App\Http\Controllers\FeedbackController;
