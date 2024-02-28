@@ -13,7 +13,7 @@ use Illuminate\Validation\Rule;
 
 class SlotAvailableAction extends AcuteHemodialysisAction
 {
-    use OrderShareValidatable, SlotCountable, AvatarLinkable;
+    use AvatarLinkable, OrderShareValidatable, SlotCountable;
 
     protected User $user;
 

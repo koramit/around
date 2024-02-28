@@ -12,7 +12,7 @@ use Illuminate\Validation\Rule;
 
 class CaseRecordCompleteAction
 {
-    use CaseRecordShareValidatable, ChangesComparable, AvatarLinkable;
+    use AvatarLinkable, CaseRecordShareValidatable, ChangesComparable;
 
     public function __invoke(array $data, string $hashed, mixed $user): array
     {

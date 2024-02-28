@@ -10,7 +10,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
-class SubHannahAPI implements PatientAPI, AuthenticationAPI, CovidInfoAPI
+class SubHannahAPI implements AuthenticationAPI, CovidInfoAPI, PatientAPI
 {
     public function authenticate(string $login, string $password): array
     {

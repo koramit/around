@@ -11,7 +11,7 @@ use App\Traits\RegistryGroupRouteQueryable;
 
 class RegistryTypeMainIndexAction
 {
-    use AvatarLinkable, RegistryGroupRouteQueryable, FlashDataGeneratable, HomePageSelectable;
+    use AvatarLinkable, FlashDataGeneratable, HomePageSelectable, RegistryGroupRouteQueryable;
 
     public function __construct(
         protected string $registryType,

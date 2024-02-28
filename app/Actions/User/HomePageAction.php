@@ -8,7 +8,7 @@ use App\Traits\HomePageSelectable;
 
 class HomePageAction
 {
-    use FlashDataGeneratable, HomePageSelectable, AvatarLinkable;
+    use AvatarLinkable, FlashDataGeneratable, HomePageSelectable;
 
     public function __invoke(mixed $user, string $routeName): array
     {

@@ -15,7 +15,7 @@ use Hashids\Hashids;
 
 class AcuteHemodialysisAction
 {
-    use FirstNameAware, FlashDataGeneratable, AvatarLinkable, Subscribable;
+    use AvatarLinkable, FirstNameAware, FlashDataGeneratable, Subscribable;
 
     protected int $REGISTRY_ID;
 

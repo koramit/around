@@ -20,25 +20,25 @@ class CaseRecordIndexAction extends AcuteHemodialysisAction
 
         $mdModels = cache()->remember('acute-hd-md-options', now()->addHour(), function () {
             $mdIds = AcuteHemodialysisOrderNote::query()
-                ->select("author_id")
-                ->distinct("author_id")
-                ->pluck("author_id");
+                ->select('author_id')
+                ->distinct('author_id')
+                ->pluck('author_id');
 
             $mdOptionsTemp = User::query()
-                ->whereIn("id", $mdIds)
-                ->select("id", "full_name")
+                ->whereIn('id', $mdIds)
+                ->select('id', 'full_name')
                 ->get();
 
             $mdOptions = [];
             $configMDOptions = [];
             foreach ($mdOptionsTemp as $md) {
                 $mdOptions[] = [
-                    "id" => $md->id,
-                    "name" => $md->first_name
+                    'id' => $md->id,
+                    'name' => $md->first_name,
                 ];
                 $configMDOptions[] = $md->first_name;
             }
-            $collator = new \Collator("th_TH");
+            $collator = new \Collator('th_TH');
             $collator->sort($configMDOptions);
 
             return [
@@ -49,7 +49,7 @@ class CaseRecordIndexAction extends AcuteHemodialysisAction
 
         $lastMDFilteredCaseIds = null;
         if ($filters['md'] ?? null) {
-            $authorId = collect($mdModels['options'])->filter(fn($md) => $md['name'] === $filters['md'])->first()['id'] ?? null;
+            $authorId = collect($mdModels['options'])->filter(fn ($md) => $md['name'] === $filters['md'])->first()['id'] ?? null;
             if (! $authorId) {
                 abort(404);
             }
@@ -60,14 +60,14 @@ class CaseRecordIndexAction extends AcuteHemodialysisAction
                 ->pluck('id');
 
             $lastMDFilteredCaseIds = AcuteHemodialysisOrderNote::query()
-                ->selectRaw("case_record_id, author_id, MAX(date_note) as latest_date")
+                ->selectRaw('case_record_id, author_id, MAX(date_note) as latest_date')
                 ->whereIn('case_record_id', $statusScopedCaseIds)
                 ->slotOccupiedStatuses()
-                ->groupBy("case_record_id")
+                ->groupBy('case_record_id')
                 ->get()
-                ->filter(fn($n) => $n->author_id === $authorId)
+                ->filter(fn ($n) => $n->author_id === $authorId)
                 ->values()
-                ->pluck("case_record_id");
+                ->pluck('case_record_id');
         }
 
         $cases = AcuteHemodialysisCaseRecord::query()

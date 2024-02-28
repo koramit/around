@@ -102,7 +102,7 @@ class ReportAction
         $reportForm = $validated;
     }
 
-    protected function updateSubNotes(array &$tempNotes, KidneyTransplantHLATypingReportNote $report, string $status = null, User $user = null): void
+    protected function updateSubNotes(array &$tempNotes, KidneyTransplantHLATypingReportNote $report, ?string $status = null, ?User $user = null): void
     {
         foreach (['patient', 'donor'] as $type) {
             foreach (['hla', 'cxm', 'addition_tissue_typing'] as $note) {

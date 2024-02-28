@@ -55,6 +55,14 @@ class CaseRecordIndexAction extends KidneyTransplantAdmissionAction
 
         $flash = $this->getFlash('Kidney Transplant Admission - Cases', $user);
         $flash['action-menu'][] = $this->getSetHomePageActionMenu($routeName, $user->home_page);
+        $flash['action-menu'][] = [
+            'label' => 'Export',
+            'as' => 'a',
+            'icon' => 'file-excel',
+            'theme' => 'accent',
+            'route' => route('wards.kt-admission.export'),
+            'can' => $user->can('create_kt_admission_case'),
+        ];
 
         return [
             'flash' => $flash,

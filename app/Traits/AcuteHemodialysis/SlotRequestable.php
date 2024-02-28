@@ -13,7 +13,7 @@ trait SlotRequestable
         $changeable = $request->changeable;
         $text = trim($changeable->meta['dialysis_type']).' / '.($changeable->meta['in_unit'] ? 'ห้อง Acute' : 'ward').' / ';
         $dateNoteStr = $changeable->date_note->format('Y-m-d');
-//        $dateLabel = (new AcuteHemodialysisAction)->getToday() === $request->changes['date_note'] ? 'วันนี้' : now()->create($request->changes['date_note'])->format('M j');
+        //        $dateLabel = (new AcuteHemodialysisAction)->getToday() === $request->changes['date_note'] ? 'วันนี้' : now()->create($request->changes['date_note'])->format('M j');
         $dateLabel = 'วันนี้';
         if ($dateNoteStr === $request->changes['date_note']) {
             $text = 'ขอ set '.$text.$dateLabel;

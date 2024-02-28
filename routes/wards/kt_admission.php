@@ -3,6 +3,7 @@
 use App\Http\Controllers\Wards\KidneyTransplantAdmission\CaseRecordCancelController;
 use App\Http\Controllers\Wards\KidneyTransplantAdmission\CaseRecordCompleteController;
 use App\Http\Controllers\Wards\KidneyTransplantAdmission\CaseRecordController;
+use App\Http\Controllers\Wards\KidneyTransplantAdmission\CaseRecordExportController;
 use App\Http\Controllers\Wards\KidneyTransplantAdmission\CaseRecordOffController;
 use Illuminate\Support\Facades\Route;
 
@@ -14,6 +15,9 @@ Route::get('/', [CaseRecordController::class, 'index'])
 Route::post('/', [CaseRecordController::class, 'store'])
     ->middleware(['can:create_kt_admission_case'])
     ->name('store');
+
+Route::get('/export', CaseRecordExportController::class)
+    ->name('export');
 
 Route::get('/{hashedKey}/edit', [CaseRecordController::class, 'edit'])
     ->name('edit');

@@ -14,7 +14,7 @@ use App\Traits\Subscribable;
 
 class CaseRecordEditAction extends AcuteHemodialysisAction
 {
-    use OrderShareValidatable, CaseRecordShareValidatable, Subscribable;
+    use CaseRecordShareValidatable, OrderShareValidatable, Subscribable;
 
     protected array $FORM_CONFIGS = [
         'comorbidities' => [

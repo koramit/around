@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Log;
 
 class LINEMessagingManager
 {
-    use Placeholderable, LINECallable;
+    use LINECallable, Placeholderable;
 
     private Chatbot $bot;
 

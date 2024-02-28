@@ -10,7 +10,7 @@ use Inertia\Inertia;
 
 class HomeController extends Controller
 {
-    use HomePageSelectable, AppLayoutSessionFlashable;
+    use AppLayoutSessionFlashable, HomePageSelectable;
 
     public function __invoke(Request $request)
     {

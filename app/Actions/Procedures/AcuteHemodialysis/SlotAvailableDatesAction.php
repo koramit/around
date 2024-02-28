@@ -10,7 +10,7 @@ use Illuminate\Validation\Rule;
 
 class SlotAvailableDatesAction extends AcuteHemodialysisAction
 {
-    use OrderShareValidatable, AvatarLinkable;
+    use AvatarLinkable, OrderShareValidatable;
 
     public function __invoke(array $data, mixed $user): array
     {
