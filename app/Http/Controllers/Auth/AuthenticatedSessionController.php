@@ -52,6 +52,7 @@ class AuthenticatedSessionController extends Controller
             if (Auth::attempt($validated)) {
                 return redirect()->intended(route(Auth::user()->home_page));
             }
+
             return back()->withErrors([
                 'login' => __('auth.failed'),
             ]);

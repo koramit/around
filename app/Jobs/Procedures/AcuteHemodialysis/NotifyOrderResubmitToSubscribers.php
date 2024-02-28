@@ -14,7 +14,7 @@ use Illuminate\Queue\SerializesModels;
 
 class NotifyOrderResubmitToSubscribers implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, EventBasedNotifiable;
+    use Dispatchable, EventBasedNotifiable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected AcuteHemodialysisOrderNote $order;
 

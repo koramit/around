@@ -9,7 +9,7 @@ use App\Traits\HomePageSelectable;
 
 class ReportIndexAction extends ReportAction
 {
-    use HomePageSelectable, FlashDataGeneratable, FirstNameAware;
+    use FirstNameAware, FlashDataGeneratable, HomePageSelectable;
 
     public function __invoke(array $filters, mixed $user, string $routeName = 'home')
     {

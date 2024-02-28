@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Validator;
 
 class ScheduleIndexAction extends AcuteHemodialysisAction
 {
-    use SlotCountable, OrderShareValidatable, HomePageSelectable;
+    use HomePageSelectable, OrderShareValidatable, SlotCountable;
 
     public function __invoke(array $data, User|AvatarUser $user, string $routeName): array
     {

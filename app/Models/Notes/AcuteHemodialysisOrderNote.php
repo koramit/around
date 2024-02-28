@@ -46,7 +46,7 @@ class AcuteHemodialysisOrderNote extends Note
             $builder->where(
                 'note_type_id',
                 cache()->rememberForever(
-                'note-type-id-acute_hd_order',
+                    'note-type-id-acute_hd_order',
                     fn () => NoteType::query()->where('name', 'acute_hd_order')->first()->id
                 ));
         });

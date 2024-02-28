@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Collection;
 
 class PreferencesShowAction
 {
-    use FlashDataGeneratable, AvatarLinkable;
+    use AvatarLinkable, FlashDataGeneratable;
 
     public function __invoke(User|AvatarUser $user): array
     {

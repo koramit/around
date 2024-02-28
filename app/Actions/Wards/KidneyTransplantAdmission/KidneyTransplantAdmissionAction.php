@@ -23,7 +23,7 @@ class KidneyTransplantAdmissionAction
             ['label' => 'Kidney Transplant', 'value' => 'kt'],
             ['label' => 'Complication', 'value' => 'complication'],
         ],
-        'donor_types' => ['CD', 'CD Single kidney', 'CD Dual kidneys','LD'],
+        'donor_types' => ['CD', 'CD Single kidney', 'CD Dual kidneys', 'LD'],
         'abo_options' => ['A', 'B', 'AB', 'O'],
         'rh_options' => ['positive', 'negative'],
         'hla_mismatch_options' => [0, 1, 2],

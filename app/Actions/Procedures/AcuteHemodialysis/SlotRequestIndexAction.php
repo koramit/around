@@ -11,7 +11,7 @@ use App\Traits\HomePageSelectable;
 
 class SlotRequestIndexAction extends AcuteHemodialysisAction
 {
-    use OrderShareValidatable, HomePageSelectable;
+    use HomePageSelectable, OrderShareValidatable;
 
     public function __invoke(User|AvatarUser $user, string $routeName): array
     {

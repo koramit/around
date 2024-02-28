@@ -10,7 +10,7 @@ use Illuminate\Validation\Rule;
 
 class OrderUpdateAction extends AcuteHemodialysisAction
 {
-    use OrderFormConfigsShareable, AvatarLinkable;
+    use AvatarLinkable, OrderFormConfigsShareable;
 
     public function __invoke(array $data, string $hashedKey, mixed $user): array
     {

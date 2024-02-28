@@ -45,6 +45,6 @@ class LoginRecordAction
                 'provider' => $provider,
             ]);
 
-       Session::put(['login_record_id' => $loginRecord->id]);
+        Session::put(['login_record_id' => $loginRecord->id]);
     }
 }

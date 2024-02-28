@@ -10,7 +10,7 @@ use Illuminate\Support\Str;
 
 class CommentTimelineAction
 {
-    use AvatarLinkable, FirstNameAware, CommentResourceValidatable;
+    use AvatarLinkable, CommentResourceValidatable, FirstNameAware;
 
     protected function transformComment(Comment $comment): array
     {

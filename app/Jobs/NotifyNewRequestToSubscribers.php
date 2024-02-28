@@ -11,7 +11,7 @@ use Illuminate\Queue\SerializesModels;
 
 class NotifyNewRequestToSubscribers implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, EventBasedNotifiable;
+    use Dispatchable, EventBasedNotifiable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected mixed $changeable;
 

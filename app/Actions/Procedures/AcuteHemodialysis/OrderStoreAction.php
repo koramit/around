@@ -22,7 +22,7 @@ use Illuminate\Validation\ValidationException;
 
 class OrderStoreAction extends AcuteHemodialysisAction
 {
-    use OrderShareValidatable, OrderSwappable, AvatarLinkable;
+    use AvatarLinkable, OrderShareValidatable, OrderSwappable;
 
     protected float $FORM_VERSION = 1.0;
 

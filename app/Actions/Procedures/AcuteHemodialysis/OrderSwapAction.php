@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Validator;
 
 class OrderSwapAction extends AcuteHemodialysisAction
 {
-    use OrderSwappable, SlotCountable, AvatarLinkable;
+    use AvatarLinkable, OrderSwappable, SlotCountable;
 
     /**
      * @throws Exception

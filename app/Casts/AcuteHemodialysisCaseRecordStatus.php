@@ -6,7 +6,7 @@ use App\Contracts\NoteStatusCast;
 use App\Traits\StatusCastable;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 
-class AcuteHemodialysisCaseRecordStatus implements NoteStatusCast, CastsAttributes
+class AcuteHemodialysisCaseRecordStatus implements CastsAttributes, NoteStatusCast
 {
     use StatusCastable;
 
