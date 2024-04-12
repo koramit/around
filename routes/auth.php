@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\Auth\RegisteredWIthEmailController;
 use App\Http\Controllers\Auth\SocialLinkController;
 use App\Http\Controllers\Auth\SocialLoginController;
 use Illuminate\Support\Facades\Route;
@@ -17,6 +18,10 @@ Route::middleware('guest')->group(function () {
         ->name('register');
     Route::post('register', [RegisteredUserController::class, 'store'])
         ->name('register.store');
+    Route::get('register-with-email', [RegisteredWIthEmailController::class, 'create'])
+        ->name('register-with-email');
+    Route::post('register-with-email', [RegisteredWIthEmailController::class, 'store'])
+        ->name('register-with-email.store');
 
     Route::get('social-login/{provider}', [SocialLoginController::class, 'create'])
         ->name('social-login.create');
