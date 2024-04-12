@@ -34,10 +34,10 @@ class ReportPublishAction extends ReportAction
 
         $rules = [
             'diagnosis' => ['nullable', 'string', 'max:255'],
-            'clinician' => ['required', 'string', 'max:255'],
-            'date_report' => ['required', 'date'],
-            'reporter' => ['required', 'string', 'max:255'],
-            'approver' => ['required', 'string', 'max:255'],
+            'clinician' => ['nullable', 'string', 'max:255'],
+            'date_report' => ['nullable', 'date'],
+            'reporter' => ['nullable', 'string', 'max:255'],
+            'approver' => ['nullable', 'string', 'max:255'],
             'recipient_is' => ['nullable', Rule::requiredIf($report->meta['donor_hn']), 'string', Rule::in($this->RECIPIENT_IS_OPTIONS)],
             'donor_is' => ['nullable', Rule::requiredIf($report->meta['donor_hn']), 'string', Rule::in($this->DONOR_IS_OPTIONS[$data['recipient_is']] ?? [])],
             'scanned_report' => ['required', 'string', 'max:255'],
