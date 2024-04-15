@@ -12,7 +12,8 @@ class KidneyTransplantAdmissionCaseRecordPolicy
 
     public function edit(User $user, KidneyTransplantAdmissionCaseRecord $caseRecord): bool
     {
-        return $caseRecord->creator->id === $user->id
+        // @TODO: use proper ability
+        return ($caseRecord->creator->id === $user->id || in_array($user->login, ['koramit@lullabears.co', 'peenida.sku']))
             && $caseRecord->status === 'draft';
     }
 

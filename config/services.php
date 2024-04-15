@@ -35,4 +35,8 @@ return [
     'SUBHANNAH_API_TOKEN' => env('SUBHANNAH_API_TOKEN'),
     'SUBHANNAH_API_URL' => env('SUBHANNAH_API_URL'),
     'SUBHANNAH_API_VERIFY' => env('SUBHANNAH_API_VERIFY', true),
+
+    'portal_token' => env('PORTAL_API_TOKEN'),
+    'portal_base_url' => env('PORTAL_API_BASE_URL'),
+    'portal_verify_ssl' => env('PORTAL_API_VERIFY_SSL', true),
 ];

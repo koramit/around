@@ -225,7 +225,7 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
             'dialysis_reservable' => $reservable,
             'covid' => [
                 'hn' => $caseRecord->patient->hn,
-                'cid' => $caseRecord->patient->profile['document_id'],
+                /*'cid' => $caseRecord->patient->profile['document_id'],*/
                 'route_lab' => route('resources.api.covid-lab'),
                 'route_vaccine' => route('resources.api.covid-vaccine'),
             ],
