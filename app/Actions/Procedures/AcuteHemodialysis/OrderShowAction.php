@@ -89,7 +89,7 @@ class OrderShowAction extends AcuteHemodialysisAction
                 'serology' => $this->getSerology($order->caseRecord->form->toArray()),
                 'covid' => [
                     'hn' => $order->patient->hn,
-                    'cid' => $order->patient->profile['document_id'],
+                    /*'cid' => $order->patient->profile['document_id'],*/
                     'route_lab' => route('resources.api.covid-lab'),
                     'route_vaccine' => route('resources.api.covid-vaccine'),
                 ],

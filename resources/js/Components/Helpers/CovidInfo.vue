@@ -56,7 +56,7 @@
                 </div>
             </div>
         </div>
-        <div class="mt-4 md:mt-5 bg-gray-100 rounded shadow p-2 md:p-4">
+<!--        <div class="mt-4 md:mt-5 bg-gray-100 rounded shadow p-2 md:p-4">
             <div
                 class="flex items-center justify-between pb-2 md:pb-4 xl:pb-8"
                 :class="{'border-b border-accent': vaccinations.vaccinations?.length}"
@@ -89,7 +89,7 @@
                     <p class="italic text-blue-400">{{ vaccine.brand }} </p>
                 </div>
             </div>
-        </div>
+        </div>-->
     </div>
 </template>
 
@@ -105,13 +105,13 @@ const handleError = (error) => {
     return {ok: false};
 };
 
-let cid = props.configs.cid;
+/*let cid = props.configs.cid;
 const vaccinations = cid
     ? await window.axios
         .post(props.configs.route_vaccine, {cid: cid})
         .then(res => res.data)
         .catch(handleError)
-    : {ok:true,found:false} ;
+    : {ok:true,found:false} ;*/
 const labs = await window.axios
     .post(props.configs.route_lab, {hn: props.configs.hn})
     .then(res => res.data)
