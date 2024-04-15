@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 use OpenSpout\Common\Exception\InvalidArgumentException;
 use OpenSpout\Common\Exception\IOException;
 use OpenSpout\Common\Exception\UnsupportedTypeException;
-use OpenSpout\Reader\Exception\ReaderNotOpenedException;
 use OpenSpout\Writer\Exception\WriterNotOpenedException;
 
 class CaseRecordExportController extends Controller

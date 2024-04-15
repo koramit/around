@@ -2,7 +2,6 @@
 
 namespace App\Actions\Wards\KidneyTransplantAdmission;
 
-use App\Casts\KidneyTransplantAdmissionCaseRecordStatus;
 use App\Extensions\Auth\AvatarUser;
 use App\Models\Registries\KidneyTransplantAdmissionCaseRecord;
 use App\Models\Resources\Admission;
@@ -13,7 +12,6 @@ use Illuminate\Support\Collection;
 use OpenSpout\Common\Exception\InvalidArgumentException;
 use OpenSpout\Common\Exception\IOException;
 use OpenSpout\Common\Exception\UnsupportedTypeException;
-use OpenSpout\Reader\Exception\ReaderNotOpenedException;
 use OpenSpout\Writer\Exception\WriterNotOpenedException;
 use Rap2hpoutre\FastExcel\FastExcel;
 use Rap2hpoutre\FastExcel\SheetCollection;
@@ -39,7 +37,7 @@ class CaseRecordExportAction extends KidneyTransplantAdmissionAction
         KidneyTransplantAdmissionCaseRecord::query()
             ->with(['patient'])
             ->whereNotIn('status', [3, 5])
-            ->each(function ($case) use(&$ldSheet, &$cdSheet) {
+            ->each(function ($case) use (&$ldSheet, &$cdSheet) {
                 if (($case->form['donor_type'] ?? null) === 'LD') {
                     $ldSheet[] = $this->getLD($case);
                 } elseif (($case->form['donor_type'] ?? null) === 'CD') {
@@ -121,7 +119,7 @@ class CaseRecordExportAction extends KidneyTransplantAdmissionAction
 
         $complicationSet = collect([]);
         foreach ($complications as $key => $value) {
-            if (!$value) {
+            if (! $value) {
                 continue;
             }
             $complicationSet->push(str_replace('_', ' ', $key));
@@ -151,7 +149,7 @@ class CaseRecordExportAction extends KidneyTransplantAdmissionAction
         $row['donor_cr_at_harvest'] = null;
 
         $row['date_op'] = Carbon::create($form['datetime_operation_start'])->format('Y-m-d');
-        $row['CIT'] = ($form['cold_ischemic_time_hours'] ?? '0') . ":" . ($form['cold_ischemic_time_minutes'] ?? '0');
+        $row['CIT'] = ($form['cold_ischemic_time_hours'] ?? '0').':'.($form['cold_ischemic_time_minutes'] ?? '0');
         $row['HLA_MM_A'] = $form['hla_mismatch_a'];
         $row['HLA_MM_B'] = $form['hla_mismatch_b'];
         $row['HLA_MM_DR'] = $form['hla_mismatch_dr'];
