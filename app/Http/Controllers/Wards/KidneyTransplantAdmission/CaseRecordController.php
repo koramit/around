@@ -24,6 +24,7 @@ class CaseRecordController extends Controller
         }
     }
 
+    // @TODO: log actions other than create
     public function index(Request $request)
     {
         $data = (new CaseRecordIndexAction)(filters: $request->all(), user: $request->user(), routeName: $request->route()->getName());
