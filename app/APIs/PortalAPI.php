@@ -205,4 +205,9 @@ class PortalAPI implements AuthenticationAPI, CovidInfoAPI, PatientAPI
     {
         return $this->makePost('covid-19-vaccinations', ['cid' => $cid]);
     }
+
+    public function patientAdmitWards(int $an): array
+    {
+        return $this->makePost('admission-transfers', ['an' => $an]);
+    }
 }
