@@ -150,10 +150,10 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
             if (! ($caseRecord->meta['ward_admit'] ?? false)) {
                 $wards = (new AdmissionManager)->wards($caseRecord->meta['an']);
                 if ($wards['found']) {
-                    $wardDb = Ward::query()->where('name_ref', $wards['wards'][0]['name'])->first();
+                    $wardDb = Ward::query()->where('name_ref', $wards['transfers'][0]['ward_name'])->first();
                     $caseRecord->meta['ward_admit'] = $wardDb
                         ? $wardDb->name
-                        : $wards['wards'][0]['name'];
+                        : $wards['transfers'][0]['ward_name'];
                     $caseRecord->save();
                     $form['admission']['ward_admit'] = $caseRecord->meta['ward_admit'] ?? null;
                 }
