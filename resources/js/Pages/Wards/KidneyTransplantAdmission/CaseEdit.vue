@@ -547,7 +547,7 @@
             name="donor_creatinine_before_harvest"
             v-model="form.donor_creatinine_before_harvest"
             :error="$page.props.errors.donor_creatinine_before_harvest"
-            type="tel"
+            type="number"
         />
         <hr class="border border-dashed my-2 md:my-4 xl:my-8">
         <label class="form-label">Recipient immunosuppressive drugs induction :</label>
