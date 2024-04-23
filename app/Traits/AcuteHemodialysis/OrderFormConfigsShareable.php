@@ -8,7 +8,7 @@ trait OrderFormConfigsShareable
         'access_types' => ['DLC', 'Perm cath', 'AVF', 'AVG', 'pending'],
         'av_access_sites' => ['Rt arm', 'Lt arm', 'Rt leg', 'Lt leg'],
         'non_av_access_sites' => ['Rt IJV', 'Lt IJV', 'Rt Femoral vain', 'Lt Femoral vain', 'Rt SCV', 'Lt SCV'],
-        'dialyzers' => ['SF130E', 'SF150E', 'SF170E', 'SF190E', 'Rexeed 13L', 'Rexeed 15L', 'Rexeed 18L', 'FB170U', 'FB190U', 'FB210U', 'HF80S'],
+        'dialyzers' => ['SF130E', 'SF150E', 'SF170E', 'SF190E', 'Rexeed 13L', 'Rexeed 15L', 'Rexeed 18L', 'FB170U', 'FB190U', 'FB210U', 'HF80S', 'Elisio 210 HR', 'Elisio 21 H'],
         'hf_dialyzers' => ['SF130E', 'SF150E', 'Rexeed 13L', 'Rexeed 15L'],
         'dialysates' => [
             'None => K 0, Ca 0, Mg 0',
