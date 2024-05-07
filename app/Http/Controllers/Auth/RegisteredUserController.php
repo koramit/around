@@ -22,6 +22,13 @@ class RegisteredUserController extends Controller
         if (! $profile = Session::get('profile')) {
             return Redirect::route('login');
         }
+
+        if (isset($profile['full_name']) && ! isset($profile['name'])) {
+            $profile['name'] = $profile['full_name'];
+            $profile['name_en'] = $profile['full_name_en'] ?? null;
+            unset($profile['full_name'], $profile['full_name_en']);
+        }
+
         if (! isset($profile['is_md'])) {
             $profile['is_md'] = str_contains($profile['name'], 'พญ.') || str_contains($profile['name'], 'นพ.');
             Session::put('profile', $profile);
