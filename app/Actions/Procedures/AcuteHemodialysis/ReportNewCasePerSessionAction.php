@@ -15,7 +15,7 @@ use OpenSpout\Common\Exception\UnsupportedTypeException;
 use OpenSpout\Writer\Exception\WriterNotOpenedException;
 use Rap2hpoutre\FastExcel\FastExcel;
 
-class ReportNewCaseBySessionAction extends AcuteHemodialysisAction
+class ReportNewCasePerSessionAction extends AcuteHemodialysisAction
 {
     /**
      * @throws IOException
@@ -84,7 +84,6 @@ class ReportNewCaseBySessionAction extends AcuteHemodialysisAction
                     'Duration' => $dialysisType[1] ?? null,
                     'Access type' => $form[$formKey]['access_type'] ?? null,
                     'Dialyzer' => $form[$formKey]['dialyzer'] ?? null,
-                    // 'Dialysate' => $form[$formKey]['dialysate'] ?? null,
                     'Dialysate K' => $dialysate['K'] ?? null,
                     'Dialysate Ca' => $dialysate['Ca'] ?? null,
                     'Dialysate Mg' => $dialysate['Mg'] ?? null,
