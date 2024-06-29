@@ -114,6 +114,11 @@ class PortalAPI implements AuthenticationAPI, CovidInfoAPI, PatientAPI
         return $this->makePost('admission-discharge-date', $data);
     }
 
+    public function getAdmissionTransfers(int|string $an): array
+    {
+        return $this->makePost('admission-transfers', ['an' => $an]);
+    }
+
     public function getItemize(string $category, string $search = ''): array
     {
         return $this->makePost('itemize', ['category' => $category, 'search' => $search]);
