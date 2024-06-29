@@ -17,6 +17,7 @@ class UserRoleShowAction
         }
 
         $user = User::query()->findByUnhashKey($hashedKey)->firstOrFail();
+        cache()->forget("uid-$user->id-role-labels");
 
         if ($authority->can('authorize_authority')) {
             $roles = Role::query()
