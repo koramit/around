@@ -92,7 +92,7 @@ onMounted(() => {
 });
 
 const form = useForm({
-    login: props.profile.username,
+    login: props.profile.login,
     full_name: props.profile.name,
     org_id: props.profile.org_id,
     division: props.profile.org_division_name,
