@@ -167,9 +167,9 @@ class ReportNewCasePerSessionAction extends AcuteHemodialysisAction
         $parts = explode(', ', $parts[0]);
 
         return [
-            'K' => str_replace('K ', '', $parts[0]),
-            'Ca' => str_replace('Ca ', '', $parts[1]),
-            'Mg' => str_replace('Mg ', '', $parts[2]),
+            'K' => ($parts[0] ?? null) ? str_replace('K ', '', $parts[0]): null,
+            'Ca' => ($parts[1] ?? null) ? str_replace('Ca ', '', $parts[1]) : null,
+            'Mg' => ($parts[2] ?? null) ? str_replace('Mg ', '', $parts[2]) : null,
         ];
     }
 
