@@ -39,8 +39,8 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
             ['name' => 'delayed_graft_function', 'label' => 'Delayed graft function'],
         ],
         'insurances' => ['เบิกจ่ายตรง', 'ประกันสังคม', '30 บาท'],
-        'opd_consent_form_pathname' => 'procedures/acute-hemodialysis/opd-consent-form',
-        'ipd_consent_form_pathname' => 'procedures/acute-hemodialysis/ipd-consent-form',
+        'opd_consent_form_pathname' => 'p/a/o',
+        'ipd_consent_form_pathname' => 'p/a/i',
     ];
     // @TODO shorten pathname => 'p/a'
 
