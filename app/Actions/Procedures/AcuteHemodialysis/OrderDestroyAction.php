@@ -5,6 +5,9 @@ namespace App\Actions\Procedures\AcuteHemodialysis;
 use App\Jobs\Procedures\AcuteHemodialysis\NotifyOrderCanceledToSubscribers;
 use App\Models\Notes\AcuteHemodialysisOrderNote;
 use App\Traits\AvatarLinkable;
+use Exception;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class OrderDestroyAction extends AcuteHemodialysisAction
@@ -43,6 +46,7 @@ class OrderDestroyAction extends AcuteHemodialysisAction
             'payload' => ['reason' => $validated['reason']],
         ]);
         $this->shouldNotifyCancel($order);
+        $this->notifyCancel($order);
 
         return [
             'type' => 'info',
@@ -61,5 +65,39 @@ class OrderDestroyAction extends AcuteHemodialysisAction
         }
 
         NotifyOrderCanceledToSubscribers::dispatchAfterResponse($order);
+    }
+
+    protected function notifyCancel(AcuteHemodialysisOrderNote $order): void
+    {
+        $order->load('author');
+        $message = "\nOrder ถูกยกเลิก\n";
+        $message .= "คนไข้ {$order->meta['name']} {$order->meta['dialysis_type']} \nวันที่ {$order->date_note->format('M j y')}\n";
+        $message .= "โดย พ.{$order->author->first_name}";
+
+        $sticker = collect([ // cheerful set
+            ['packageId' => 789, 'stickerId' => 10856],
+            ['packageId' => 789, 'stickerId' => 10863],
+            ['packageId' => 789, 'stickerId' => 10874],
+            ['packageId' => 1070, 'stickerId' => 17840],
+            ['packageId' => 1070, 'stickerId' => 17841],
+            ['packageId' => 1070, 'stickerId' => 17843],
+            ['packageId' => 8522, 'stickerId' => 16581276],
+            ['packageId' => 11537, 'stickerId' => 52002734],
+            ['packageId' => 11537, 'stickerId' => 52002738],
+            ['packageId' => 11539, 'stickerId' => 52114118],
+            ['packageId' => 11539, 'stickerId' => 52114131],
+        ])->random();
+
+        try {
+            Http::withToken(config('line_notify_group_chat.acute_hd'))
+                ->asForm()
+                ->post('https://notify-api.line.me/api/notify', [
+                    'message' => $message,
+                    'stickerPackageId' => $sticker['packageId'],
+                    'stickerId' => $sticker['stickerId'],
+                ]);
+        } catch (Exception $e) {
+            Log::error("Failed to notify cancel order\n".$e->getMessage());
+        }
     }
 }

@@ -70,7 +70,7 @@ class ReportNewCasePerSessionAction extends AcuteHemodialysisAction
                     'Name' => $case->patient->full_name,
                     'AN' => $case->meta['an'],
                     'patient location' => $admission
-                        ? $this->getPatientLocation($admission['transfers'], $order->date_note->format('Y-m-d') . ' ' . $order->meta['started_at'])
+                        ? $this->getPatientLocation($admission['transfers'], $order->date_note->format('Y-m-d').' '.$order->meta['started_at'])
                         : 'แพทย์เวร/ER',
                     'covid-19 infected' => $order->meta['covid_case'] ? 'YES' : 'NO',
                     'dialysis at' => $order->place_name,
@@ -138,7 +138,7 @@ class ReportNewCasePerSessionAction extends AcuteHemodialysisAction
                     'EKG' => $form['monitor']['ekg'] ? 'YES' : 'NO',
                     'observe_chest_pain' => $form['monitor']['observe_chest_pain'] ? 'YES' : 'NO',
                     'observe_neuro_sign' => $form['monitor']['observe_neuro_sign'] ? 'YES' : 'NO',
-                    'other monitoring' =>  $form['monitor']['other'],
+                    'other monitoring' => $form['monitor']['other'],
                 ];
             });
         }
@@ -167,7 +167,7 @@ class ReportNewCasePerSessionAction extends AcuteHemodialysisAction
         $parts = explode(', ', $parts[0]);
 
         return [
-            'K' => ($parts[0] ?? null) ? str_replace('K ', '', $parts[0]): null,
+            'K' => ($parts[0] ?? null) ? str_replace('K ', '', $parts[0]) : null,
             'Ca' => ($parts[1] ?? null) ? str_replace('Ca ', '', $parts[1]) : null,
             'Mg' => ($parts[2] ?? null) ? str_replace('Mg ', '', $parts[2]) : null,
         ];

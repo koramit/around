@@ -8,6 +8,9 @@ use App\Models\Notes\AcuteHemodialysisOrderNote;
 use App\Rules\AcceptedIfOthersFalsy;
 use App\Traits\AcuteHemodialysis\OrderFormConfigsShareable;
 use App\Traits\AvatarLinkable;
+use Exception;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
@@ -356,8 +359,10 @@ class OrderSubmitAction extends AcuteHemodialysisAction
 
         $validated = Validator::make($data, $rules)->validate();
 
+        $action = ($note->status === 'submitted' || ($note->meta['submitted'] ?? false)) ? 'resubmit' : 'submit';
+
         $note->actionLogs()->create([
-            'action' => ($note->status === 'submitted' || ($note->meta['submitted'] ?? false)) ? 'resubmit' : 'submit',
+            'action' => $action,
             'actor_id' => $user->id,
         ]);
 
@@ -369,6 +374,7 @@ class OrderSubmitAction extends AcuteHemodialysisAction
         $note->save();
         $this->shouldNotifyResubmit($note);
         ShouldNotifyOrderSubmittedWithoutConsentForm::dispatchAfterResponse($note);
+        $this->notifyResubmit($note, $action);
 
         return [
             'case' => $note->caseRecord->hashed_key,
@@ -390,5 +396,43 @@ class OrderSubmitAction extends AcuteHemodialysisAction
         }
 
         NotifyOrderResubmitToSubscribers::dispatchAfterResponse($note);
+    }
+
+    protected function notifyResubmit(AcuteHemodialysisOrderNote $note, string $action): void
+    {
+        if ($action !== 'resubmit') {
+            return;
+        }
+
+        $note->load('author');
+        $message = "\nOrder ถูกแก้ไข\n";
+        $message .= "คนไข้ {$note->meta['name']} {$note->meta['dialysis_type']} \nวันที่ {$note->date_note->format('M j y')}\n";
+        $message .= "โดย พ.{$note->author->first_name}";
+
+        $sticker = collect([ // notify set
+            ['packageId' => 789, 'stickerId' => 10873],
+            ['packageId' => 789, 'stickerId' => 10892],
+            ['packageId' => 1070, 'stickerId' => 17852],
+            ['packageId' => 6359, 'stickerId' => 11069853],
+            ['packageId' => 6359, 'stickerId' => 11069859],
+            ['packageId' => 6359, 'stickerId' => 11069861],
+            ['packageId' => 8522, 'stickerId' => 16581272],
+            ['packageId' => 8522, 'stickerId' => 16581281],
+            ['packageId' => 11537, 'stickerId' => 52002739],
+            ['packageId' => 11537, 'stickerId' => 52002770],
+            ['packageId' => 11538, 'stickerId' => 51626530],
+        ])->random();
+
+        try {
+            Http::withToken(config('line_notify_group_chat.acute_hd'))
+                ->asForm()
+                ->post('https://notify-api.line.me/api/notify', [
+                    'message' => $message,
+                    'stickerPackageId' => $sticker['packageId'],
+                    'stickerId' => $sticker['stickerId'],
+                ]);
+        } catch (Exception $e) {
+            Log::error("Failed to notify resubmit order\n".$e->getMessage());
+        }
     }
 }
