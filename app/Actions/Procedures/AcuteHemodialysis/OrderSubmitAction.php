@@ -109,7 +109,7 @@ class OrderSubmitAction extends AcuteHemodialysisAction
                     'required_unless:hd.ultrafiltration_min,null',
                     'nullable',
                     'integer',
-                    'between:'.$data['hd']['ultrafiltration_min'].','.$this->FORM_CONFIGS['validators']['ultrafiltration_max']['max'],
+                    'between:'.($data['hd']['ultrafiltration_min'] ?? 0).','.$this->FORM_CONFIGS['validators']['ultrafiltration_max']['max'],
                 ],
                 'hd.dry_weight' => 'required_if:hd.ultrafiltration_min,null|nullable|numeric',
                 'hd.glucose_50_percent_iv_volume' => ['nullable', Rule::in($this->FORM_CONFIGS['glucose_50_percent_iv_volumes'])],
