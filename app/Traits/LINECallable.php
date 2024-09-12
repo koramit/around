@@ -44,7 +44,12 @@ trait LINECallable
                 ->withToken($token)
                 ->post('https://api.line.me/v2/bot/'.$url, $payload);
         } catch (Exception $e) {
-            Log::error('LINE API ERROR : '.$e->getMessage());
+            $message = $e->getMessage();
+            if (str_contains($message, '429')) {
+
+                return false;
+            }
+            Log::error('LINE API ERROR : '.$message);
 
             return false;
         }
