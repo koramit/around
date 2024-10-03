@@ -27,6 +27,7 @@ class CaseRecordUpdateAction extends KidneyTransplantAdmissionAction
                 'surgeon' => ['nullable', 'string', 'max:255'],
                 'date_off_drain' => ['nullable', 'date'],
                 'retain_jackson_drain' => ['boolean'],
+                'no_jackson_drain' => ['boolean'],
                 'date_off_foley' => ['nullable', 'date'],
                 'retain_foley_catheter' => ['boolean'],
                 'insurance' => ['nullable', 'string', 'max:255'],

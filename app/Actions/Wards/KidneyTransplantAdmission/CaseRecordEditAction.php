@@ -249,6 +249,11 @@ class CaseRecordEditAction extends KidneyTransplantAdmissionAction
             $case->form['retain_foley_catheter'] = false;
         }
 
+        // CR 2024-10-02 add no jackson drain
+        if (! array_key_exists('no_jackson_drain', $case->form->toArray())) {
+            $case->form['no_jackson_drain'] = false;
+        }
+
         /** @var ArrayObject $form */
         $form = $case->form;
 

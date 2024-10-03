@@ -106,7 +106,7 @@ class CaseRecordCompleteAction extends KidneyTransplantAdmissionAction
             ];
         }
 
-        if ($data['retain_jackson_drain'] === 'true') {
+        if ($data['retain_jackson_drain'] === 'true' || $data['no_jackson_drain'] === 'true') {
             $data['date_off_drain'] = null;
         }
 
@@ -119,6 +119,7 @@ class CaseRecordCompleteAction extends KidneyTransplantAdmissionAction
             'surgeon' => ['required', new FieldValueExists('App\Models\Resources\Person', 'name')],
             'date_off_drain' => ['nullable', 'required_if:retain_jackson_drain,false', 'date', 'after:datetime_operation_finish'],
             'retain_jackson_drain' => ['accepted_if:date_off_drain,null'],
+            'no_jackson_drain' => ['boolean'],
             'date_off_foley' => ['nullable', 'required_if:retain_foley_catheter,false', 'date', 'after:datetime_operation_finish'],
             'retain_foley_catheter' => ['accepted_if:date_off_foley,null'],
             'insurance' => ['required', 'string', 'max:255'],
