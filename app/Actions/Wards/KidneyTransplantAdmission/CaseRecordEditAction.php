@@ -253,6 +253,10 @@ class CaseRecordEditAction extends KidneyTransplantAdmissionAction
         if (! array_key_exists('no_jackson_drain', $case->form->toArray())) {
             $case->form['no_jackson_drain'] = false;
         }
+        if (! array_key_exists('donor_blood_group_abo', $case->form->toArray())) {
+            $case->form['donor_blood_group_abo'] = null;
+            $case->form['donor_blood_group_rh'] = null;
+        }
 
         /** @var ArrayObject $form */
         $form = $case->form;

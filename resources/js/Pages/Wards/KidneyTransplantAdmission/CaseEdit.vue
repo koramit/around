@@ -50,16 +50,24 @@
             :length-to-start="3"
         />
         <template v-if="form.reason_for_admission === 'kt'">
-            <div class="space-y-2 md:space-y-4">
-                <FormCheckbox
-                    label="Retain Jackson drain"
-                    name="retain_jackson_drain"
-                    v-model="form.retain_jackson_drain"
-                    :error="$page.props.errors.retain_jackson_drain"
-                />
+            <div class="mt-2 md:mt-4 space-y-2 md:space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <FormCheckbox
+                        label="Retain Jackson drain"
+                        name="retain_jackson_drain"
+                        v-model="form.retain_jackson_drain"
+                        :error="$page.props.errors.retain_jackson_drain"
+                    />
+                    <FormCheckbox
+                        label="No Jackson drain"
+                        name="no_jackson_drain"
+                        v-model="form.no_jackson_drain"
+                        :error="$page.props.errors.no_jackson_drain"
+                    />
+                </div>
                 <transition name="slide-fade">
                     <FormDatetime
-                        v-if="!form.retain_jackson_drain"
+                        v-if="!form.retain_jackson_drain && !form.no_jackson_drain"
                         name="date_off_drain"
                         label="date off drain"
                         v-model="form.date_off_drain"
@@ -67,7 +75,7 @@
                     />
                 </transition>
             </div>
-            <div class="space-y-2 md:space-y-4">
+            <div class="mt-2 md:mt-4 space-y-2 md:space-y-4">
                 <FormCheckbox
                     label="Retain foley's catheter"
                     name="retain_foley_catheter"
@@ -203,7 +211,7 @@
 
         <Transition name="slide-fade">
             <div
-                class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8"
+                class="mt-2 md:mt-4 xl:mt-8 grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8"
                 v-if="form.donor_type === 'LD'"
             >
                 <FormSelect
@@ -224,22 +232,39 @@
             </div>
         </Transition>
 
-        <div class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8">
+        <div
+            class="mt-2 md:mt-4 xl:mt-8 grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8"
+        >
             <FormSelect
-                label="abo"
+                label="recipient abo"
                 name="blood_group_abo"
                 v-model="form.blood_group_abo"
                 :options="configs.abo_options"
                 :error="$page.props.errors.blood_group_abo"
             />
             <FormSelect
-                label="rh"
+                label="recipient rh"
                 name="blood_group_rh"
                 v-model="form.blood_group_rh"
                 :options="configs.rh_options"
                 :error="$page.props.errors.blood_group_rh"
             />
+            <FormSelect
+                label="donor abo"
+                name="donor_blood_group_abo"
+                v-model="form.donor_blood_group_abo"
+                :options="configs.abo_options"
+                :error="$page.props.errors.donor_blood_group_abo"
+            />
+            <FormSelect
+                label="donor rh"
+                name="donor_blood_group_rh"
+                v-model="form.donor_blood_group_rh"
+                :options="configs.rh_options"
+                :error="$page.props.errors.donor_blood_group_rh"
+            />
         </div>
+
         <h3 class="form-label mt-4 md:mt-8 xl:mt-16">
             hla mismatch :
         </h3>
@@ -1195,6 +1220,24 @@ if (configs.can.update) {
         {deep: true},
     );
 }
+
+watch(
+    () => form.retain_jackson_drain,
+    (value) => {
+        if (value) {
+            form.no_jackson_drain = false;
+        }
+    },
+);
+
+watch(
+    () => form.no_jackson_drain,
+    (value) => {
+        if (value) {
+            form.retain_jackson_drain = false;
+        }
+    },
+);
 
 const { selectOtherInput, selectOther, selectOtherClosed } = useSelectOther();
 const insuranceInput = ref(null);

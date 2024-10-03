@@ -47,6 +47,8 @@ class CaseRecordUpdateAction extends KidneyTransplantAdmissionAction
                 'donor_is' => ['nullable', Rule::in($this->CONFIGS['donor_is_options'][$data['recipient_is']] ?? [])],
                 'blood_group_abo' => ['nullable', Rule::in($this->CONFIGS['abo_options'])],
                 'blood_group_rh' => ['nullable', Rule::in($this->CONFIGS['rh_options'])],
+                'donor_blood_group_abo' => ['nullable', Rule::in($this->CONFIGS['abo_options'])],
+                'donor_blood_group_rh' => ['nullable', Rule::in($this->CONFIGS['rh_options'])],
                 'hla_mismatch_a' => ['nullable', Rule::in($this->CONFIGS['hla_mismatch_options'])],
                 'hla_mismatch_b' => ['nullable', Rule::in($this->CONFIGS['hla_mismatch_options'])],
                 'hla_mismatch_dr' => ['nullable', Rule::in($this->CONFIGS['hla_mismatch_options'])],

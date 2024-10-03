@@ -117,8 +117,13 @@ class CaseRecordCompleteAction extends KidneyTransplantAdmissionAction
         return Validator::validate($data, [
             'nephrologist' => ['required', new FieldValueExists('App\Models\Resources\Person', 'name')],
             'surgeon' => ['required', new FieldValueExists('App\Models\Resources\Person', 'name')],
-            'date_off_drain' => ['nullable', 'required_if:retain_jackson_drain,false', 'date', 'after:datetime_operation_finish'],
-            'retain_jackson_drain' => ['accepted_if:date_off_drain,null'],
+            'date_off_drain' => [
+                'nullable',
+                Rule::requiredIf(fn () => !$data['retain_jackson_drain'] && !$data['no_jackson_drain']),
+                'date',
+                'after:datetime_operation_finish'
+            ],
+            'retain_jackson_drain' => ['boolean'],
             'no_jackson_drain' => ['boolean'],
             'date_off_foley' => ['nullable', 'required_if:retain_foley_catheter,false', 'date', 'after:datetime_operation_finish'],
             'retain_foley_catheter' => ['accepted_if:date_off_foley,null'],
@@ -139,6 +144,8 @@ class CaseRecordCompleteAction extends KidneyTransplantAdmissionAction
             'donor_is' => ['nullable', 'required_if:donor_type,LD', Rule::in($this->CONFIGS['donor_is_options'][$data['recipient_is']] ?? [])],
             'blood_group_abo' => ['required', Rule::in($this->CONFIGS['abo_options'])],
             'blood_group_rh' => ['required', Rule::in($this->CONFIGS['rh_options'])],
+            'donor_blood_group_abo' => ['nullable', Rule::in($this->CONFIGS['abo_options'])],
+            'donor_blood_group_rh' => ['nullable', Rule::in($this->CONFIGS['rh_options'])],
             'hla_mismatch_a' => ['nullable', Rule::in($this->CONFIGS['hla_mismatch_options'])],
             'hla_mismatch_b' => ['nullable', Rule::in($this->CONFIGS['hla_mismatch_options'])],
             'hla_mismatch_dr' => ['nullable', Rule::in($this->CONFIGS['hla_mismatch_options'])],
