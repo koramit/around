@@ -80,8 +80,8 @@ class CaseRecordExportAction extends KidneyTransplantAdmissionAction
         $row['relation'] = $form['donor_is'];
         $row['donor_gender'] = null;
         $row['donor_age'] = null;
-        $row['donor_abo'] = null;
-        $row['donor_rh'] = null;
+        $row['donor_abo'] = $form['donor_blood_group_abo'] ?? null;
+        $row['donor_rh'] = $form['donor_blood_group_rh'] ?? null;
 
         $row['date_op'] = Carbon::create($form['datetime_operation_start'])->format('Y-m-d');
         $row['HLA_MM_A'] = $form['hla_mismatch_a'];
@@ -144,8 +144,8 @@ class CaseRecordExportAction extends KidneyTransplantAdmissionAction
         $row['hospital'] = $form['donor_cd_hospital'];
         $row['donor_gender'] = null;
         $row['donor_age'] = null;
-        $row['donor_abo'] = null;
-        $row['donor_rh'] = null;
+        $row['donor_abo'] = $form['donor_blood_group_abo'] ?? null;
+        $row['donor_rh'] = $form['donor_blood_group_rh'] ?? null;
         $row['donor_cr_at_harvest'] = null;
 
         $row['date_op'] = Carbon::create($form['datetime_operation_start'])->format('Y-m-d');
