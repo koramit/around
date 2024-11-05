@@ -56,5 +56,8 @@ class ShouldNotifyOrderSubmittedWithoutConsentForm implements ShouldQueue
                 'stickerPackageId' => $sticker['packageId'],
                 'stickerId' => $sticker['stickerId'],
             ]);
+        // COUNT LINE NOTIFY
+        $cacheKey = now()->format('Ym') . '-LINE-NOTIFY-COUNT';
+        cache()->increment($cacheKey);
     }
 }
