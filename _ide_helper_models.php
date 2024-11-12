@@ -1,6 +1,7 @@
 <?php
 
 // @formatter:off
+// phpcs:ignoreFile
 /**
  * A helper file for your Eloquent Models
  * Copy the phpDocs from this file to the correct Model,
@@ -55,8 +56,8 @@ namespace App\Models{
  * @property int $id
  * @property int $patient_id
  * @property int $registry_id
- * @property \Illuminate\Database\Eloquent\Casts\AsArrayObject $meta
- * @property \Illuminate\Database\Eloquent\Casts\AsArrayObject $form
+ * @property \ArrayObject $meta
+ * @property \ArrayObject $form
  * @property int $status
  * @property \Illuminate\Support\Carbon|null $deleted_at
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -65,9 +66,11 @@ namespace App\Models{
  * @property-read int|null $action_logs_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Comment> $comments
  * @property-read int|null $comments_count
+ * @property-read mixed $hashed_key
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Note> $notes
  * @property-read int|null $notes_count
  * @property-read \App\Models\Resources\Patient $patient
+ * @property-read mixed $title
  * @method static \Illuminate\Database\Eloquent\Builder|CaseRecord findByUnhashKey(string $hashed)
  * @method static \Illuminate\Database\Eloquent\Builder|CaseRecord metaSearchTerms($search)
  * @method static \Illuminate\Database\Eloquent\Builder|CaseRecord newModelQuery()
@@ -133,7 +136,7 @@ namespace App\Models{
  * @property int|null $user_id
  * @property int $chat_bot_id
  * @property int $mode
- * @property \Illuminate\Database\Eloquent\Casts\AsArrayObject $payload
+ * @property \ArrayObject $payload
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @method static \Illuminate\Database\Eloquent\Builder|ChatLog newModelQuery()
@@ -199,7 +202,7 @@ namespace App\Models{
  * @property string $changeable_type
  * @property int $changeable_id
  * @property int $authority_ability_id
- * @property \Illuminate\Database\Eloquent\Casts\AsArrayObject $changes
+ * @property \ArrayObject $changes
  * @property int $status
  * @property int $requester_id
  * @property \Illuminate\Support\Carbon $submitted_at
@@ -232,13 +235,15 @@ namespace App\Models\DocumentChangeRequests{
  * @property string $changeable_type
  * @property int $changeable_id
  * @property int $authority_ability_id
- * @property \Illuminate\Database\Eloquent\Casts\AsArrayObject $changes
+ * @property \ArrayObject $changes
  * @property int $status
  * @property int $requester_id
  * @property \Illuminate\Support\Carbon $submitted_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\ResourceActionLog> $actionLogs
  * @property-read int|null $action_logs_count
+ * @property-read mixed $change_request_text
  * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $changeable
+ * @property-read mixed $hashed_key
  * @property-read \App\Models\User|null $requester
  * @method static \Illuminate\Database\Eloquent\Builder|DocumentChangeRequest findByUnhashKey(string $hashed)
  * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisSlotRequest newModelQuery()
@@ -268,8 +273,8 @@ namespace App\Models{
  * @property int $ability_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Database\Eloquent\Casts\AsArrayObject $locale
- * @property-read \App\Models\Resources\Registry $registry
+ * @property-read mixed $hashed_key
+ * @property-read \App\Models\Resources\Registry|null $registry
  * @property-read \App\Models\Subscription|null $subscription
  * @method static \Illuminate\Database\Eloquent\Builder|EventBasedNotification findByUnhashKey(string $hashed)
  * @method static \Illuminate\Database\Eloquent\Builder|EventBasedNotification newModelQuery()
@@ -304,7 +309,6 @@ namespace App\Models{
  *
  * @property int $id
  * @property int $user_id
- * @property string $provider
  * @property string|null $ip_address
  * @property string $device
  * @property int $type
@@ -315,6 +319,7 @@ namespace App\Models{
  * @property string|null $robot
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string $provider
  * @method static \Illuminate\Database\Eloquent\Builder|LoginRecord newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|LoginRecord newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|LoginRecord query()
@@ -350,9 +355,9 @@ namespace App\Models{
  * @property int|null $attending_staff_id
  * @property string|null $place_type
  * @property int|null $place_id
- * @property \Illuminate\Database\Eloquent\Casts\AsArrayObject $meta
- * @property \Illuminate\Database\Eloquent\Casts\AsArrayObject $form
- * @property mixed|null $report
+ * @property \ArrayObject $meta
+ * @property \ArrayObject $form
+ * @property string|null $report
  * @property int $status
  * @property \Illuminate\Support\Carbon $date_note
  * @property int $author_id
@@ -367,7 +372,10 @@ namespace App\Models{
  * @property-read int|null $change_requests_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Comment> $comments
  * @property-read int|null $comments_count
+ * @property-read mixed $log_list
+ * @property-read mixed $logs
  * @property-read \App\Models\Resources\Patient|null $patient
+ * @property-read mixed $request_list
  * @property-read \App\Models\Subscription|null $subscription
  * @method static \Illuminate\Database\Eloquent\Builder|Note findByUnhashKey(string $hashed)
  * @method static \Illuminate\Database\Eloquent\Builder|Note metaSearchTerms($search)
@@ -411,10 +419,10 @@ namespace App\Models\Notes{
  * @property int|null $attending_staff_id
  * @property string|null $place_type
  * @property int|null $place_id
- * @property \Illuminate\Database\Eloquent\Casts\AsArrayObject $meta
- * @property \Illuminate\Database\Eloquent\Casts\AsArrayObject $form
- * @property mixed|null $report
- * @property string|null $status
+ * @property \ArrayObject $meta
+ * @property \ArrayObject $form
+ * @property string|null $report
+ * @property string $status
  * @property \Illuminate\Support\Carbon $date_note
  * @property int $author_id
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -428,8 +436,13 @@ namespace App\Models\Notes{
  * @property-read int|null $change_requests_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Comment> $comments
  * @property-read int|null $comments_count
+ * @property-read mixed $hashed_key
+ * @property-read mixed $log_list
+ * @property-read mixed $logs
  * @property-read \App\Models\Resources\Patient|null $patient
+ * @property-read mixed $request_list
  * @property-read \App\Models\Subscription|null $subscription
+ * @property-read mixed $title
  * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisOrderNote activeStatuses()
  * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisOrderNote dialysisDate($dateRef)
  * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisOrderNote dialysisTypeLike($type)
@@ -472,10 +485,10 @@ namespace App\Models\Notes{
  * @property int|null $attending_staff_id
  * @property string|null $place_type
  * @property int|null $place_id
- * @property \Illuminate\Database\Eloquent\Casts\AsArrayObject $meta
- * @property \Illuminate\Database\Eloquent\Casts\AsArrayObject $form
- * @property mixed|null $report
- * @property string|null $status
+ * @property \ArrayObject $meta
+ * @property \ArrayObject $form
+ * @property string|null $report
+ * @property string $status
  * @property \Illuminate\Support\Carbon $date_note
  * @property int $author_id
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -489,8 +502,13 @@ namespace App\Models\Notes{
  * @property-read int|null $change_requests_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Comment> $comments
  * @property-read int|null $comments_count
+ * @property-read mixed $hashed_key
+ * @property-read mixed $log_list
+ * @property-read mixed $logs
  * @property-read \App\Models\Resources\Patient|null $patient
+ * @property-read mixed $request_list
  * @property-read \App\Models\Subscription|null $subscription
+ * @property-read mixed $title
  * @method static \Illuminate\Database\Eloquent\Builder|Note findByUnhashKey(string $hashed)
  * @method static \Illuminate\Database\Eloquent\Builder|Note metaSearchTerms($search)
  * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantAdditionTissueTypingNote newModelQuery()
@@ -528,10 +546,10 @@ namespace App\Models\Notes{
  * @property int|null $attending_staff_id
  * @property string|null $place_type
  * @property int|null $place_id
- * @property \Illuminate\Database\Eloquent\Casts\AsArrayObject $meta
- * @property \Illuminate\Database\Eloquent\Casts\AsArrayObject $form
- * @property mixed|null $report
- * @property string|null $status
+ * @property \ArrayObject $meta
+ * @property \ArrayObject $form
+ * @property string|null $report
+ * @property string $status
  * @property \Illuminate\Support\Carbon $date_note
  * @property int $author_id
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -545,8 +563,13 @@ namespace App\Models\Notes{
  * @property-read int|null $change_requests_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Comment> $comments
  * @property-read int|null $comments_count
+ * @property-read mixed $hashed_key
+ * @property-read mixed $log_list
+ * @property-read mixed $logs
  * @property-read \App\Models\Resources\Patient|null $patient
+ * @property-read mixed $request_list
  * @property-read \App\Models\Subscription|null $subscription
+ * @property-read mixed $title
  * @method static \Illuminate\Database\Eloquent\Builder|Note findByUnhashKey(string $hashed)
  * @method static \Illuminate\Database\Eloquent\Builder|Note metaSearchTerms($search)
  * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantCrossmatchNote newModelQuery()
@@ -584,10 +607,10 @@ namespace App\Models\Notes{
  * @property int|null $attending_staff_id
  * @property string|null $place_type
  * @property int|null $place_id
- * @property \Illuminate\Database\Eloquent\Casts\AsArrayObject $meta
- * @property \Illuminate\Database\Eloquent\Casts\AsArrayObject $form
- * @property mixed|null $report
- * @property string|null $status
+ * @property \ArrayObject $meta
+ * @property \ArrayObject $form
+ * @property string|null $report
+ * @property string $status
  * @property \Illuminate\Support\Carbon $date_note
  * @property int $author_id
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -601,8 +624,13 @@ namespace App\Models\Notes{
  * @property-read int|null $change_requests_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Comment> $comments
  * @property-read int|null $comments_count
+ * @property-read mixed $hashed_key
+ * @property-read mixed $log_list
+ * @property-read mixed $logs
  * @property-read \App\Models\Resources\Patient|null $patient
+ * @property-read mixed $request_list
  * @property-read \App\Models\Subscription|null $subscription
+ * @property-read mixed $title
  * @method static \Illuminate\Database\Eloquent\Builder|Note findByUnhashKey(string $hashed)
  * @method static \Illuminate\Database\Eloquent\Builder|Note metaSearchTerms($search)
  * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantHLATypingNote newModelQuery()
@@ -640,10 +668,10 @@ namespace App\Models\Notes{
  * @property int|null $attending_staff_id
  * @property string|null $place_type
  * @property int|null $place_id
- * @property \Illuminate\Database\Eloquent\Casts\AsArrayObject $meta
- * @property \Illuminate\Database\Eloquent\Casts\AsArrayObject $form
- * @property mixed|null $report
- * @property string|null $status
+ * @property \ArrayObject $meta
+ * @property \ArrayObject $form
+ * @property string|null $report
+ * @property string $status
  * @property \Illuminate\Support\Carbon $date_note
  * @property int $author_id
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -657,8 +685,15 @@ namespace App\Models\Notes{
  * @property-read int|null $change_requests_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Comment> $comments
  * @property-read int|null $comments_count
+ * @property-read mixed $edit_route
+ * @property-read mixed $hashed_key
+ * @property-read mixed $log_list
+ * @property-read mixed $logs
  * @property-read \App\Models\Resources\Patient|null $patient
+ * @property-read mixed $request
+ * @property-read mixed $request_list
  * @property-read \App\Models\Subscription|null $subscription
+ * @property-read mixed $title
  * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantHLATypingReportNote filterStatus($status)
  * @method static \Illuminate\Database\Eloquent\Builder|Note findByUnhashKey(string $hashed)
  * @method static \Illuminate\Database\Eloquent\Builder|Note metaSearchTerms($search)
@@ -695,9 +730,9 @@ namespace App\Models\Registries{
  * @property int $id
  * @property int $patient_id
  * @property int $registry_id
- * @property \Illuminate\Database\Eloquent\Casts\AsArrayObject $meta
- * @property \Illuminate\Database\Eloquent\Casts\AsArrayObject $form
- * @property string|null $status
+ * @property \ArrayObject $meta
+ * @property \ArrayObject $form
+ * @property string $status
  * @property \Illuminate\Support\Carbon|null $deleted_at
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
@@ -705,6 +740,8 @@ namespace App\Models\Registries{
  * @property-read int|null $action_logs_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Comment> $comments
  * @property-read int|null $comments_count
+ * @property-read mixed $creator
+ * @property-read mixed $discussion_route
  * @property-read \App\Models\Notes\AcuteHemodialysisOrderNote|null $firstPerformedOrder
  * @property-read \App\Models\Notes\AcuteHemodialysisOrderNote|null $lastOrder
  * @property-read \App\Models\Notes\AcuteHemodialysisOrderNote|null $lastPerformedOrder
@@ -713,6 +750,7 @@ namespace App\Models\Registries{
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Notes\AcuteHemodialysisOrderNote> $orders
  * @property-read int|null $orders_count
  * @property-read \App\Models\Resources\Patient $patient
+ * @property-read mixed $title
  * @method static \Illuminate\Database\Eloquent\Builder|AcuteHemodialysisCaseRecord filterStatus($status)
  * @method static \Illuminate\Database\Eloquent\Builder|CaseRecord findByUnhashKey(string $hashed)
  * @method static \Illuminate\Database\Eloquent\Builder|CaseRecord metaSearchTerms($search)
@@ -744,9 +782,9 @@ namespace App\Models\Registries{
  * @property int $id
  * @property int $patient_id
  * @property int $registry_id
- * @property \Illuminate\Database\Eloquent\Casts\AsArrayObject $meta
- * @property \Illuminate\Database\Eloquent\Casts\AsArrayObject $form
- * @property string|null $status
+ * @property \ArrayObject $meta
+ * @property \ArrayObject $form
+ * @property string $status
  * @property \Illuminate\Support\Carbon|null $deleted_at
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
@@ -754,9 +792,11 @@ namespace App\Models\Registries{
  * @property-read int|null $action_logs_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Comment> $comments
  * @property-read int|null $comments_count
+ * @property-read mixed $creator
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Note> $notes
  * @property-read int|null $notes_count
  * @property-read \App\Models\Resources\Patient $patient
+ * @property-read mixed $title
  * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantAdmissionCaseRecord filterStatus($status)
  * @method static \Illuminate\Database\Eloquent\Builder|CaseRecord findByUnhashKey(string $hashed)
  * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantAdmissionCaseRecord metaSearchTerms($search)
@@ -787,8 +827,8 @@ namespace App\Models\Registries{
  * @property int $id
  * @property int $patient_id
  * @property int $registry_id
- * @property \Illuminate\Database\Eloquent\Casts\AsArrayObject $meta
- * @property \Illuminate\Database\Eloquent\Casts\AsArrayObject $form
+ * @property \ArrayObject $meta
+ * @property \ArrayObject $form
  * @property int $status
  * @property \Illuminate\Support\Carbon|null $deleted_at
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -797,9 +837,12 @@ namespace App\Models\Registries{
  * @property-read int|null $action_logs_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Comment> $comments
  * @property-read int|null $comments_count
+ * @property-read mixed $creator
+ * @property-read mixed $hashed_key
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Note> $notes
  * @property-read int|null $notes_count
  * @property-read \App\Models\Resources\Patient $patient
+ * @property-read mixed $title
  * @method static \Illuminate\Database\Eloquent\Builder|CaseRecord findByUnhashKey(string $hashed)
  * @method static \Illuminate\Database\Eloquent\Builder|CaseRecord metaSearchTerms($search)
  * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantHLATypingCaseRecord newModelQuery()
@@ -822,6 +865,51 @@ namespace App\Models\Registries{
 	class KidneyTransplantHLATypingCaseRecord extends \Eloquent {}
 }
 
+namespace App\Models\Registries{
+/**
+ * App\Models\Registries\KidneyTransplantSurvivalCaseRecord
+ *
+ * @property int $id
+ * @property int $patient_id
+ * @property int $registry_id
+ * @property \ArrayObject $meta
+ * @property \ArrayObject $form
+ * @property \App\Enums\KidneyTransplantSurvivalCaseStatus $status
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\ResourceActionLog> $actionLogs
+ * @property-read int|null $action_logs_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Comment> $comments
+ * @property-read int|null $comments_count
+ * @property-read mixed $creator
+ * @property-read mixed $hashed_key
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Note> $notes
+ * @property-read int|null $notes_count
+ * @property-read \App\Models\Resources\Patient $patient
+ * @property-read mixed $title
+ * @method static \Illuminate\Database\Eloquent\Builder|CaseRecord findByUnhashKey(string $hashed)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantSurvivalCaseRecord metaSearchTerms($search)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantSurvivalCaseRecord newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantSurvivalCaseRecord newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantSurvivalCaseRecord onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantSurvivalCaseRecord query()
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantSurvivalCaseRecord whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantSurvivalCaseRecord whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantSurvivalCaseRecord whereForm($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantSurvivalCaseRecord whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantSurvivalCaseRecord whereMeta($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantSurvivalCaseRecord wherePatientId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantSurvivalCaseRecord whereRegistryId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantSurvivalCaseRecord whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantSurvivalCaseRecord whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CaseRecord withCreatorName()
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantSurvivalCaseRecord withTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|KidneyTransplantSurvivalCaseRecord withoutTrashed()
+ */
+	class KidneyTransplantSurvivalCaseRecord extends \Eloquent {}
+}
+
 namespace App\Models{
 /**
  * App\Models\ResourceActionLog
@@ -830,7 +918,7 @@ namespace App\Models{
  * @property string $loggable_type
  * @property int $loggable_id
  * @property int $action
- * @property \Illuminate\Database\Eloquent\Casts\AsArrayObject|null $payload
+ * @property \ArrayObject|null $payload
  * @property int $actor_id
  * @property \Illuminate\Support\Carbon $performed_at
  * @property-read \App\Models\User|null $actor
@@ -857,13 +945,20 @@ namespace App\Models\Resources{
  * @property int $id
  * @property string $an
  * @property int $patient_id
- * @property \Illuminate\Database\Eloquent\Casts\AsArrayObject|null $meta
+ * @property \ArrayObject|null $meta
  * @property \Illuminate\Support\Carbon|null $encountered_at
  * @property \Illuminate\Support\Carbon|null $dismissed_at
  * @property int $ward_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read mixed $dismissed_at_for_humans
+ * @property-read mixed $encountered_at_for_humans
+ * @property-read mixed $hashed_key
+ * @property-read mixed $length_of_stay
  * @property-read \App\Models\Resources\Patient $patient
+ * @property-read mixed $patient_age_at_encounter
+ * @property-read mixed $patient_age_at_encounter_text
+ * @property-read mixed $patient_age_at_encounter_unit
  * @property-read \App\Models\Resources\Ward $place
  * @method static \Illuminate\Database\Eloquent\Builder|Admission findByHashKey(string $plain)
  * @method static \Illuminate\Database\Eloquent\Builder|Admission newModelQuery()
@@ -892,7 +987,7 @@ namespace App\Models\Resources{
  * @property string $name_en
  * @property string $name_en_short
  * @property string $department
- * @property bool $active
+ * @property int $active
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @method static \Illuminate\Database\Eloquent\Builder|Division newModelQuery()
@@ -917,7 +1012,7 @@ namespace App\Models\Resources{
  * @property int $id
  * @property string $name
  * @property string $label
- * @property bool $active
+ * @property int $active
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @method static \Illuminate\Database\Eloquent\Builder|NoteType newModelQuery()
@@ -941,14 +1036,15 @@ namespace App\Models\Resources{
  * @property-read string $full_name
  * @property int $id
  * @property string $hn
- * @property bool $gender
+ * @property-read int $gender
  * @property \Illuminate\Support\Carbon|null $dob
  * @property \Illuminate\Database\Eloquent\Casts\AsEncryptedArrayObject|null $profile
- * @property bool $alive
+ * @property int $alive
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Resources\Admission> $admissions
  * @property-read int|null $admissions_count
+ * @property-read mixed $hashed_key
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Note> $notes
  * @property-read int|null $notes_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Resources\Registry> $registries
@@ -978,7 +1074,7 @@ namespace App\Models\Resources{
  * @property string $name
  * @property int $division_id
  * @property int $position
- * @property bool $active
+ * @property int $active
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @method static \Illuminate\Database\Eloquent\Builder|Person filter($filters)
@@ -1002,9 +1098,11 @@ namespace App\Models\Resources{
  *
  * @property int $id
  * @property string $name
+ * @property string $label
+ * @property string $label_eng
  * @property string $route
  * @property int $division_id
- * @property bool $active
+ * @property int $active
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\ResourceActionLog> $actionLogs
@@ -1020,6 +1118,8 @@ namespace App\Models\Resources{
  * @method static \Illuminate\Database\Eloquent\Builder|Registry whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Registry whereDivisionId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Registry whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Registry whereLabel($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Registry whereLabelEng($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Registry whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Registry whereRoute($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Registry whereUpdatedAt($value)
@@ -1036,7 +1136,7 @@ namespace App\Models\Resources{
  * @property string|null $name_short
  * @property string $name_ref
  * @property int $division_id
- * @property bool $active
+ * @property int $active
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @method static \Illuminate\Database\Eloquent\Builder|Ward newModelQuery()
@@ -1091,11 +1191,11 @@ namespace App\Models{
  * @property int $social_provider_id
  * @property string $profile_id
  * @property \Illuminate\Database\Eloquent\Casts\AsEncryptedArrayObject $profile
- * @property bool $active
+ * @property int $active
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\SocialProvider|null $socialProvider
- * @property-read \App\Models\User $user
+ * @property-read \App\Models\User|null $user
  * @method static \Illuminate\Database\Eloquent\Builder|SocialProfile activeLoginByProviderId($providerId)
  * @method static \Illuminate\Database\Eloquent\Builder|SocialProfile newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|SocialProfile newQuery()
@@ -1178,75 +1278,5 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|SupportTicket query()
  */
 	class SupportTicket extends \Eloquent {}
-}
-
-namespace App\Models{
-/**
- * App\Models\User
- *
- * @property int $items_per_page
- * @property string $home_page
- * @property Collection $role_names
- * @property Collection $role_labels
- * @property string $hashed_key
- * @property string $first_name
- * @property Collection $abilities
- * @property Collection $abilities_id
- * @property bool $auto_subscribe_to_channel
- * @property bool $mute_notification
- * @property bool $notify_approval_result
- * @property Collection $registry_names
- * @property string $avatar_token
- * @property int $id
- * @property string $name
- * @property string $login
- * @property string $full_name
- * @property string $password
- * @property \Illuminate\Database\Eloquent\Casts\AsArrayObject $profile
- * @property \Illuminate\Database\Eloquent\Casts\AsArrayObject $preferences
- * @property int $division_id
- * @property bool $active
- * @property string|null $remember_token
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\ResourceActionLog> $actionLogs
- * @property-read int|null $action_logs_count
- * @property-read \App\Models\SocialProfile|null $activeLINEProfile
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\ChatBot> $chatBots
- * @property-read int|null $chat_bots_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\ChatLog> $chatLogs
- * @property-read int|null $chat_logs_count
- * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
- * @property-read int|null $notifications_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Resources\Registry> $registries
- * @property-read int|null $registries_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Role> $roles
- * @property-read int|null $roles_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\SocialProfile> $socialProfiles
- * @property-read int|null $social_profiles_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Subscription> $subscriptions
- * @property-read int|null $subscriptions_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \Laravel\Sanctum\PersonalAccessToken> $tokens
- * @property-read int|null $tokens_count
- * @method static \Database\Factories\UserFactory factory($count = null, $state = [])
- * @method static \Illuminate\Database\Eloquent\Builder|User findByUnhashKey(string $hashed)
- * @method static \Illuminate\Database\Eloquent\Builder|User newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|User newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|User query()
- * @method static \Illuminate\Database\Eloquent\Builder|User whereActive($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereDivisionId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereFullName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereLogin($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User wherePassword($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User wherePreferences($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereProfile($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereRememberToken($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User withActiveChatBots()
- */
-	class User extends \Eloquent {}
 }
 

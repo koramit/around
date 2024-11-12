@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Clinics\PostKT;
 
+use App\Actions\Clinics\PostKT\CaseEditAction;
+use App\Actions\Clinics\PostKT\CaseStoreAction;
 use App\Http\Controllers\Controller;
 use App\Traits\AppLayoutSessionFlashable;
 use Illuminate\Http\Request;
@@ -21,11 +23,41 @@ class CaseRecordController extends Controller
 
     public function index()
     {
-        return 'POST KT cases index';
+        $configs = [
+            'can' => ['create' => true],
+            'routes' => [
+                'store' => route('clinics.post-kt.store'),
+                'admissionsShow' => route('resources.api.admissions.show')
+            ],
+        ];
+
+        return Inertia::render('Clinics/PostKT/Index', [
+            'configs' => $configs,
+        ]);
     }
 
-    public function edit()
+    public function store(Request $request, CaseStoreAction $action)
     {
-        return Inertia::render('Clinics/PostKT/Edit', []);
+        $case = $action($request->all(), $request->user());
+
+        if ($request->wantsJson()) {
+            return $case;
+        }
+
+        return redirect()->route('clinics.post-kt.edit', $case['key']);
+    }
+
+    public function edit(string $hashedKey, Request $request, CaseEditAction $action)
+    {
+        $data = $action($hashedKey, $request->user());
+
+        if ($request->wantsJson()) {
+            return $data;
+        }
+
+        $this->setFlash($data['flash']);
+        unset($data['flash']);
+
+        return Inertia::render('Clinics/PostKT/Edit', [...$data]);
     }
 }
