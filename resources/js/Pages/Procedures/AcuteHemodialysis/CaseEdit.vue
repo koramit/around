@@ -178,18 +178,16 @@
     />
     <hr class="border border-dashed my-2 md:my-4 xl:my-8">
 
-    <!-- admission diagnosis -->
-    <template v-if="form.admission.an">
-        <h3 class="form-label mt-4 md:mt-8 xl:mt-16">
-            admission diagnosis :
-        </h3>
-        <FormInput
-            name="admission_diagnosis"
-            v-model="form.admission_diagnosis"
-            :error="$page.props.errors.admission_diagnosis"
-        />
-        <hr class="border border-dashed my-2 md:my-4 xl:my-8">
-    </template>
+    <!-- principal diagnosis -->
+    <h3 class="form-label mt-4 md:mt-8 xl:mt-16">
+        {{ form.admission.an ? 'admission' : '' }} diagnosis :
+    </h3>
+    <FormInput
+        name="admission_diagnosis"
+        v-model="form.admission_diagnosis"
+        :error="$page.props.errors.admission_diagnosis"
+    />
+    <hr class="border border-dashed my-2 md:my-4 xl:my-8">
 
     <!--comorbidities & indications-->
     <div class="md:grid grid-cols-2 gap-2 lg:gap-x-8">
