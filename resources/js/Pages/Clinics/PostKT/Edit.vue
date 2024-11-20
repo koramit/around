@@ -6,6 +6,7 @@ import {useForm} from '@inertiajs/vue3';
 import {reactive, watch} from 'vue';
 import FormDatetime from '../../../Components/Controls/FormDatetime.vue';
 import GraftLossReport from '../../../Partials/Clinics/PostKT/GraftLossReport.vue';
+import DeadReport from '../../../Partials/Clinics/PostKT/DeadReport.vue';
 
 const props = defineProps({
     formData: {type: Object, required: true},
@@ -21,6 +22,9 @@ watch(
     (val) => {
         if (val === 'loss follow up') {
             form.patient_status = 'loss follow up';
+            form.status = 'loss follow up';
+        } else {
+            form.status = [form.graft_status, form.patient_status].join(' / ');
         }
     },
 );
@@ -29,6 +33,9 @@ watch(
     (val) => {
         if (val === 'loss follow up') {
             form.graft_status = 'loss follow up';
+            form.status = 'loss follow up';
+        } else {
+            form.status = [form.graft_status, form.patient_status].join(' / ');
         }
     },
 );
@@ -94,7 +101,7 @@ watch(
                 readonly
             />
             <FormInput
-                label="annual cr (mg/dL)"
+                :label="`annual cr (mg/dL) (year ${form.annual_year})`"
                 name="annual_cr"
                 v-model="form.annual_cr"
                 readonly
@@ -110,21 +117,30 @@ watch(
             graft status update :
         </h3>
         <hr class="border border-dashed my-2 md:my-4 xl:my-8">
-        <div>
-            <FormRadio
-                class="grid grid-cols-2 gap-4"
-                name="graft_status"
-                :options="configs.graft_status_options"
-                v-model="form.graft_status"
-            />
+        <div class="grid grid-cols-1 md:grid-cols-2 md:gap-4 xl:gap-8">
+            <div class="space-y-2 md:space-y-4">
+                <FormRadio
+                    class="grid grid-cols-1 gap-2 2xl:grid-cols-3"
+                    name="graft_status"
+                    :options="configs.graft_status_options"
+                    v-model="form.graft_status"
+                />
+                <FormDatetime
+                    label="date update graft status"
+                    name="date_update_graft_status"
+                    v-model="form.date_update_graft_status"
+                />
+            </div>
         </div>
-        <template v-if="true">
-            <h3 class="form-label mt-4 md:mt-8 xl:mt-16">
-                Graft Loss report :
-            </h3>
-            <hr class="border border-dashed my-2 md:my-4 xl:my-8">
-            <GraftLossReport />
-        </template>
+        <Transition name="slide-fade">
+            <section v-if="form.graft_status === 'graft loss'">
+                <h3 class="form-label mt-4 md:mt-8 xl:mt-16">
+                    Graft Loss report :
+                </h3>
+                <hr class="border border-dashed my-2 md:my-4 xl:my-8">
+                <GraftLossReport v-model="form.graft_loss_codes" />
+            </section>
+        </Transition>
         <h2
             class="form-label text-lg italic text-complement mt-4 md:mt-8 xl:mt-16 form-scroll-mt"
             id="patient-status"
@@ -132,14 +148,30 @@ watch(
             patient status :
         </h2>
         <hr class="my-4 border-b border-accent">
-        <div>
-            <FormRadio
-                class="grid grid-cols-2 gap-4"
-                name="patient_status"
-                :options="configs.patient_status_options"
-                v-model="form.patient_status"
-            />
+        <div class="grid grid-cols-1 md:grid-cols-2 md:gap-4 xl:gap-8">
+            <div class="space-y-2 md:space-y-4">
+                <FormRadio
+                    class="grid grid-cols-1 gap-2 2xl:grid-cols-3"
+                    name="patient_status"
+                    :options="configs.patient_status_options"
+                    v-model="form.patient_status"
+                />
+                <FormDatetime
+                    label="date update patient status"
+                    name="date_update_patient_status"
+                    v-model="form.date_update_patient_status"
+                />
+            </div>
         </div>
+        <Transition name="slide-fade">
+            <section v-if="form.patient_status === 'dead'">
+                <h3 class="form-label mt-4 md:mt-8 xl:mt-16">
+                    Dead report :
+                </h3>
+                <hr class="border border-dashed my-2 md:my-4 xl:my-8">
+                <DeadReport v-model="form.dead_report_codes" />
+            </section>
+        </Transition>
         <h2
             class="form-label text-lg italic text-complement mt-4 md:mt-8 xl:mt-16 form-scroll-mt"
             id="creatinine-chart"
@@ -152,6 +184,17 @@ watch(
         </h3>
         <hr class="border border-dashed my-2 md:my-4 xl:my-8">
         <div class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8">
+            <FormInput
+                label="discharge cr (mg/dL)"
+                name="discharge_cr"
+                v-model="form.discharge_cr"
+                type="number"
+            />
+            <FormDatetime
+                label="date discharge cr"
+                name="date_discharge_cr"
+                v-model="form.date_discharge_cr"
+            />
             <FormInput
                 label="one week cr (mg/dL)"
                 name="one_week_cr"

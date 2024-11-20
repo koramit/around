@@ -4,6 +4,7 @@ namespace App\Actions\Clinics\PostKT;
 
 use App\Extensions\Auth\AvatarUser;
 use App\Models\User;
+use Illuminate\Support\Carbon;
 
 class CaseEditAction extends CaseBaseAction
 {
@@ -14,6 +15,14 @@ class CaseEditAction extends CaseBaseAction
         }
 
         $case = $this->getCaseRecord($hashedKey);
+        $dateTx = Carbon::create($case->form['date_transplant']);
+        $yearTh = now()->year - $dateTx->year;
+        if (isset($case->form["year_{$yearTh}_cr"])) {
+            $case->form['annual_cr'] = $case->form["year_{$yearTh}_cr"];
+            $case->form["date_annual_cr"] = $case->form["date_year_{$yearTh}_cr"];
+            $case->form["annual_year"] = $yearTh;
+        }
+
         $form = $case->form;
         foreach ($form as $field => $value) {
             if (in_array(gettype($value), ['double', 'float', 'integer'])) {

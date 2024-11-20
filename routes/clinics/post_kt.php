@@ -10,3 +10,5 @@ Route::post('/', [CaseRecordController::class, 'store'])
     ->name('store');
 Route::get('/{hashedKey}/edit', [CaseRecordController::class, 'edit'])
     ->name('edit');
+Route::get('/{hashedKey}/annual-update', [CaseRecordController::class, 'annualUpdate'])
+    ->name('annual-update');

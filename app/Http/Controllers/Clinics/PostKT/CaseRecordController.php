@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Clinics\PostKT;
 
+use App\Actions\Clinics\PostKT\AnnualUpdateAction;
 use App\Actions\Clinics\PostKT\CaseEditAction;
 use App\Actions\Clinics\PostKT\CaseStoreAction;
 use App\Http\Controllers\Controller;
@@ -59,5 +60,16 @@ class CaseRecordController extends Controller
         unset($data['flash']);
 
         return Inertia::render('Clinics/PostKT/Edit', [...$data]);
+    }
+
+    public function annualUpdate(string $hashedKey, Request $request, AnnualUpdateAction $action)
+    {
+        $data = $action($hashedKey, $request->user());
+
+        if ($request->wantsJson()) {
+            return $data;
+        }
+
+        return redirect()->route('clinics.post-kt.edit', $hashedKey);
     }
 }

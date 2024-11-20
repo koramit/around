@@ -1,49 +1,91 @@
 <script setup>
 
 import FormCheckbox from '../../../Components/Controls/FormCheckbox.vue';
-import {reactive} from 'vue';
+import {nextTick, reactive, watch} from 'vue';
 import FormInput from '../../../Components/Controls/FormInput.vue';
 import AlertMessage from '../../../Components/Helpers/AlertMessage.vue';
 
+const model = defineModel({type: Array, required: true});
+
 const form = reactive({
-    gl_101: false,
-    gl_102: false,
-    gl_103: false,
-    gl_104: false,
-    gl_105: false,
-    gl_106: false,
-    gl_109: false,
-    gl_200: false,
-    gl_200_specification: null,
-    gl_300: false,
-    gl_401: false,
-    gl_402: false,
-    gl_403: false,
-    gl_404: false,
-    gl_405: false,
-    gl_406: false,
-    gl_407: false,
-    gl_408: false,
-    gl_408_specification: null,
-    gl_409: false,
-    gl_501: false,
-    gl_502: false,
-    gl_503: false,
-    gl_504: false,
-    gl_505: false,
-    gl_601: false,
-    gl_602: false,
-    gl_701: false,
-    gl_702: false,
-    gl_801: false,
-    gl_802: false,
-    gl_802_specification: null,
-    gl_901: false,
-    gl_902: false,
-    gl_903: false,
-    gl_904: false,
-    gl_904_specification: null,
-    gl_999: false,
+    gl_101: Boolean(model.value.find(item => parseInt(item.code) === 101)),
+    gl_102: Boolean(model.value.find(item => parseInt(item.code) === 102)),
+    gl_103: Boolean(model.value.find(item => parseInt(item.code) === 103)),
+    gl_104: Boolean(model.value.find(item => parseInt(item.code) === 104)),
+    gl_105: Boolean(model.value.find(item => parseInt(item.code) === 105)),
+    gl_106: Boolean(model.value.find(item => parseInt(item.code) === 106)),
+    gl_109: Boolean(model.value.find(item => parseInt(item.code) === 109)),
+    gl_200: Boolean(model.value.find(item => parseInt(item.code) === 200)),
+    gl_200_specification: model.value.find(item => parseInt(item.code) === 200)?.specification,
+    gl_300: Boolean(model.value.find(item => parseInt(item.code) === 300)),
+    gl_401: Boolean(model.value.find(item => parseInt(item.code) === 401)),
+    gl_402: Boolean(model.value.find(item => parseInt(item.code) === 402)),
+    gl_403: Boolean(model.value.find(item => parseInt(item.code) === 403)),
+    gl_404: Boolean(model.value.find(item => parseInt(item.code) === 404)),
+    gl_405: Boolean(model.value.find(item => parseInt(item.code) === 405)),
+    gl_406: Boolean(model.value.find(item => parseInt(item.code) === 406)),
+    gl_407: Boolean(model.value.find(item => parseInt(item.code) === 407)),
+    gl_408: Boolean(model.value.find(item => parseInt(item.code) === 408)),
+    gl_408_specification: model.value.find(item => parseInt(item.code) === 408)?.specification,
+    gl_409: Boolean(model.value.find(item => parseInt(item.code) === 409)),
+    gl_501: Boolean(model.value.find(item => parseInt(item.code) === 501)),
+    gl_502: Boolean(model.value.find(item => parseInt(item.code) === 502)),
+    gl_503: Boolean(model.value.find(item => parseInt(item.code) === 503)),
+    gl_504: Boolean(model.value.find(item => parseInt(item.code) === 504)),
+    gl_505: Boolean(model.value.find(item => parseInt(item.code) === 505)),
+    gl_601: Boolean(model.value.find(item => parseInt(item.code) === 601)),
+    gl_602: Boolean(model.value.find(item => parseInt(item.code) === 602)),
+    gl_701: Boolean(model.value.find(item => parseInt(item.code) === 701)),
+    gl_702: Boolean(model.value.find(item => parseInt(item.code) === 702)),
+    gl_801: Boolean(model.value.find(item => parseInt(item.code) === 801)),
+    gl_802: Boolean(model.value.find(item => parseInt(item.code) === 802)),
+    gl_802_specification: model.value.find(item => parseInt(item.code) === 802)?.specification,
+    gl_901: Boolean(model.value.find(item => parseInt(item.code) === 901)),
+    gl_902: Boolean(model.value.find(item => parseInt(item.code) === 902)),
+    gl_903: Boolean(model.value.find(item => parseInt(item.code) === 903)),
+    gl_904: Boolean(model.value.find(item => parseInt(item.code) === 904)),
+    gl_904_specification: model.value.find(item => parseInt(item.code) === 904)?.specification,
+    gl_999: Boolean(model.value.find(item => parseInt(item.code) === 999)),
+});
+
+watch(
+    () => form,
+    val => {
+        const keys = Object.keys(form);
+        let codes = [];
+        keys.forEach((key) => {
+            if (val[key] === true) {
+                const code = parseInt(key.replace('gl_', ''));
+                let specification = null;
+                if (val[`${key}_specification`] !== undefined && val[`${key}_specification`]) {
+                    specification = val[`${key}_specification`];
+                }
+                codes.push({code: code, specification: specification});
+            }
+        });
+        model.value = [...codes];
+    },
+    {deep: true}
+);
+
+const specificationInputRefs = reactive({
+    gl_200: null,
+    gl_408: null,
+    gl_802: null,
+    gl_904: null,
+});
+function toggleSpecification(val, code) {
+    if (val) {
+        nextTick(() => specificationInputRefs[code].focus());
+    } else {
+        form[`${code}_specification`] = null;
+    }
+}
+[...Object.keys(specificationInputRefs)].forEach(code => {
+    watch(
+        () => form[code],
+        (val) => toggleSpecification(val, code)
+    );
 });
 </script>
 
@@ -87,6 +129,7 @@ const form = reactive({
                     v-model="form.gl_109"
                 />
             </div>
+            <hr class="border border-dashed my-2 md:my-4 xl:my-8">
             <div class="space-y-2 md:space-y-4 xl:space-y-6">
                 <FormCheckbox
                     label="200 - Severe IFTA, unknown cause"
@@ -97,8 +140,11 @@ const form = reactive({
                     placeholder="IFTA จากอย่างอื่นลงเหตุนั้นๆ"
                     name="gl_200_specification"
                     v-model="form.gl_200_specification"
+                    :disabled="!form.gl_200"
+                    :ref="ref => specificationInputRefs.gl_200 = ref"
                 />
             </div>
+            <hr class="border border-dashed my-2 md:my-4 xl:my-8">
             <div class="space-y-2 md:space-y-4 xl:space-y-6">
                 <FormCheckbox
                     label="300 - CNI toxicity"
@@ -106,6 +152,7 @@ const form = reactive({
                     v-model="form.gl_300"
                 />
             </div>
+            <hr class="border border-dashed my-2 md:my-4 xl:my-8">
             <div class="space-y-2 md:space-y-4 xl:space-y-6">
                 <FormCheckbox
                     label="401 - MPGN type 1 (Bx)"
@@ -149,8 +196,10 @@ const form = reactive({
                 />
                 <FormInput
                     placeholder="ex. diabetic, nephropathy, lupus nephritis etc..."
-                    name="gl_200_specification"
-                    v-model="form.gl_200_specification"
+                    name="gl_408_specification"
+                    v-model="form.gl_408_specification"
+                    :disabled="!form.gl_408"
+                    :ref="ref => specificationInputRefs.gl_408 = ref"
                 />
                 <FormCheckbox
                     label="409 - Suspected glomerular disease, unknown (no biopsy)"
@@ -186,6 +235,9 @@ const form = reactive({
                     name="gl_505"
                     v-model="form.gl_505"
                 />
+            </div>
+            <hr class="border border-dashed my-2 md:my-4 xl:my-8">
+            <div class="space-y-2 md:space-y-4 xl:space-y-6">
                 <FormCheckbox
                     label="601 - BKVAN"
                     name="gl_601"
@@ -197,6 +249,7 @@ const form = reactive({
                     v-model="form.gl_602"
                 />
             </div>
+            <hr class="border border-dashed my-2 md:my-4 xl:my-8">
             <div class="space-y-2 md:space-y-4 xl:space-y-6">
                 <FormCheckbox
                     label="701 - TMA, with rejection"
@@ -209,6 +262,7 @@ const form = reactive({
                     v-model="form.gl_702"
                 />
             </div>
+            <hr class="border border-dashed my-2 md:my-4 xl:my-8">
             <div class="space-y-2 md:space-y-4 xl:space-y-6">
                 <FormCheckbox
                     label="801 - AKI ontop then graft loss (sepsis)"
@@ -224,8 +278,11 @@ const form = reactive({
                     placeholder="any other causes"
                     name="gl_802_specification"
                     v-model="form.gl_802_specification"
+                    :disabled="!form.gl_802"
+                    :ref="ref => specificationInputRefs.gl_802 = ref"
                 />
             </div>
+            <hr class="border border-dashed my-2 md:my-4 xl:my-8">
             <div class="space-y-2 md:space-y-4 xl:space-y-6">
                 <FormCheckbox
                     label="901 - Primary non-functioning"
@@ -255,6 +312,8 @@ const form = reactive({
                     placeholder="specify other causes"
                     name="gl_904_specification"
                     v-model="form.gl_904_specification"
+                    :disabled="!form.gl_904"
+                    :ref="ref => specificationInputRefs.gl_904 = ref"
                 />
                 <FormCheckbox
                     label="999 - Dead with functioning"
