@@ -5,6 +5,7 @@ use App\Http\Controllers\Procedures\AcuteHemodialysis\CaseRecordController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\CaseRecordExportController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\CreateOrderShortcutController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\DialysisSessionController;
+use App\Http\Controllers\Procedures\AcuteHemodialysis\DialysisSessionExportController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\IdleCaseController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\LastIndexSectionController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\OrderController;
@@ -91,6 +92,24 @@ Route::get('/orders/{hashedKey}', [OrderController::class, 'show'])
 Route::get('/orders-export', OrderExportController::class)
     ->can('view_any_acute_hemodialysis_orders')
     ->name('orders.export');
+
+Route::get('/dialysis-session-export', DialysisSessionExportController::class)
+    ->can('export_acute_hemodialysis_clinical_reports')
+    ->name('dialysis-session.export');
+
+Route::get('/deploy-dialysis-session-report', function () {
+    $acuteStaff = App\Models\Role::query()->where('name', 'acute_hemodialysis_staff')->first();
+    $exportData = App\Models\Ability::query()->firstOrCreate([
+        'registry_id' => 1,
+        'name' => 'export_acute_hemodialysis_clinical_reports'
+    ]);
+    $acuteStaff->allowTo($exportData);
+    $root = App\Models\Role::query()->where('name', 'root')->first();
+    $root->allowTo($exportData);
+    $acuteStaff->users->each(fn ($user) => $user->flushPrivileges());
+    $root->users->each(fn ($user) => $user->flushPrivileges());
+    return 'ok';
+});
 
 // resources
 Route::post('/slot-available', SlotAvailableController::class)
