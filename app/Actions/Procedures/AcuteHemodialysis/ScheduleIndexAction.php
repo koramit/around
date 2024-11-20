@@ -100,6 +100,14 @@ class ScheduleIndexAction extends AcuteHemodialysisAction
         $flash = $this->getFlash('Acute Hemodialysis - Schedule', $user);
         $flash['navs'] = $this->NAVS;
         $flash['action-menu'][] = $this->getSetHomePageActionMenu($routeName, $user->home_page);
+        $flash['action-menu'][] = [
+            'label' => 'Dialysis Session Report',
+            'as' => 'a',
+            'icon' => 'file-excel',
+            'theme' => 'accent',
+            'route' => route('procedures.acute-hemodialysis.dialysis-session.export', ['ref_date' => $validated['ref_date']]),
+            'can' => $user->can('export_acute_hemodialysis_clinical_reports'),
+        ];
 
         return [
             'flash' => $flash,
