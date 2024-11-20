@@ -374,7 +374,7 @@ class OrderSubmitAction extends AcuteHemodialysisAction
         $note->save();
         $this->shouldNotifyResubmit($note);
         ShouldNotifyOrderSubmittedWithoutConsentForm::dispatchAfterResponse($note);
-        $this->notifyResubmit($note, $action);
+        /*$this->notifyResubmit($note, $action);*/
 
         return [
             'case' => $note->caseRecord->hashed_key,
