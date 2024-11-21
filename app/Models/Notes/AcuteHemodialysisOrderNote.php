@@ -136,7 +136,7 @@ class AcuteHemodialysisOrderNote extends Note
     protected function onVentilator(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->form['oxygen_support'] === 'Ventilator',
+            get: fn () => in_array($this->form['oxygen_support'], ['Ventilator', 'High flow oxygen']),
         );
     }
 }

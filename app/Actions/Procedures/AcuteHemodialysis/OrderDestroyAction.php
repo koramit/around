@@ -96,6 +96,10 @@ class OrderDestroyAction extends AcuteHemodialysisAction
                     'stickerPackageId' => $sticker['packageId'],
                     'stickerId' => $sticker['stickerId'],
                 ]);
+
+            // COUNT LINE NOTIFY
+            $cacheKey = now()->format('Ym') . '-LINE-NOTIFY-COUNT';
+            cache()->increment($cacheKey);
         } catch (Exception $e) {
             Log::error("Failed to notify cancel order\n".$e->getMessage());
         }
