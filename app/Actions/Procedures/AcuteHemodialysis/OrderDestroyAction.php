@@ -46,7 +46,7 @@ class OrderDestroyAction extends AcuteHemodialysisAction
             'payload' => ['reason' => $validated['reason']],
         ]);
         $this->shouldNotifyCancel($order);
-        $this->notifyCancel($order);
+        /*$this->notifyCancel($order);*/
 
         return [
             'type' => 'info',
