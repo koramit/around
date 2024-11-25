@@ -7,6 +7,7 @@ import {reactive, watch} from 'vue';
 import FormDatetime from '../../../Components/Controls/FormDatetime.vue';
 import GraftLossReport from '../../../Partials/Clinics/PostKT/GraftLossReport.vue';
 import DeadReport from '../../../Partials/Clinics/PostKT/DeadReport.vue';
+import FormTextarea from '../../../Components/Controls/FormTextarea.vue';
 
 const props = defineProps({
     formData: {type: Object, required: true},
@@ -133,12 +134,27 @@ watch(
             </div>
         </div>
         <Transition name="slide-fade">
-            <section v-if="form.graft_status === 'graft loss'">
+            <section
+                v-if="form.graft_status === 'graft loss'"
+                class="space-y-2 md:space-y-4 xl:space-y-8"
+            >
                 <h3 class="form-label mt-4 md:mt-8 xl:mt-16">
                     Graft Loss report :
                 </h3>
                 <hr class="border border-dashed my-2 md:my-4 xl:my-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 md:gap-4 xl:gap-8">
+                    <FormDatetime
+                        label="date graft loss"
+                        name="date_graft_loss"
+                        v-model="form.date_graft_loss"
+                    />
+                </div>
                 <GraftLossReport v-model="form.graft_loss_codes" />
+                <FormTextarea
+                    label="graft loss note"
+                    name="graft_loss_note"
+                    v-model="form.graft_loss_note"
+                />
             </section>
         </Transition>
         <h2
@@ -164,12 +180,27 @@ watch(
             </div>
         </div>
         <Transition name="slide-fade">
-            <section v-if="form.patient_status === 'dead'">
+            <section
+                v-if="form.patient_status === 'dead'"
+                class="space-y-2 md:space-y-4 xl:space-y-8"
+            >
                 <h3 class="form-label mt-4 md:mt-8 xl:mt-16">
                     Dead report :
                 </h3>
                 <hr class="border border-dashed my-2 md:my-4 xl:my-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 md:gap-4 xl:gap-8">
+                    <FormDatetime
+                        label="date dead"
+                        name="date_dead"
+                        v-model="form.date_dead"
+                    />
+                </div>
                 <DeadReport v-model="form.dead_report_codes" />
+                <FormTextarea
+                    label="dead note"
+                    name="dead_note"
+                    v-model="form.dead_note"
+                />
             </section>
         </Transition>
         <h2

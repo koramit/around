@@ -64,6 +64,7 @@ class CaseStoreAction extends CaseBaseAction
             'date_update_patient_status' => null,
             'date_dead' => null,
             'dead_report_codes' => [],
+            'dead_place' => null,
             'dead_note' => null,
             'discharge_cr' => null,
             'date_discharge_cr' => null,
