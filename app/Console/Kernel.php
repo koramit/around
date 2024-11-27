@@ -4,6 +4,7 @@ namespace App\Console;
 
 use App\Jobs\NotifyDiscussionUpdates;
 use App\Jobs\Procedures\AcuteHemodialysis\NotifyIncompleteOrderToAuthor;
+use App\Models\ChatBot;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -26,6 +27,17 @@ class Kernel extends ConsoleKernel
 
         /* Admission */
         $schedule->command('admission:update')->timezone('Asia/Bangkok')->at('06:00');
+
+        /* Reset LINE bot push count */
+        $schedule->call(function () {
+            $bots = ChatBot::all();
+            foreach ($bots as $bot) {
+                if ($bot->configs['limit_reached']) {
+                    $bot->configs['limit_reached'] = false;
+                    $bot->save();
+                }
+            }
+        })->timezone('Asia/Bangkok')->monthly();
     }
 
     protected function commands(): void

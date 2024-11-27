@@ -26,6 +26,13 @@ trait LINECallable
 
     private function pushMessage(ChatBot $bot, string $to, array $messages): ?array
     {
+        if ($bot->configs['limit_reached']) {
+            $bot->configs['missed_count'] = $bot->configs['missed_count'] + 1;
+            $bot->save();
+
+            return null;
+        }
+
         $payload = [
             'to' => $to,
             'messages' => $messages,
@@ -36,16 +43,18 @@ trait LINECallable
             : null;
     }
 
-    private function makePost(string $token, string $url, array $payload): bool
+    private function makePost(ChatBot $bot, string $url, array $payload): bool
     {
         try {
             Http::timeout(2)
                 ->retry(3, 100)
-                ->withToken($token)
+                ->withToken($bot->configs['token'])
                 ->post('https://api.line.me/v2/bot/'.$url, $payload);
         } catch (Exception $e) {
             $message = $e->getMessage();
             if (str_contains($message, '429')) {
+                $bot->configs['limit_reached'] = true;
+                $bot->save();
 
                 return false;
             }
