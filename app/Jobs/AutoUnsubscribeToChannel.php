@@ -15,8 +15,7 @@ class AutoUnsubscribeToChannel implements ShouldQueue
 
     public function __construct(
         protected Subscription $subscription,
-    ) {
-    }
+    ) {}
 
     public function handle(): void
     {

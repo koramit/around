@@ -3,11 +3,18 @@
 import FormInput from '../../../Components/Controls/FormInput.vue';
 import FormRadio from '../../../Components/Controls/FormRadio.vue';
 import {useForm} from '@inertiajs/vue3';
-import {reactive, watch} from 'vue';
+import {computed, reactive, ref, watch} from 'vue';
 import FormDatetime from '../../../Components/Controls/FormDatetime.vue';
 import GraftLossReport from '../../../Partials/Clinics/PostKT/GraftLossReport.vue';
 import DeadReport from '../../../Partials/Clinics/PostKT/DeadReport.vue';
 import FormTextarea from '../../../Components/Controls/FormTextarea.vue';
+import SpinnerButton from '../../../Components/Controls/SpinnerButton.vue';
+import {useActionStore} from '../../../functions/useActionStore.js';
+import {useSelectOther} from '../../../functions/useSelectOther.js';
+import FormSelectOther from '../../../Components/Controls/FormSelectOther.vue';
+import {useFormAutosave} from '../../../functions/useFormAutosave.js';
+import {useConfirmForm} from '../../../functions/useConfirmForm.js';
+import ConfirmFormComposable from '../../../Components/Forms/ConfirmFormComposable.vue';
 
 const props = defineProps({
     formData: {type: Object, required: true},
@@ -18,14 +25,35 @@ const form = useForm({...props.formData});
 
 const configs = reactive({...props.formConfigs});
 
+const {autosave} = useFormAutosave();
+if (configs.can.update) {
+    watch(
+        () => form.data(),
+        (value) => {
+            autosave(value, configs.routes.update);
+        },
+        {deep: true},
+    );
+}
+
+const caseStatus = computed(() => {
+    if (form.patient_status === 'loss follow up') {
+        return 'loss f/u';
+    } else if (form.patient_status === 'dead') {
+        return 'dead';
+    } else if (form.graft_status === 'graft loss') {
+        return 'graft Loss';
+    } else {
+        return 'active';
+    }
+});
+
 watch(
     () => form.graft_status,
     (val) => {
         if (val === 'loss follow up') {
             form.patient_status = 'loss follow up';
             form.status = 'loss follow up';
-        } else {
-            form.status = [form.graft_status, form.patient_status].join(' / ');
         }
     },
 );
@@ -35,11 +63,65 @@ watch(
         if (val === 'loss follow up') {
             form.graft_status = 'loss follow up';
             form.status = 'loss follow up';
-        } else {
-            form.status = [form.graft_status, form.patient_status].join(' / ');
+        } else if (val === 'dead') {
+            form.graft_status = 'graft loss';
         }
     },
 );
+
+function timestampUpdate() {
+    form.put(configs.routes.timestamp_update);
+}
+
+const {confirmForm, openConfirmForm, confirmed} = useConfirmForm();
+const {actionStore} = useActionStore();
+let actionStoreName = null;
+watch (
+    () => actionStore.value,
+    (value) => {
+        switch (value.name) {
+        case 'timestamp-update':
+            timestampUpdate();
+            break;
+        case 'destroy-case':
+            actionStoreName = value.name;
+            openConfirmForm(value.config);
+            break;
+        default:
+            return;
+        }
+    },
+    {deep: true}
+);
+const handleConfirmedAction = (reason) => {
+    switch (actionStoreName) {
+    case 'destroy-case':
+        useForm({reason: reason}).delete(configs.routes.destroy);
+        break;
+    default :
+        return;
+    }
+    actionStoreName = null;
+};
+
+const deadPlace = ref(null);
+if (form.dead_place && !configs.dead_place_options.includes(form.dead_place)) {
+    configs.dead_place_options.push(form.dead_place);
+}
+watch (
+    () => form.dead_place,
+    (val) => {
+        if (val !== 'other') {
+            return;
+        }
+
+        selectOther.placeholder = 'Other dead place (in case hospital, please specific hospital name)';
+        selectOther.configs = configs.dead_place_options;
+        selectOther.input = deadPlace.value;
+        selectOtherInput.value.open();
+    }
+);
+const { selectOtherInput, selectOther, selectOtherClosed } = useSelectOther();
 </script>
 
 <template>
@@ -54,27 +136,63 @@ watch(
         <div class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8">
             <FormInput
                 label="KT NO"
-                :readonly="true"
+                readonly
                 name="kt_no"
                 v-model="form.kt_no"
             />
             <FormInput
                 label="KT ID"
-                :readonly="true"
+                readonly
                 name="kt_id"
                 v-model="form.kt_id"
             />
-            <FormDatetime
+            <FormInput
                 label="date transplant"
-                :readonly="true"
-                name="date_transplant"
-                v-model="form.date_transplant"
+                readonly
+                name="date_transplant_formatted"
+                v-model="form.date_transplant_formatted"
             />
             <FormInput
                 label="status"
-                :readonly="true"
+                readonly
                 name="status"
-                v-model="form.status"
+                v-model="caseStatus"
+            />
+        </div>
+        <h2
+            class="form-label text-lg italic text-complement mt-4 md:mt-8 xl:mt-16 form-scroll-mt"
+            id="creatinine-update"
+        >
+            Creatinine update :
+        </h2>
+        <hr class="my-4 border-b border-accent">
+        <div class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8">
+            <div>
+                <FormInput
+                    label="latest cr (mg/dL)"
+                    name="latest_cr"
+                    v-model="form.latest_cr"
+                    readonly
+                />
+                <button>use latest cr as annual cr</button>
+            </div>
+            <FormInput
+                label="date latest cr"
+                name="date_latest_cr_formatted"
+                v-model="form.date_latest_cr_formatted"
+                readonly
+            />
+            <FormInput
+                :label="`annual cr (mg/dL) (year ${form.annual_year})`"
+                name="annual_cr"
+                v-model="form.annual_cr"
+                readonly
+            />
+            <FormInput
+                label="date annual cr"
+                name="date_annual_cr"
+                v-model="form.date_annual_cr"
+                readonly
             />
         </div>
         <h2
@@ -84,40 +202,6 @@ watch(
             graft status :
         </h2>
         <hr class="my-4 border-b border-accent">
-        <h3 class="form-label">
-            Creatinine update :
-        </h3>
-        <hr class="border border-dashed my-2 md:my-4 xl:my-8">
-        <div class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8">
-            <FormInput
-                label="latest cr (mg/dL)"
-                name="latest_cr"
-                v-model="form.latest_cr"
-                readonly
-            />
-            <FormDatetime
-                label="date latest cr"
-                name="date_latest_cr"
-                v-model="form.date_latest_cr"
-                readonly
-            />
-            <FormInput
-                :label="`annual cr (mg/dL) (year ${form.annual_year})`"
-                name="annual_cr"
-                v-model="form.annual_cr"
-                readonly
-            />
-            <FormDatetime
-                label="date annual cr"
-                name="date_annual_cr"
-                v-model="form.date_annual_cr"
-                readonly
-            />
-        </div>
-        <h3 class="form-label mt-4 md:mt-8 xl:mt-16">
-            graft status update :
-        </h3>
-        <hr class="border border-dashed my-2 md:my-4 xl:my-8">
         <div class="grid grid-cols-1 md:grid-cols-2 md:gap-4 xl:gap-8">
             <div class="space-y-2 md:space-y-4">
                 <FormRadio
@@ -125,6 +209,7 @@ watch(
                     name="graft_status"
                     :options="configs.graft_status_options"
                     v-model="form.graft_status"
+                    :disabled="form.patient_status === 'dead' && form.graft_status === 'graft loss'"
                 />
                 <FormDatetime
                     label="date update graft status"
@@ -150,6 +235,23 @@ watch(
                     />
                 </div>
                 <GraftLossReport v-model="form.graft_loss_codes" />
+                <Transition name="slide-fade">
+                    <div
+                        class="grid grid-cols-1 md:grid-cols-2 md:gap-4 xl:gap-8"
+                        v-if="form.patient_status === 'alive'"
+                    >
+                        <div>
+                            <label class="form-label">dialysis status (in case patient is alive) :</label>
+                            <FormRadio
+                                class="grid grid-cols-1 gap-2 2xl:grid-cols-3"
+                                name="dialysis_status"
+                                :options="configs.dialysis_status_options"
+                                v-model="form.dialysis_status"
+                                allow-reset
+                            />
+                        </div>
+                    </div>
+                </Transition>
                 <FormTextarea
                     label="graft loss note"
                     name="graft_loss_note"
@@ -196,6 +298,30 @@ watch(
                     />
                 </div>
                 <DeadReport v-model="form.dead_report_codes" />
+                <div class="grid grid-cols-1 md:grid-cols-2 md:gap-4 xl:gap-8">
+                    <div>
+                        <label class="form-label">autopsy perform :</label>
+                        <FormRadio
+                            class="grid grid-cols-1 gap-2 2xl:grid-cols-3"
+                            name="autopsy_perform"
+                            :options="configs.autopsy_perform_options"
+                            v-model="form.autopsy_perform"
+                            allow-reset
+                        />
+                    </div>
+                    <div>
+                        <label class="form-label">dead place :</label>
+                        <FormRadio
+                            class="grid grid-cols-1 gap-2 2xl:grid-cols-3"
+                            name="dead_place"
+                            :options="configs.dead_place_options"
+                            v-model="form.dead_place"
+                            allow-reset
+                            allow-other
+                            ref="deadPlace"
+                        />
+                    </div>
+                </div>
                 <FormTextarea
                     label="dead note"
                     name="dead_note"
@@ -298,6 +424,25 @@ watch(
                 </div>
             </div>
         </div>
+        <SpinnerButton
+            v-if="configs.can.update"
+            :spin="form.processing"
+            @click="timestampUpdate"
+            class="mt-4 md:mt-8 w-full btn-complement"
+        >
+            TIMESTAMP UPDATE
+        </SpinnerButton>
+
+        <FormSelectOther
+            :placeholder="selectOther.placeholder"
+            ref="selectOtherInput"
+            @closed="selectOtherClosed"
+        />
+
+        <ConfirmFormComposable
+            ref="confirmForm"
+            @confirmed="(reason) => confirmed(reason, handleConfirmedAction)"
+        />
     </div>
 </template>
 

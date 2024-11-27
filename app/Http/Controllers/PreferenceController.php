@@ -14,7 +14,7 @@ class PreferenceController extends Controller
 
     public function show(Request $request)
     {
-        $data = (new PreferencesShowAction())($request->user());
+        $data = (new PreferencesShowAction)($request->user());
 
         if ($request->wantsJson()) {
             return $data;

@@ -10,7 +10,7 @@ class ReportPublishController extends Controller
 {
     public function __invoke(string $hashedKey, Request $request)
     {
-        $data = (new ReportPublishAction())($hashedKey, $request->all(), $request->user());
+        $data = (new ReportPublishAction)($hashedKey, $request->all(), $request->user());
 
         if ($request->wantsJson()) {
             return $data;

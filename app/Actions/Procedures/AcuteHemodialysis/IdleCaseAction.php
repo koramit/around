@@ -19,7 +19,7 @@ class IdleCaseAction
 
         return AcuteHemodialysisCaseRecord::query()
             ->select(['id', 'meta', 'patient_id'])
-            ->where('status', (new AcuteHemodialysisCaseRecordStatus())->getCode('active'))
+            ->where('status', (new AcuteHemodialysisCaseRecordStatus)->getCode('active'))
             ->with(['patient:id,hn,profile'])
             ->whereDoesntHave('orders', fn ($q) => $q->activeStatuses())
             ->metaSearchTerms($search)

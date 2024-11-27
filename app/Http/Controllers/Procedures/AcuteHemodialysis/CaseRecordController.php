@@ -76,7 +76,7 @@ class CaseRecordController extends Controller
 
     public function destroy($hashedKey, Request $request)
     {
-        $message = (new CaseRecordDestroyAction())(data: $request->all(), hashedKey: $hashedKey, user: $request->user());
+        $message = (new CaseRecordDestroyAction)(data: $request->all(), hashedKey: $hashedKey, user: $request->user());
 
         if ($request->wantsJson()) {
             return $message;

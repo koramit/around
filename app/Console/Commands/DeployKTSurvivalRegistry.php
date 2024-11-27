@@ -77,6 +77,17 @@ class DeployKTSurvivalRegistry extends Command
                 ->where('name', 'like', '%_kt_survival_%')
                 ->pluck('id')
             );
+        $ktSurvivalCaseCoordinator = Role::query()->create([
+            'name' => 'kt_survival_case_staff',
+            'label' => 'KT Survival Case Staff',
+            'registry_id' => $registry->id,
+        ]);
+        $ktSurvivalCaseCoordinator->abilities()
+            ->attach(Ability::query()
+                ->where('registry_id', $registry->id)
+                ->where('name', 'view_any_kt_survival_cases')
+                ->pluck('id')
+            );
 
         // 4. Clear ability-registry-user related cache
         cache()->forget('ability-registry-map');

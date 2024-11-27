@@ -57,7 +57,7 @@ class SocialLoginController extends Controller
         Auth::login($user);
         (new LoginRecordAction)(
             ip: $request->ip(),
-            agent: new Agent(),
+            agent: new Agent,
             user: $user,
             provider: $this->provider->platform,
         );

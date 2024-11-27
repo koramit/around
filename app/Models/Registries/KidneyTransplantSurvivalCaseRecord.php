@@ -6,7 +6,6 @@ use App\Enums\KidneyTransplantSurvivalCaseStatus;
 use App\Models\CaseRecord;
 use App\Models\Resources\Registry;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class KidneyTransplantSurvivalCaseRecord extends CaseRecord
 {
@@ -42,7 +41,7 @@ class KidneyTransplantSurvivalCaseRecord extends CaseRecord
 
     public function genTitle(): string
     {
-        return "HN {$this->meta['hn']} {$this->patient->full_name} : KT-NO {$this->form['kt_no']} : Date-Tx {$this->form['date_transplant']}";
+        return "HN {$this->meta['hn']} {$this->patient->full_name} : KT-NO {$this->meta['kt_no']} : Date-Tx {$this->meta['date_transplant']}";
     }
 
     public function scopeMetaSearchTerms($query, $search): void

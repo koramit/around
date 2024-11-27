@@ -11,16 +11,16 @@ class UploadController extends Controller
 {
     public function store(Request $request)
     {
-        return (new UploadStoreAction())($request->all());
+        return (new UploadStoreAction)($request->all());
     }
 
     public function show(Request $request)
     {
-        return (new UploadShowAction())($request->input('path'));
+        return (new UploadShowAction)($request->input('path'));
     }
 
     public function destroy(Request $request)
     {
-        return (new UploadDestroyAction())($request->input('path'));
+        return (new UploadDestroyAction)($request->input('path'));
     }
 }

@@ -15,9 +15,7 @@ class AcuteHemodialysisSlotRequestPolicy
      *
      * @return void
      */
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     public function approve(User $user, AcuteHemodialysisSlotRequest $request): bool
     {

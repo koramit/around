@@ -70,7 +70,7 @@ class KidneyTransplantHLATypingReportNote extends Note
 
     public function scopeFilterStatus($query, $status)
     {
-        $caster = new KidneyTransplantHLATypingReportStatus();
+        $caster = new KidneyTransplantHLATypingReportStatus;
         $statuses = $status && $status !== 'all'
             ? [$caster->getCode($status)]
             : [

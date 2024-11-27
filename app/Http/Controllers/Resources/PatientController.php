@@ -14,6 +14,6 @@ class PatientController extends Controller
             'hn' => ['required', 'string'],
         ]);
 
-        return (new PatientShowAction())($request->input('hn'));
+        return (new PatientShowAction)($request->input('hn'));
     }
 }

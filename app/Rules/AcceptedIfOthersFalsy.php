@@ -13,8 +13,7 @@ class AcceptedIfOthersFalsy implements Rule
      */
     public function __construct(
         protected array $data,
-    ) {
-    }
+    ) {}
 
     /**
      * Determine if the validation rule passes.

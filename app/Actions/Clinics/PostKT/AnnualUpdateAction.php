@@ -2,7 +2,6 @@
 
 namespace App\Actions\Clinics\PostKT;
 
-use App\Actions\Clinics\PostKT\CaseBaseAction;
 use App\Extensions\Auth\AvatarUser;
 use App\Models\User;
 use Illuminate\Support\Carbon;
@@ -23,10 +22,10 @@ class AnnualUpdateAction extends CaseBaseAction
 
         $this->updateCreatinine($case);
 
-        $dateTx = Carbon::create($case->form['date_transplant']);
+        $dateTx = Carbon::create($case->meta['date_transplant']);
         $yearTh = now()->year - $dateTx->year;
 
-        if (!isset($case->form["year_{$yearTh}_cr"])) {
+        if (! isset($case->form["year_{$yearTh}_cr"])) {
             return ['ok' => true, 'graft_function' => false];
         }
 

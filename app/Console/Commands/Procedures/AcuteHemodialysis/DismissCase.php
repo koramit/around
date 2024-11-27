@@ -34,7 +34,7 @@ class DismissCase extends Command
         // expire order first
         AcuteHemodialysisOrderNote::query()
             ->select(['id', 'meta', 'status', 'date_note'])
-            ->whereIn('status', (new AcuteHemodialysisOrderStatus())->getActiveStatusCodes())
+            ->whereIn('status', (new AcuteHemodialysisOrderStatus)->getActiveStatusCodes())
             ->where('date_note', '<', now()->subDays(4))
             ->get()
             ->each(function ($order) {
@@ -57,7 +57,7 @@ class DismissCase extends Command
             });
 
         // expire case
-        $status = new AcuteHemodialysisCaseRecordStatus();
+        $status = new AcuteHemodialysisCaseRecordStatus;
         AcuteHemodialysisCaseRecord::query()
             ->select(['id', 'meta', 'created_at', 'status'])
             ->whereIn('status', [
@@ -88,7 +88,7 @@ class DismissCase extends Command
                 $query->where('date_note', '<', now()->subWeek()->subDay());
             })
             ->whereDoesntHave('orders', function ($query) {
-                $query->whereIn('status', (new AcuteHemodialysisOrderStatus())->getActiveStatusCodes())
+                $query->whereIn('status', (new AcuteHemodialysisOrderStatus)->getActiveStatusCodes())
                     ->where('date_note', '<', now()->subDays(4));
             })
             ->with(['lastPerformedOrder'])

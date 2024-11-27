@@ -96,7 +96,7 @@ class AcuteHemodialysisCaseRecord extends CaseRecord
     public function scopeFilterStatus($query, $status)
     {
         // active, incomplete, empty, valid
-        $statusCaster = new AcuteHemodialysisCaseRecordStatus();
+        $statusCaster = new AcuteHemodialysisCaseRecordStatus;
         $statusCodes = match ($status ?? '') {
             'completed' => [
                 $statusCaster->getCode('completed'),

@@ -37,11 +37,7 @@ class SupportTicketController extends Controller
         ]);
     }
 
-    public function store()
-    {
-    }
+    public function store() {}
 
-    public function destroy()
-    {
-    }
+    public function destroy() {}
 }

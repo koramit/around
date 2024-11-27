@@ -17,8 +17,7 @@ class RegistryTypeMainIndexAction
         protected string $registryType,
         protected User|AvatarUser $user,
         protected string $routeName,
-    ) {
-    }
+    ) {}
 
     public function __invoke()
     {

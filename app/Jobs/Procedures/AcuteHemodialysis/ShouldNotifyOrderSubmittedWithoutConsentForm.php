@@ -19,8 +19,7 @@ class ShouldNotifyOrderSubmittedWithoutConsentForm implements ShouldQueue
      */
     public function __construct(
         protected AcuteHemodialysisOrderNote $order
-    ) {
-    }
+    ) {}
 
     /**
      * Execute the job.
@@ -57,7 +56,7 @@ class ShouldNotifyOrderSubmittedWithoutConsentForm implements ShouldQueue
                 'stickerId' => $sticker['stickerId'],
             ]);
         // COUNT LINE NOTIFY
-        $cacheKey = now()->format('Ym') . '-LINE-NOTIFY-COUNT';
+        $cacheKey = now()->format('Ym').'-LINE-NOTIFY-COUNT';
         cache()->increment($cacheKey);
     }
 }

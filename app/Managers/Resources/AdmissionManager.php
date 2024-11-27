@@ -57,7 +57,7 @@ class AdmissionManager
         }
 
         // create
-        $patient = (new PatientManager())->manage($admissionData['hn']);
+        $patient = (new PatientManager)->manage($admissionData['hn']);
         if (! $patient['found']) {
             Log::info($an.' hn from admission but not found in patient api');
 

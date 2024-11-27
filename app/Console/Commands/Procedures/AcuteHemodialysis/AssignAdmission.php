@@ -31,7 +31,7 @@ class AssignAdmission extends Command
             ->whereNull('meta->an')
             ->get()
             ->each(function (AcuteHemodialysisCaseRecord $c) {
-                $admission = (new AdmissionManager())->manage($c->meta['hn'], true);
+                $admission = (new AdmissionManager)->manage($c->meta['hn'], true);
                 if (! $admission['found']) {
                     $this->line("{$c->meta['name']} no admission found");
 

@@ -70,7 +70,7 @@ class AuthenticatedSessionController extends Controller
             Auth::login($user);
             (new LoginRecordAction)(
                 ip: $request->ip(),
-                agent: new Agent(),
+                agent: new Agent,
                 user: $user,
                 daysBeforePasswordExpired: $data['password_expires_in_days'] ?? 0
             );

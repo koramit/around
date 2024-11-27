@@ -49,7 +49,7 @@ class CaseBaseAction
 
     protected function updateCreatinine(KidneyTransplantSurvivalCaseRecord $case): void
     {
-        $api = new PortalAPI();
+        $api = new PortalAPI;
         $result = $api->getLabFromItemCodeAllResults($case->meta['hn'], '0020');
         if (! $result['found']) {
             return;
@@ -64,9 +64,9 @@ class CaseBaseAction
 
         $dateLatestCr = Carbon::create($case->form['date_latest_cr']);
 
-        $dateTransplant = Carbon::create($case->form['date_transplant']);
+        $dateTransplant = Carbon::create($case->meta['date_transplant']);
 
-        if (!$case->form['one_week_cr'] || !$case->form['date_one_week_cr']) {
+        if (! $case->form['one_week_cr'] || ! $case->form['date_one_week_cr']) {
             $dateOneWeek = $dateTransplant->copy()->addWeek();
             $selectedLab = $this->searchNearestLab($dateOneWeek, 2, $labs);
             if ($selectedLab) {
@@ -75,7 +75,7 @@ class CaseBaseAction
             }
         }
 
-        if (!$case->form['one_month_cr'] || !$case->form['date_one_month_cr']) {
+        if (! $case->form['one_month_cr'] || ! $case->form['date_one_month_cr']) {
             $dateOneMonth = $dateTransplant->copy()->addMonth();
             $selectedLab = $this->searchNearestLab($dateOneMonth, 7, $labs);
             if ($selectedLab) {
@@ -84,7 +84,7 @@ class CaseBaseAction
             }
         }
 
-        if (!$case->form['three_month_cr'] || !$case->form['date_three_month_cr']) {
+        if (! $case->form['three_month_cr'] || ! $case->form['date_three_month_cr']) {
             $dateThreeMonth = $dateTransplant->copy()->addMonths(3);
             $selectedLab = $this->searchNearestLab($dateThreeMonth, 14, $labs);
             if ($selectedLab) {
@@ -93,7 +93,7 @@ class CaseBaseAction
             }
         }
 
-        if (!$case->form['six_month_cr'] || !$case->form['date_six_month_cr']) {
+        if (! $case->form['six_month_cr'] || ! $case->form['date_six_month_cr']) {
             $dateSixMonth = $dateTransplant->copy()->addMonths(6);
             $selectedLab = $this->searchNearestLab($dateSixMonth, 14, $labs);
             if ($selectedLab) {
@@ -102,7 +102,7 @@ class CaseBaseAction
             }
         }
 
-        if (!$case->form['discharge_cr'] || !$case->form['date_discharge_cr']) {
+        if (! $case->form['discharge_cr'] || ! $case->form['date_discharge_cr']) {
             $dateDischarged = null;
             if ($case->meta['an'] ?? null) {
                 $dateDischarged = Admission::query()
@@ -124,11 +124,12 @@ class CaseBaseAction
         $nextYear = $dateTransplant->copy();
         while (true) {
             $nextYear->addYear();
-            if ($nextYear->isFuture() || $nextYear->greaterThan($dateLatestCr)) {
+            $coupleMonthsBeforeNextYear = $nextYear->copy()->subDays(60);
+            if ($coupleMonthsBeforeNextYear->isFuture() || $coupleMonthsBeforeNextYear->greaterThan($dateLatestCr)) {
                 break;
             }
 
-            if (!($case->form["year_{$yearCount}_cr"] ?? null) || !($case->form["date_year_{$yearCount}_cr"] ?? null)) {
+            if (! ($case->form["year_{$yearCount}_cr"] ?? null) || ! ($case->form["date_year_{$yearCount}_cr"] ?? null)) {
                 $selectedLab = $this->searchNearestLab($nextYear, 60, $labs);
                 $case->form["year_{$yearCount}_cr"] = $selectedLab->value ?? null;
                 $case->form["date_year_{$yearCount}_cr"] = $selectedLab
@@ -145,7 +146,7 @@ class CaseBaseAction
     protected function searchNearestLab(Carbon $refDate, int $dayOffset, Collection $labs): ?object
     {
         $minutesOffset = $dayOffset * 24 * 60;
-        $nearestLab = $labs->map(fn ($lab) => (object)[
+        $nearestLab = $labs->map(fn ($lab) => (object) [
             'value' => $lab->value_numeric,
             'date_lab' => $lab->datetime_specimen_received,
             'time_diff' => abs($refDate->diffInMinutes(Carbon::create($lab->datetime_specimen_received))),

@@ -3,8 +3,12 @@
 namespace App\Http\Controllers\Clinics\PostKT;
 
 use App\Actions\Clinics\PostKT\AnnualUpdateAction;
+use App\Actions\Clinics\PostKT\CaseDestroyAction;
 use App\Actions\Clinics\PostKT\CaseEditAction;
+use App\Actions\Clinics\PostKT\CaseIndexAction;
 use App\Actions\Clinics\PostKT\CaseStoreAction;
+use App\Actions\Clinics\PostKT\CaseUpdateAction;
+use App\Actions\Clinics\PostKT\TimestampUpdateAction;
 use App\Http\Controllers\Controller;
 use App\Traits\AppLayoutSessionFlashable;
 use Illuminate\Http\Request;
@@ -22,19 +26,18 @@ class CaseRecordController extends Controller
         }
     }
 
-    public function index()
+    public function index(Request $request, CaseIndexAction $action)
     {
-        $configs = [
-            'can' => ['create' => true],
-            'routes' => [
-                'store' => route('clinics.post-kt.store'),
-                'admissionsShow' => route('resources.api.admissions.show')
-            ],
-        ];
+        $data = $action($request->all(), $request->user(), $request->route()->getName());
 
-        return Inertia::render('Clinics/PostKT/Index', [
-            'configs' => $configs,
-        ]);
+        if ($request->wantsJson()) {
+            return $data;
+        }
+
+        $this->setFlash($data['flash']);
+        unset($data['flash']);
+
+        return Inertia::render('Clinics/PostKT/Index', [...$data]);
     }
 
     public function store(Request $request, CaseStoreAction $action)
@@ -62,6 +65,28 @@ class CaseRecordController extends Controller
         return Inertia::render('Clinics/PostKT/Edit', [...$data]);
     }
 
+    public function update(string $hashedKey, Request $request, CaseUpdateAction $action)
+    {
+        $message = $action($hashedKey, $request->all(), $request->user());
+
+        if ($request->wantsJson()) {
+            return $message;
+        }
+
+        return redirect()->route('clinics.post-kt.index')->with('message', $message);
+    }
+
+    public function destroy(string $hashedKey, Request $request, CaseDestroyAction $action)
+    {
+        $message = $action($hashedKey, $request->user());
+
+        if ($request->wantsJson()) {
+            return $message;
+        }
+
+        return redirect()->route('clinics.post-kt.index')->with('message', $message);
+    }
+
     public function annualUpdate(string $hashedKey, Request $request, AnnualUpdateAction $action)
     {
         $data = $action($hashedKey, $request->user());
@@ -71,5 +96,16 @@ class CaseRecordController extends Controller
         }
 
         return redirect()->route('clinics.post-kt.edit', $hashedKey);
+    }
+
+    public function timestampUpdate(string $hashedKey, Request $request, TimestampUpdateAction $action)
+    {
+        $message = $action($hashedKey, $request->all(), $request->user());
+
+        if ($request->wantsJson()) {
+            return $message;
+        }
+
+        return redirect()->route('clinics.post-kt.index')->with('message', $message);
     }
 }

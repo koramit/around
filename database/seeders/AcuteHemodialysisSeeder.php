@@ -52,7 +52,7 @@ class AcuteHemodialysisSeeder extends Seeder
         $anRun = env('SEED_AN_START');
         $count = 0;
         do {
-            $admission = (new AdmissionManager())->manage($anRun);
+            $admission = (new AdmissionManager)->manage($anRun);
             $anRun++;
             if (! $admission['found']) {
                 continue;
@@ -73,7 +73,7 @@ class AcuteHemodialysisSeeder extends Seeder
         $dateNote = now()->tz(7);
         $countAn = 1;
         for ($day = 0; $day <= 3; $day++) { // next 3 days
-            if ($dateNote->is((new AcuteHemodialysisAction())->getUnitDayOff())) {
+            if ($dateNote->is((new AcuteHemodialysisAction)->getUnitDayOff())) {
                 $dateNote->addDay();
 
                 continue;
@@ -108,7 +108,7 @@ class AcuteHemodialysisSeeder extends Seeder
         $inCharge = User::query()->where('login', 'in-charge.ahd')->first();
         AcuteHemodialysisSlotRequest::query()
             ->each(function ($r) use ($inCharge) {
-                (new SlotRequestUpdateAction())($r->hashed_key, ['approve' => true], $inCharge);
+                (new SlotRequestUpdateAction)($r->hashed_key, ['approve' => true], $inCharge);
             });
 
         // fake patient name
@@ -157,13 +157,13 @@ class AcuteHemodialysisSeeder extends Seeder
         if (! $admission->dismissed_at) {
             $data['an'] = $admission->an;
         }
-        $case = (new CaseRecordStoreAction())($data, $user);
+        $case = (new CaseRecordStoreAction)($data, $user);
         $data['dialysis_type'] = $dialysisType;
         $data['attending_staff'] = $staff->name;
         $data['patient_type'] = 'Acute';
         $data['dialysis_at'] = $dialysisAt;
         $data['case_record_hashed_key'] = $case['key'];
         $data['date_note'] = $dateNote;
-        (new OrderStoreAction())($data, $user);
+        (new OrderStoreAction)($data, $user);
     }
 }

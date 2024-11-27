@@ -50,7 +50,7 @@ class SlotRequestController extends Controller
 
     public function destroy(string $hashedKey, Request $request)
     {
-        $reply = (new SlotRequestDestroyAction())(hashedKey: $hashedKey, data: $request->all(), user: $request->user());
+        $reply = (new SlotRequestDestroyAction)(hashedKey: $hashedKey, data: $request->all(), user: $request->user());
 
         if ($request->wantsJson()) {
             return $reply;
