@@ -125,6 +125,7 @@ class CaseBaseAction
         while (true) {
             $nextYear->addYear();
             $coupleMonthsBeforeNextYear = $nextYear->copy()->subDays(60);
+            logger($coupleMonthsBeforeNextYear->format('Y-m-d'));
             if ($coupleMonthsBeforeNextYear->isFuture() || $coupleMonthsBeforeNextYear->greaterThan($dateLatestCr)) {
                 break;
             }

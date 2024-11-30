@@ -403,7 +403,7 @@ const { selectOtherInput, selectOther, selectOtherClosed } = useSelectOther();
         <hr class="border border-dashed my-2 md:my-4 xl:my-8">
         <div class="space-y-4 xl:space-y-8">
             <div
-                v-for="key in 30"
+                v-for="key in parseInt(form.annual_year)"
                 :key
             >
                 <div
@@ -424,6 +424,12 @@ const { selectOtherInput, selectOther, selectOtherClosed } = useSelectOther();
                 </div>
             </div>
         </div>
+        <hr class="border border-dashed my-2 md:my-4 xl:my-8">
+        <FormTextarea
+            label="remark"
+            name="remark"
+            v-model="form.remark"
+        />
         <SpinnerButton
             v-if="configs.can.update"
             :spin="form.processing"

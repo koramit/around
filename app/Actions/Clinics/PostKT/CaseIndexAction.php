@@ -23,7 +23,7 @@ class CaseIndexAction
 
         $cases = KidneyTransplantSurvivalCaseRecord::query()
             ->with(['patient'])
-            ->orderBy('meta->case_no')
+            ->orderBy('meta->kt_no')
             ->where('status', '!=', KidneyTransplantSurvivalCaseStatus::DELETED)
             ->paginate($user->items_per_page)
             ->withQueryString()
