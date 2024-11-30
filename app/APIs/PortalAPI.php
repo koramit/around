@@ -148,6 +148,7 @@ class PortalAPI implements AuthenticationAPI, CovidInfoAPI, PatientAPI
     {
         try {
             $response = Http::withToken(config('services.portal_token'))
+                ->timeout(60)
                 ->retry(2, 200)
                 ->withOptions(['verify' => config('services.portal_verify_ssl')])
                 ->acceptJson()
