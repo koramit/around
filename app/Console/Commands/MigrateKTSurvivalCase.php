@@ -218,8 +218,7 @@ class MigrateKTSurvivalCase extends Command
 
         $admissionTxFiltered = collect($admissionData['admissions'])
             ->filter(static fn ($admission) =>
-                (str_contains($admission['ward_name'], 'Transplant')
-                    || $dateTx->greaterThanOrEqualTo(Carbon::create(explode(' ', $admission['admitted_at'])[0])))
+                $dateTx->greaterThanOrEqualTo(Carbon::create(explode(' ', $admission['admitted_at'])[0]))
                 && $dateTx->lessThan(Carbon::create(explode(' ', $admission['discharged_at'])[0]))
             )->first();
 
@@ -247,7 +246,7 @@ class MigrateKTSurvivalCase extends Command
                 $patient = $this->createPatient($data);
                 $patientNote = 'NO PATIENT RECORD';
             }
-            $case = (new CaseStoreAction())->createWithPatient($patient, $dateTx->format('Y-m-d'), $caseId, $caseNo, $user);
+            $case = (new CaseStoreAction())->createWithPatient($patient, $dateTx->format('Y-m-d'), $caseId, $caseNo, $user, !$patientData['found']);
         }
 
 
@@ -407,6 +406,20 @@ class MigrateKTSurvivalCase extends Command
             $form['date_latest_cr'] = $data['last crDate']
                 ? Carbon::create($data['last crDate'])->format('Y-m-d')
                 : null;
+        }
+
+        $dateGraftLoss = $form['date_graft_loss']
+            ? Carbon::create($form['date_graft_loss'])
+            : null;
+
+        if ($dateGraftLoss) {
+            $graftFunctionYears = $dateGraftLoss->year - $dateTx->year;
+            $txPassedYears = Carbon::now()->year - $dateTx->year;
+            for($y = ($graftFunctionYears+1); $y <= $txPassedYears; $y++) {
+                if (array_key_exists("year_{$y}_cr", $form->toArray())) {
+                    unset($form["year_{$y}_cr"], $form["date_year_{$y}_cr"]);
+                }
+            }
         }
 
         $case->form = $form;

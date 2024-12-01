@@ -88,7 +88,9 @@ class CaseStoreAction extends CaseBaseAction
             'hn' => $admission->patient->hn,
             'an' => $admission->an,
             'name' => $admission->patient->full_name,
-            'month' => Carbon::create($validated['date_transplant'])->month
+            'month' => Carbon::create($validated['date_transplant'])->month,
+            'no_patient_record' => false,
+            'no_patient_dob' => false,
         ];
         $case->save();
         $case->update(['meta->title' => $case->genTitle()]);
@@ -99,7 +101,7 @@ class CaseStoreAction extends CaseBaseAction
         return ['key' => $case->hashed_key];
     }
 
-    public function createWithPatient(Patient $patient, string $dateTx, int $caseId, string $caseNo, User $user): KidneyTransplantSurvivalCaseRecord
+    public function createWithPatient(Patient $patient, string $dateTx, int $caseId, string $caseNo, User $user, bool $noPatient = false): KidneyTransplantSurvivalCaseRecord
     {
         $case = new KidneyTransplantSurvivalCaseRecord;
 
@@ -115,7 +117,9 @@ class CaseStoreAction extends CaseBaseAction
             'hn' => $patient->hn,
             'an' => null,
             'name' => $patient->full_name,
-            'month' => Carbon::create($dateTx)->month
+            'month' => Carbon::create($dateTx)->month,
+            'no_patient_record' => $noPatient,
+            'no_patient_dob' => $patient->dob->year === 1900,
         ];
         $case->save();
         $case->update(['meta->title' => $case->genTitle()]);

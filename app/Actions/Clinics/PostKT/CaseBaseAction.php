@@ -129,7 +129,10 @@ class CaseBaseAction
                 break;
             }
 
-            if (! ($case->form["year_{$yearCount}_cr"] ?? null) || ! ($case->form["date_year_{$yearCount}_cr"] ?? null)) {
+            if (
+                ! ($case->form["year_{$yearCount}_cr"] ?? null)
+                || ! ($case->form["date_year_{$yearCount}_cr"] ?? null)
+            ) {
                 $selectedLab = $this->searchNearestLab($nextYear, 60, $labs);
                 $case->form["year_{$yearCount}_cr"] = $selectedLab->value ?? null;
                 $case->form["date_year_{$yearCount}_cr"] = $selectedLab

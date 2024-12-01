@@ -15,6 +15,7 @@ import FormSelectOther from '../../../Components/Controls/FormSelectOther.vue';
 import {useFormAutosave} from '../../../functions/useFormAutosave.js';
 import {useConfirmForm} from '../../../functions/useConfirmForm.js';
 import ConfirmFormComposable from '../../../Components/Forms/ConfirmFormComposable.vue';
+import AlertMessage from '../../../Components/Helpers/AlertMessage.vue';
 
 const props = defineProps({
     formData: {type: Object, required: true},
@@ -133,6 +134,13 @@ const { selectOtherInput, selectOther, selectOtherClosed } = useSelectOther();
             CASE DATA
         </h2>
         <hr class="my-4 border-b border-accent">
+        <AlertMessage
+            class="my-4"
+            v-if="form.no_patient_record"
+            type="warning"
+            title="Attention"
+            :message="form.no_patient_record_message"
+        />
         <div class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8">
             <FormInput
                 label="KT NO"
@@ -157,6 +165,12 @@ const { selectOtherInput, selectOther, selectOtherClosed } = useSelectOther();
                 readonly
                 name="status"
                 v-model="caseStatus"
+            />
+            <FormInput
+                label="date last update"
+                readonly
+                name="date_last_update_formatted"
+                v-model="form.date_last_update_formatted"
             />
         </div>
         <h2

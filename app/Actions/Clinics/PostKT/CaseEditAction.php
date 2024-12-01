@@ -17,7 +17,14 @@ class CaseEditAction extends CaseBaseAction
         $case = $this->getCaseRecord($hashedKey);
 
         $dateTx = Carbon::create($case->meta['date_transplant']);
-        $yearTh = Carbon::now()->year - $dateTx->year;
+        $dateGraftLoss = $case->form['date_graft_loss']
+            ? \Carbon\Carbon::create($case->form['date_graft_loss'])
+            : null;
+
+        $yearTh = $dateGraftLoss
+            ? $dateGraftLoss->year - $dateTx->year
+            : Carbon::now()->year - $dateTx->year;
+
         $case->form['annual_year'] = $yearTh;
         if (isset($case->form["year_{$yearTh}_cr"])) {
             $case->form['annual_cr'] = $case->form["year_{$yearTh}_cr"];
@@ -29,9 +36,18 @@ class CaseEditAction extends CaseBaseAction
         $form['kt_id'] = $case->meta['kt_id'];
         $form['date_transplant'] = $case->meta['date_transplant'];
         $form['date_transplant_formatted'] = Carbon::create($case->meta['date_transplant'])->format('M d, Y');
+        $form['date_last_update_formatted'] = Carbon::create($case->form['date_last_update'])->format('M d, Y');
         $form['date_latest_cr_formatted'] = $form['date_latest_cr']
             ? Carbon::create($case->form['date_latest_cr'])->format('M d, Y')
             : null;
+        $form['no_patient_record'] = $case->meta['no_patient_record'];
+        if ($form['no_patient_record']) {
+            if ($case->meta['no_patient_dob']) {
+                $form['no_patient_record_message'] = 'The patient record and the DOB were not found.';
+            } else {
+                $form['no_patient_record_message'] = 'The patient record was not found.';
+            }
+        }
         foreach ($form as $field => $value) {
             if (in_array(gettype($value), ['double', 'float', 'integer'])) {
                 $form[$field] = (string) $value;
