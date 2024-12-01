@@ -1,15 +1,24 @@
 <script setup>
 
-import {ref} from 'vue';
+import {reactive, ref} from 'vue';
 import CreateForm from '../../../Partials/Clinics/PostKT/CreateForm.vue';
 import {useForm} from '@inertiajs/vue3';
 import NoteStatusBadge from '../../../Components/Helpers/NoteStatusBadge.vue';
 import ActionColumn from '../../../Components/Controls/ActionColumn.vue';
 import PaginationNav from '../../../Components/Helpers/PaginationNav.vue';
+import SearchIndex from '../../../Components/Controls/SearchIndex.vue';
+import FormSelect from '../../../Components/Controls/FormSelect.vue';
 
 const props = defineProps({
     caseRecords: {type: Object, required: true},
     configs: {type: Object, required: true},
+});
+
+const searchInput = ref(null);
+const searchForm = reactive({
+    search: props.configs.filters.search,
+    scope: props.configs.filters.scope,
+    mo: props.configs.filters.mo,
 });
 
 const createFormRef = ref(null);
@@ -23,6 +32,30 @@ function createCase(data) {
 <template>
     <div>
         <div class="flex flex-col-reverse md:flex-row justify-between items-center mb-4">
+            <SearchIndex
+                class="lg:hidden"
+                :scopes="configs.scopes"
+                :form="searchForm"
+                @search-changed="(val) => searchForm.search = val"
+                @scope-changed="(val) => searchForm.scope = val"
+                ref="searchInput"
+            />
+            <div class="hidden lg:flex lg:gap-x-2">
+                <SearchIndex
+                    :scopes="configs.scopes"
+                    :form="searchForm"
+                    @search-changed="(val) => searchForm.search = val"
+                    @scope-changed="(val) => searchForm.scope = val"
+                    ref="searchInput"
+                />
+                <FormSelect
+                    class="hidden lg:block lg:w-auto"
+                    v-model="searchForm.mo"
+                    name="md"
+                    :options="configs.month_options"
+                    placeholder="Filter by Month"
+                />
+            </div>
             <button
                 v-if="configs.can.create"
                 class="btn btn-accent w-full mb-4 md:w-auto md:px-4 md:mb-0"

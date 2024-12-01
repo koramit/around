@@ -25,7 +25,28 @@ class CaseIndexAction
             ->with(['patient'])
             ->orderBy('meta->kt_no')
             ->where('status', '!=', KidneyTransplantSurvivalCaseStatus::DELETED)
-            ->paginate($user->items_per_page)
+            ->when(! ($filters['scope'] ?? null),
+                fn ($query)
+                    => $query->where('status', KidneyTransplantSurvivalCaseStatus::ACTIVE)
+            )->when(($filters['scope'] ?? null) && $filters['scope'] !== 'all',
+                fn ($query)
+                    => $query->where('status', KidneyTransplantSurvivalCaseStatus::fromLabel($filters['scope']))
+            )->when($filters['mo'] ?? null,
+                fn ($query) => $query->where('meta->month', match ($filters['mo']) {
+                    'Jan' => 1,
+                    'Feb' => 2,
+                    'Mar' => 3,
+                    'Apr' => 4,
+                    'May' => 5,
+                    'Jun' => 6,
+                    'Jul' => 7,
+                    'Aug' => 8,
+                    'Sep' => 9,
+                    'Oct' => 10,
+                    'Nov' => 11,
+                    'Dec' => 12,
+                })
+            )->paginate($user->items_per_page)
             ->withQueryString()
             ->through(function (KidneyTransplantSurvivalCaseRecord $case) {
                 $dateTx = Carbon::create($case->meta['date_transplant']);
@@ -54,10 +75,17 @@ class CaseIndexAction
         $flash = $this->getFlash('Kidney Transplant Survival - Cases', $user);
         $flash['action-menu'][] = $this->getSetHomePageActionMenu($routeName, $user->home_page);
         $configs = [
+            'scopes' => ['all', 'active', 'graft loss', 'dead', 'loss f/u'],
+            'month_options' => ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
             'can' => ['create' => true],
             'routes' => [
                 'store' => route('clinics.post-kt.store'),
                 'admissionsShow' => route('resources.api.admissions.show'),
+            ],
+            'filters' => [
+                'search' => $filters['search'] ?? '',
+                'scope' => $filters['scope'] ?? 'active',
+                'mo' => $filters['mo'] ?? '',
             ],
         ];
 

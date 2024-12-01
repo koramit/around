@@ -32,4 +32,14 @@ enum KidneyTransplantSurvivalCaseStatus: int
             'loss follow up / loss follow up' => self::LOSS_FOLLOW_UP,
         };
     }
+
+    public static function fromLabel(string $label): self
+    {
+        return match ($label) {
+            'active' => self::ACTIVE,
+            'graft loss' => self::GRAFT_LOSS,
+            'loss f/u' => self::LOSS_FOLLOW_UP,
+            'dead' => self::DEAD,
+        };
+    }
 }
