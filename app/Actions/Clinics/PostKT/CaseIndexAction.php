@@ -36,7 +36,7 @@ class CaseIndexAction
                     'date_transplant' => $dateTx->format('M d, Y'),
                     'patient' => 'HN '.$case->meta['hn'].' '.$case->meta['name'],
                     'status' => $case->status->label(),
-                    'annual_cr' => $case->form["year_{$yearTh}_cr"] ?? null,
+                    'annual_cr' => (string) ($case->form["year_{$yearTh}_cr"] ?? null),
                     'last_update' => Carbon::create($case->form['date_last_update'])->format('M d, Y'),
                     'actions' => [
                         [
