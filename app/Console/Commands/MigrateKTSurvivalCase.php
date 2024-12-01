@@ -217,10 +217,11 @@ class MigrateKTSurvivalCase extends Command
         }
 
         $admissionTxFiltered = collect($admissionData['admissions'])
-            ->filter(static fn($admission)
-            => str_contains($admission['ward_name'], 'Transplant')
-                && $dateTx->lessThan(Carbon::create($admission['discharged_at']))
-            )->last();
+            ->filter(static fn ($admission) =>
+                (str_contains($admission['ward_name'], 'Transplant')
+                    || $dateTx->greaterThanOrEqualTo(Carbon::create(explode(' ', $admission['admitted_at'])[0])))
+                && $dateTx->lessThan(Carbon::create(explode(' ', $admission['discharged_at'])[0]))
+            )->first();
 
         if ($admissionTxFiltered) {
             $admission = (new AdmissionManager())->manage($admissionTxFiltered['an'])['admission'];
