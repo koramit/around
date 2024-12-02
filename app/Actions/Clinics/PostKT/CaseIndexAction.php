@@ -25,7 +25,14 @@ class CaseIndexAction
             ->with(['patient'])
             ->orderBy('meta->kt_no')
             ->where('status', '!=', KidneyTransplantSurvivalCaseStatus::DELETED)
-            ->when(! ($filters['scope'] ?? null),
+            ->when($filters['search'] ?? null,
+                fn ($query)
+                    => $query->where(
+                        fn ($q) => $q->where('meta->kt_no', 'like', $filters['search'] . '%')
+                            ->orWhere('meta->hn', 'like', $filters['search'] . '%')
+                            ->orWhere('meta->name', 'like', '%'. $filters['search'] . '%')
+                )
+            )->when(! ($filters['scope'] ?? null),
                 fn ($query)
                     => $query->where('status', KidneyTransplantSurvivalCaseStatus::ACTIVE)
             )->when(($filters['scope'] ?? null) && $filters['scope'] !== 'all',
