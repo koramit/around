@@ -15,39 +15,35 @@ const modal = ref(null);
 const anInput = ref(null);
 const busy = ref(false);
 const form = reactive({
-    an: null,
     hn: null,
     date_transplant: null,
     case_no: null,
 });
-const admission = reactive({
-    an: null,
+const patient = reactive({
     hn: null,
     name: null,
     gender: null,
     age: null,
-    ward_admit: null,
-    admitted_at: null,
-    discharged_at: null,
 });
 const errors = reactive({
-    an: null,
+    hn: null,
 });
 
-function searchAdmission() {
+function searchPatient() {
     busy.value = true;
-    errors.an = null;
-    Object.keys(admission).map(k => admission[k] = null);
+    errors.hn = null;
+    Object.keys(patient).map(k => patient[k] = null);
 
     window.axios
-        .post(props.serviceEndpoint, {key: form.an})
+        .post(props.serviceEndpoint, {hn: form.hn})
         .then((response) => {
             if (! response.data.found) {
-                errors.an = response.data.message;
+                errors.hn = response.data.message;
                 return;
             }
 
-            Object.keys(admission).map(k => admission[k] = response.data[k]);
+            Object.keys(patient).map(k => patient[k] = response.data[k] ?? null);
+            patient.hn = form.hn;
         })
         .catch((error) => {
             console.log(error);
@@ -59,13 +55,12 @@ function searchAdmission() {
 
 function open() {
     modal.value.open();
-    Object.keys(admission).map(k => admission[k] = null);
+    Object.keys(patient).map(k => patient[k] = null);
     nextTick(() => anInput.value.focus());
 }
 
 function confirm() {
-    form.an = admission.an;
-    form.hn = admission.hn;
+    form.hn = patient.hn;
     emits('confirmed', {...form});
     modal.value.close();
 }
@@ -81,38 +76,38 @@ defineExpose({ open });
         >
             <template #header>
                 <div class="font-semibold text-complement">
-                    Search Admission
+                    Search HN
                 </div>
             </template>
             <template #body>
                 <div class="py-4 my-2 md:py-6 md:my-4 border-t border-b border-accent-darker">
                     <FormInput
-                        label="an"
-                        name="an"
-                        v-model="form.an"
+                        label="hn"
+                        name="hn"
+                        v-model="form.hn"
                         type="tel"
-                        :error="errors.an"
+                        :error="errors.hn"
                         ref="anInput"
-                        @keydown.enter="searchAdmission"
+                        @keydown.enter="searchPatient"
                     />
                     <SpinnerButton
                         :spin="busy"
                         class="btn-complement w-full mt-2"
-                        @click="searchAdmission"
-                        :disabled="!form.an?.length"
+                        @click="searchPatient"
+                        :disabled="!form.hn?.length"
                     >
                         SEARCH
                     </SpinnerButton>
                     <hr class="my-4 md:my-6">
-                    <span class="form-label block">admission data</span>
+                    <span class="form-label block">Patient data</span>
                     <div
-                        v-if="!admission.hn"
+                        v-if="!patient.hn"
                         class="bg-white rounded shadow p-2 lg:p-4 text-sm"
                         :class="{ 'animate-pulse': busy }"
                     >
                         <div
                             class="mt-1"
-                            v-for="key in Object.keys(admission)"
+                            v-for="key in Object.keys(patient)"
                             :key="key"
                         >
                             <span class="bg-gray-100 text-gray-100 whitespace-nowrap">
@@ -126,14 +121,14 @@ defineExpose({ open });
                     >
                         <p
                             class="mt-1 whitespace-nowrap"
-                            v-for="key in [...Object.keys(admission)].filter(k => admission[k])"
+                            v-for="key in [...Object.keys(patient)].filter(k => patient[k])"
                             :key="key"
                         >
-                            <span class="text-complement uppercase font-semibold">{{ key.replaceAll('_', ' ') }} : </span> {{ admission[key] }}
+                            <span class="text-complement uppercase font-semibold">{{ key.replaceAll('_', ' ') }} : </span> {{ patient[key] }}
                         </p>
                     </div>
                     <transition name="slide-fade">
-                        <div v-if="admission.hn">
+                        <div v-if="patient.hn">
                             <hr class="my-4 md:my-6">
                             <FormDatetime
                                 label="date transplant"
@@ -156,7 +151,7 @@ defineExpose({ open });
                     <button
                         class="btn btn-accent"
                         @click="confirm"
-                        :disabled="!admission.an || !form.date_transplant || !form.case_no"
+                        :disabled="!patient.hn || !form.date_transplant || !form.case_no"
                     >
                         Confirm
                     </button>

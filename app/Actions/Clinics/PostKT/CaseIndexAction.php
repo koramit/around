@@ -23,21 +23,18 @@ class CaseIndexAction
 
         $cases = KidneyTransplantSurvivalCaseRecord::query()
             ->with(['patient'])
-            ->orderBy('meta->kt_no')
+            ->orderBy('form->date_last_update')
             ->where('status', '!=', KidneyTransplantSurvivalCaseStatus::DELETED)
             ->when($filters['search'] ?? null,
-                fn ($query)
-                    => $query->where(
-                        fn ($q) => $q->where('meta->kt_no', 'like', $filters['search'] . '%')
-                            ->orWhere('meta->hn', 'like', $filters['search'] . '%')
-                            ->orWhere('meta->name', 'like', '%'. $filters['search'] . '%')
+                fn ($query) => $query->where(
+                    fn ($q) => $q->where('meta->kt_no', 'like', $filters['search'].'%')
+                        ->orWhere('meta->hn', 'like', $filters['search'].'%')
+                        ->orWhere('meta->name', 'like', '%'.$filters['search'].'%')
                 )
             )->when(! ($filters['scope'] ?? null),
-                fn ($query)
-                    => $query->where('status', KidneyTransplantSurvivalCaseStatus::ACTIVE)
+                fn ($query) => $query->where('status', KidneyTransplantSurvivalCaseStatus::ACTIVE)
             )->when(($filters['scope'] ?? null) && $filters['scope'] !== 'all',
-                fn ($query)
-                    => $query->where('status', KidneyTransplantSurvivalCaseStatus::fromLabel($filters['scope']))
+                fn ($query) => $query->where('status', KidneyTransplantSurvivalCaseStatus::fromLabel($filters['scope']))
             )->when($filters['mo'] ?? null,
                 fn ($query) => $query->where('meta->month', match ($filters['mo']) {
                     'Jan' => 1,
@@ -55,7 +52,7 @@ class CaseIndexAction
                 })
             )->paginate($user->items_per_page)
             ->withQueryString()
-            ->through(function (KidneyTransplantSurvivalCaseRecord $case) {
+            ->through(function (KidneyTransplantSurvivalCaseRecord $case) use ($user) {
                 $dateTx = Carbon::create($case->meta['date_transplant']);
                 $yearTh = Carbon::now()->year - $dateTx->year;
 
@@ -73,7 +70,7 @@ class CaseIndexAction
                             'icon' => 'edit',
                             'theme' => 'accent',
                             'route' => route('clinics.post-kt.edit', $case->hashed_key),
-                            'can' => true, // @TODO set policy
+                            'can' => $user->can('edit', $case),
                         ],
                     ],
                 ];
@@ -81,13 +78,23 @@ class CaseIndexAction
 
         $flash = $this->getFlash('Kidney Transplant Survival - Cases', $user);
         $flash['action-menu'][] = $this->getSetHomePageActionMenu($routeName, $user->home_page);
+        $flash['action-menu'][] = [
+            'label' => 'Update all by month',
+            'as' => 'button',
+            'icon' => 'calendar-check',
+            'name' => 'update-by-month',
+            /*'route' => route('clinics.post-kt.update', $case->hashed_key),*/
+            'can' => $user->can('update_kt_survival_case'),
+        ];
+
         $configs = [
             'scopes' => ['all', 'active', 'graft loss', 'dead', 'loss f/u'],
             'month_options' => ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
             'can' => ['create' => true],
             'routes' => [
                 'store' => route('clinics.post-kt.store'),
-                'admissionsShow' => route('resources.api.admissions.show'),
+                'patients_show' => route('resources.api.patients.show'),
+                'month_cases' => route('clinics.post-kt.month-cases', 'month'),
             ],
             'filters' => [
                 'search' => $filters['search'] ?? '',

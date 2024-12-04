@@ -6,9 +6,11 @@ use App\Actions\Clinics\PostKT\AnnualUpdateAction;
 use App\Actions\Clinics\PostKT\CaseDestroyAction;
 use App\Actions\Clinics\PostKT\CaseEditAction;
 use App\Actions\Clinics\PostKT\CaseIndexAction;
+use App\Actions\Clinics\PostKT\CaseIndexByMothAction;
 use App\Actions\Clinics\PostKT\CaseStoreAction;
 use App\Actions\Clinics\PostKT\CaseUpdateAction;
 use App\Actions\Clinics\PostKT\TimestampUpdateAction;
+use App\Actions\Clinics\PostKT\TimestampUpdateByCrAction;
 use App\Http\Controllers\Controller;
 use App\Traits\AppLayoutSessionFlashable;
 use Illuminate\Http\Request;
@@ -91,6 +93,17 @@ class CaseRecordController extends Controller
     {
         $data = $action($hashedKey, $request->user());
 
+        if ($request->wantsJson() || $request->method() == 'POST') {
+            return $data;
+        }
+
+        return redirect()->route('clinics.post-kt.edit', $hashedKey);
+    }
+
+    public function annualUpdateByCr(string $hashedKey, Request $request, AnnualUpdateAction $action)
+    {
+        $data = $action($hashedKey, $request->user(), true);
+
         if ($request->wantsJson()) {
             return $data;
         }
@@ -107,5 +120,21 @@ class CaseRecordController extends Controller
         }
 
         return redirect()->route('clinics.post-kt.index')->with('message', $message);
+    }
+
+    public function timestampUpdateByCr(string $hashedKey, Request $request, TimestampUpdateByCrAction $action)
+    {
+        $data = $action($hashedKey, $request->user());
+
+        if ($request->wantsJson()) {
+            return $data;
+        }
+
+        return redirect()->route('clinics.post-kt.edit', $hashedKey);
+    }
+
+    public function monthCases(string $month, Request $request, CaseIndexByMothAction $action)
+    {
+        return $action($month, $request->user());
     }
 }

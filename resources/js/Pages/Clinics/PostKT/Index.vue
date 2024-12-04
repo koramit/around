@@ -1,13 +1,15 @@
 <script setup>
 
-import {reactive, ref} from 'vue';
+import {reactive, ref, watch} from 'vue';
 import CreateForm from '../../../Partials/Clinics/PostKT/CreateForm.vue';
-import {useForm} from '@inertiajs/vue3';
+import {router, useForm} from '@inertiajs/vue3';
 import NoteStatusBadge from '../../../Components/Helpers/NoteStatusBadge.vue';
 import ActionColumn from '../../../Components/Controls/ActionColumn.vue';
 import PaginationNav from '../../../Components/Helpers/PaginationNav.vue';
 import SearchIndex from '../../../Components/Controls/SearchIndex.vue';
 import FormSelect from '../../../Components/Controls/FormSelect.vue';
+import UpdateByMonth from '../../../Partials/Clinics/PostKT/UpdateByMonth.vue';
+import {useActionStore} from '../../../functions/useActionStore.js';
 
 const props = defineProps({
     caseRecords: {type: Object, required: true},
@@ -22,11 +24,27 @@ const searchForm = reactive({
 });
 
 const createFormRef = ref(null);
+const updateFormRef = ref(null);
 
 function createCase(data) {
     useForm({...data})
         .post(props.configs.routes.store);
 }
+
+const {actionStore} = useActionStore();
+watch (
+    () => actionStore.value,
+    (value) => {
+        switch (value.name) {
+        case 'update-by-month':
+            updateFormRef.value.open();
+            break;
+        default:
+            return;
+        }
+    },
+    {deep: true}
+);
 </script>
 
 <template>
@@ -125,9 +143,15 @@ function createCase(data) {
         <PaginationNav :links="caseRecords.links" />
 
         <CreateForm
-            :service-endpoint="configs.routes.admissionsShow"
+            :service-endpoint="configs.routes.patients_show"
             ref="createFormRef"
             @confirmed="createCase"
+        />
+
+        <UpdateByMonth
+            ref="updateFormRef"
+            :url="configs.routes.month_cases"
+            @done="router.reload()"
         />
     </div>
 </template>

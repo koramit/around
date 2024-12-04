@@ -18,7 +18,7 @@ class CaseEditAction extends CaseBaseAction
 
         $dateTx = Carbon::create($case->meta['date_transplant']);
         $dateGraftLoss = $case->form['date_graft_loss']
-            ? \Carbon\Carbon::create($case->form['date_graft_loss'])
+            ? Carbon::create($case->form['date_graft_loss'])
             : null;
 
         $yearTh = $dateGraftLoss
@@ -96,9 +96,13 @@ class CaseEditAction extends CaseBaseAction
                 'update' => route('clinics.post-kt.update', $case->hashed_key),
                 'timestamp_update' => route('clinics.post-kt.timestamp-update', $case->hashed_key),
                 'destroy' => route('clinics.post-kt.destroy', $case->hashed_key),
+                'annual_update' => route('clinics.post-kt.annual-update', $case->hashed_key),
+                'annual_update_by_latest_cr' => route('clinics.post-kt.annual-update-by-latest-cr', $case->hashed_key),
+                'timestamp_update_by_latest_cr' => route('clinics.post-kt.timestamp-update-by-latest-cr', $case->hashed_key),
             ],
             'can' => [
                 'update' => $user->can('update', $case),
+                'use_latest_cr_to_update_timestamps' => ! isset($form['annual_cr']) && (float) $form['latest_cr'] <= 4.0,
             ],
         ];
 

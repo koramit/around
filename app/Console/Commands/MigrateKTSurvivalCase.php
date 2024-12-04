@@ -10,8 +10,8 @@ use App\Managers\Resources\PatientManager;
 use App\Models\Registries\KidneyTransplantSurvivalCaseRecord;
 use App\Models\Resources\Patient;
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use OpenSpout\Common\Exception\IOException;
 use OpenSpout\Common\Exception\UnsupportedTypeException;
@@ -146,6 +146,7 @@ class MigrateKTSurvivalCase extends Command
     ];
 
     protected ?Collection $DOBS = null;
+
     /**
      * @throws IOException
      * @throws UnsupportedTypeException
@@ -153,7 +154,7 @@ class MigrateKTSurvivalCase extends Command
      */
     public function handle(): void
     {
-        $cases = (new FastExcel())->import(storage_path("app/seeders/export_survival_{$this->argument('file')}.xlsx"));
+        $cases = (new FastExcel)->import(storage_path("app/seeders/export_survival_{$this->argument('file')}.xlsx"));
         $cases = $cases->sortBy(['KTID']);
 
         /** @var User $user */
@@ -162,7 +163,7 @@ class MigrateKTSurvivalCase extends Command
         foreach ($cases as $case) {
             $case = $this->tryCreate($case, $user);
             if ($case['ok']) {
-                $this->info("Case: {$case['case_no']} --> OK. " . $case['message'] ?? '' );
+                $this->info("Case: {$case['case_no']} --> OK. ".$case['message'] ?? '');
             } else {
                 $this->error("Case: {$case['case_no']} --> {$case['message']}.");
             }
@@ -200,7 +201,7 @@ class MigrateKTSurvivalCase extends Command
             ];
         }
 
-        $api = new PortalAPI();
+        $api = new PortalAPI;
 
         $admissionData = $api->getPatientAdmissions($data['recipientHN']);
         $patientNote = null;
@@ -217,28 +218,15 @@ class MigrateKTSurvivalCase extends Command
         }
 
         $admissionTxFiltered = collect($admissionData['admissions'])
-            ->filter(static fn ($admission) =>
-                $dateTx->greaterThanOrEqualTo(Carbon::create(explode(' ', $admission['admitted_at'])[0]))
+            ->filter(static fn ($admission) => $dateTx->greaterThanOrEqualTo(Carbon::create(explode(' ', $admission['admitted_at'])[0]))
                 && $dateTx->lessThan(Carbon::create(explode(' ', $admission['discharged_at'])[0]))
             )->first();
 
         if ($admissionTxFiltered) {
-            $admission = (new AdmissionManager())->manage($admissionTxFiltered['an'])['admission'];
-
-            $case = (new CaseStoreAction())(
-                [
-                    'an' => $admission->an,
-                    'date_transplant' => $dateTx->format('Y-m-d'),
-                    'case_no' => $runNo
-                ],
-                $user
-            );
-
-            $case = KidneyTransplantSurvivalCaseRecord::query()
-                ->findByUnhashKey($case['key'])
-                ->first();
+            $admission = (new AdmissionManager)->manage($admissionTxFiltered['an'])['admission'];
+            $case = (new CaseStoreAction)->createWithAdmission($admission, $dateTx, $caseId, $caseNo, $user);
         } else {
-            $patientData = (new PatientManager())->manage($data['recipientHN']);
+            $patientData = (new PatientManager)->manage($data['recipientHN']);
             if ($patientData['found']) {
                 $patient = $patientData['patient'];
                 $patientNote = 'NO ADMISSION RECORD';
@@ -246,9 +234,8 @@ class MigrateKTSurvivalCase extends Command
                 $patient = $this->createPatient($data);
                 $patientNote = 'NO PATIENT RECORD';
             }
-            $case = (new CaseStoreAction())->createWithPatient($patient, $dateTx->format('Y-m-d'), $caseId, $caseNo, $user, !$patientData['found']);
+            $case = (new CaseStoreAction)->createWithPatient($patient, $dateTx->format('Y-m-d'), $caseId, $caseNo, $user, ! $patientData['found']);
         }
-
 
         $form = $case->form;
         $form['date_last_update'] = Carbon::create($data['Date update'])->format('Y-m-d');
@@ -260,7 +247,7 @@ class MigrateKTSurvivalCase extends Command
                 continue;
             }
             if (gettype($value) === 'object') {
-                $remark['name'] .= "$field: ". $value->format('Y-m-d') . "\n";
+                $remark['name'] .= "$field: ".$value->format('Y-m-d')."\n";
             } else {
                 $remark['name'] .= "$field: $value\n";
             }
@@ -301,13 +288,13 @@ class MigrateKTSurvivalCase extends Command
                 continue;
             }
             if (in_array($field, ['codeGL1', 'codeGL2'])) {
-                $lookupValue = array_key_exists((string)$value, $this->caewGLCodes)
-                    ? $value.'|'.$this->caewGLCodes[(string)$value]
+                $lookupValue = array_key_exists((string) $value, $this->caewGLCodes)
+                    ? $value.'|'.$this->caewGLCodes[(string) $value]
                     : $value;
                 $remark['graft loss'] .= "$field: $lookupValue\n";
             } elseif ($field === 'graftLossTxsoc') {
-                $lookupValue = array_key_exists((string)$value, $this->socGLCodes)
-                    ? $value.'|'.$this->socGLCodes[(string)$value]
+                $lookupValue = array_key_exists((string) $value, $this->socGLCodes)
+                    ? $value.'|'.$this->socGLCodes[(string) $value]
                     : $value;
                 $remark['graft loss'] .= "$field: $lookupValue\n";
             } else {
@@ -336,13 +323,13 @@ class MigrateKTSurvivalCase extends Command
                 continue;
             }
             if (in_array($field, ['codeDead1', 'codeDead2'])) {
-                $lookupValue = array_key_exists((string)$value, $this->caewDeadCodes)
-                    ? $value.'|'.$this->caewDeadCodes[(string)$value]
+                $lookupValue = array_key_exists((string) $value, $this->caewDeadCodes)
+                    ? $value.'|'.$this->caewDeadCodes[(string) $value]
                     : $value;
                 $remark['dead cause'] .= "$field: $lookupValue\n";
             } elseif ($field === 'DeadCauseTxsoc') {
-                $lookupValue = array_key_exists((string)$value, $this->socDeadCodes)
-                    ? $value.'|'.$this->socDeadCodes[(string)$value]
+                $lookupValue = array_key_exists((string) $value, $this->socDeadCodes)
+                    ? $value.'|'.$this->socDeadCodes[(string) $value]
                     : $value;
                 $remark['dead cause'] .= "$field: $lookupValue\n";
             } else {
@@ -350,7 +337,7 @@ class MigrateKTSurvivalCase extends Command
             }
         }
         $admissionDead = collect($admissionData['admissions'])
-            ->filter(static fn($admission) => str_contains($admission['discharge_type'], 'DEATH'))
+            ->filter(static fn ($admission) => str_contains($admission['discharge_type'], 'DEATH'))
             ->first();
         if ($admissionDead) {
             $remark['dead cause'] .= "-----\nDead at ศิริราช\n";
@@ -378,7 +365,7 @@ class MigrateKTSurvivalCase extends Command
         ];
 
         foreach ($cr_map as $des => $org) {
-            if (!$form[$des] && $data[$org]) {
+            if (! $form[$des] && $data[$org]) {
                 if (gettype($data[$org]) === 'object') {
                     $form[$des] = Carbon::create($data[$org])->format('Y-m-d');
                 } else {
@@ -392,7 +379,7 @@ class MigrateKTSurvivalCase extends Command
             if (! array_key_exists("year_{$yearCount}_cr", $form->toArray())) {
                 break;
             }
-            if (!$form["year_{$yearCount}_cr"] && ($data["{$yearCount}yr"] ?? null)) {
+            if (! $form["year_{$yearCount}_cr"] && ($data["{$yearCount}yr"] ?? null)) {
                 $form["year_{$yearCount}_cr"] = $data["{$yearCount}yr"];
                 $form["date_year_{$yearCount}_cr"] = $data["{$yearCount}yrDate"]
                     ? Carbon::create($data["{$yearCount}yrDate"])->format('Y-m-d')
@@ -401,7 +388,7 @@ class MigrateKTSurvivalCase extends Command
             $yearCount++;
         }
 
-        if (!$form['latest_cr'] && $data['last cr']) {
+        if (! $form['latest_cr'] && $data['last cr']) {
             $form['latest_cr'] = $data['last cr'];
             $form['date_latest_cr'] = $data['last crDate']
                 ? Carbon::create($data['last crDate'])->format('Y-m-d')
@@ -415,7 +402,7 @@ class MigrateKTSurvivalCase extends Command
         if ($dateGraftLoss) {
             $graftFunctionYears = $dateGraftLoss->year - $dateTx->year;
             $txPassedYears = Carbon::now()->year - $dateTx->year;
-            for($y = ($graftFunctionYears+1); $y <= $txPassedYears; $y++) {
+            for ($y = ($graftFunctionYears + 1); $y <= $txPassedYears; $y++) {
                 if (array_key_exists("year_{$y}_cr", $form->toArray())) {
                     unset($form["year_{$y}_cr"], $form["date_year_{$y}_cr"]);
                 }
@@ -441,12 +428,12 @@ class MigrateKTSurvivalCase extends Command
     protected function createPatient(array $data): Patient
     {
         if (! $this->DOBS) {
-            $this->DOBS = (new FastExcel())->import(storage_path("app/seeders/r_dob.xlsx"));
+            $this->DOBS = (new FastExcel)->import(storage_path('app/seeders/r_dob.xlsx'));
         }
 
-        $dob = $this->DOBS->filter(static fn($row) => (int) $row['ID'] === (int) $data['KTID'])->first();
+        $dob = $this->DOBS->filter(static fn ($row) => (int) $row['ID'] === (int) $data['KTID'])->first();
 
-        $patient = new Patient();
+        $patient = new Patient;
         $patient->hn = $data['recipientHN'];
         $patient->alive = $data['status'] === 'A';
         $patient->gender = strtolower($dob['Rsex']) === 'male';
@@ -459,24 +446,24 @@ class MigrateKTSurvivalCase extends Command
         }
 
         $patient->profile = [
-            "patient_name" => $data['recipient_name'] . ' ' . $data['recipient_surname'],
-            "title" => null,
-            "first_name" => $data['recipient_name'],
-            "middle_name" => null,
-            "last_name" => $data['recipient_surname'],
-            "document_id" => null,
-            "race" => "ไทย",
-            "nation" => "ไทย",
-            "tel_no" => null,
-            "spouse" => null,
-            "address" => null,
-            "subdistrict" => null,
-            "district" => null,
-            "postcode" => null,
-            "province" => null,
-            "insurance_name" => null,
-            "marital_status" => null,
-            "alternative_contact" => null,
+            'patient_name' => $data['recipient_name'].' '.$data['recipient_surname'],
+            'title' => null,
+            'first_name' => $data['recipient_name'],
+            'middle_name' => null,
+            'last_name' => $data['recipient_surname'],
+            'document_id' => null,
+            'race' => 'ไทย',
+            'nation' => 'ไทย',
+            'tel_no' => null,
+            'spouse' => null,
+            'address' => null,
+            'subdistrict' => null,
+            'district' => null,
+            'postcode' => null,
+            'province' => null,
+            'insurance_name' => null,
+            'marital_status' => null,
+            'alternative_contact' => null,
         ];
 
         $patient->save();

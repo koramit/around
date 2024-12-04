@@ -2,7 +2,7 @@
 
 import FormInput from '../../../Components/Controls/FormInput.vue';
 import FormRadio from '../../../Components/Controls/FormRadio.vue';
-import {useForm} from '@inertiajs/vue3';
+import {Link, useForm} from '@inertiajs/vue3';
 import {computed, reactive, ref, watch} from 'vue';
 import FormDatetime from '../../../Components/Controls/FormDatetime.vue';
 import GraftLossReport from '../../../Partials/Clinics/PostKT/GraftLossReport.vue';
@@ -177,7 +177,15 @@ const { selectOtherInput, selectOther, selectOtherClosed } = useSelectOther();
             class="form-label text-lg italic text-complement mt-4 md:mt-8 xl:mt-16 form-scroll-mt"
             id="creatinine-update"
         >
-            Creatinine update :
+            <span class="flex justify-between items-baseline">
+                <span>Creatinine update :</span>
+                <Link
+                    :href="configs.routes.annual_update"
+                    class="text-xs underline font-semibold not-italic text-accent"
+                >
+                    annual update
+                </Link>
+            </span>
         </h2>
         <hr class="my-4 border-b border-accent">
         <div class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8">
@@ -188,7 +196,13 @@ const { selectOtherInput, selectOther, selectOtherClosed } = useSelectOther();
                     v-model="form.latest_cr"
                     readonly
                 />
-                <button>use latest cr as annual cr</button>
+                <Link
+                    v-if="configs.can.use_latest_cr_to_update_timestamps"
+                    :href="configs.routes.timestamp_update_by_latest_cr"
+                    class="text-xs uppercase underline font-semibold not-italic text-accent"
+                >
+                    use latest cr to update timestamps
+                </Link>
             </div>
             <FormInput
                 label="date latest cr"
@@ -196,12 +210,21 @@ const { selectOtherInput, selectOther, selectOtherClosed } = useSelectOther();
                 v-model="form.date_latest_cr_formatted"
                 readonly
             />
-            <FormInput
-                :label="`annual cr (mg/dL) (year ${form.annual_year})`"
-                name="annual_cr"
-                v-model="form.annual_cr"
-                readonly
-            />
+            <div>
+                <FormInput
+                    :label="`annual cr (mg/dL) (year ${form.annual_year})`"
+                    name="annual_cr"
+                    v-model="form.annual_cr"
+                    readonly
+                />
+                <Link
+                    v-if="!form.annual_cr && form.latest_cr && parseInt(form.annual_year) !== 0"
+                    :href="configs.routes.annual_update_by_latest_cr"
+                    class="text-xs uppercase underline font-semibold not-italic text-accent"
+                >
+                    use latest cr as annual cr
+                </Link>
+            </div>
             <FormInput
                 label="date annual cr"
                 name="date_annual_cr"

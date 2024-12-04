@@ -61,6 +61,7 @@ class CaseUpdateAction extends CaseBaseAction
             }
         }
 
+        $validated['date_last_update'] = $case->form['date_last_update'];
         $case->form = $validated;
         $case->status = KidneyTransplantSurvivalCaseStatus::fromGraftPatientStatus($validated['graft_status'], $validated['patient_status']);
         $case->save();
