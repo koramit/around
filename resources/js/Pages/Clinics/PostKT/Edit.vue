@@ -182,6 +182,7 @@ const { selectOtherInput, selectOther, selectOtherClosed } = useSelectOther();
                 <Link
                     :href="configs.routes.annual_update"
                     class="text-xs underline font-semibold not-italic text-accent"
+                    v-if="configs.can.annual_update"
                 >
                     annual update
                 </Link>
@@ -218,7 +219,7 @@ const { selectOtherInput, selectOther, selectOtherClosed } = useSelectOther();
                     readonly
                 />
                 <Link
-                    v-if="!form.annual_cr && form.latest_cr && parseInt(form.annual_year) !== 0"
+                    v-if="configs.can.use_latest_cr_as_annual_cr"
                     :href="configs.routes.annual_update_by_latest_cr"
                     class="text-xs uppercase underline font-semibold not-italic text-accent"
                 >

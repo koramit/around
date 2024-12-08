@@ -2,6 +2,7 @@
 
 namespace App\Actions\Clinics\PostKT;
 
+use App\Enums\KidneyTransplantSurvivalCaseStatus;
 use App\Extensions\Auth\AvatarUser;
 use App\Models\User;
 use Illuminate\Support\Carbon;
@@ -102,7 +103,14 @@ class CaseEditAction extends CaseBaseAction
             ],
             'can' => [
                 'update' => $user->can('update', $case),
-                'use_latest_cr_to_update_timestamps' => ! isset($form['annual_cr']) && (float) $form['latest_cr'] <= 4.0,
+                'use_latest_cr_to_update_timestamps' => ! isset($form['annual_cr'])
+                    && (float) $form['latest_cr'] <= 4.0
+                    && $case->status === KidneyTransplantSurvivalCaseStatus::ACTIVE,
+                'use_latest_cr_as_annual_cr' => $case->status === KidneyTransplantSurvivalCaseStatus::ACTIVE
+                    && $yearTh !== 0
+                    && ! isset($form['annual_cr'])
+                    && $form['latest_cr'],
+                'annual_update' => $case->status === KidneyTransplantSurvivalCaseStatus::ACTIVE,
             ],
         ];
 
