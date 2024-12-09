@@ -290,13 +290,14 @@ const { selectOtherInput, selectOther, selectOtherClosed } = useSelectOther();
                         </div>
                     </div>
                 </Transition>
-                <FormTextarea
-                    label="graft loss note"
-                    name="graft_loss_note"
-                    v-model="form.graft_loss_note"
-                />
             </section>
         </Transition>
+        <FormTextarea
+            class="mt-2 md:mt-4 xl:mt-8"
+            label="graft status note"
+            name="graft_loss_note"
+            v-model="form.graft_loss_note"
+        />
         <h2
             class="form-label text-lg italic text-complement mt-4 md:mt-8 xl:mt-16 form-scroll-mt"
             id="patient-status"
@@ -360,13 +361,14 @@ const { selectOtherInput, selectOther, selectOtherClosed } = useSelectOther();
                         />
                     </div>
                 </div>
-                <FormTextarea
-                    label="dead note"
-                    name="dead_note"
-                    v-model="form.dead_note"
-                />
             </section>
         </Transition>
+        <FormTextarea
+            class="mt-2 md:mt-4 xl:mt-8"
+            label="patient status note"
+            name="dead_note"
+            v-model="form.dead_note"
+        />
         <h2
             class="form-label text-lg italic text-complement mt-4 md:mt-8 xl:mt-16 form-scroll-mt"
             id="creatinine-chart"

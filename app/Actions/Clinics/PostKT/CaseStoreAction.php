@@ -28,7 +28,7 @@ class CaseStoreAction extends CaseBaseAction
         'date_graft_loss' => null,
         'graft_loss_codes' => [],
         'dialysis_status' => null,
-        'graft_loss_note' => null,
+        'graft_loss_note' => null, // will rename to graft_loss_note
         'date_latest_cr' => null,
         'latest_cr' => null,
         'patient_status' => 'alive',
@@ -37,7 +37,7 @@ class CaseStoreAction extends CaseBaseAction
         'dead_report_codes' => [],
         'dead_place' => null,
         'autopsy_perform' => null,
-        'dead_note' => null,
+        'dead_note' => null, // will rename to patient_status_note
         'discharge_cr' => null,
         'date_discharge_cr' => null,
         'one_week_cr' => null,
