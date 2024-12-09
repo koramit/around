@@ -23,6 +23,7 @@ class CaseStoreAction extends CaseBaseAction
     protected float $CRF_VERSION = 1.0;
 
     protected array $FORM_TEMPLATE = [
+        'refer' => null,
         'graft_status' => 'graft function',
         'date_update_graft_status' => null,
         'date_graft_loss' => null,

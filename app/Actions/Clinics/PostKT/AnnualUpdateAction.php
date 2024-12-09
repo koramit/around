@@ -40,6 +40,13 @@ class AnnualUpdateAction extends CaseBaseAction
             return ['ok' => true, 'graft_function' => false];
         }
 
+        if ($case->form['refer']) {
+            if ($case->form["date_year_{$yearTh}_cr"] > $case->form['date_latest_cr']) {
+                $case->form['latest_cr'] = $case->form["year_{$yearTh}_cr"];
+                $case->form['date_latest_cr'] = $case->form["date_year_{$yearTh}_cr"];
+            }
+        }
+
         $case->form['graft_status'] = 'graft function';
         $case->form['date_update_graft_status'] = $case->form['date_latest_cr'];
         $case->form['patient_status'] = 'alive';

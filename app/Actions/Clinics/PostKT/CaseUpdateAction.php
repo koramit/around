@@ -23,6 +23,7 @@ class CaseUpdateAction extends CaseBaseAction
         }
 
         $validated = Validator::validate($data, [
+            'refer' => ['nullable', 'string', 'max:255'],
             'graft_status' => ['required', 'in:graft function,graft loss,loss follow up'],
             'date_update_graft_status' => ['required', 'date', 'before:tomorrow', 'after:date_transplant'],
             'date_graft_loss' => ['nullable', 'date', 'after:date_transplant'],

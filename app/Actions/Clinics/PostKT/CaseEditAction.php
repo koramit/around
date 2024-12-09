@@ -32,6 +32,11 @@ class CaseEditAction extends CaseBaseAction
             $case->form['date_annual_cr'] = Carbon::create($case->form["date_year_{$yearTh}_cr"])->format('M d, Y');
         }
 
+        if (!array_key_exists('refer', [...$case->form])) {
+            $case->form['refer'] = null;
+            $case->save();
+        }
+
         $form = $case->form;
         $form['kt_no'] = $case->meta['kt_no'];
         $form['kt_id'] = $case->meta['kt_id'];
@@ -49,6 +54,7 @@ class CaseEditAction extends CaseBaseAction
                 $form['no_patient_record_message'] = 'The patient record was not found.';
             }
         }
+
         foreach ($form as $field => $value) {
             if (in_array(gettype($value), ['double', 'float', 'integer'])) {
                 $form[$field] = (string) $value;

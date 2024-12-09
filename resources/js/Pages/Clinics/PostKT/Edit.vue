@@ -172,6 +172,11 @@ const { selectOtherInput, selectOther, selectOtherClosed } = useSelectOther();
                 name="date_last_update_formatted"
                 v-model="form.date_last_update_formatted"
             />
+            <FormInput
+                label="refer"
+                name="refer"
+                v-model="form.refer"
+            />
         </div>
         <h2
             class="form-label text-lg italic text-complement mt-4 md:mt-8 xl:mt-16 form-scroll-mt"

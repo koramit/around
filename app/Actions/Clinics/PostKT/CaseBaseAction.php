@@ -49,6 +49,11 @@ class CaseBaseAction
 
     protected function updateCreatinine(KidneyTransplantSurvivalCaseRecord $case): void
     {
+        if (!array_key_exists('refer', [...$case->form])) {
+            $case->form['refer'] = null;
+            $case->save();
+        }
+
         $api = new PortalAPI;
         $result = $api->getLabFromItemCodeAllResults($case->meta['hn'], '0020');
         if (! $result['found']) {
@@ -125,7 +130,10 @@ class CaseBaseAction
         while (true) {
             $nextYear->addYear();
             $coupleMonthsBeforeNextYear = $nextYear->copy()->subDays(60);
-            if ($coupleMonthsBeforeNextYear->isFuture() || $coupleMonthsBeforeNextYear->greaterThan($dateLatestCr)) {
+            if (
+                $coupleMonthsBeforeNextYear->isFuture()
+                || ($coupleMonthsBeforeNextYear->greaterThan($dateLatestCr) && !$case->form['refer'])
+            ) {
                 break;
             }
 
