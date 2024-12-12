@@ -20,7 +20,7 @@
     @vite('resources/js/app.js')
     @inertiaHead
 </head>
-<body class="m-0 font-sarabun font-extralight text-gray-700 {{ config('app.env') === 'test.html' ? 'bg-test.html-env' : 'bg-primary'}}">
+<body class="m-0 font-sarabun font-extralight text-gray-700 {{ config('app.env') === 'uat' ? 'bg-uat-env' : 'bg-primary'}}">
     @inertia
     <div id="page-loading-indicator" style="height: 100vh; display: flex; align-items: center; justify-content: center;">
         <svg style="width: 150px; height: 150px;" class="animate-spin text-accent" viewBox="0 0 512 512">
