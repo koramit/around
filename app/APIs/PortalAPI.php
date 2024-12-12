@@ -124,10 +124,31 @@ class PortalAPI implements AuthenticationAPI, CovidInfoAPI, PatientAPI
         return $this->makePost('itemize', ['category' => $category, 'search' => $search]);
     }
 
+    public function getLabRecently(string|int $hn): array
+    {
+        return $this->makePost('lab-recently', ['hn' => $hn]);
+    }
+
+    public function getLabFromServiceId(string|int $hn, array $serviceIds): array
+    {
+        return $this->makePost('lab-from-service-id', ['hn' => (string) $hn, 'service_ids' => $serviceIds]);
+    }
+
+    public function getLabFromItemCode(string|int $hn, array $itemCodes): array
+    {
+        return $this->makePost('lab-from-item-code', ['hn' => (string) $hn, 'item_codes' => $itemCodes]);
+    }
+
+    public function getLabFromItemCodeAllResults(string|int $hn, string $itemCode): array
+    {
+        return $this->makePost('lab-from-item-all', ['hn' => (string) $hn, 'item_code' => $itemCode]);
+    }
+
     protected function makePost(string $route, array $data): array
     {
         try {
             $response = Http::withToken(config('services.portal_token'))
+                ->timeout(60)
                 ->retry(2, 200)
                 ->withOptions(['verify' => config('services.portal_verify_ssl')])
                 ->acceptJson()

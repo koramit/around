@@ -27,8 +27,8 @@ class DialysisSessionExportAction extends AcuteHemodialysisAction
 
         $caseIds = AcuteHemodialysisOrderNote::query()
             ->performedStatuses()
-            ->whereBetween("date_note", [$dateStart, $dateEnd])
-            ->pluck("case_record_id")
+            ->whereBetween('date_note', [$dateStart, $dateEnd])
+            ->pluck('case_record_id')
             ->unique()
             ->values();
 
@@ -38,13 +38,13 @@ class DialysisSessionExportAction extends AcuteHemodialysisAction
                 'patient:id,profile,hn',
                 'orders' => fn ($query) => $query->select(['id', 'case_record_id', 'author_id', 'status', 'meta', 'date_note', 'form'])
                     ->performedStatuses()
-                    ->whereBetween("date_note", [$dateStart, $dateEnd])
+                    ->whereBetween('date_note', [$dateStart, $dateEnd])
                     ->withAuthorName()
                     ->withPlaceName(Ward::class)
                     ->orderBy('date_note'),
             ])->get();
 
-        $api = new PortalAPI();
+        $api = new PortalAPI;
         $admissions = $cases->filter(fn ($case) => $case->meta['an'])
             ->map(fn ($case) => [...$api->getAdmissionTransfers($case->meta['an']), 'an' => $case->meta['an']]);
 
@@ -146,10 +146,10 @@ class DialysisSessionExportAction extends AcuteHemodialysisAction
         ]);
 
         $filename = 'acute_HD-session-report-'
-            . $dateStart->format('Y-m-d')
-            . '_to_'
-            . $dateEnd->format('Y-m-d')
-            . '.xlsx';
+            .$dateStart->format('Y-m-d')
+            .'_to_'
+            .$dateEnd->format('Y-m-d')
+            .'.xlsx';
 
         return [
             'sheet' => $report,

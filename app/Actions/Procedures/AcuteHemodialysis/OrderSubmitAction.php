@@ -433,7 +433,7 @@ class OrderSubmitAction extends AcuteHemodialysisAction
                 ]);
 
             // COUNT LINE NOTIFY
-            $cacheKey = now()->format('Ym') . '-LINE-NOTIFY-COUNT';
+            $cacheKey = now()->format('Ym').'-LINE-NOTIFY-COUNT';
             cache()->increment($cacheKey);
         } catch (Exception $e) {
             Log::error("Failed to notify resubmit order\n".$e->getMessage());

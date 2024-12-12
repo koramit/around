@@ -78,7 +78,7 @@ class RegisteredUserController extends Controller
             'remark' => $data['remark'],
         ];
 
-        $user = new User();
+        $user = new User;
 
         $user->login = $data['login'];
         $user->name = $data['name'];
@@ -90,7 +90,7 @@ class RegisteredUserController extends Controller
         (new InitUserRoleAction)($user);
 
         Auth::login($user);
-        (new LoginRecordAction)($request->ip(), new Agent(), $user);
+        (new LoginRecordAction)($request->ip(), new Agent, $user);
         Session::forget('profile');
 
         return Redirect::route('home');

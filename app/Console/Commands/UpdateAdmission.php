@@ -29,7 +29,7 @@ class UpdateAdmission extends Command
      */
     public function handle()
     {
-        $manager = new AdmissionManager();
+        $manager = new AdmissionManager;
         Admission::query()
             ->whereNull('dismissed_at')
             ->where('updated_at', '<', now()->subHours(6))

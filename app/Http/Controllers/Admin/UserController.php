@@ -16,7 +16,7 @@ class UserController extends Controller
 
     public function index(Request $request)
     {
-        $data = (new UserIndexAction())($request->all(), $request->user());
+        $data = (new UserIndexAction)($request->all(), $request->user());
 
         if ($request->wantsJson()) {
             return $data;
@@ -30,11 +30,11 @@ class UserController extends Controller
 
     public function show(string $hashedKey, Request $request)
     {
-        return (new UserRoleShowAction())($hashedKey, $request->user());
+        return (new UserRoleShowAction)($hashedKey, $request->user());
     }
 
     public function update(string $hashedKey, Request $request)
     {
-        return (new UserRoleUpdateAction())($hashedKey, $request->input('roles'), $request->user());
+        return (new UserRoleUpdateAction)($hashedKey, $request->input('roles'), $request->user());
     }
 }

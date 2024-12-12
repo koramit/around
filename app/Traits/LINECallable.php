@@ -45,6 +45,9 @@ trait LINECallable
 
     private function makePost(ChatBot $bot, string $url, array $payload): bool
     {
+        if (config('app.env') !== 'production') {
+            return false;
+        }
         try {
             Http::timeout(2)
                 ->retry(3, 100)

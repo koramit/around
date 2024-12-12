@@ -98,7 +98,7 @@ class OrderDestroyAction extends AcuteHemodialysisAction
                 ]);
 
             // COUNT LINE NOTIFY
-            $cacheKey = now()->format('Ym') . '-LINE-NOTIFY-COUNT';
+            $cacheKey = now()->format('Ym').'-LINE-NOTIFY-COUNT';
             cache()->increment($cacheKey);
         } catch (Exception $e) {
             Log::error("Failed to notify cancel order\n".$e->getMessage());

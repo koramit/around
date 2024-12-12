@@ -15,7 +15,7 @@ class PatientShowAction
             return $link;
         }
 
-        $patient = (new PatientManager())->manage($hn);
+        $patient = (new PatientManager)->manage($hn);
 
         if (! $patient['found']) {
             return $patient;

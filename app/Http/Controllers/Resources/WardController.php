@@ -10,6 +10,6 @@ class WardController extends Controller
 {
     public function __invoke(Request $request)
     {
-        return (new WardSearchAction())($request->input('search'));
+        return (new WardSearchAction)($request->input('search'));
     }
 }

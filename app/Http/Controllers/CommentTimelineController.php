@@ -10,11 +10,11 @@ class CommentTimelineController extends Controller
 {
     public function store(Request $request)
     {
-        return (new CommentTimelineStoreAction())($request->all(), $request->user());
+        return (new CommentTimelineStoreAction)($request->all(), $request->user());
     }
 
     public function index(Request $request)
     {
-        return (new CommentTimelineIndexAction())($request->all());
+        return (new CommentTimelineIndexAction)($request->all());
     }
 }

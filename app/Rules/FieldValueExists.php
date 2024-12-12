@@ -10,8 +10,7 @@ class FieldValueExists implements Rule
         protected string $className,
         protected string $fieldName,
         protected ?string $cacheKeyPrefix = null,
-    ) {
-    }
+    ) {}
 
     public function passes($attribute, $value): bool
     {

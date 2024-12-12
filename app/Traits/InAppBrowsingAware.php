@@ -9,7 +9,7 @@ trait InAppBrowsingAware
 {
     protected function inAppBrowsing(Request $request): bool
     {
-        $agent = new Agent();
+        $agent = new Agent;
 
         $agentName = trim($request->header('User-Agent').' '.($agent->isRobot() ? $agent->robot() : ''));
 

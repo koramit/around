@@ -10,7 +10,7 @@ class CaseRecordCompleteController extends Controller
 {
     public function __invoke(string $hashedKey, Request $request)
     {
-        $message = (new CaseRecordCompleteAction())($request->all(), $hashedKey, $request->user());
+        $message = (new CaseRecordCompleteAction)($request->all(), $hashedKey, $request->user());
 
         if ($request->wantsJson()) {
             return $message;

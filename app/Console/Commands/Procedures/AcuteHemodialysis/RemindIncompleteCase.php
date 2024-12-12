@@ -46,7 +46,7 @@ class RemindIncompleteCase extends Command
     protected function getNoConsent(): array
     {
         $noConsent = [];
-        $status = new AcuteHemodialysisCaseRecordStatus();
+        $status = new AcuteHemodialysisCaseRecordStatus;
         AcuteHemodialysisCaseRecord::query()
             ->select(['id', 'meta'])
             ->where('status', $status->getCode('active'))
@@ -68,7 +68,7 @@ class RemindIncompleteCase extends Command
     protected function getIncomplete(): array
     {
         $incomplete = [];
-        $status = new AcuteHemodialysisCaseRecordStatus();
+        $status = new AcuteHemodialysisCaseRecordStatus;
         AcuteHemodialysisCaseRecord::query()
             ->select(['id', 'meta'])
             ->whereIn('status', [$status->getCode('dismissed'), $status->getCode('discharged')])

@@ -47,7 +47,7 @@ class RegisteredWIthEmailController
             'remark' => null,
         ];
 
-        $user = new User();
+        $user = new User;
         $user->login = $validated['email'];
         $user->name = $validated['name'];
         $user->full_name = $validated['full_name'];
@@ -56,7 +56,7 @@ class RegisteredWIthEmailController
         $user->save();
 
         Auth::login($user);
-        (new LoginRecordAction)($request->ip(), new Agent(), $user);
+        (new LoginRecordAction)($request->ip(), new Agent, $user);
 
         return Redirect::route('home');
     }

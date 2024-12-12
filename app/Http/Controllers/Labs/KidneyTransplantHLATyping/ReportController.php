@@ -26,7 +26,7 @@ class ReportController extends Controller
 
     public function index(Request $request)
     {
-        $data = (new ReportIndexAction())(filters: $request->all(), user: $request->user(), routeName: $request->route()->getName());
+        $data = (new ReportIndexAction)(filters: $request->all(), user: $request->user(), routeName: $request->route()->getName());
 
         if ($request->wantsJson()) {
             return $data;
@@ -40,7 +40,7 @@ class ReportController extends Controller
 
     public function store(Request $request)
     {
-        $report = (new ReportStoreAction())(data: $request->all(), user: $request->user());
+        $report = (new ReportStoreAction)(data: $request->all(), user: $request->user());
 
         if ($request->wantsJson()) {
             return $report;
@@ -51,7 +51,7 @@ class ReportController extends Controller
 
     public function edit(string $hashedKey, Request $request)
     {
-        $data = (new ReportEditAction())($hashedKey, $request->user());
+        $data = (new ReportEditAction)($hashedKey, $request->user());
 
         if ($request->wantsJson()) {
             return $data;
@@ -65,12 +65,12 @@ class ReportController extends Controller
 
     public function update(string $hashedKey, Request $request)
     {
-        return (new ReportUpdateAction())($hashedKey, $request->all(), $request->user());
+        return (new ReportUpdateAction)($hashedKey, $request->all(), $request->user());
     }
 
     public function destroy(string $hashedKey, Request $request)
     {
-        $data = (new ReportDestroyAction())($hashedKey, $request->user());
+        $data = (new ReportDestroyAction)($hashedKey, $request->user());
 
         if ($request->wantsJson()) {
             return $data;

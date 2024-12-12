@@ -53,7 +53,7 @@ class ReportNewCasePerSessionAction extends AcuteHemodialysisAction
                     ->orderBy('date_note'),
             ])->get();
 
-        $api = new PortalAPI();
+        $api = new PortalAPI;
         $admissions = $cases->filter(fn ($case) => $case->meta['an'])
             ->map(fn ($case) => [...$api->getAdmissionTransfers($case->meta['an']), 'an' => $case->meta['an']]);
 

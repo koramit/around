@@ -56,9 +56,7 @@ class AvatarUser extends Authenticatable
         return '';
     }
 
-    public function setRememberToken($value): void
-    {
-    }
+    public function setRememberToken($value): void {}
 
     public function getRememberTokenName(): string
     {

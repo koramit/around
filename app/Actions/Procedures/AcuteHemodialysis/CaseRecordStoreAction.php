@@ -77,7 +77,7 @@ class CaseRecordStoreAction extends AcuteHemodialysisAction
         if ($caseRecord = CaseRecord::query()->where('status', 1)->where('meta->hn', $validated['hn'])->first()) {
             return ['key' => $caseRecord->hashed_key];
         }
-        $caseRecord = new CaseRecord();
+        $caseRecord = new CaseRecord;
         $patient = Patient::query()->findByHashKey($validated['hn'])->first();
         $caseRecord->patient_id = $patient->id;
         $form = $this->FORM_TEMPLATE;

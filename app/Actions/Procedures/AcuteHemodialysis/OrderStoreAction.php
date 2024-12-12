@@ -251,7 +251,7 @@ class OrderStoreAction extends AcuteHemodialysisAction
         }
         $zombieHours = $this->zombieHours($validated['date_note']);
 
-        $note = new AcuteHemodialysisOrderNote();
+        $note = new AcuteHemodialysisOrderNote;
         $note->case_record_id = $caseRecord->id;
         $note->attending_staff_id = cache()->pull($personKeyCache)->id;
         $note->place_type = Ward::class;

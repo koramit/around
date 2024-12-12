@@ -25,8 +25,7 @@ class LINELoginAPI implements LoginProvider
 
     public function __construct(
         protected SocialProvider $provider,
-    ) {
-    }
+    ) {}
 
     public function redirect(string $mode = 'login'): RedirectResponse
     {

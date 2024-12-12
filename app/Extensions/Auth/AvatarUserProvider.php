@@ -42,9 +42,7 @@ class AvatarUserProvider implements UserProvider
         return new AvatarUser($user);
     }
 
-    public function retrieveByToken($identifier, $token)
-    {
-    }
+    public function retrieveByToken($identifier, $token) {}
 
     public function updateRememberToken(Authenticatable $user, $token)
     {

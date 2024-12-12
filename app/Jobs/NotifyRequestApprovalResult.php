@@ -16,8 +16,7 @@ class NotifyRequestApprovalResult implements ShouldQueue
 
     public function __construct(
         protected DocumentChangeRequest $changeRequest,
-    ) {
-    }
+    ) {}
 
     public function handle(): void
     {

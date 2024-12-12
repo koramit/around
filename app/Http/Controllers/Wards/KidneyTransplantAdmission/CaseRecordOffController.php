@@ -10,7 +10,7 @@ class CaseRecordOffController extends Controller
 {
     public function __invoke(string $hashedKey, Request $request)
     {
-        $reply = (new CaseRecordOffAction())(data: $request->all(), hashedKey: $hashedKey, user: $request->user());
+        $reply = (new CaseRecordOffAction)(data: $request->all(), hashedKey: $hashedKey, user: $request->user());
 
         if ($request->wantsJson()) {
             return $reply;

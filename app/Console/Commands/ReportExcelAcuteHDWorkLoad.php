@@ -34,7 +34,7 @@ class ReportExcelAcuteHDWorkLoad extends Command
     public function handle()
     {
         $data = AcuteHemodialysisOrderNote::query()
-            ->whereIn('status', (new AcuteHemodialysisOrderStatus())->getPerformedStatusCodes())
+            ->whereIn('status', (new AcuteHemodialysisOrderStatus)->getPerformedStatusCodes())
             ->orderBy('date_note')
             ->get()
             ->transform(fn ($o) => [
