@@ -45,6 +45,9 @@ const form = reactive({
     gl_903: Boolean(model.value.find(item => parseInt(item.code) === 903)),
     gl_904: Boolean(model.value.find(item => parseInt(item.code) === 904)),
     gl_904_specification: model.value.find(item => parseInt(item.code) === 904)?.specification,
+    gl_905: Boolean(model.value.find(item => parseInt(item.code) === 905)),
+    gl_906: Boolean(model.value.find(item => parseInt(item.code) === 906)),
+    gl_907: Boolean(model.value.find(item => parseInt(item.code) === 907)),
     gl_999: Boolean(model.value.find(item => parseInt(item.code) === 999)),
 });
 
@@ -297,6 +300,21 @@ function toggleSpecification(val, code) {
                     label="902 - Malignancy at transplanted kidney"
                     name="gl_902"
                     v-model="form.gl_902"
+                />
+                <FormCheckbox
+                    label="905 - Malignancy invade graft"
+                    name="gl_905"
+                    v-model="form.gl_905"
+                />
+                <FormCheckbox
+                    label="906 - non-compliance"
+                    name="gl_906"
+                    v-model="form.gl_906"
+                />
+                <FormCheckbox
+                    label="907 - loss follow up > 6 mo"
+                    name="gl_907"
+                    v-model="form.gl_907"
                 />
                 <FormCheckbox
                     label="903 - Unknown"
