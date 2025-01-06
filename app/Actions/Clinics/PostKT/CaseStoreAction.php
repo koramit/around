@@ -288,6 +288,7 @@ class CaseStoreAction extends CaseBaseAction
     {
         if ($redcrossId) {
             if ($coDonor = KidneyTransplantSurvivalCaseRecord::query()
+                ->where('status', '!=',KidneyTransplantSurvivalCaseStatus::DELETED)
                 ->where('form->donor_redcross_id', "$redcrossId")
                 ->first()) {
                 return $coDonor->meta['donor_id'];
@@ -296,6 +297,7 @@ class CaseStoreAction extends CaseBaseAction
 
         $maxDonorId = 0;
         KidneyTransplantSurvivalCaseRecord::query()
+            ->where('status', '!=',KidneyTransplantSurvivalCaseStatus::DELETED)
             ->where('meta->date_transplant', 'like', $year.'-%')
             ->each(function ($case) use(&$maxDonorId) {
                 $maxDonorId = max($case->meta['donor_id'], $maxDonorId);
