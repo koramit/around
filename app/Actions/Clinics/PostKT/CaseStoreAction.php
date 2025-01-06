@@ -128,7 +128,7 @@ class CaseStoreAction extends CaseBaseAction
             'donor_type' => ['required', 'in:CD single kidney,CD dual kidneys,LD'],
             'donor_hn' => ['nullable', 'required_if:donor_type,LD', new HnExists],
             'donor_name' => ['nullable', 'required_if:donor_type,LD', 'string', 'min:10'],
-            'donor_redcross_id' => ['nullable', 'required_if:donor_type,CD single kidney,CD dual kidneys', 'string', 'max:10'],
+            'donor_redcross_id' => ['nullable', 'required_if:donor_type,CD single kidney,CD dual kidneys', 'string', 'max:12'],
             'donor_hospital' => ['nullable', 'required_if:donor_type,CD single kidney,CD dual kidneys', 'exists:hospitals,name'],
         ]);
 
