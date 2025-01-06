@@ -10,7 +10,7 @@ class ReportCancelController extends Controller
 {
     public function __invoke(string $hashedKey, Request $request)
     {
-        $reply = (new ReportCancelAction())(data: $request->all(), hashedKey: $hashedKey, user: $request->user());
+        $reply = (new ReportCancelAction)(data: $request->all(), hashedKey: $hashedKey, user: $request->user());
 
         if ($request->wantsJson()) {
             return $reply;

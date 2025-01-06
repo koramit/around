@@ -15,7 +15,7 @@ class AdmissionShowAction
             return $link;
         }
 
-        $admission = (new AdmissionManager())->manage($key);
+        $admission = (new AdmissionManager)->manage($key);
 
         if (! $admission['found']) {
             return $admission;

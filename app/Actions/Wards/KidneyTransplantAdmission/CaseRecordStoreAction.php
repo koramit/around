@@ -251,7 +251,7 @@ class CaseRecordStoreAction extends KidneyTransplantAdmissionAction
             return ['key' => $caseRecord->hashed_key];
         }
 
-        $caseRecord = new CaseRecord();
+        $caseRecord = new CaseRecord;
         $admission = Admission::query()->findByHashKey($validated['an'])->first();
         $caseRecord->patient_id = $admission->patient_id;
         $caseRecord->form = $this->FORM_TEMPLATE[$validated['reason_for_admission']];

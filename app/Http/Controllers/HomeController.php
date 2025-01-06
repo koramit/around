@@ -14,7 +14,7 @@ class HomeController extends Controller
 
     public function __invoke(Request $request)
     {
-        $data = (new HomePageAction())($request->user(), $request->route()->getName());
+        $data = (new HomePageAction)($request->user(), $request->route()->getName());
         $this->setFlash($data);
 
         if ($request->wantsJson()) {

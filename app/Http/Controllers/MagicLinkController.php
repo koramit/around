@@ -28,7 +28,7 @@ class MagicLinkController extends Controller
         Auth::login($user);
         (new LoginRecordAction)(
             ip: $request->ip(),
-            agent: new Agent(),
+            agent: new Agent,
             user: $user,
             provider: 'magic-link',
         );

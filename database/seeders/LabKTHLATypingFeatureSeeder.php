@@ -108,7 +108,7 @@ class LabKTHLATypingFeatureSeeder extends Seeder
             ->with(['patient', 'subscription'])
             ->each(function ($note) {
                 if (! $note->subscription) {
-                    $note->subscription()->save(new Subscription());
+                    $note->subscription()->save(new Subscription);
                     $note->refresh();
                 }
 

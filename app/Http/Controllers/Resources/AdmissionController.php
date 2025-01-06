@@ -14,6 +14,6 @@ class AdmissionController extends Controller
             'key' => ['required', 'string'],
         ]);
 
-        return (new AdmissionShowAction())($request->input('key'));
+        return (new AdmissionShowAction)($request->input('key'));
     }
 }

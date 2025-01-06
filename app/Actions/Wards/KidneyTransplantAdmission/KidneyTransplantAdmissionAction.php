@@ -61,7 +61,7 @@ class KidneyTransplantAdmissionAction
 
         $this->REGISTRY_ID = cache()->rememberForever(
             'registry-id-kt_admission',
-            fn () => Registry::query()->where('name', 'acute_hd')->first()->id
+            fn () => Registry::query()->where('name', 'kt_admission')->first()->id
         );
 
         $this->BREADCRUMBS = [

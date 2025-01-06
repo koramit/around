@@ -15,21 +15,21 @@ class CommentReplyController extends Controller
 
     public function store(Request $request)
     {
-        return (new CommentReplyStoreCommentAction())($request->all(), $request->user());
+        return (new CommentReplyStoreCommentAction)($request->all(), $request->user());
     }
 
     public function index(Request $request)
     {
-        return (new CommentReplyIndexAction())($request->all());
+        return (new CommentReplyIndexAction)($request->all());
     }
 
     public function show(string $hashedKey)
     {
-        return (new CommentReplyShowRepliesAction())($hashedKey);
+        return (new CommentReplyShowRepliesAction)($hashedKey);
     }
 
     public function reply(string $hashedKey, Request $request)
     {
-        return (new CommentReplyStoreReplyAction())($hashedKey, $request->all(), $request->user());
+        return (new CommentReplyStoreReplyAction)($hashedKey, $request->all(), $request->user());
     }
 }

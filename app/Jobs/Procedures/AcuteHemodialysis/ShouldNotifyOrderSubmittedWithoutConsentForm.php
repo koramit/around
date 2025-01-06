@@ -19,14 +19,16 @@ class ShouldNotifyOrderSubmittedWithoutConsentForm implements ShouldQueue
      */
     public function __construct(
         protected AcuteHemodialysisOrderNote $order
-    ) {
-    }
+    ) {}
 
     /**
      * Execute the job.
      */
     public function handle(): void
     {
+        if (config('app.env') !== 'production') {
+            return;
+        }
         $this->order->load('caseRecord');
         $case = $this->order->caseRecord;
         if ($case->form['opd_consent_form'] || $case->form['ipd_consent_form']) {
@@ -57,7 +59,7 @@ class ShouldNotifyOrderSubmittedWithoutConsentForm implements ShouldQueue
                 'stickerId' => $sticker['stickerId'],
             ]);
         // COUNT LINE NOTIFY
-        $cacheKey = now()->format('Ym') . '-LINE-NOTIFY-COUNT';
+        $cacheKey = now()->format('Ym').'-LINE-NOTIFY-COUNT';
         cache()->increment($cacheKey);
     }
 }

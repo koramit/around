@@ -1347,7 +1347,6 @@ watch(
         case 'cancel-case':
         case 'off-case':
             actionStoreName = value.name;
-            console.log(value.config);
             openConfirmForm(value.config);
             break;
         default :

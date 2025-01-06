@@ -23,9 +23,7 @@ class EventServiceProvider extends ServiceProvider
         AcuteHemodialysisOrderNoteUpdating::class => [HandleChangeToInactiveStatus::class],
     ];
 
-    public function boot(): void
-    {
-    }
+    public function boot(): void {}
 
     public function shouldDiscoverEvents(): bool
     {

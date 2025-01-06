@@ -9,8 +9,7 @@ class HashedKeyIdExists implements Rule
     public function __construct(
         protected string $className,
         protected ?string $cacheKeyPrefix = null,
-    ) {
-    }
+    ) {}
 
     public function passes($attribute, $value): bool
     {

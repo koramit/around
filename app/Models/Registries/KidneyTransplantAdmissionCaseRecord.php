@@ -49,7 +49,7 @@ class KidneyTransplantAdmissionCaseRecord extends CaseRecord
 
     public function scopeFilterStatus($query, $status)
     {
-        $caster = new KidneyTransplantAdmissionCaseRecordStatus();
+        $caster = new KidneyTransplantAdmissionCaseRecordStatus;
         $statuses = $status && $status !== 'all'
             ? [$caster->getCode($status)]
             : [

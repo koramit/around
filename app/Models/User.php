@@ -31,6 +31,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @property bool $notify_approval_result
  * @property Collection $registry_names
  * @property string $avatar_token
+ * @property mixed $id
  */
 class User extends Authenticatable
 {

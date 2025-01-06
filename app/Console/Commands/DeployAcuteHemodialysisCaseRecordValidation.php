@@ -65,7 +65,7 @@ class DeployAcuteHemodialysisCaseRecordValidation extends Command
                 $dischargedAt = null;
                 if ($an) {
                     if ($this->argument('mode') === 'api') {
-                        $admission = (new AdmissionManager())->manage($an);
+                        $admission = (new AdmissionManager)->manage($an);
                         if ($admission['found']) {
                             $dischargedAt = $admission['admission']->dismissed_at;
                         }
@@ -90,11 +90,11 @@ class DeployAcuteHemodialysisCaseRecordValidation extends Command
                 ]);
                 $splitUser = $splitOrders->first()->author;
                 $data['hn'] = $c->meta['hn'];
-                $admission = (new AdmissionManager())->manage($data['hn'], true);
+                $admission = (new AdmissionManager)->manage($data['hn'], true);
                 if ($admission['found']) {
                     $data['an'] = $admission['admission']->an;
                 }
-                $splitCase = (new CaseRecordStoreAction())($data, $splitUser);
+                $splitCase = (new CaseRecordStoreAction)($data, $splitUser);
                 $splitOrders->each(function ($o) use ($splitCase) {
                     $o->update([
                         'case_record_id' => $splitCase->id,

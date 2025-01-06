@@ -101,13 +101,14 @@ Route::get('/deploy-dialysis-session-report', function () {
     $acuteStaff = App\Models\Role::query()->where('name', 'acute_hemodialysis_staff')->first();
     $exportData = App\Models\Ability::query()->firstOrCreate([
         'registry_id' => 1,
-        'name' => 'export_acute_hemodialysis_clinical_reports'
+        'name' => 'export_acute_hemodialysis_clinical_reports',
     ]);
     $acuteStaff->allowTo($exportData);
     $root = App\Models\Role::query()->where('name', 'root')->first();
     $root->allowTo($exportData);
     $acuteStaff->users->each(fn ($user) => $user->flushPrivileges());
     $root->users->each(fn ($user) => $user->flushPrivileges());
+
     return 'ok';
 });
 

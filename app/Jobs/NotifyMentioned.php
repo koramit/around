@@ -17,8 +17,7 @@ class NotifyMentioned implements ShouldQueue
     public function __construct(
         protected User $mentionable,
         protected mixed $channel,
-    ) {
-    }
+    ) {}
 
     public function handle(): void
     {

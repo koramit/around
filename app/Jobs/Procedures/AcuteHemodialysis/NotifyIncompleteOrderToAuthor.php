@@ -21,7 +21,7 @@ class NotifyIncompleteOrderToAuthor implements ShouldQueue
 
         AcuteHemodialysisOrderNote::query()
             ->dialysisDate($tomorrow)
-            ->where('status', (new AcuteHemodialysisOrderStatus())->getCode('draft'))
+            ->where('status', (new AcuteHemodialysisOrderStatus)->getCode('draft'))
             ->get()
             ->each(function (AcuteHemodialysisOrderNote $order) {
                 $order->author->notify(new AlertIncompleteOrder($order));

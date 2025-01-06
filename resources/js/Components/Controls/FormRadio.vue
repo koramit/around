@@ -77,6 +77,13 @@ watch (
     },
 );
 
+watch(
+    () => props.modelValue,
+    (val) => {
+        selected.value = val;
+    }
+);
+
 const computeItems = computed(() => {
     let options = ['string', 'number'].includes(typeof props.options[0])
         ?   props.options.map( function (option) {

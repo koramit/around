@@ -25,7 +25,7 @@ class PatientManager
                 return $data;
             }
 
-            $patient = new Patient();
+            $patient = new Patient;
             $patient->hn = $data['hn'];
             $patient->dob = $data['dob'];
             $patient->alive = $data['alive'];

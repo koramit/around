@@ -15,8 +15,7 @@ class DocumentChangeRequestCreated
 
     public function __construct(
         public DocumentChangeRequest $changeRequest,
-    ) {
-    }
+    ) {}
 
     public function broadcastOn(): Channel|array
     {

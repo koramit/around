@@ -23,19 +23,23 @@ const theme = computed(() => {
     switch (props.status) {
     case 'draft':
     case 'pending':
+    case 'loss f/u':
         return 'light';
     case 'submitted':
     case 'published':
     case 'approved':
     case 'completed':
+    case 'active':
         return 'success';
     case 'canceled':
     case 'deleted':
     case 'offed':
+    case 'dead':
         return 'dark';
     case 'disapproved':
     case 'scheduling':
     case 'edited':
+    case 'graft loss':
         return 'warning';
     default:
         return 'light';

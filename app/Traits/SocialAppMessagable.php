@@ -26,7 +26,7 @@ trait SocialAppMessagable
     public function toLINE(mixed $notifiable): LINEMessage
     {
         if (! $this->magicLink) {
-            return (new LINEMessage())->text($this->message);
+            return (new LINEMessage)->text($this->message);
         }
 
         $token = Str::random(32);
@@ -37,6 +37,6 @@ trait SocialAppMessagable
             'token' => $token,
         ]);
 
-        return (new LINEMessage())->text($this->message."\n\nlink หมดอายุภายใน 15 นาที\n\n".$signedUrl);
+        return (new LINEMessage)->text($this->message."\n\nlink หมดอายุภายใน 15 นาที\n\n".$signedUrl);
     }
 }

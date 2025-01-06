@@ -27,9 +27,9 @@ class ReportStoreAction extends ReportAction
 
         $validated = Validator::validate($data, [
             'patient_type' => ['required', 'string', Rule::in($this->PATIENT_TYPES)],
-            'hn' => ['required', 'digits:8', new HnExists()],
+            'hn' => ['required', 'digits:8', new HnExists],
             'date_serum' => ['required', 'date'],
-            'donor_hn' => ['nullable', 'digits:8', new HnExists()],
+            'donor_hn' => ['nullable', 'digits:8', new HnExists],
             'request_hla' => ['required', 'bool', Rule::requiredIf(! $data['request_cxm'] && ! $data['request_addition_tissue'])],
             'request_cxm' => ['required', 'bool', Rule::requiredIf(! $data['request_hla'] && ! $data['request_addition_tissue'])],
             'request_addition_tissue' => ['required', 'bool', Rule::requiredIf(! $data['request_hla'] && ! $data['request_cxm'])],
@@ -102,7 +102,7 @@ class ReportStoreAction extends ReportAction
         }
 
         // create report note
-        $report = new KidneyTransplantHLATypingReportNote();
+        $report = new KidneyTransplantHLATypingReportNote;
         $report->case_record_id = $patientCaseRecord->id;
         $report->date_note = $validated['date_serum'];
         $form['diagnosis'] = null;
