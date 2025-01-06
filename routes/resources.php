@@ -3,6 +3,7 @@
 use App\Http\Controllers\Resources\AdmissionController;
 use App\Http\Controllers\Resources\CovidLabController;
 use App\Http\Controllers\Resources\CovidVaccineController;
+use App\Http\Controllers\Resources\HospitalController;
 use App\Http\Controllers\Resources\PatientController;
 use App\Http\Controllers\Resources\PatientRecentlyAdmissionController;
 use App\Http\Controllers\Resources\PeopleController;
@@ -23,3 +24,5 @@ Route::post('covid-lab', CovidLabController::class)
     ->name('covid-lab');
 Route::post('covid-vaccine', CovidVaccineController::class)
     ->name('covid-vaccine');
+Route::get('hospitals', HospitalController::class)
+    ->name('hospitals');

@@ -60,7 +60,7 @@ class CaseBaseAction
             return;
         }
 
-        $labs = collect(array_map(fn ($item) => (object) $item, $result['reports']));
+        $labs = collect(array_map(fn ($item) => (object) $item, $result['reports']))->filter(fn ($lab) => $lab->value_numeric !== null);
         $latestLabs = $labs->sortByDesc('datetime_specimen_received');
         if ($latestLabs->first()->datetime_specimen_received > $case->form['date_latest_cr']) {
             $case->form['date_latest_cr'] = explode(' ', $latestLabs->first()->datetime_specimen_received)[0];

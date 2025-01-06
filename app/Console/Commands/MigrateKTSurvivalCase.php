@@ -301,7 +301,7 @@ class MigrateKTSurvivalCase extends Command
                 $remark['graft loss'] .= "$field: $value\n";
             }
         }
-        $form['graft_loss_note'] = $remark['graft loss'];
+        $form['graft_loss_status_note'] = $remark['graft loss'];
 
         $form['date_update_patient_status'] = $data['deadUpdate']
             ? Carbon::create($data['deadUpdate'])->format('Y-m-d')
@@ -349,7 +349,7 @@ class MigrateKTSurvivalCase extends Command
             $remark['dead cause'] .= "Type: {$admissionDead['discharge_type']}\n";
             $remark['dead cause'] .= "Status: {$admissionDead['discharge_status']}\n";
         }
-        $form['dead_note'] = $remark['dead cause'];
+        $form['patient_status_note'] = $remark['dead cause'];
 
         $cr_map = [
             'discharge_cr' => 'D/CCr',

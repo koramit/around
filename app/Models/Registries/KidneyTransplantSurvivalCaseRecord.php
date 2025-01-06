@@ -6,6 +6,7 @@ use App\Enums\KidneyTransplantSurvivalCaseStatus;
 use App\Models\CaseRecord;
 use App\Models\Resources\Registry;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class KidneyTransplantSurvivalCaseRecord extends CaseRecord
 {
@@ -37,6 +38,40 @@ class KidneyTransplantSurvivalCaseRecord extends CaseRecord
     public function getCasts(): array
     {
         return array_merge(parent::getCasts(), ['status' => KidneyTransplantSurvivalCaseStatus::class]);
+    }
+
+    protected function caseNo(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                $form = $this->form;
+                if (!$form['combined_with_liver'] && !$form['combined_with_heart'] && !$form['combined_with_pancreas']) {
+                    return $this->meta['kt_no'];
+                }
+
+                $liver = $form['combined_with_liver'];
+                $heart = $form['combined_with_heart'];
+                $pancreas = $form['combined_with_pancreas'];
+
+                if ($liver && !$heart && !$pancreas) {
+                    return 'LK'.$this->meta['kt_no'];
+                }
+
+                if (!$liver && $heart && !$pancreas) {
+                    return 'HK'.$this->meta['kt_no'];
+                }
+
+                if (!$liver && !$heart && $pancreas) {
+                    return 'SPK'.$this->meta['kt_no'];
+                }
+
+                if ($liver && $heart && !$pancreas) {
+                    return 'HLK'.$this->meta['kt_no'];
+                }
+
+                return '??'.$this->meta['kt_no'];
+            }
+        );
     }
 
     public function genTitle(): string

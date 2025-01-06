@@ -30,3 +30,5 @@ Route::delete('/{hashedKey}', [CaseRecordController::class, 'destroy'])
     ->name('destroy');
 Route::patch('/{hashedKey}', [CaseRecordController::class, 'update'])
     ->name('update');
+Route::get('/{hashedKey}', [CaseRecordController::class, 'show'])
+    ->name('show');
