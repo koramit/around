@@ -3,11 +3,14 @@
 import FormInput from '../../../Components/Controls/FormInput.vue';
 import ModalDialog from '../../../Components/Helpers/ModalDialog.vue';
 import SpinnerButton from '../../../Components/Controls/SpinnerButton.vue';
-import {nextTick, reactive, ref} from 'vue';
+import {computed, nextTick, reactive, ref} from 'vue';
 import FormDatetime from '../../../Components/Controls/FormDatetime.vue';
+import FormRadio from '../../../Components/Controls/FormRadio.vue';
+import FormAutocomplete from '../../../Components/Controls/FormAutocomplete.vue';
+import FormSelect from '../../../Components/Controls/FormSelect.vue';
 
 const props = defineProps({
-    serviceEndpoint: { type: String, required: true },
+    serviceEndpoints: { type: Object, required: true },
 });
 const emits = defineEmits(['confirmed']);
 
@@ -18,8 +21,13 @@ const form = reactive({
     hn: null,
     date_transplant: null,
     case_no: null,
+    donor_type: null,
+    donor_hn: null,
+    donor_name: null,
+    donor_hospital: null,
+    donor_redcross_id: null,
 });
-const patient = reactive({
+const recipient = reactive({
     hn: null,
     name: null,
     gender: null,
@@ -29,21 +37,28 @@ const errors = reactive({
     hn: null,
 });
 
-function searchPatient() {
+function searchPatient(isDonor = false) {
     busy.value = true;
     errors.hn = null;
-    Object.keys(patient).map(k => patient[k] = null);
+    if (!isDonor) {
+        Object.keys(recipient).map(k => recipient[k] = null);
+    }
 
     window.axios
-        .post(props.serviceEndpoint, {hn: form.hn})
+        .post(props.serviceEndpoints.patients_show, {hn: isDonor ? form.donor_hn : form.hn})
         .then((response) => {
             if (! response.data.found) {
                 errors.hn = response.data.message;
                 return;
             }
 
-            Object.keys(patient).map(k => patient[k] = response.data[k] ?? null);
-            patient.hn = form.hn;
+            if (isDonor) {
+                form.donor_name = response.data.name;
+                return;
+            }
+
+            Object.keys(recipient).map(k => recipient[k] = response.data[k] ?? null);
+            recipient.hn = form.hn;
         })
         .catch((error) => {
             console.log(error);
@@ -55,15 +70,28 @@ function searchPatient() {
 
 function open() {
     modal.value.open();
-    Object.keys(patient).map(k => patient[k] = null);
+    Object.keys(recipient).map(k => recipient[k] = null);
     nextTick(() => anInput.value.focus());
 }
 
 function confirm() {
-    form.hn = patient.hn;
+    form.hn = recipient.hn;
     emits('confirmed', {...form});
     modal.value.close();
 }
+
+const canConfirm = computed(() => {
+    if (!form.hn || !form.date_transplant || !form.case_no || !form.donor_type) {
+        return false;
+    }
+
+    if (form.donor_type?.startsWith('LD')) {
+        return form.donor_hn && form.donor_name;
+    } else {
+        return form.donor_redcross_id && form.donor_hospital;
+    }
+});
+
 defineExpose({ open });
 </script>
 
@@ -82,32 +110,32 @@ defineExpose({ open });
             <template #body>
                 <div class="py-4 my-2 md:py-6 md:my-4 border-t border-b border-accent-darker">
                     <FormInput
-                        label="hn"
+                        label="recipient hn"
                         name="hn"
                         v-model="form.hn"
                         type="tel"
                         :error="errors.hn"
                         ref="anInput"
-                        @keydown.enter="searchPatient"
+                        @keydown.enter="searchPatient()"
                     />
                     <SpinnerButton
                         :spin="busy"
                         class="btn-complement w-full mt-2"
-                        @click="searchPatient"
+                        @click="searchPatient()"
                         :disabled="!form.hn?.length"
                     >
                         SEARCH
                     </SpinnerButton>
                     <hr class="my-4 md:my-6">
-                    <span class="form-label block">Patient data</span>
+                    <span class="form-label block">recipient data</span>
                     <div
-                        v-if="!patient.hn"
+                        v-if="!recipient.hn"
                         class="bg-white rounded shadow p-2 lg:p-4 text-sm"
                         :class="{ 'animate-pulse': busy }"
                     >
                         <div
                             class="mt-1"
-                            v-for="key in Object.keys(patient)"
+                            v-for="key in Object.keys(recipient)"
                             :key="key"
                         >
                             <span class="bg-gray-100 text-gray-100 whitespace-nowrap">
@@ -121,27 +149,70 @@ defineExpose({ open });
                     >
                         <p
                             class="mt-1 whitespace-nowrap"
-                            v-for="key in [...Object.keys(patient)].filter(k => patient[k])"
+                            v-for="key in [...Object.keys(recipient)].filter(k => recipient[k])"
                             :key="key"
                         >
-                            <span class="text-complement uppercase font-semibold">{{ key.replaceAll('_', ' ') }} : </span> {{ patient[key] }}
+                            <span class="text-complement uppercase font-semibold">{{ key.replaceAll('_', ' ') }} : </span> {{ recipient[key] }}
                         </p>
                     </div>
                     <transition name="slide-fade">
-                        <div v-if="patient.hn">
+                        <div v-if="recipient.hn">
                             <hr class="my-4 md:my-6">
-                            <FormDatetime
-                                label="date transplant"
-                                name="date_transplant"
-                                v-model="form.date_transplant"
-                            />
-                            <FormInput
-                                class="mt-4"
-                                label="case no"
-                                name="case_no"
-                                v-model="form.case_no"
-                                type="tel"
-                            />
+                            <div class="grid grid-cols-2 gap-4">
+                                <FormDatetime
+                                    label="date transplant"
+                                    name="date_transplant"
+                                    v-model="form.date_transplant"
+                                />
+                                <FormInput
+                                    label="case no"
+                                    name="case_no"
+                                    v-model="form.case_no"
+                                    type="tel"
+                                />
+                            </div>
+                            <hr class="my-4 md:my-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <FormRadio
+                                    label="kidney donor type"
+                                    name="donor_type"
+                                    v-model="form.donor_type"
+                                    :options="['CD single kidney', 'CD dual kidneys', 'LD']"
+                                />
+                                <div
+                                    v-if="form.donor_type?.startsWith('LD')"
+                                    class="space-y-2"
+                                >
+                                    <FormInput
+                                        label="Donor HN"
+                                        name="donor_hn"
+                                        v-model="form.donor_hn"
+                                        type="tel"
+                                        @autosave="searchPatient(true)"
+                                    />
+                                    <FormInput
+                                        name="donor_name"
+                                        v-model="form.donor_name"
+                                        readonly
+                                    />
+                                </div>
+                                <div
+                                    v-else-if="form.donor_type?.startsWith('CD')"
+                                    class="space-y-2"
+                                >
+                                    <FormInput
+                                        label="donor redcross id"
+                                        name="donor_redcross_id"
+                                        v-model="form.donor_redcross_id"
+                                    />
+                                    <FormAutocomplete
+                                        placeholder="donor hospital"
+                                        name="donor_hospital"
+                                        v-model="form.donor_hospital"
+                                        :endpoint="serviceEndpoints.hospitals"
+                                    />
+                                </div>
+                            </div>
                         </div>
                     </transition>
                 </div>
@@ -151,7 +222,7 @@ defineExpose({ open });
                     <button
                         class="btn btn-accent"
                         @click="confirm"
-                        :disabled="!patient.hn || !form.date_transplant || !form.case_no"
+                        :disabled="!canConfirm"
                     >
                         Confirm
                     </button>

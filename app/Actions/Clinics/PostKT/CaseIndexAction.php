@@ -84,7 +84,7 @@ class CaseIndexAction
             'icon' => 'calendar-check',
             'name' => 'update-by-month',
             /*'route' => route('clinics.post-kt.update', $case->hashed_key),*/
-            'can' => $user->can('update_kt_survival_case'),
+            'can' => $user->can('update_kt_survival_case') && $user->can('view_kt_survival_follow_up_data'),
         ];
 
         $configs = [
@@ -95,6 +95,7 @@ class CaseIndexAction
                 'store' => route('clinics.post-kt.store'),
                 'patients_show' => route('resources.api.patients.show'),
                 'month_cases' => route('clinics.post-kt.month-cases', 'month'),
+                'hospitals' => route('resources.api.hospitals'),
             ],
             'filters' => [
                 'search' => $filters['search'] ?? '',

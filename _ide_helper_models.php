@@ -1036,7 +1036,7 @@ namespace App\Models\Resources{
  * @property-read string $full_name
  * @property int $id
  * @property string $hn
- * @property-read int $gender
+ * @property int $gender
  * @property \Illuminate\Support\Carbon|null $dob
  * @property \Illuminate\Database\Eloquent\Casts\AsEncryptedArrayObject|null $profile
  * @property int $alive
