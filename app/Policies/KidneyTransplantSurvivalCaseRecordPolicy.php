@@ -13,4 +13,10 @@ class KidneyTransplantSurvivalCaseRecordPolicy
         return $case->status !== KidneyTransplantSurvivalCaseStatus::DELETED
             && $user->can('update_kt_survival_case');
     }
+
+    public function delete(User $user, KidneyTransplantSurvivalCaseRecord $case): bool
+    {
+        return $case->status !== KidneyTransplantSurvivalCaseStatus::DELETED
+            && $user->can('create_kt_survival_case');
+    }
 }

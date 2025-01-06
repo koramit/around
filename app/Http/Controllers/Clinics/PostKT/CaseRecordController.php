@@ -9,6 +9,7 @@ use App\Actions\Clinics\PostKT\CaseIndexAction;
 use App\Actions\Clinics\PostKT\CaseIndexByMothAction;
 use App\Actions\Clinics\PostKT\CaseStoreAction;
 use App\Actions\Clinics\PostKT\CaseUpdateAction;
+use App\Actions\Clinics\PostKT\ShowCase;
 use App\Actions\Clinics\PostKT\TimestampUpdateAction;
 use App\Actions\Clinics\PostKT\TimestampUpdateByCrAction;
 use App\Http\Controllers\Controller;
@@ -136,5 +137,10 @@ class CaseRecordController extends Controller
     public function monthCases(string $month, Request $request, CaseIndexByMothAction $action)
     {
         return $action($month, $request->user());
+    }
+
+    public function show(string $hashedKey, Request $request, ShowCase $action)
+    {
+        return $action($hashedKey, $request->user());
     }
 }

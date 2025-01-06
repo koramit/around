@@ -143,7 +143,7 @@ watch (
         <PaginationNav :links="caseRecords.links" />
 
         <CreateForm
-            :service-endpoint="configs.routes.patients_show"
+            :service-endpoints="configs.routes"
             ref="createFormRef"
             @confirmed="createCase"
         />
