@@ -128,6 +128,7 @@ class OrderExportAction extends AcuteHemodialysisAction
             'LPB' => $row['prc'],
             'FFP' => $row['ffp'],
             'platelet' => $row['platelet'],
+            'transfusion_other' => $row['transfusion_other'] ?? null,
             'post_dialysis_weight' => $row['post_dialysis_weight'],
             'oxygen_support' => $row['oxygen_support'],
             'monitor' => $row['monitor'],

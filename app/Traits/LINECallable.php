@@ -19,7 +19,7 @@ trait LINECallable
             'messages' => $messages,
         ];
 
-        return $this->makePost($bot->configs['token'], 'message/reply', $payload)
+        return $this->makePost($bot, 'message/reply', $payload)
             ? $payload
             : null;
     }
@@ -38,7 +38,7 @@ trait LINECallable
             'messages' => $messages,
         ];
 
-        return $this->makePost($bot->configs['token'], 'message/push', $payload)
+        return $this->makePost($bot, 'message/push', $payload)
             ? $payload
             : null;
     }
