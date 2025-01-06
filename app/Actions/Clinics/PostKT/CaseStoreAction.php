@@ -128,7 +128,7 @@ class CaseStoreAction extends CaseBaseAction
             'donor_type' => ['required', 'in:CD single kidney,CD dual kidneys,LD'],
             'donor_hn' => ['nullable', 'required_if:donor_type,LD', new HnExists],
             'donor_name' => ['nullable', 'required_if:donor_type,LD', 'string', 'min:10'],
-            'donor_redcross_id' => ['nullable', 'required_if:donor_type,CD single kidney,CD dual kidneys', 'string', 'max:10'],
+            'donor_redcross_id' => ['nullable', 'required_if:donor_type,CD single kidney,CD dual kidneys', 'string', 'max:12'],
             'donor_hospital' => ['nullable', 'required_if:donor_type,CD single kidney,CD dual kidneys', 'exists:hospitals,name'],
         ]);
 
@@ -284,7 +284,7 @@ class CaseStoreAction extends CaseBaseAction
         return $case;
     }
 
-    protected function genDonorId(int $year, ?int $redcrossId): int
+    protected function genDonorId(int $year, ?string $redcrossId): int
     {
         if ($redcrossId) {
             $cases = KidneyTransplantSurvivalCaseRecord::query()
@@ -294,7 +294,7 @@ class CaseStoreAction extends CaseBaseAction
 
             foreach ($cases as $case) {
                 $donorRCId = $case->meta['donor_redcross_id'];
-               if ($donorRCId && ((int) $donorRCId) === $redcrossId
+               if ($donorRCId && ((string) $donorRCId) === $redcrossId
                ) {
                    return $case->meta['donor_id'];
                }
