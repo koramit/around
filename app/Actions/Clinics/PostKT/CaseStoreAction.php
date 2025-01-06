@@ -287,11 +287,17 @@ class CaseStoreAction extends CaseBaseAction
     protected function genDonorId(int $year, ?int $redcrossId): int
     {
         if ($redcrossId) {
-            if ($coDonor = KidneyTransplantSurvivalCaseRecord::query()
+            $cases = KidneyTransplantSurvivalCaseRecord::query()
                 ->where('status', '!=',KidneyTransplantSurvivalCaseStatus::DELETED)
-                ->where('form->donor_redcross_id', "$redcrossId")
-                ->first()) {
-                return $coDonor->meta['donor_id'];
+                ->where('meta->date_transplant', 'like', $year.'-%')
+                ->get();
+
+            foreach ($cases as $case) {
+                $donorRCId = $case->meta['donor_redcross_id'];
+               if ($donorRCId && ((int) $donorRCId) === $redcrossId
+               ) {
+                   return $donorRCId;
+               }
             }
         }
 
