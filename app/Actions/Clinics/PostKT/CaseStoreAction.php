@@ -146,7 +146,7 @@ class CaseStoreAction extends CaseBaseAction
         }
 
         $recipientId = '1'.$year.str_pad($caseNo, 3, '0', STR_PAD_LEFT);
-        $donorId = $this->genDonorId($year, (int) $validated['donor_redcross_id']);
+        $donorId = $this->genDonorId($year, $validated['donor_redcross_id']);
 
         $patient = Patient::query()->findByHashKey($validated['hn'])->first();
         $admission = $this->findTxAdmission($patient->hn, $dateTx);
