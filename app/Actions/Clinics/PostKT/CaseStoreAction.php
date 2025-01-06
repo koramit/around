@@ -296,7 +296,7 @@ class CaseStoreAction extends CaseBaseAction
                 $donorRCId = $case->meta['donor_redcross_id'];
                if ($donorRCId && ((int) $donorRCId) === $redcrossId
                ) {
-                   return $donorRCId;
+                   return $case->meta['donor_id'];
                }
             }
         }
