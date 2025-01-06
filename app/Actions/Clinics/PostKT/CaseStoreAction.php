@@ -284,7 +284,7 @@ class CaseStoreAction extends CaseBaseAction
         return $case;
     }
 
-    protected function genDonorId(int $year, ?int $redcrossId): int
+    protected function genDonorId(int $year, ?string $redcrossId): int
     {
         if ($redcrossId) {
             $cases = KidneyTransplantSurvivalCaseRecord::query()
@@ -294,7 +294,7 @@ class CaseStoreAction extends CaseBaseAction
 
             foreach ($cases as $case) {
                 $donorRCId = $case->meta['donor_redcross_id'];
-               if ($donorRCId && ((int) $donorRCId) === $redcrossId
+               if ($donorRCId && ((string) $donorRCId) === $redcrossId
                ) {
                    return $case->meta['donor_id'];
                }
