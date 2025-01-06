@@ -138,6 +138,7 @@ class CaseStoreAction extends CaseBaseAction
         $caseNo = (int) $validated['case_no'];
         $ktNo = ($thaiYear % 100).'-'.($caseNo > (99) ? $caseNo : str_pad($caseNo, 2, '0', STR_PAD_LEFT));
         if ($case = KidneyTransplantSurvivalCaseRecord::query()
+            ->where('status', '!=', KidneyTransplantSurvivalCaseStatus::DELETED)
             ->where('meta->kt_no', $ktNo)
             ->first()
         ) {
