@@ -26,6 +26,8 @@ Route::put('/{hashedKey}/timestamp-update', [CaseRecordController::class, 'times
     ->name('timestamp-update');
 Route::get('/{hashedKey}/timestamp-update-by-latest-cr', [CaseRecordController::class, 'timestampUpdateByCr'])
     ->name('timestamp-update-by-latest-cr');
+Route::get('/{hashedKey}/export-follow-up-schedule', [CaseRecordController::class, 'fuSchedule'])
+    ->name('export-follow-up-schedule');
 Route::delete('/{hashedKey}', [CaseRecordController::class, 'destroy'])
     ->name('destroy');
 Route::patch('/{hashedKey}', [CaseRecordController::class, 'update'])

@@ -9,6 +9,7 @@ use App\Actions\Clinics\PostKT\CaseIndexAction;
 use App\Actions\Clinics\PostKT\CaseIndexByMothAction;
 use App\Actions\Clinics\PostKT\CaseStoreAction;
 use App\Actions\Clinics\PostKT\CaseUpdateAction;
+use App\Actions\Clinics\PostKT\ExportFUSchedule;
 use App\Actions\Clinics\PostKT\ShowCase;
 use App\Actions\Clinics\PostKT\TimestampUpdateAction;
 use App\Actions\Clinics\PostKT\TimestampUpdateByCrAction;
@@ -16,6 +17,11 @@ use App\Http\Controllers\Controller;
 use App\Traits\AppLayoutSessionFlashable;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use OpenSpout\Common\Exception\InvalidArgumentException;
+use OpenSpout\Common\Exception\IOException;
+use OpenSpout\Common\Exception\UnsupportedTypeException;
+use OpenSpout\Writer\Exception\WriterNotOpenedException;
+use Rap2hpoutre\FastExcel\FastExcel;
 
 class CaseRecordController extends Controller
 {
@@ -142,5 +148,20 @@ class CaseRecordController extends Controller
     public function show(string $hashedKey, Request $request, ShowCase $action)
     {
         return $action($hashedKey, $request->user());
+    }
+
+    /**
+     * @throws IOException
+     * @throws WriterNotOpenedException
+     * @throws UnsupportedTypeException
+     * @throws InvalidArgumentException
+     */
+    public function fuSchedule(string $hashedKey, Request $request, ExportFUSchedule $action)
+    {
+        $data = $action($hashedKey, $request->user());
+        if ($request->wantsJson()) {
+            return $data;
+        }
+        return (new FastExcel($data['sheet']))->download($data['filename']);
     }
 }

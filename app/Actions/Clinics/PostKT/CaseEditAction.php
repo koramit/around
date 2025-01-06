@@ -88,6 +88,14 @@ class CaseEditAction extends CaseBaseAction
                 'route' => route('clinics.post-kt.update', $case->hashed_key),
                 'can' => $user->can('update', $case) && $user->can('view_kt_survival_follow_up_data'),
             ],
+            [
+                'label' => 'FU schedule',
+                'as' => 'a',
+                'icon' => 'file-excel',
+                'theme' => 'accent',
+                'route' => route('clinics.post-kt.export-follow-up-schedule', ['hashedKey' => $case->hashed_key]),
+                'can' => $user->can('view_kt_survival_case_data'),
+            ]
         ];
         $flash['main-menu-links']->prepend(['icon' => 'slack-hash', 'label' => 'Creatinine Chart', 'type' => '#', 'route' => '#creatinine-chart', 'can' => $user->can('view_kt_survival_clinical_data')]);
         $flash['main-menu-links']->prepend(['icon' => 'slack-hash', 'label' => 'Patient Status', 'type' => '#', 'route' => '#patient-status', 'can' => $user->can('view_kt_survival_follow_up_data')]);
