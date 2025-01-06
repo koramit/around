@@ -113,8 +113,7 @@ class CaseBaseAction
                 $dateDischarged = Admission::query()
                     ->findByHashKey($case->meta['an'])
                     ->first()
-                    ->dismissed_at
-                    ->tz('Asia/Bangkok');
+                    ->dismissed_at?->tz('Asia/Bangkok');
             }
             if ($dateDischarged) {
                 $selectedLab = $this->searchNearestLab($dateDischarged, 2, $labs);
