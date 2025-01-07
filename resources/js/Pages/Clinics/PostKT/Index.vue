@@ -84,7 +84,7 @@ watch (
         </div>
 
         <!-- table -->
-        <div class="bg-white rounded shadow overflow-x-auto hidden md:block">
+        <div class="bg-white rounded shadow overflow-x-auto">
             <table class="w-full whitespace-nowrap">
                 <thead>
                     <tr class="text-left font-semibold text-complement">
