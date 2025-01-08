@@ -20,15 +20,17 @@
     <!-- table -->
     <div class="bg-white rounded shadow overflow-x-auto hidden md:block">
         <table class="w-full whitespace-nowrap">
-            <tr class="text-left font-semibold text-complement">
-                <th
-                    class="px-6 pt-6 pb-4"
-                    v-for="column in ['HN', 'Patient', 'Request', 'On', 'Status', 'Author']"
-                    :key="column"
-                    v-text="column"
-                    :colspan="column === 'Author' ? 2:1"
-                />
-            </tr>
+            <thead>
+                <tr class="text-left font-semibold text-complement">
+                    <th
+                        class="px-6 pt-6 pb-4"
+                        v-for="column in ['HN', 'Patient', 'Request', 'On', 'Status', 'Author']"
+                        :key="column"
+                        v-text="column"
+                        :colspan="column === 'Author' ? 2:1"
+                    />
+                </tr>
+            </thead>
             <tr
                 class="focus-within:bg-primary-darker"
                 v-for="(report, key) in reports.data"
