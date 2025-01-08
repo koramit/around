@@ -500,16 +500,21 @@ class MigrateKTSurvivalCase extends Command
             }
         }
 
-        $case->form['medical_scheme'] = $donor['ms1'] ?? $donor['ms2'] ?? $donor['ms3'] ?? null;
+        foreach (['ms1', 'ms2', 'ms3'] as $ms) {
+            if ($donor[$ms]) {
+                $case->form['medical_scheme'] = $donor[$ms];
+                break;
+            }
+        }
 
-        if (str_contains('HLK', $donor['case_no'])) {
+        if (str_contains($donor['case_no'], 'HLK')) {
             $case->form['combined_with_liver'] = true;
             $case->form['combined_with_heart'] = true;
-        } elseif (str_contains('LK', $donor['case_no'])) {
+        } elseif (str_contains($donor['case_no'], 'LK')) {
             $case->form['combined_with_liver'] = true;
-        } elseif (str_contains('HK', $donor['case_no'])) {
+        } elseif (str_contains($donor['case_no'], 'HK')) {
             $case->form['combined_with_heart'] = true;
-        } elseif (str_contains('SPK', $donor['case_no'])) {
+        } elseif (str_contains($donor['case_no'], 'SPK')) {
             $case->form['combined_with_pancreas'] = true;
         }
 
