@@ -40,6 +40,10 @@ class CaseEditAction extends CaseBaseAction
         $form = $case->form;
         $form['kt_no'] = $case->meta['kt_no'];
         $form['case_no'] = $case->case_no;
+        $form['gender'] = $case->patient->gender;
+        $form['nationality'] = $case->patient->profile['nation'] ?? null;
+        $form['dob'] = $case->patient->dob->format('M d, Y');
+        $form['age_at_tx'] = $case->patient->dob ? abs((int) $dateTx->diffInYears($case->patient->dob)) : null;
         $form['recipient_id'] = $case->meta['recipient_id'];
         $form['donor_type'] = $case->meta['donor_type'];
         $form['donor_id'] = $case->meta['donor_id'];
@@ -140,7 +144,7 @@ class CaseEditAction extends CaseBaseAction
                 ['name' => 'crossmatch_flow_cxm', 'label' => 'Flow-CXM'],
             ],
             'crossmatch_options' => ['positive', 'negative'],
-            'medical_scheme_options' => ['เบิกจ่ายตรง', 'ประกันสังคม', 'สปสช', 'รัฐวิสาหกิจ', 'จ่ายเอง'],
+            'medical_scheme_options' => ['เบิกจ่ายตรง', 'ประกันสังคม', 'สปสช', 'รัฐวิสาหกิจ', 'จ่ายเอง', 'กทม.', 'อปท.', 'อบต.'],
             'routes' => [
                 'show' => route('clinics.post-kt.show', $case->hashed_key),
                 'update' => route('clinics.post-kt.update', $case->hashed_key),
