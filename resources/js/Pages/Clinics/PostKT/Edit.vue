@@ -214,6 +214,30 @@ const { selectOtherInput, selectOther, selectOtherClosed } = useSelectOther();
             />
             <div class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8">
                 <FormInput
+                    label="gender"
+                    readonly
+                    name="gender"
+                    v-model="form.gender"
+                />
+                <FormInput
+                    label="nationality"
+                    readonly
+                    name="nationality"
+                    v-model="form.nationality"
+                />
+                <FormInput
+                    label="dob"
+                    readonly
+                    name="dob"
+                    v-model="form.dob"
+                />
+                <FormInput
+                    label="age at transplant"
+                    readonly
+                    name="age_at_tx"
+                    v-model="form.age_at_tx"
+                />
+                <FormInput
                     label="KT NO"
                     readonly
                     name="kt_no"
