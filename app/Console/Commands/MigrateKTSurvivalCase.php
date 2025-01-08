@@ -9,6 +9,7 @@ use App\Managers\Resources\AdmissionManager;
 use App\Managers\Resources\PatientManager;
 use App\Models\Registries\KidneyTransplantSurvivalCaseRecord;
 use App\Models\Resources\Patient;
+use App\Models\Resources\Registry;
 use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
@@ -25,7 +26,7 @@ class MigrateKTSurvivalCase extends Command
      *
      * @var string
      */
-    protected $signature = 'migrate:kt-survival-case {file}';
+    protected $signature = 'migrate-data:kt-survival-case {file}';
 
     /**
      * The console command description.
@@ -49,6 +50,22 @@ class MigrateKTSurvivalCase extends Command
         '11' => 'Renal vein thrombosis',
         '12' => 'Urine leak',
         '13' => 'Other ดูใน',
+    ];
+
+    protected array $glCodesMap = [
+        '0' => '903',
+        '1' => '101',
+        '2' => '601',
+        '4' => '105',
+        '5' => '999',
+        '6' => '907',
+        '7' => '401',
+        '8' => '905',
+        '9' => '502',
+        '10' => '502',
+        '11' => '503',
+        '12' => '505',
+        '13' => '904',
     ];
 
     protected array $socGLCodes = [
@@ -93,6 +110,17 @@ class MigrateKTSurvivalCase extends Command
         '6' => 'Liver disease',
         '7' => 'Loss follow up',
         '8' => 'Other ดูใน Note',
+    ];
+
+    protected array $deadCodesMap = [
+        '0' => '900',
+        '1' => '101',
+        '2' => '201',
+        '3' => '301',
+        '4' => '400',
+        '5' => '600',
+        '6' => '501',
+        '8' => '700',
     ];
 
     protected array $socDeadCodes = [
@@ -146,6 +174,9 @@ class MigrateKTSurvivalCase extends Command
     ];
 
     protected ?Collection $DOBS = null;
+    protected ?Collection $DONORS = null;
+    protected ?Collection $CD_HOSPITAL = null;
+    protected int $REGISTRY_ID;
 
     /**
      * @throws IOException
@@ -154,6 +185,12 @@ class MigrateKTSurvivalCase extends Command
      */
     public function handle(): void
     {
+        $this->REGISTRY_ID = cache()->rememberForever(
+            'registry-id-kt_survival',
+            fn () => Registry::query()->where('name', 'kt_survival')->first()->id
+        );
+        $this->DONORS = (new FastExcel)->import(storage_path("app/seeders/donor_{$this->argument('file')}.xlsx"));
+        $this->CD_HOSPITAL = (new FastExcel)->import(storage_path("app/seeders/cd_hospital.xlsx"));
         $cases = (new FastExcel)->import(storage_path("app/seeders/export_survival_{$this->argument('file')}.xlsx"));
         $cases = $cases->sortBy(['KTID']);
 
@@ -276,8 +313,8 @@ class MigrateKTSurvivalCase extends Command
             : null;
 
         foreach (['codeGL1', 'codeGL2'] as $field) {
-            if ($data[$field] && strlen($data[$field]) === 3) {
-                $form['graft_loss_codes'][] = ['code' => $data[$field], 'specification' => null];
+            if ($data[$field] && ((int)$data[$field]) >= 100) {
+                $form['graft_loss_codes'][] = ['code' => (string) $data[$field], 'specification' => null];
             }
         }
 
@@ -288,9 +325,15 @@ class MigrateKTSurvivalCase extends Command
                 continue;
             }
             if (in_array($field, ['codeGL1', 'codeGL2'])) {
-                $lookupValue = array_key_exists((string) $value, $this->caewGLCodes)
-                    ? $value.'|'.$this->caewGLCodes[(string) $value]
-                    : $value;
+                if (array_key_exists((string) $value, $this->caewGLCodes)) {
+                    $lookupValue = $value.'|'.$this->caewGLCodes[(string) $value];
+                    if (array_key_exists((string) $value, $this->glCodesMap)) {
+                        $form['graft_loss_codes'][] = ['code' => $this->glCodesMap[(string) $value], 'specification' => null];
+                    }
+                } else {
+                    $lookupValue = $value;
+                }
+
                 $remark['graft loss'] .= "$field: $lookupValue\n";
             } elseif ($field === 'graftLossTxsoc') {
                 $lookupValue = array_key_exists((string) $value, $this->socGLCodes)
@@ -311,8 +354,8 @@ class MigrateKTSurvivalCase extends Command
             : null;
 
         foreach (['codeDead1', 'codeDead2'] as $field) {
-            if ($data[$field] && strlen($data[$field]) === 3) {
-                $form['dead_report_codes'][] = ['code' => $data[$field], 'specification' => null];
+            if ($data[$field] && ((int) $data[$field]) > 100) {
+                $form['dead_report_codes'][] = ['code' => (string) $data[$field], 'specification' => null];
             }
         }
 
@@ -323,9 +366,15 @@ class MigrateKTSurvivalCase extends Command
                 continue;
             }
             if (in_array($field, ['codeDead1', 'codeDead2'])) {
-                $lookupValue = array_key_exists((string) $value, $this->caewDeadCodes)
-                    ? $value.'|'.$this->caewDeadCodes[(string) $value]
-                    : $value;
+                if (array_key_exists((string) $value, $this->caewDeadCodes)) {
+                    $lookupValue = $value.'|'.$this->caewDeadCodes[(string) $value];
+                    if (array_key_exists((string) $value, $this->deadCodesMap)) {
+                        $form['dead_report_codes'][] = ['code' => $this->deadCodesMap[(string) $value], 'specification' => null];
+                    }
+                } else {
+                    $lookupValue = $value;
+                }
+
                 $remark['dead cause'] .= "$field: $lookupValue\n";
             } elseif ($field === 'DeadCauseTxsoc') {
                 $lookupValue = array_key_exists((string) $value, $this->socDeadCodes)
@@ -413,11 +462,60 @@ class MigrateKTSurvivalCase extends Command
         $case->status = KidneyTransplantSurvivalCaseStatus::fromGraftPatientStatus($form['graft_status'], $form['patient_status']);
         $case->save();
 
-        return [
+        $reply = [
             'ok' => true,
             'case_no' => $data['KT NO'],
             'message' => $patientNote,
         ];
+
+        if (!$donor = $this->DONORS->first(fn ($d) => (int) $d['r_id'] === $caseId)) {
+            $this->warn($caseId. ' --> NO DONOR FOUND');
+            return $reply;
+        };
+
+        $case->meta['donor_id'] = $donor['d_id'];
+        $case->meta['donor_type'] = $donor['d_type'] === 'CD'
+            ? 'CD single kidney'
+            : 'LD';
+        if ($donor['d_type'] === 'CD') {
+            $case->meta['donor_redcross_id'] = $donor['d_no'];
+            if ($donor['d_title']) {
+                if ($hospital = $this->CD_HOSPITAL->first(fn ($h) => $h['source'] === $donor['d_title'])) {
+                    $case->form['donor_hospital'] = $hospital['map'];
+                }
+            }
+        } else {
+            $case->form['donor_hn_recheck'] = implode(' ', [$donor['d_title'], $donor['d_fname'], $donor['d_lname']]);
+            if ($donor['d_no']) {
+                $livingDonor = (new PatientManager())->manage($donor['d_no']);
+                if ($livingDonor['found']) {
+                    $livingDonor = $livingDonor['patient'];
+                    $case->form['donor_hn'] = $livingDonor->hn;
+                    $case->form['donor_name'] = $livingDonor->full_name;
+                    $case->form['donor_gender'] = $livingDonor->gender;
+                    $case->form['donor_age'] = abs((int) $dateTx->diffInYears($livingDonor->dob));
+                } else {
+                    $this->warn($caseId. ' --> DONOR HN NOT FOUND');
+                }
+            }
+        }
+
+        $case->form['medical_scheme'] = $donor['ms1'] ?? $donor['ms2'] ?? $donor['ms3'] ?? null;
+
+        if (str_contains('HLK', $donor['case_no'])) {
+            $case->form['combined_with_liver'] = true;
+            $case->form['combined_with_heart'] = true;
+        } elseif (str_contains('LK', $donor['case_no'])) {
+            $case->form['combined_with_liver'] = true;
+        } elseif (str_contains('HK', $donor['case_no'])) {
+            $case->form['combined_with_heart'] = true;
+        } elseif (str_contains('SPK', $donor['case_no'])) {
+            $case->form['combined_with_pancreas'] = true;
+        }
+
+        $case->save();
+
+        return $reply;
     }
 
     /**
