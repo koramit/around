@@ -43,7 +43,6 @@ function updateByMonth() {
         emits('done');
     }
     monthCases.value.forEach((caseRecord) => {
-        console.log(caseRecord.url);
         updatingCount.value++;
         window.axios
             .post(caseRecord.url)
