@@ -24,7 +24,7 @@ class CaseEditAction extends CaseBaseAction
 
         $yearTh = $dateGraftLoss
             ? $dateGraftLoss->year - $dateTx->year
-            : Carbon::now()->year - $dateTx->year;
+            : abs($dateTx->diffInYears(Carbon::now()));
 
         $case->form['annual_year'] = $yearTh;
         if (isset($case->form["year_{$yearTh}_cr"])) {
@@ -38,6 +38,9 @@ class CaseEditAction extends CaseBaseAction
         }
 
         $form = $case->form;
+        if (!array_key_exists('managements', [...$form])) {
+            $form['managements'] = [];
+        }
         $form['kt_no'] = $case->meta['kt_no'];
         $form['case_no'] = $case->case_no;
         $form['gender'] = $case->patient->gender;
@@ -105,6 +108,7 @@ class CaseEditAction extends CaseBaseAction
         $flash['main-menu-links']->prepend(['icon' => 'slack-hash', 'label' => 'Patient Status', 'type' => '#', 'route' => '#patient-status', 'can' => $user->can('view_kt_survival_follow_up_data')]);
         $flash['main-menu-links']->prepend(['icon' => 'slack-hash', 'label' => 'Graft Status', 'type' => '#', 'route' => '#graft-status', 'can' => $user->can('view_kt_survival_follow_up_data')]);
         $flash['main-menu-links']->prepend(['icon' => 'slack-hash', 'label' => 'Creatinine Update', 'type' => '#', 'route' => '#creatinine-update', 'can' => $user->can('view_kt_survival_follow_up_data')]);
+        $flash['main-menu-links']->prepend(['icon' => 'slack-hash', 'label' => 'Diagnosis & Management', 'type' => '#', 'route' => '#managements', 'can' => $user->can('view_kt_survival_clinical_data')]);
         $flash['main-menu-links']->prepend(['icon' => 'slack-hash', 'label' => 'Clinical Data', 'type' => '#', 'route' => '#clinical-data', 'can' => $user->can('view_kt_survival_clinical_data')]);
         $flash['main-menu-links']->prepend(['icon' => 'slack-hash', 'label' => 'Operation Data', 'type' => '#', 'route' => '#operation-data', 'can' => $user->can('view_kt_survival_case_data')]);
         $flash['main-menu-links']->prepend(['icon' => 'slack-hash', 'label' => 'Case Data', 'type' => '#', 'route' => '#case-data', 'can' => $user->can('view_kt_survival_case_data')]);
@@ -145,6 +149,7 @@ class CaseEditAction extends CaseBaseAction
             ],
             'crossmatch_options' => ['positive', 'negative'],
             'medical_scheme_options' => ['เบิกจ่ายตรง', 'ประกันสังคม', 'สปสช', 'รัฐวิสาหกิจ', 'จ่ายเอง', 'กทม.', 'อปท.', 'อบต.'],
+            'management_template' => ['date_diagnosis', 'management'],
             'routes' => [
                 'show' => route('clinics.post-kt.show', $case->hashed_key),
                 'update' => route('clinics.post-kt.update', $case->hashed_key),

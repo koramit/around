@@ -19,6 +19,7 @@ import AlertMessage from '../../../Components/Helpers/AlertMessage.vue';
 import FormAutocomplete from '../../../Components/Controls/FormAutocomplete.vue';
 import FormCheckbox from '../../../Components/Controls/FormCheckbox.vue';
 import FormSelect from '../../../Components/Controls/FormSelect.vue';
+import DiagnosisManagementForm from '../../../Partials/Clinics/PostKT/DiagnosisManagementForm.vue';
 
 const props = defineProps({
     formData: {type: Object, required: true},
@@ -677,6 +678,17 @@ const { selectOtherInput, selectOther, selectOtherClosed } = useSelectOther();
                 v-model="form.graft_function"
                 :options="configs.graft_function_options"
                 :error="$page.props.errors.graft_function"
+            />
+            <h2
+                class="form-label text-lg italic text-complement mt-4 md:mt-8 xl:mt-16 form-scroll-mt"
+                id="managements"
+            >
+                Diagnosis & Management
+            </h2>
+            <hr class="my-4 border-b border-accent">
+            <DiagnosisManagementForm
+                :configs="{template: configs.management_template}"
+                v-model="form.managements"
             />
         </template>
 

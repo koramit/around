@@ -120,6 +120,9 @@ class CaseUpdateAction extends CaseBaseAction
             'date_three_month_cr' => ['nullable', 'date', 'after:date_transplant'],
             'six_month_cr' => ['nullable', 'numeric'],
             'date_six_month_cr' => ['nullable', 'date', 'after:date_transplant'],
+            'managements' => ['array'],
+            'managements.*.date_diagnosis' => ['nullable', 'date'],
+            'managements.*.management' => ['nullable', 'string', 'max:1024'],
             'remarks' => ['nullable', 'string', 'max:512'],
         ]);
 
