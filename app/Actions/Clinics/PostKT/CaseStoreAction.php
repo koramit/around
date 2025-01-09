@@ -112,6 +112,7 @@ class CaseStoreAction extends CaseBaseAction
         'date_three_month_cr' => null,
         'six_month_cr' => null,
         'date_six_month_cr' => null,
+        'managements' => [],
         'remark' => null,
     ];
 
