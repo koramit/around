@@ -9,7 +9,7 @@ use App\Models\User;
 use App\Traits\AvatarLinkable;
 use App\Traits\FlashDataGeneratable;
 use App\Traits\HomePageSelectable;
-use Carbon\Carbon;
+use Illuminate\Support\Carbon;
 
 class CaseIndexAction
 {
@@ -54,7 +54,7 @@ class CaseIndexAction
             ->withQueryString()
             ->through(function (KidneyTransplantSurvivalCaseRecord $case) use ($user) {
                 $dateTx = Carbon::create($case->meta['date_transplant']);
-                $yearTh = Carbon::now()->year - $dateTx->year;
+                $yearTh = abs($dateTx->diffInYears(Carbon::now()));
 
                 return [
                     'kt_no' => $case->meta['kt_no'],
@@ -83,7 +83,6 @@ class CaseIndexAction
             'as' => 'button',
             'icon' => 'calendar-check',
             'name' => 'update-by-month',
-            /*'route' => route('clinics.post-kt.update', $case->hashed_key),*/
             'can' => $user->can('update_kt_survival_case') && $user->can('view_kt_survival_follow_up_data'),
         ];
 

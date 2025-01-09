@@ -23,7 +23,7 @@ class AnnualUpdateAction extends CaseBaseAction
         $this->updateCreatinine($case);
 
         $dateTx = Carbon::create($case->meta['date_transplant']);
-        $yearTh = now()->year - $dateTx->year;
+        $yearTh = abs($dateTx->diffInYears(Carbon::now()));
 
         if ($useLatestCr) {
             $case->form["year_{$yearTh}_cr"] = $case->form['latest_cr'];
