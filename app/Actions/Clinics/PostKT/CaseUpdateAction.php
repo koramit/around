@@ -127,7 +127,7 @@ class CaseUpdateAction extends CaseBaseAction
         ]);
 
         $dateTx = Carbon::create($case->meta['date_transplant']);
-        $yearTh = Carbon::now()->year - $dateTx->year;
+        $yearTh = abs($dateTx->diffInYears(Carbon::now()));
         for ($year = 1; $year <= $yearTh; $year++) {
             if (array_key_exists("year_{$year}_cr", $data)) {
                 $validated["year_{$year}_cr"] = $data["year_{$year}_cr"];
