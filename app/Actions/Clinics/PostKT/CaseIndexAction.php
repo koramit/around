@@ -89,7 +89,7 @@ class CaseIndexAction
         $configs = [
             'scopes' => ['all', 'active', 'graft loss', 'dead', 'loss f/u'],
             'month_options' => ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-            'can' => ['create' => true],
+            'can' => ['create' => $user->can('create_kt_survival_case')],
             'routes' => [
                 'store' => route('clinics.post-kt.store'),
                 'patients_show' => route('resources.api.patients.show'),
