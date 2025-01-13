@@ -6,6 +6,7 @@ use App\Extensions\Auth\AvatarUser;
 use App\Models\Registries\KidneyTransplantSurvivalCaseRecord;
 use App\Models\User;
 use App\Traits\AvatarLinkable;
+use Illuminate\Support\Carbon;
 
 class TimestampUpdateAction
 {
@@ -19,12 +20,7 @@ class TimestampUpdateAction
 
         $message = (new CaseUpdateAction)($hashedKey, $data, $user);
 
-        $case = KidneyTransplantSurvivalCaseRecord::query()
-            ->findByUnhashKey($hashedKey)
-            ->first();
-
-        $case->form['date_last_update'] = now()->format('Y-m-d');
-        $case->save();
+        $case = $this->timestamp($hashedKey);
 
         $snapshot = $case->form;
         $snapshot['status'] = $case->status->label();
@@ -38,5 +34,40 @@ class TimestampUpdateAction
         ]);
 
         return $message;
+    }
+
+    protected function timestamp(string $hashedKey): KidneyTransplantSurvivalCaseRecord
+    {
+        /** @var KidneyTransplantSurvivalCaseRecord $case */
+        $case = KidneyTransplantSurvivalCaseRecord::query()
+            ->findByUnhashKey($hashedKey)
+            ->first();
+
+        if ($case->form['refer'] === null) {
+            $case->form['date_last_update'] = now()->format('Y-m-d');
+            $case->save();
+
+            return $case;
+        }
+
+        // check latest annual cr
+        $dateTx = Carbon::create($case->meta['date_transplant']);
+        $yearTh = abs($dateTx->diffInYears(Carbon::now()));
+        $form = $case->form;
+        for($i = $yearTh; $i >= 1; $i--) {
+            if (($form["year_{$i}_cr"] ?? null) && ($form["date_year_{$i}_cr"] ?? null)) {
+                if ($form["date_year_{$i}_cr"] > $form['date_last_update']) {
+                    $case->form['latest_cr'] = $form["year_{$i}_cr"];
+                    $case->form['date_last_update'] = $form["date_year_{$i}_cr"];
+                    $case->form['date_latest_cr'] = $form["date_year_{$i}_cr"];
+                    $case->form['date_update_graft_status'] = $form["date_year_{$i}_cr"];
+                    $case->form['date_update_patient_status'] = $form["date_year_{$i}_cr"];
+                    $case->save();
+                    break;
+                }
+            }
+        }
+
+        return $case;
     }
 }

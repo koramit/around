@@ -18,7 +18,7 @@
                     class="w-4 h-4 transition-colors duration-200 ease-linear text-primary group-hover:text-accent"
                 />
                 <div
-                    class="ml-2 duration-200 ease-linear text-primary group-hover:text-accent"
+                    class="ml-2 duration-200 ease-linear text-primary group-hover:text-accent truncate"
                     v-if="!zenMode"
                 >
                     {{ link.label }}
