@@ -1,1 +1,0 @@
-import{c as t,b as s,h as l}from"./app-DqlKw3YA.js";const o={class:"w-full min-h-screen flex items-center justify-center"},c={__name:"NoBotAllow",props:{layout:null},setup(n){return(r,e)=>(l(),t("main",o,e[0]||(e[0]=[s("h1",{class:"text-center font-semibold text-2xl md:text-4xl italic text-complement"}," Please open link in browser ",-1)])))}};export{c as default};
