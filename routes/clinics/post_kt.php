@@ -10,6 +10,8 @@ Route::get('/', [CaseRecordController::class, 'index'])
 Route::post('/', [CaseRecordController::class, 'store'])
     ->middleware(['can:create_kt_survival_case'])
     ->name('store');
+Route::get('/export-summary-cases', [CaseRecordController::class, 'exportSummaryCases'])
+    ->name('export-summary-cases');
 Route::get('/{month}/month-cases', [CaseRecordController::class, 'monthCases'])
     ->middleware(['can:view_any_kt_survival_cases'])
     ->name('month-cases');
@@ -28,6 +30,10 @@ Route::get('/{hashedKey}/timestamp-update-by-latest-cr', [CaseRecordController::
     ->name('timestamp-update-by-latest-cr');
 Route::get('/{hashedKey}/export-follow-up-schedule', [CaseRecordController::class, 'fuSchedule'])
     ->name('export-follow-up-schedule');
+Route::get('/{hashedKey}/print-front-cover', [CaseRecordController::class, 'printFrontCover'])
+    ->name('print-front-cover');
+Route::get('/{hashedKey}/print-folder-label', [CaseRecordController::class, 'printFolderLabel'])
+    ->name('print-folder-label');
 Route::delete('/{hashedKey}', [CaseRecordController::class, 'destroy'])
     ->name('destroy');
 Route::patch('/{hashedKey}', [CaseRecordController::class, 'update'])
