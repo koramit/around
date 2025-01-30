@@ -76,7 +76,7 @@ defineExpose({ open });
             <template #body>
                 <div class="py-4 my-2 md:py-6 md:my-4 border-t border-b border-accent-darker">
                     <FormSelect
-                        :disabled="doneCount && doneCount !== updatingCount"
+                        :disabled="Boolean(doneCount && (doneCount !== updatingCount))"
                         v-model="selectedMonth"
                         name="month"
                         :options="['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']"
