@@ -1,16 +1,22 @@
 <script setup>
-import {onMounted} from 'vue';
+import {nextTick, onMounted} from 'vue';
 import JsBarcode from 'jsbarcode';
+
+const props = defineProps({
+    data: {type: Object, required: true}
+});
 
 onMounted(() => {
     document.body.classList.remove('bg-primary');
-    JsBarcode('svg.barcode-hn', 'D1060', {
+    JsBarcode('svg.barcode-hn', props.data.hn, {
         format: 'CODE128',
         width: 1.15,
         height: 30,
         displayValue: false,
         margin: 0
     });
+
+    nextTick(() => print());
 });
 </script>
 
@@ -20,12 +26,12 @@ onMounted(() => {
             งานเปลี่ยนอวัยวะศิริราช <br> โทร 0-2419-8079
         </div>
         <div class="text-center p-2 flex items-center w-[18.5cm] justify-around border-r border-gray-950">
-            <div>NAME xxx xxxxxxxx xxxxxxxxx</div>
-            <div>HN xxxxxxxx อ.ปีณิดา</div>
-            <div>KT date 11 เมษายน 2567</div>
+            <div>{{ data.patient_name }}</div>
+            <div>HN. {{ data.hn }} {{ data.staff }}</div>
+            <div>KT date {{ data.date_kt }}</div>
         </div>
         <div class="w-[1.4cm] -ml-6 rotate-90 text-center p-1 border-t border-gray-950">
-            67-38
+            {{ data.kt_no }}
         </div>
         <div class="w-[1.4cm] -ml-6 rotate-90 text-center p-1 border-t border-gray-950">
             KT No.

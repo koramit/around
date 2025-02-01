@@ -102,6 +102,14 @@ class CaseEditAction extends CaseBaseAction
                 'theme' => 'accent',
                 'route' => route('clinics.post-kt.export-follow-up-schedule', ['hashedKey' => $case->hashed_key]),
                 'can' => $user->can('view_kt_survival_case_data'),
+            ],
+            [
+                'label' => 'Folder label',
+                'as' => 'tab',
+                'icon' => 'print',
+                'theme' => 'accent',
+                'route' => route('clinics.post-kt.print-folder-label', ['hashedKey' => $case->hashed_key]),
+                'can' => $user->can('view_kt_survival_case_data'),
             ]
         ];
         $flash['main-menu-links']->prepend(['icon' => 'slack-hash', 'label' => 'Creatinine Chart', 'type' => '#', 'route' => '#creatinine-chart', 'can' => $user->can('view_kt_survival_clinical_data')]);

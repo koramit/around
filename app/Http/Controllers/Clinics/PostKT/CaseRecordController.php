@@ -11,6 +11,8 @@ use App\Actions\Clinics\PostKT\CaseStoreAction;
 use App\Actions\Clinics\PostKT\CaseUpdateAction;
 use App\Actions\Clinics\PostKT\ExportFUSchedule;
 use App\Actions\Clinics\PostKT\ExportSummaryCases;
+use App\Actions\Clinics\PostKT\PrintCaseFolderLabel;
+use App\Actions\Clinics\PostKT\PrintCaseFrontCover;
 use App\Actions\Clinics\PostKT\ShowCase;
 use App\Actions\Clinics\PostKT\TimestampUpdateAction;
 use App\Actions\Clinics\PostKT\TimestampUpdateByCrAction;
@@ -166,14 +168,22 @@ class CaseRecordController extends Controller
         return (new FastExcel($data['sheet']))->download($data['filename']);
     }
 
-    public function printFrontCover(string $hashedKey)
+    public function printFrontCover(string $hashedKey, Request $request, PrintCaseFrontCover $action)
     {
         return Inertia::render('Clinics/PostKT/Printout/CaseFrontCover');
     }
 
-    public function printFolderLabel(string $hashedKey)
+    public function printFolderLabel(string $hashedKey, Request $request, PrintCaseFolderLabel $action)
     {
-        return Inertia::render('Clinics/PostKT/Printout/CaseFolderLabel');
+        $data = $action($hashedKey, $request->user());
+
+        if ($request->wantsJson()) {
+            return $data;
+        }
+
+        $this->setFlash($data['flash']);
+
+        return Inertia::render('Clinics/PostKT/Printout/CaseFolderLabel', ['data' => $data['data']]);
     }
 
     /**

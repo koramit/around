@@ -19,11 +19,11 @@ const donorType = ref('LD');
                     <label>Name</label>
                     <span class="w-full text-center">xxx xxxxxx xxxxxxxxxx</span>
                 </p>
-                <p class="flex space-x-1 text-xs">
+                <p class="flex space-x-1 text-xs justify-between">
                     <label class="whitespace-nowrap">Cause of ESRD</label>
-                    <span class="w-full text-center whitespace-nowrap truncate">xxxxxx xxxxxxxxxx xxxxxxxx xxx</span>
+                    <span class="text-center whitespace-nowrap truncate">xxxxxx xxxxxxxxxx xxxxxxxx xxx</span>
                     <label class="whitespace-nowrap">Native Bx</label>
-                    <span class="mx-1.5 text-center">Y/N</span>
+                    <span class="text-center  whitespace-nowrap truncate">Y/N</span>
                 </p>
                 <p class="flex space-x-1 text-xs">
                     <label>Nephro</label>
@@ -59,8 +59,6 @@ const donorType = ref('LD');
                         <span class="whitespace-nowrap">xxxx-xx-xx xx:xx</span>
                         <label class="whitespace-nowrap">Graft function</label>
                         <span class="w-full text-center whitespace-nowrap truncate">xxx xxxx xxxxx</span>
-                        <!--                        <label class="whitespace-nowrap">Co-hospital</label>
-                        <span class="whitespace-nowrap truncate">xxxx xxxxxxx xxxxxxxx xxxxxxxxxxxxxx</span>-->
                     </p>
                     <p class="flex space-x-1 text-xs">
                         <label class="whitespace-nowrap">Co-hospital</label>
