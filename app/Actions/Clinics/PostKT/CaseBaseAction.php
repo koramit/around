@@ -3,7 +3,6 @@
 namespace App\Actions\Clinics\PostKT;
 
 use App\APIs\PortalAPI;
-use App\Models\Registries\KidneyTransplantSurvivalCaseRecord;
 use App\Models\Registries\KidneyTransplantSurvivalCaseRecord as CaseRecord;
 use App\Models\Resources\Admission;
 use App\Models\Resources\Registry;
@@ -47,7 +46,7 @@ class CaseBaseAction
             ->firstOrFail();
     }
 
-    protected function updateCreatinine(KidneyTransplantSurvivalCaseRecord $case): void
+    protected function updateCreatinine(CaseRecord $case): void
     {
         if (!array_key_exists('refer', [...$case->form])) {
             $case->form['refer'] = null;
