@@ -43,6 +43,7 @@ class CaseUpdateAction extends CaseBaseAction
             'co_recipient_hospital' => ['nullable', 'exists:hospitals,name'],
             'donor_trauma' => ['bool'],
             'donor_is' => ['nullable', 'in:ฝาแฝด,น้อง,ลูกผู้น้อง,พี่,ลูกผู้พี่,บุตร,ภรรยา,สามี,มารดา,บิดา,หลาน,ป้า,ลุง,น้า,อา'],
+            'donor_cause_of_death' => ['nullable', 'string', 'max:255'],
             'abo_incompatible' => ['bool'],
             'preemptive' => ['bool'],
             'combined_with_liver' => ['bool'],
@@ -93,6 +94,7 @@ class CaseUpdateAction extends CaseBaseAction
             'mismatch_dpa1' => ['nullable', 'in:0,1,2'],
             'recipient_cmv_igg' => ['nullable', 'in:negative,positive'],
             'donor_cmv_igg' => ['nullable', 'in:negative,positive'],
+            'graft_function' => ['nullable', 'in:immediate graft function,slow graft function,delayed graft function,primary non-function'],
             'refer' => ['nullable', 'string', 'max:255'],
             'graft_status' => ['required', 'in:graft function,graft loss,loss follow up'],
             'date_update_graft_status' => ['required', 'date', 'before:tomorrow', 'after:date_transplant'],
@@ -123,7 +125,7 @@ class CaseUpdateAction extends CaseBaseAction
             'managements' => ['array'],
             'managements.*.date_diagnosis' => ['nullable', 'date'],
             'managements.*.management' => ['nullable', 'string', 'max:1024'],
-            'remarks' => ['nullable', 'string', 'max:512'],
+            'remark' => ['nullable', 'string', 'max:512'],
         ]);
 
         $dateTx = Carbon::create($case->meta['date_transplant']);

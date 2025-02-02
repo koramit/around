@@ -32,10 +32,13 @@ class CaseEditAction extends CaseBaseAction
             $case->form['date_annual_cr'] = Carbon::create($case->form["date_year_{$yearTh}_cr"])->format('M d, Y');
         }
 
-        if (!array_key_exists('refer', [...$case->form])) {
-            $case->form['refer'] = null;
-            $case->save();
+        foreach (['refer', 'graft_function', 'donor_cause_of_death', 'remark'] as $field) {
+            if (! array_key_exists($field, [...$case->form])) {
+                $case->form[$field] = null;
+            }
         }
+        $case->save();
+
 
         $form = $case->form;
         if (!array_key_exists('managements', [...$form])) {
