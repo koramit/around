@@ -170,7 +170,9 @@ class CaseRecordController extends Controller
 
     public function printFrontCover(string $hashedKey, Request $request, PrintCaseFrontCover $action)
     {
-        return Inertia::render('Clinics/PostKT/Printout/CaseFrontCover');
+        $data = $action($hashedKey, $request->user());
+
+        return Inertia::render('Clinics/PostKT/Printout/CaseFrontCover', ['data' => $data]);
     }
 
     public function printFolderLabel(string $hashedKey, Request $request, PrintCaseFolderLabel $action)
