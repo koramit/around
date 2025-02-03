@@ -51,7 +51,7 @@ class PrintCaseFrontCover
             $data['co_recipient_hospital'] = $case->form['co_recipient_hospital'];
             $data['clamp_time'] = $case->form['time_clamp_at_donor'];
             $data['donor_is'] = $case->form['donor_gender'] . ' ' . $case->form['donor_age'] . 'Yo';
-            $data['donor_is'] = $data['donor_trauma']
+            $data['donor_is'] = $case->form['donor_trauma']
                 ? $data['donor_is'] . ' trauma'
                 : $data['donor_is'] . 'non-trauma';
             $data['transplant_specification'] = str_contains(strtolower($case->form['donor_type']), 'dual kidneys')
