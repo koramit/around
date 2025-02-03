@@ -98,12 +98,14 @@ class PrintCaseFrontCover
 
         $data['last_pra_class_i_percent'] = $case->form['last_pra_class_i_percent'];
         $data['last_pra_class_ii_percent'] = $case->form['last_pra_class_ii_percent'];
-        $data['date_last_pra_class_i'] = $case->form['date_last_pra_class_i'];
-        $data['date_last_pra_class_ii'] = $case->form['date_last_pra_class_ii'];
+        $data['date_last_pra'] = $case->form['date_last_pra_class_i'] === $case->form['date_last_pra_class_ii']
+            ? $case->form['date_last_pra_class_i']
+            : trim($case->form['date_last_pra_class_i'].'/'.$case->form['date_last_pra_class_ii'], '/');
         $data['peak_pra_class_i_percent'] = $case->form['peak_pra_class_i_percent'];
         $data['peak_pra_class_ii_percent'] = $case->form['peak_pra_class_ii_percent'];
-        $data['date_peak_pra_class_i'] = $case->form['date_peak_pra_class_i'];
-        $data['date_peak_pra_class_ii'] = $case->form['date_peak_pra_class_ii'];
+        $data['date_peak_pra'] = $case->form['date_peak_pra_class_i'] === $case->form['date_peak_pra_class_i']
+            ? $case->form['date_peak_pra_class_i']
+            : trim($case->form['date_peak_pra_class_i'].'/'.$case->form['date_peak_pra_class_ii'], '/');
         $data['mismatch_a'] = $case->form['mismatch_a'];
         $data['mismatch_b'] = $case->form['mismatch_b'];
         $data['mismatch_dr'] = $case->form['mismatch_dr'];

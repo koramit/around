@@ -25,7 +25,7 @@ onMounted(() => {
                     <label class="whitespace-nowrap">Cause of ESRD</label>
                     <span class="text-center whitespace-nowrap truncate">{{ data.cause_of_esrd }}</span>
                     <label class="whitespace-nowrap">Native Bx</label>
-                    <span class="text-center  whitespace-nowrap truncate">{{ data.native_biopsy_report }}</span>
+                    <span class="text-center whitespace-nowrap truncate">{{ data.native_biopsy_report }}</span>
                 </p>
                 <p class="flex space-x-1 text-xs">
                     <label>Nephro</label>
@@ -72,7 +72,7 @@ onMounted(() => {
                         <label class="whitespace-nowrap">LD is</label>
                         <span class="w-full text-center whitespace-nowrap truncate">{{ data.donor_is }}</span>
                     </p>
-                    <p class="flex space-x-1 text-xs">
+                    <p class="flex justify-between text-xs">
                         <label class="whitespace-nowrap">Anastomosis time</label>
                         <span class="w-full text-center whitespace-nowrap truncate">{{ data.anastomosis_time_minutes }} min</span>
                         <label>WIT</label>
@@ -115,7 +115,7 @@ onMounted(() => {
                     <label>II</label>
                     <span class="whitespace-nowrap truncate">{{ data.last_pra_class_ii_percent }} %</span>
                     <label>Date</label>
-                    <span class="whitespace-nowrap truncate">{{ data.date_last_pra_class_i }}/{{ data.date_last_pra_class_ii }}</span>
+                    <span class="whitespace-nowrap truncate">{{ data.date_last_pra }}</span>
                 </p>
                 <p class="flex justify-between space-x-1 text-xs">
                     <label class="whitespace-nowrap">Peak PRA I</label>
@@ -123,7 +123,7 @@ onMounted(() => {
                     <label>II</label>
                     <span class="whitespace-nowrap truncate">{{ data.peak_pra_class_ii_percent }} %</span>
                     <label>Date</label>
-                    <span class="whitespace-nowrap truncate">{{ data.date_peak_pra_class_i }}/{{ data.date_peak_pra_class_ii }}</span>
+                    <span class="whitespace-nowrap truncate">{{ data.date_peak_pra }}</span>
                 </p>
                 <p class="flex space-x-1 text-xs">
                     <label class="whitespace-nowrap">MM : A</label>
