@@ -37,9 +37,6 @@ class CaseEditAction extends CaseBaseAction
                 $case->form[$field] = null;
             }
         }
-        if (! array_key_exists('donor_trauma', [...$case->form])) {
-            $case->form['donor_trauma'] = false;
-        }
         $case->save();
 
 
