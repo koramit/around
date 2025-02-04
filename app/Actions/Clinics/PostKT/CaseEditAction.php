@@ -37,13 +37,12 @@ class CaseEditAction extends CaseBaseAction
                 $case->form[$field] = null;
             }
         }
+        if (!array_key_exists('managements', [...$case->form])) {
+            $case->form['managements'] = [];
+        }
         $case->save();
 
-
         $form = $case->form;
-        if (!array_key_exists('managements', [...$form])) {
-            $form['managements'] = [];
-        }
         $form['kt_no'] = $case->meta['kt_no'];
         $form['case_no'] = $case->case_no;
         $form['gender'] = $case->patient->gender;
@@ -98,12 +97,36 @@ class CaseEditAction extends CaseBaseAction
                 'route' => route('clinics.post-kt.update', $case->hashed_key),
                 'can' => $user->can('update', $case) && $user->can('view_kt_survival_follow_up_data'),
             ],
-            [
+            /*[
                 'label' => 'FU schedule',
                 'as' => 'a',
                 'icon' => 'file-excel',
                 'theme' => 'accent',
                 'route' => route('clinics.post-kt.export-follow-up-schedule', ['hashedKey' => $case->hashed_key]),
+                'can' => $user->can('view_kt_survival_case_data'),
+            ],*/
+            [
+                'label' => 'Folder label',
+                'as' => 'tab',
+                'icon' => 'print',
+                'theme' => 'accent',
+                'route' => route('clinics.post-kt.print-folder-label', ['hashedKey' => $case->hashed_key]),
+                'can' => $user->can('view_kt_survival_case_data'),
+            ],
+            [
+                'label' => 'Front cover',
+                'as' => 'tab',
+                'icon' => 'print',
+                'theme' => 'accent',
+                'route' => route('clinics.post-kt.print-front-cover', ['hashedKey' => $case->hashed_key]),
+                'can' => $user->can('view_kt_survival_case_data'),
+            ],
+            [
+                'label' => 'FU schedule',
+                'as' => 'tab',
+                'icon' => 'print',
+                'theme' => 'accent',
+                'route' => route('clinics.post-kt.print-fu-schedule', ['hashedKey' => $case->hashed_key]),
                 'can' => $user->can('view_kt_survival_case_data'),
             ]
         ];
