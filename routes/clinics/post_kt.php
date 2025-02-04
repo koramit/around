@@ -28,12 +28,14 @@ Route::put('/{hashedKey}/timestamp-update', [CaseRecordController::class, 'times
     ->name('timestamp-update');
 Route::get('/{hashedKey}/timestamp-update-by-latest-cr', [CaseRecordController::class, 'timestampUpdateByCr'])
     ->name('timestamp-update-by-latest-cr');
-Route::get('/{hashedKey}/export-follow-up-schedule', [CaseRecordController::class, 'fuSchedule'])
-    ->name('export-follow-up-schedule');
+/*Route::get('/{hashedKey}/export-follow-up-schedule', [CaseRecordController::class, 'fuSchedule'])
+    ->name('export-follow-up-schedule');*/
 Route::get('/{hashedKey}/print-front-cover', [CaseRecordController::class, 'printFrontCover'])
     ->name('print-front-cover');
 Route::get('/{hashedKey}/print-folder-label', [CaseRecordController::class, 'printFolderLabel'])
     ->name('print-folder-label');
+Route::get('/{hashedKey}/print-fu-schedule', [CaseRecordController::class, 'printFUSchedule'])
+    ->name('print-fu-schedule');
 Route::delete('/{hashedKey}', [CaseRecordController::class, 'destroy'])
     ->name('destroy');
 Route::patch('/{hashedKey}', [CaseRecordController::class, 'update'])

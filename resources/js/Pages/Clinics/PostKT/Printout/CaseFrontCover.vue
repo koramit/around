@@ -8,6 +8,7 @@ defineProps({
 
 onMounted(() => {
     document.body.classList.remove('bg-primary');
+    setTimeout(() => print(), 300);
 });
 </script>
 
@@ -60,7 +61,7 @@ onMounted(() => {
                         <label class="whitespace-nowrap">Clamp time</label>
                         <span class="whitespace-nowrap">{{ data.clamp_time }}</span>
                         <label class="whitespace-nowrap">Graft function</label>
-                        <span class="w-full text-center whitespace-nowrap truncate">{{ data.graft_function }}</span>
+                        <span class="text-center whitespace-nowrap truncate">{{ data.graft_function }}</span>
                     </p>
                     <p class="flex space-x-1 text-xs">
                         <label class="whitespace-nowrap">Co-hospital</label>
@@ -87,7 +88,7 @@ onMounted(() => {
                 </template>
                 <p class="flex space-x-1.5 text-xs">
                     <label>CXM</label>
-                    <span class="w-full text-center whitespace-nowrap truncate">{{ data.CXM }}</span>
+                    <span class="w-full text-center whitespace-nowrap truncate">{{ data.cxm }}</span>
                 </p>
                 <p class="flex space-x-1 text-xs">
                     <label class="whitespace-nowrap">KT Date</label>
@@ -163,18 +164,6 @@ onMounted(() => {
                     <label class="whitespace-nowrap">Transplant specification</label>
                     <span class="w-full text-center whitespace-nowrap truncate">{{ data.transplant_specification }}</span>
                 </p>
-                <!--                <template v-if="data.donor_type === 'LD'">
-                    <p class="flex space-x-1 text-xs">
-                        <label class="whitespace-nowrap">Transplant specification</label>
-                        <span class="w-full text-center whitespace-nowrap truncate">{{ data.transplant_specification }}</span>
-                    </p>
-                </template>
-                <template v-if="data.donor_type === 'CD'">
-                    <p class="flex space-x-1 text-xs">
-                        <label class="whitespace-nowrap">Transplant specification</label>
-                        <span class="w-full text-center whitespace-nowrap truncate">Dual kidneys</span>
-                    </p>
-                </template>-->
             </div>
         </div>
         <hr class="border-t-2 border-gray-950 mt-2">
@@ -189,22 +178,17 @@ onMounted(() => {
             </div>
             <div
                 class="flex"
-                v-for="event in 8"
+                v-for="event in data.managements"
                 :key="event"
             >
                 <div class="w-1/6 border-r-2 border-t-2 border-gray-950 p-2 text-center">
-                    xxxx-xx-xx
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
+                    <p>{{ event.date_diagnosis }}</p>
                 </div>
                 <div class="w-5/6 border-t-2 border-gray-950 p-2">
-                    <div>
-                        detail....
-                    </div>
+                    <div
+                        class="h-[3cm]"
+                        v-html="event.management.replaceAll('\n', '<br>')"
+                    />
                 </div>
             </div>
         </div>
@@ -228,5 +212,4 @@ onMounted(() => {
         line-height: 0.85rem !important;
     }
 }
-
 </style>

@@ -13,6 +13,7 @@ use App\Actions\Clinics\PostKT\ExportFUSchedule;
 use App\Actions\Clinics\PostKT\ExportSummaryCases;
 use App\Actions\Clinics\PostKT\PrintCaseFolderLabel;
 use App\Actions\Clinics\PostKT\PrintCaseFrontCover;
+use App\Actions\Clinics\PostKT\PrintCaseFUSchedule;
 use App\Actions\Clinics\PostKT\ShowCase;
 use App\Actions\Clinics\PostKT\TimestampUpdateAction;
 use App\Actions\Clinics\PostKT\TimestampUpdateByCrAction;
@@ -172,7 +173,13 @@ class CaseRecordController extends Controller
     {
         $data = $action($hashedKey, $request->user());
 
-        return Inertia::render('Clinics/PostKT/Printout/CaseFrontCover', ['data' => $data]);
+        if ($request->wantsJson()) {
+            return $data;
+        }
+
+        $this->setFlash($data['flash']);
+
+        return Inertia::render('Clinics/PostKT/Printout/CaseFrontCover', ['data' => $data['data']]);
     }
 
     public function printFolderLabel(string $hashedKey, Request $request, PrintCaseFolderLabel $action)
@@ -186,6 +193,19 @@ class CaseRecordController extends Controller
         $this->setFlash($data['flash']);
 
         return Inertia::render('Clinics/PostKT/Printout/CaseFolderLabel', ['data' => $data['data']]);
+    }
+
+    public function printFUSchedule(string $hashedKey, Request $request, PrintCaseFUSchedule $action)
+    {
+        $data = $action($hashedKey, $request->user());
+
+        if ($request->wantsJson()) {
+            return $data;
+        }
+
+        $this->setFlash($data['flash']);
+
+        return Inertia::render('Clinics/PostKT/Printout/CaseFollowUpSchedule', ['data' => $data['data']]);
     }
 
     /**

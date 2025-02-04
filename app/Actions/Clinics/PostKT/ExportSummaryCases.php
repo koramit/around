@@ -5,6 +5,7 @@ namespace App\Actions\Clinics\PostKT;
 use App\Enums\KidneyTransplantSurvivalCaseStatus;
 use App\Extensions\Auth\AvatarUser;
 use App\Models\Registries\KidneyTransplantSurvivalCaseRecord;
+use App\Models\Resources\Registry;
 use App\Models\User;
 use App\Traits\AvatarLinkable;
 
@@ -43,6 +44,20 @@ class ExportSummaryCases
                     'date_last_update' => $c->form['date_last_update'],
                 ];
             });
+
+        $registryId = cache()->rememberForever(
+            'registry-id-kt_survival',
+            fn () => Registry::query()->where('name', 'kt_survival')->first()->id
+        );
+
+        $registry = Registry::query()->find($registryId);
+        $registry->actionLogs()->create([
+            'action' => 'export',
+            'actor_id' => $user->id,
+            'payload' => [
+                'report' => 'summary_cases',
+            ],
+        ]);
 
         return [
             'sheet' => $sheet,
