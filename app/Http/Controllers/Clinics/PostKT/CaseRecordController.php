@@ -10,6 +10,10 @@ use App\Actions\Clinics\PostKT\CaseIndexByMothAction;
 use App\Actions\Clinics\PostKT\CaseStoreAction;
 use App\Actions\Clinics\PostKT\CaseUpdateAction;
 use App\Actions\Clinics\PostKT\ExportFUSchedule;
+use App\Actions\Clinics\PostKT\ExportSummaryCases;
+use App\Actions\Clinics\PostKT\PrintCaseFolderLabel;
+use App\Actions\Clinics\PostKT\PrintCaseFrontCover;
+use App\Actions\Clinics\PostKT\PrintCaseFUSchedule;
 use App\Actions\Clinics\PostKT\ShowCase;
 use App\Actions\Clinics\PostKT\TimestampUpdateAction;
 use App\Actions\Clinics\PostKT\TimestampUpdateByCrAction;
@@ -162,6 +166,61 @@ class CaseRecordController extends Controller
         if ($request->wantsJson()) {
             return $data;
         }
+        return (new FastExcel($data['sheet']))->download($data['filename']);
+    }
+
+    public function printFrontCover(string $hashedKey, Request $request, PrintCaseFrontCover $action)
+    {
+        $data = $action($hashedKey, $request->user());
+
+        if ($request->wantsJson()) {
+            return $data;
+        }
+
+        $this->setFlash($data['flash']);
+
+        return Inertia::render('Clinics/PostKT/Printout/CaseFrontCover', ['data' => $data['data']]);
+    }
+
+    public function printFolderLabel(string $hashedKey, Request $request, PrintCaseFolderLabel $action)
+    {
+        $data = $action($hashedKey, $request->user());
+
+        if ($request->wantsJson()) {
+            return $data;
+        }
+
+        $this->setFlash($data['flash']);
+
+        return Inertia::render('Clinics/PostKT/Printout/CaseFolderLabel', ['data' => $data['data']]);
+    }
+
+    public function printFUSchedule(string $hashedKey, Request $request, PrintCaseFUSchedule $action)
+    {
+        $data = $action($hashedKey, $request->user());
+
+        if ($request->wantsJson()) {
+            return $data;
+        }
+
+        $this->setFlash($data['flash']);
+
+        return Inertia::render('Clinics/PostKT/Printout/CaseFollowUpSchedule', ['data' => $data['data']]);
+    }
+
+    /**
+     * @throws IOException
+     * @throws WriterNotOpenedException
+     * @throws UnsupportedTypeException
+     * @throws InvalidArgumentException
+     */
+    public function exportSummaryCases(Request $request, ExportSummaryCases $action)
+    {
+        $data = $action($request->user());
+        if ($request->wantsJson()) {
+            return $data;
+        }
+
         return (new FastExcel($data['sheet']))->download($data['filename']);
     }
 }

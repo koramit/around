@@ -20,7 +20,7 @@ createInertiaApp({
     resolve: name => {
         return resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue'))
             .then(page => {
-                page.default.layout = (name.startsWith('Auth/') || name.startsWith('Guest/') ) ? PageLayout : AppLayout;
+                page.default.layout = (name.startsWith('Auth/') || name.startsWith('Guest/') || name.includes('/Printout/') ) ? PageLayout : AppLayout;
 
                 return page;
             });

@@ -85,6 +85,14 @@ class CaseIndexAction
             'name' => 'update-by-month',
             'can' => $user->can('update_kt_survival_case') && $user->can('view_kt_survival_follow_up_data'),
         ];
+        $flash['action-menu'][] = [
+            'label' => 'Export summary',
+            'as' => 'a',
+            'icon' => 'file-excel',
+            'theme' => 'accent',
+            'route' => route('clinics.post-kt.export-summary-cases'),
+            'can' => true, // @TODO authorized
+        ];
 
         $configs = [
             'scopes' => ['all', 'active', 'graft loss', 'dead', 'loss f/u'],
