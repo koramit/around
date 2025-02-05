@@ -365,6 +365,7 @@ onMounted(() => {
 <style scoped>
 @page  {
     size: A4;
+    margin-left: 1in;
     font-size: 0.625rem !important;
     line-height: 0.85rem !important;
 }
