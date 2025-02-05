@@ -24,9 +24,9 @@ onMounted(() => {
                 </p>
                 <p class="flex space-x-1 text-xs justify-between">
                     <label class="whitespace-nowrap">Cause of ESRD</label>
-                    <span class="text-center whitespace-nowrap truncate">{{ data.cause_of_esrd }}</span>
+                    <span class="text-center whitespace-nowrap truncate w-full">{{ data.cause_of_esrd }}</span>
                     <label class="whitespace-nowrap">Native Bx</label>
-                    <span class="text-center whitespace-nowrap truncate">{{ data.native_biopsy_report }}</span>
+                    <span class="text-center whitespace-nowrap truncate w-[1cm]">{{ data.native_biopsy_report }}</span>
                 </p>
                 <p class="flex space-x-1 text-xs">
                     <label>Nephro</label>
@@ -53,15 +53,15 @@ onMounted(() => {
                 <template v-if="data.donor_type === 'CD'">
                     <p class="flex justify-between space-x-1 text-xs">
                         <label class="whitespace-nowrap">CD is</label>
-                        <span class="whitespace-nowrap truncate">{{ data.donor_is }}</span>
+                        <span class="whitespace-nowrap truncate w-[16.5cm]">{{ data.donor_is }}</span>
                         <label class="whitespace-nowrap">Cause of death</label>
-                        <span class="whitespace-nowrap truncate">{{ data.donor_cause_of_death }}</span>
+                        <span class="whitespace-nowrap truncate w-full">{{ data.donor_cause_of_death }}</span>
                     </p>
                     <p class="flex justify-between space-x-1 text-xs">
                         <label class="whitespace-nowrap">Clamp time</label>
-                        <span class="whitespace-nowrap">{{ data.clamp_time }}</span>
+                        <span class="whitespace-nowrap w-[11cm]">{{ data.clamp_time }}</span>
                         <label class="whitespace-nowrap">Graft function</label>
-                        <span class="text-center whitespace-nowrap truncate">{{ data.graft_function }}</span>
+                        <span class="text-center whitespace-nowrap truncate w-full">{{ data.graft_function }}</span>
                     </p>
                     <p class="flex space-x-1 text-xs">
                         <label class="whitespace-nowrap">Co-hospital</label>
@@ -112,19 +112,19 @@ onMounted(() => {
                 </p>
                 <p class="flex justify-between space-x-1 text-xs">
                     <label class="whitespace-nowrap">Last PRA I</label>
-                    <span class="whitespace-nowrap truncate">{{ data.last_pra_class_i_percent }} %</span>
+                    <span class="whitespace-nowrap w-[2cm]">{{ data.last_pra_class_i_percent }}</span>
                     <label>II</label>
-                    <span class="whitespace-nowrap truncate">{{ data.last_pra_class_ii_percent }} %</span>
+                    <span class="whitespace-nowrap w-[2cm]">{{ data.last_pra_class_ii_percent }}</span>
                     <label>Date</label>
-                    <span class="whitespace-nowrap truncate">{{ data.date_last_pra }}</span>
+                    <span class="whitespace-nowrap truncate w-full">{{ data.date_last_pra }}</span>
                 </p>
                 <p class="flex justify-between space-x-1 text-xs">
                     <label class="whitespace-nowrap">Peak PRA I</label>
-                    <span class="whitespace-nowrap truncate">{{ data.peak_pra_class_i_percent }} %</span>
+                    <span class="whitespace-nowrap w-[2cm]">{{ data.peak_pra_class_i_percent }}</span>
                     <label>II</label>
-                    <span class="whitespace-nowrap truncate">{{ data.peak_pra_class_ii_percent }} %</span>
+                    <span class="whitespace-nowrap w-[2cm]">{{ data.peak_pra_class_ii_percent }}</span>
                     <label>Date</label>
-                    <span class="whitespace-nowrap truncate">{{ data.date_peak_pra }}</span>
+                    <span class="whitespace-nowrap truncate w-full">{{ data.date_peak_pra }}</span>
                 </p>
                 <p class="flex space-x-1 text-xs">
                     <label class="whitespace-nowrap">MM : A</label>

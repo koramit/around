@@ -42,7 +42,7 @@ class PrintCaseFolderLabel
                 'hn' => $case->meta['hn'],
                 'patient_name' => $case->meta['name'],
                 'staff' => $case->form['nephrologist']
-                    ? $this->getFirstName($case->form['nephrologist'])
+                    ? 'อ.'.$this->getFirstName($case->form['nephrologist'])
                     : null,
                 'kt_no' => $case->meta['kt_no'],
                 'date_kt' => $dateTxThai
