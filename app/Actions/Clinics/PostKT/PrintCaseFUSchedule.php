@@ -49,13 +49,13 @@ class PrintCaseFUSchedule
         $data['date_transplant'] = $dateTx->format('d') . ' ' . $dateTx->format('m') . ' ' . ($dateTx->format('Y') + 543) % 100;
         $data['medical_scheme'] = $case->form['medical_scheme'];
 
-        $flash['page-title'] = 'Print front cover ' . $case->title;
+        $flash['page-title'] = 'Print FU schedule ' . $case->title;
         $flash['main-menu-links'] = [];
         $flash['action-menu'] = [];
 
         $case->actionLogs()->create([
             'actor_id' => $user->id,
-            'action' => 'print_case_front_cover',
+            'action' => 'print_case_fu_schedule',
         ]);
 
         return [
