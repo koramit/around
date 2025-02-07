@@ -75,20 +75,55 @@ onMounted(() => {
                     </p>
                     <p class="flex justify-between text-xs">
                         <label class="whitespace-nowrap">Anastomosis time</label>
-                        <span class="w-full text-center whitespace-nowrap truncate">{{ data.anastomosis_time_minutes }} min</span>
+                        <span class="text-center whitespace-nowrap truncate">{{ data.anastomosis_time_minutes }} min</span>
                         <label>WIT</label>
-                        <span class="w-full text-center whitespace-nowrap truncate">{{ data.warm_ischemic_time_minutes }} min</span>
+                        <span class="text-center whitespace-nowrap truncate">{{ data.warm_ischemic_time_minutes }} min</span>
                         <label>CIT</label>
-                        <span class="w-full text-center whitespace-nowrap truncate">{{ data.cold_ischemic_time_hours }} hr {{ data.cold_ischemic_time_minutes }} min</span>
+                        <span class="text-center whitespace-nowrap truncate">
+                            <span
+                                v-if="!data.cold_ischemic_time_hours"
+                                class="ml-[0.25cm]"
+                            />
+                            {{ data.cold_ischemic_time_hours }} hr
+                            <span
+                                v-if="!data.cold_ischemic_time_minutes"
+                                class="ml-[0.25cm]"
+                            />
+                            {{ data.cold_ischemic_time_minutes }} min
+                        </span>
                     </p>
                     <p class="flex space-x-1 text-xs">
                         <label class="whitespace-nowrap">Graft function</label>
                         <span class="w-full text-center whitespace-nowrap truncate">{{ data.graft_function }}</span>
                     </p>
+                    <p class="flex space-x-1.5 text-xs">
+                        <label>CXM</label>
+                        <span class="text-center whitespace-nowrap truncate">{{ data.cxm }}</span>
+                    </p>
                 </template>
-                <p class="flex space-x-1.5 text-xs">
+                <p
+                    v-else
+                    class="flex space-x-1.5 text-xs"
+                >
                     <label>CXM</label>
-                    <span class="w-full text-center whitespace-nowrap truncate">{{ data.cxm }}</span>
+                    <span class="text-center whitespace-nowrap truncate w-[4.75cm]">{{ data.cxm }}</span>
+                    <template
+                        v-if="data.donor_type === 'CD'"
+                    >
+                        <label>CIT</label>
+                        <span class="text-center whitespace-nowrap truncate">
+                            <span
+                                v-if="!data.cold_ischemic_time_hours"
+                                class="ml-[0.25cm]"
+                            />
+                            {{ data.cold_ischemic_time_hours }} hr
+                            <span
+                                v-if="!data.cold_ischemic_time_minutes"
+                                class="ml-[0.25cm]"
+                            />
+                            {{ data.cold_ischemic_time_minutes }} min
+                        </span>
+                    </template>
                 </p>
                 <p class="flex space-x-1 text-xs">
                     <label class="whitespace-nowrap">KT Date</label>
