@@ -194,27 +194,27 @@ class ReportStoreAction extends ReportAction
         ];
         if ($noteType === 'hla') {
             $data['form'] = [
-                'date_hla_typing' => null,
-                'abo' => null,
-                'rh' => null,
-                'hla_typing_class_i_a1' => null,
-                'hla_typing_class_i_a2' => null,
-                'hla_typing_class_i_b1' => null,
-                'hla_typing_class_i_b2' => null,
+                'date_hla_typing' => null, // Hndonor+donorname+donorsurname+recipientHN+R_name+R_surname+R_relationship+D_Relate_R_1Sister_2Brother_3Mother_4Father_5Daughter
+                'abo' => null, // RBlgr+D_ABO
+                'rh' => null, // R_Rh+D_Rh
+                'hla_typing_class_i_a1' => null, // R_HLAA1+D_HLAA1
+                'hla_typing_class_i_a2' => null, // R_HLAA2+D_HLAA2
+                'hla_typing_class_i_b1' => null, // R_HLAB1+D_HLAB1
+                'hla_typing_class_i_b2' => null, // R_HLAB2+D_HLAB2
                 'hla_typing_class_i_c1' => null,
                 'hla_typing_class_i_c2' => null,
-                'hla_typing_class_i_bw4' => null,
-                'hla_typing_class_i_bw6' => null,
-                'hla_typing_class_ii_drb11' => null,
-                'hla_typing_class_ii_drb12' => null,
-                'hla_typing_class_ii_drb31' => null,
+                'hla_typing_class_i_bw4' => null, // R_HLABw1+D_HLABw1
+                'hla_typing_class_i_bw6' => null, // R_HLABw2+D_HLABw2
+                'hla_typing_class_ii_drb11' => null, // R_HLADR1+D_HLADR1
+                'hla_typing_class_ii_drb12' => null, // R_HLADR2+D_HLADR2
+                'hla_typing_class_ii_drb31' => null, // R_HLADR52_DRB3+DHLADR52DRB3
                 'hla_typing_class_ii_drb32' => null,
-                'hla_typing_class_ii_drb41' => null,
+                'hla_typing_class_ii_drb41' => null, // R_HLADR53_DRB4+DHLADR53DRB4
                 'hla_typing_class_ii_drb42' => null,
-                'hla_typing_class_ii_drb51' => null,
+                'hla_typing_class_ii_drb51' => null, // R_HLADR51_DRB5+DHLADR51DRB5
                 'hla_typing_class_ii_drb52' => null,
-                'hla_typing_class_ii_dqb11' => null,
-                'hla_typing_class_ii_dqb12' => null,
+                'hla_typing_class_ii_dqb11' => null, // R_HLADBQ1+D_HLADBQ1
+                'hla_typing_class_ii_dqb12' => null, // R_HLADBQ2+D_HLADBQ2
                 'hla_typing_mismatch' => null,
             ];
             $note = KidneyTransplantHLATypingNote::query()->create($data);
@@ -238,14 +238,14 @@ class ReportStoreAction extends ReportAction
         } elseif ($noteType === 'addition_tissue_typing') {
             $data['form'] = [
                 'date_addition_tissue_typing' => null,
-                'tissue_typing_dqa1' => null,
-                'tissue_typing_dqa2' => null,
-                'tissue_typing_dpa1' => null,
-                'tissue_typing_dpa2' => null,
-                'tissue_typing_dpb1' => null,
-                'tissue_typing_dpb2' => null,
-                'tissue_typing_mica1' => null,
-                'tissue_typing_mica2' => null,
+                'tissue_typing_dqa1' => null, // R_HLADQA1+D_HLADQA1
+                'tissue_typing_dqa2' => null, // R_HLADQA2+D_HLADQA2
+                'tissue_typing_dpa1' => null, // R_DPA_1+D_DPA_1
+                'tissue_typing_dpa2' => null, // R_DPA_2+D_DPA_2
+                'tissue_typing_dpb1' => null, // R_DPB_1+D_DPB_1
+                'tissue_typing_dpb2' => null, // R_DPB_2+D_DPB_2
+                'tissue_typing_mica1' => null, // R_MICA1+D_MICA1
+                'tissue_typing_mica2' => null, // R_MICA2+D_MICA2
             ];
             $note = KidneyTransplantAdditionTissueTypingNote::query()->create($data);
         } else {
