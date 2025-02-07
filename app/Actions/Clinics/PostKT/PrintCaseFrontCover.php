@@ -43,6 +43,8 @@ class PrintCaseFrontCover
         $data['pre_kt_cr'] = $case->form['pre_kt_cr'];
         $data['date_first_rrt'] = $case->form['date_first_rrt'];
         $data['rrt_mode'] = $case->form['rrt_mode'];
+        $data['cold_ischemic_time_hours'] = $case->form['cold_ischemic_time_hours'];
+        $data['cold_ischemic_time_minutes'] = $case->form['cold_ischemic_time_minutes'];
 
         if ($data['donor_type'] === 'CD') {
             $data['donor_cause_of_death'] = $case->form['donor_cause_of_death'];
@@ -63,8 +65,6 @@ class PrintCaseFrontCover
         } else {
             $data['anastomosis_time_minutes'] = $case->form['anastomosis_time_minutes'];
             $data['warm_ischemic_time_minutes'] = $case->form['warm_ischemic_time_minutes'];
-            $data['cold_ischemic_time_hours'] = $case->form['cold_ischemic_time_hours'];
-            $data['cold_ischemic_time_minutes'] = $case->form['cold_ischemic_time_minutes'];
             $data['donor_is'] = $case->form['donor_is'] . ' ' . $case->form['donor_gender'] . ' ' . $case->form['donor_age'] . 'Yo';
             $aboIncompatible = $case->form['abo_incompatible']
                 ? 'ABO incompatible'
