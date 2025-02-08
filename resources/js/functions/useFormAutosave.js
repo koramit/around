@@ -1,5 +1,6 @@
 import debounce from 'lodash/debounce';
 import {reactive} from 'vue';
+import {usePage} from '@inertiajs/vue3';
 
 const formState = reactive({
     state: '',
@@ -24,6 +25,10 @@ export function useFormAutosave() {
                 formState.error = error;
                 if (error.response.status === 419) {
                     window.location.reload();
+                } else if (error.response.status === 422) {
+                    let errors = {};
+                    Object.keys(error.response.data.errors).forEach(k => errors[k] = error.response.data.errors[k][0]);
+                    usePage().props.errors = {...errors};
                 }
             });
     }, 2000);
