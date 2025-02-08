@@ -27,7 +27,7 @@ onMounted(() => {
         </div>
         <div class="text-center p-2 flex items-center w-[18.5cm] justify-around border-r border-gray-950">
             <div>{{ data.patient_name }}</div>
-            <div>HN. {{ data.hn }} {{ data.staff }}</div>
+            <div>HN. {{ data.hn }} <span class="ml-6">{{ data.staff }}</span></div>
             <div>KT date {{ data.date_kt }}</div>
         </div>
         <div class="w-[1.4cm] -ml-6 rotate-90 text-center p-1 border-t border-gray-950">
