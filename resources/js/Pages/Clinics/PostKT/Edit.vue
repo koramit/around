@@ -461,224 +461,225 @@ const { selectOtherInput, selectOther, selectOtherClosed } = useSelectOther();
                 </template>
             </div>
         </template>
-        <template v-if="configs.can.view_clinical_data">
-            <h2
-                class="form-label text-lg italic text-complement mt-4 md:mt-8 xl:mt-16 form-scroll-mt"
-                id="clinical-data"
-            >
-                clinical data
-            </h2>
-            <hr class="my-4 border-b border-accent">
-            <div class="grid gap-2 md:grid-cols-2 xl:gap-8">
-                <template v-if="configs.recipient_gender === 'female'">
-                    <div>
-                        <label class="form-label">
-                            gestation (g/p/a) :
-                        </label>
-                        <div class="flex space-x-2 md:space-x-4">
-                            <FormInput
-                                name="gestation_g"
-                                v-model="form.gestation_g"
-                                :error="$page.props.errors.gestation_g"
-                                type="tel"
-                                placeholder="G"
-                            />
-                            <FormInput
-                                name="gestation_p"
-                                v-model="form.gestation_p"
-                                :error="$page.props.errors.gestation_p"
-                                type="tel"
-                                placeholder="P"
-                            />
-                            <FormInput
-                                name="gestation_a"
-                                v-model="form.gestation_a"
-                                :error="$page.props.errors.gestation_a"
-                                type="tel"
-                                placeholder="A"
-                            />
-                        </div>
+
+        <h2
+            class="form-label text-lg italic text-complement mt-4 md:mt-8 xl:mt-16 form-scroll-mt"
+            id="clinical-data"
+        >
+            clinical data
+        </h2>
+        <hr class="my-4 border-b border-accent">
+        <div class="grid gap-2 md:grid-cols-2 xl:gap-8">
+            <template v-if="configs.recipient_gender === 'female'">
+                <div>
+                    <label class="form-label">
+                        gestation (g/p/a) :
+                    </label>
+                    <div class="flex space-x-2 md:space-x-4">
+                        <FormInput
+                            name="gestation_g"
+                            v-model="form.gestation_g"
+                            :error="$page.props.errors.gestation_g"
+                            type="tel"
+                            placeholder="G"
+                        />
+                        <FormInput
+                            name="gestation_p"
+                            v-model="form.gestation_p"
+                            :error="$page.props.errors.gestation_p"
+                            type="tel"
+                            placeholder="P"
+                        />
+                        <FormInput
+                            name="gestation_a"
+                            v-model="form.gestation_a"
+                            :error="$page.props.errors.gestation_a"
+                            type="tel"
+                            placeholder="A"
+                        />
                     </div>
-                    <div />
-                </template>
-                <FormSelect
-                    label="cause of esrd"
-                    name="cause_of_esrd"
-                    v-model="form.cause_of_esrd"
-                    :options="configs.cause_of_esrd_options"
-                    :allow-other="true"
-                    :error="$page.props.errors.cause_of_esrd"
-                    ref="causeOfEsrdInput"
-                />
-                <div>
-                    <label
-                        class="form-label"
-                        for="native_biopsy_report"
-                    >esrd diagnosis with native bx report :</label>
-                    <FormRadio
-                        class="grid grid-cols-1 sm:grid-cols-3 gap-2 md:gap-4"
-                        name="native_biopsy_report"
-                        v-model="form.native_biopsy_report"
-                        :options="['Yes', 'No']"
-                        allow-reset
-                    />
                 </div>
-                <FormDatetime
-                    label="date first rrt"
-                    name="date_first_rrt"
-                    v-model="form.date_first_rrt"
-                />
-                <div>
-                    <label
-                        class="form-label"
-                        for="rrt_mode"
-                    >rrt mode :</label>
-                    <FormRadio
-                        class="grid grid-cols-1 sm:grid-cols-3 gap-2 md:gap-4"
-                        name="rrt_mode"
-                        v-model="form.rrt_mode"
-                        :options="['PD', 'HD']"
-                        allow-reset
-                    />
-                </div>
-                <FormInput
-                    label="baseline cr (mg/dL)"
-                    name="baseline_cr"
-                    v-model="form.baseline_cr"
-                />
-                <FormInput
-                    label="pre kt cr (mg/dL)"
-                    name="pre_kt_cr"
-                    v-model="form.pre_kt_cr"
-                />
-                <div>
-                    <label class="form-label">recipient cmv igg :</label>
-                    <FormRadio
-                        class="grid grid-cols-2 gap-4"
-                        name="recipient_cmv_igg"
-                        v-model="form.recipient_cmv_igg"
-                        :options="configs.crossmatch_options"
-                    />
-                </div>
-                <div>
-                    <label class="form-label">donor cmv igg :</label>
-                    <FormRadio
-                        class="grid grid-cols-2 gap-4"
-                        name="donor_cmv_igg"
-                        v-model="form.donor_cmv_igg"
-                        :options="configs.crossmatch_options"
-                    />
-                </div>
-            </div>
-            <h3 class="form-label mt-4 md:mt-8 xl:mt-16">
-                hla mismatch :
-            </h3>
-            <hr class="border border-dashed my-2 md:my-4 xl:my-8">
-            <div class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8">
-                <div
-                    v-for="antigen in configs.hla_mismatch_antigens"
-                    :key="antigen"
-                >
-                    <label class="form-label">{{ antigen }} :</label>
-                    <FormRadio
-                        class="grid grid-cols-2 gap-2 lg:grid-cols-4 lg:gap-4"
-                        :name="`mismatch_${antigen.toLowerCase()}`"
-                        v-model="form[`mismatch_${antigen.toLowerCase()}`]"
-                        :options="configs.hla_mismatch_options"
-                        :error="$page.props.errors['mismatch_'+antigen.toLowerCase()]"
-                        :allow-reset="true"
-                    />
-                </div>
-            </div>
-            <h3 class="form-label mt-4 md:mt-8 xl:mt-16">
-                pra :
-            </h3>
-            <hr class="border border-dashed my-2 md:my-4 xl:my-8">
-            <div class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8">
-                <FormInput
-                    label="last class i (%)"
-                    name="last_pra_class_i_percent"
-                    v-model="form.last_pra_class_i_percent"
-                    type="number"
-                    :error="$page.props.errors.last_pra_class_i_percent"
-                />
-                <FormDatetime
-                    label="date last class i"
-                    name="date_last_pra_class_i"
-                    v-model="form.date_last_pra_class_i"
-                />
-                <FormInput
-                    label="last class ii (%)"
-                    name="last_pra_class_ii_percent"
-                    v-model="form.last_pra_class_ii_percent"
-                    type="number"
-                    :error="$page.props.errors.last_pra_class_ii_percent"
-                />
-                <FormDatetime
-                    label="date last class ii"
-                    name="date_last_pra_class_ii"
-                    v-model="form.date_last_pra_class_ii"
-                />
-                <FormInput
-                    label="peak class i (%)"
-                    name="peak_pra_class_i_percent"
-                    v-model="form.peak_pra_class_i_percent"
-                    type="number"
-                    :error="$page.props.errors.peak_pra_class_i_percent"
-                />
-                <FormDatetime
-                    label="date peak class i"
-                    name="date_peak_pra_class_i"
-                    v-model="form.date_peak_pra_class_i"
-                />
-                <FormInput
-                    label="peak class ii (%)"
-                    name="peak_pra_class_ii_percent"
-                    v-model="form.peak_pra_class_ii_percent"
-                    type="number"
-                    :error="$page.props.errors.peak_pra_class_ii_percent"
-                />
-                <FormDatetime
-                    label="date peak class ii"
-                    name="date_peak_pra_class_ii"
-                    v-model="form.date_peak_pra_class_ii"
-                />
-            </div>
-            <h3 class="form-label mt-4 md:mt-8 xl:mt-16">
-                crossmatch :
-            </h3>
-            <hr class="border border-dashed my-2 md:my-4 xl:my-8">
-            <div
-                class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8"
-                v-for="(crossmatch, key) in configs.crossmatches"
-                :key="key"
-            >
+                <div />
+            </template>
+            <FormSelect
+                label="cause of esrd"
+                name="cause_of_esrd"
+                v-model="form.cause_of_esrd"
+                :options="configs.cause_of_esrd_options"
+                :allow-other="true"
+                :error="$page.props.errors.cause_of_esrd"
+                ref="causeOfEsrdInput"
+            />
+            <div>
+                <label
+                    class="form-label"
+                    for="native_biopsy_report"
+                >esrd diagnosis with native bx report :</label>
                 <FormRadio
-                    :label="crossmatch.label"
-                    :name="crossmatch.name"
-                    v-model="form[crossmatch.name]"
+                    class="grid grid-cols-1 sm:grid-cols-3 gap-2 md:gap-4"
+                    name="native_biopsy_report"
+                    v-model="form.native_biopsy_report"
+                    :options="['Yes', 'No']"
+                    allow-reset
+                />
+            </div>
+            <FormDatetime
+                label="date first rrt"
+                name="date_first_rrt"
+                v-model="form.date_first_rrt"
+            />
+            <div>
+                <label
+                    class="form-label"
+                    for="rrt_mode"
+                >rrt mode :</label>
+                <FormRadio
+                    class="grid grid-cols-1 sm:grid-cols-3 gap-2 md:gap-4"
+                    name="rrt_mode"
+                    v-model="form.rrt_mode"
+                    :options="['PD', 'HD']"
+                    allow-reset
+                />
+            </div>
+            <FormInput
+                label="baseline cr (mg/dL)"
+                name="baseline_cr"
+                v-model="form.baseline_cr"
+            />
+            <FormInput
+                label="pre kt cr (mg/dL)"
+                name="pre_kt_cr"
+                v-model="form.pre_kt_cr"
+            />
+            <div>
+                <label class="form-label">recipient cmv igg :</label>
+                <FormRadio
+                    class="grid grid-cols-2 gap-4"
+                    name="recipient_cmv_igg"
+                    v-model="form.recipient_cmv_igg"
                     :options="configs.crossmatch_options"
-                    :error="$page.props.errors[crossmatch.name]"
+                />
+            </div>
+            <div>
+                <label class="form-label">donor cmv igg :</label>
+                <FormRadio
+                    class="grid grid-cols-2 gap-4"
+                    name="donor_cmv_igg"
+                    v-model="form.donor_cmv_igg"
+                    :options="configs.crossmatch_options"
+                />
+            </div>
+        </div>
+        <h3 class="form-label mt-4 md:mt-8 xl:mt-16">
+            hla mismatch :
+        </h3>
+        <hr class="border border-dashed my-2 md:my-4 xl:my-8">
+        <div class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8">
+            <div
+                v-for="antigen in configs.hla_mismatch_antigens"
+                :key="antigen"
+            >
+                <label class="form-label">{{ antigen }} :</label>
+                <FormRadio
+                    class="grid grid-cols-2 gap-2 lg:grid-cols-4 lg:gap-4"
+                    :name="`mismatch_${antigen.toLowerCase()}`"
+                    v-model="form[`mismatch_${antigen.toLowerCase()}`]"
+                    :options="configs.hla_mismatch_options"
+                    :error="$page.props.errors['mismatch_'+antigen.toLowerCase()]"
                     :allow-reset="true"
                 />
-                <FormInput
-                    :label="`specify ${crossmatch.label} positive`"
-                    :name="`${crossmatch.name}_positive_specification`"
-                    v-model="form[`${crossmatch.name}_positive_specification`]"
-                    :error="$page.props.errors[crossmatch.name+'_positive_specification']"
-                    :disabled="form[crossmatch.name] !== 'positive'"
-                />
             </div>
-            <h3 class="form-label mt-4 md:mt-8 xl:mt-16">
-                graft function :
-            </h3>
-            <hr class="border border-dashed my-2 md:my-4 xl:my-8">
-            <FormSelect
-                name="graft_function"
-                v-model="form.graft_function"
-                :options="configs.graft_function_options"
-                :error="$page.props.errors.graft_function"
+        </div>
+        <h3 class="form-label mt-4 md:mt-8 xl:mt-16">
+            pra :
+        </h3>
+        <hr class="border border-dashed my-2 md:my-4 xl:my-8">
+        <div class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8">
+            <FormInput
+                label="last class i (%)"
+                name="last_pra_class_i_percent"
+                v-model="form.last_pra_class_i_percent"
+                type="number"
+                :error="$page.props.errors.last_pra_class_i_percent"
             />
+            <FormDatetime
+                label="date last class i"
+                name="date_last_pra_class_i"
+                v-model="form.date_last_pra_class_i"
+            />
+            <FormInput
+                label="last class ii (%)"
+                name="last_pra_class_ii_percent"
+                v-model="form.last_pra_class_ii_percent"
+                type="number"
+                :error="$page.props.errors.last_pra_class_ii_percent"
+            />
+            <FormDatetime
+                label="date last class ii"
+                name="date_last_pra_class_ii"
+                v-model="form.date_last_pra_class_ii"
+            />
+            <FormInput
+                label="peak class i (%)"
+                name="peak_pra_class_i_percent"
+                v-model="form.peak_pra_class_i_percent"
+                type="number"
+                :error="$page.props.errors.peak_pra_class_i_percent"
+            />
+            <FormDatetime
+                label="date peak class i"
+                name="date_peak_pra_class_i"
+                v-model="form.date_peak_pra_class_i"
+            />
+            <FormInput
+                label="peak class ii (%)"
+                name="peak_pra_class_ii_percent"
+                v-model="form.peak_pra_class_ii_percent"
+                type="number"
+                :error="$page.props.errors.peak_pra_class_ii_percent"
+            />
+            <FormDatetime
+                label="date peak class ii"
+                name="date_peak_pra_class_ii"
+                v-model="form.date_peak_pra_class_ii"
+            />
+        </div>
+        <h3 class="form-label mt-4 md:mt-8 xl:mt-16">
+            crossmatch :
+        </h3>
+        <hr class="border border-dashed my-2 md:my-4 xl:my-8">
+        <div
+            class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8"
+            v-for="(crossmatch, key) in configs.crossmatches"
+            :key="key"
+        >
+            <FormRadio
+                :label="crossmatch.label"
+                :name="crossmatch.name"
+                v-model="form[crossmatch.name]"
+                :options="configs.crossmatch_options"
+                :error="$page.props.errors[crossmatch.name]"
+                :allow-reset="true"
+            />
+            <FormInput
+                :label="`specify ${crossmatch.label} positive`"
+                :name="`${crossmatch.name}_positive_specification`"
+                v-model="form[`${crossmatch.name}_positive_specification`]"
+                :error="$page.props.errors[crossmatch.name+'_positive_specification']"
+                :disabled="form[crossmatch.name] !== 'positive'"
+            />
+        </div>
+        <h3 class="form-label mt-4 md:mt-8 xl:mt-16">
+            graft function :
+        </h3>
+        <hr class="border border-dashed my-2 md:my-4 xl:my-8">
+        <FormSelect
+            name="graft_function"
+            v-model="form.graft_function"
+            :options="configs.graft_function_options"
+            :error="$page.props.errors.graft_function"
+        />
+        <template v-if="configs.can.view_clinical_data">
             <h2
                 class="form-label text-lg italic text-complement mt-4 md:mt-8 xl:mt-16 form-scroll-mt"
                 id="managements"
@@ -796,6 +797,7 @@ const { selectOtherInput, selectOther, selectOtherClosed } = useSelectOther();
                         label="date update graft status"
                         name="date_update_graft_status"
                         v-model="form.date_update_graft_status"
+                        :error="$page.props.errors.date_update_graft_status"
                     />
                 </div>
             </div>
@@ -860,6 +862,7 @@ const { selectOtherInput, selectOther, selectOtherClosed } = useSelectOther();
                         label="date update patient status"
                         name="date_update_patient_status"
                         v-model="form.date_update_patient_status"
+                        :error="$page.props.errors.date_update_patient_status"
                     />
                 </div>
             </div>

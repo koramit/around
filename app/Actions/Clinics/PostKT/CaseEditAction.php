@@ -135,7 +135,7 @@ class CaseEditAction extends CaseBaseAction
         $flash['main-menu-links']->prepend(['icon' => 'slack-hash', 'label' => 'Graft Status', 'type' => '#', 'route' => '#graft-status', 'can' => $user->can('view_kt_survival_follow_up_data')]);
         $flash['main-menu-links']->prepend(['icon' => 'slack-hash', 'label' => 'Creatinine Update', 'type' => '#', 'route' => '#creatinine-update', 'can' => $user->can('view_kt_survival_follow_up_data')]);
         $flash['main-menu-links']->prepend(['icon' => 'slack-hash', 'label' => 'Diagnosis & Management', 'type' => '#', 'route' => '#managements', 'can' => $user->can('view_kt_survival_clinical_data')]);
-        $flash['main-menu-links']->prepend(['icon' => 'slack-hash', 'label' => 'Clinical Data', 'type' => '#', 'route' => '#clinical-data', 'can' => $user->can('view_kt_survival_clinical_data')]);
+        $flash['main-menu-links']->prepend(['icon' => 'slack-hash', 'label' => 'Clinical Data', 'type' => '#', 'route' => '#clinical-data', 'can' => $user->can('view_kt_survival_case_data')]);
         $flash['main-menu-links']->prepend(['icon' => 'slack-hash', 'label' => 'Operation Data', 'type' => '#', 'route' => '#operation-data', 'can' => $user->can('view_kt_survival_case_data')]);
         $flash['main-menu-links']->prepend(['icon' => 'slack-hash', 'label' => 'Case Data', 'type' => '#', 'route' => '#case-data', 'can' => $user->can('view_kt_survival_case_data')]);
         $flash['hn'] = $case->patient->hn;

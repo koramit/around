@@ -185,9 +185,12 @@ class CaseStoreAction extends CaseBaseAction
         $this->updateCreatinine($case);
 
         $form = $case->form;
-        $form['date_update_graft_status'] = $form['date_latest_cr'];
-        $form['date_update_patient_status'] = $form['date_latest_cr'];
-        $form['date_last_update'] = $form['date_latest_cr'];
+        $dateLatest = $validated['date_transplant'] > $form['date_latest_cr']
+            ? $form['date_transplant']
+            : $form['date_latest_cr'];
+        $form['date_update_graft_status'] = $dateLatest;
+        $form['date_update_patient_status'] = $dateLatest;
+        $form['date_last_update'] = $dateLatest;
         $form['donor_type'] = $validated['donor_type'];
         $form['donor_hn'] = $validated['donor_hn'];
         $form['donor_name'] = $validated['donor_name'];
