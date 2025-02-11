@@ -203,7 +203,7 @@ onMounted(() => {
         </div>
         <hr class="border-t-2 border-gray-950 mt-2">
         <div class="pt-0 text-xs">
-            <div class="flex">
+            <div class="flex border-b-2 border-gray-950">
                 <div class="w-1/6 border-r-2 border-gray-950 p-2">
                     <label>Date Dx</label>
                 </div>
@@ -211,19 +211,20 @@ onMounted(() => {
                     <label>Diagnosis & Management</label>
                 </div>
             </div>
-            <div
-                class="flex"
-                v-for="event in data.managements"
-                :key="event"
-            >
-                <div class="w-1/6 border-r-2 border-t-2 border-gray-950 p-2 text-center">
-                    <p>{{ event.date_diagnosis }}</p>
-                </div>
-                <div class="w-5/6 border-t-2 border-gray-950 p-2">
-                    <div
-                        class="h-[3cm]"
-                        v-html="event.management.replaceAll('\n', '<br>')"
-                    />
+            <div class="h-[21cm]">
+                <div
+                    class="flex"
+                    v-for="event in data.managements"
+                    :key="event"
+                >
+                    <div class="w-1/6 p-2 text-center">
+                        <p>{{ event.date_diagnosis }}</p>
+                    </div>
+                    <div class="w-5/6 p-2">
+                        <div
+                            v-html="event.management.replaceAll('\n', '<br>')"
+                        />
+                    </div>
                 </div>
             </div>
         </div>
