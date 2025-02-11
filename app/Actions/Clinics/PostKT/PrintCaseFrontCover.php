@@ -157,12 +157,6 @@ class PrintCaseFrontCover
         }
 
         $data['managements'] = [...$case->form['managements']];
-        while (count($data['managements']) < 6) {
-            $data['managements'][] = [
-                'date_diagnosis' => null,
-                'management' => ''
-            ];
-        }
 
         $flash['page-title'] = 'Print front cover ' . $case->title;
         $flash['main-menu-links'] = [];
