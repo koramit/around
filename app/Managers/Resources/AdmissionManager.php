@@ -40,8 +40,8 @@ class AdmissionManager
             if ($admissionData['found']) { // update
                 $ward = $this->maintainWard($admissionData);
                 $admission->ward_id = $ward->id;
-                $admission->meta['discharge_type'] = $admissionData['discharge_type_name'] ?? null;
-                $admission->meta['discharge_status'] = $admissionData['discharge_status_name'] ?? null;
+                $admission->meta['discharge_type'] = $admissionData['discharge_type'] ?? null;
+                $admission->meta['discharge_status'] = $admissionData['discharge_status'] ?? null;
                 $admission->dismissed_at = $admissionData['dismissed_at'] ?? null;
                 $admission->save();
             }
@@ -70,8 +70,8 @@ class AdmissionManager
             'an' => $an,
             'meta' => [
                 'attending' => $admissionData['attending_name'] ?? null,
-                'discharge_status' => $admissionData['discharge_status_name'] ?? null,
-                'discharge_type' => $admissionData['discharge_type_name'] ?? null,
+                'discharge_status' => $admissionData['discharge_status'] ?? null,
+                'discharge_type' => $admissionData['discharge_type'] ?? null,
             ],
             'encountered_at' => $admissionData['encountered_at'],
             'dismissed_at' => $admissionData['dismissed_at'],

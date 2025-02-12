@@ -209,8 +209,6 @@ class PortalAPI implements AuthenticationAPI, CovidInfoAPI, PatientAPI
     {
         $data['patient']['found'] = true;
         $data['attending_name'] = $data['attending'];
-        $data['discharge_type_name'] = $data['discharge_type'];
-        $data['discharge_status_name'] = $data['discharge_status'];
         $data['encountered_at'] = $data['admitted_at'] ? Carbon::parse($data['admitted_at'], 'asia/bangkok')->tz('UTC') : null;
         $data['dismissed_at'] = $data['discharged_at'] ? Carbon::parse($data['discharged_at'], 'asia/bangkok')->tz('UTC') : null;
         $data['patient']['marital_status_name'] = $data['patient']['marital_status'];
