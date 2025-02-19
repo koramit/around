@@ -34,6 +34,7 @@ class CaseStoreAction extends CaseBaseAction
         'donor_trauma' => false, // CD
         'donor_cause_of_death' => null, // CD
         'co_recipient_hospital' => null, // CD
+        'no_co_recipient_hospital_reason' => null, // CD
         'preemptive' => false,
         'abo_incompatible' => false,
         'combined_with_liver' => false,

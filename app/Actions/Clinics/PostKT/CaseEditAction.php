@@ -40,6 +40,10 @@ class CaseEditAction extends CaseBaseAction
         if (!array_key_exists('managements', [...$case->form])) {
             $case->form['managements'] = [];
         }
+        if (! array_key_exists('no_co_recipient_hospital_reason', [...$case->form])) {
+            $case->form['no_co_recipient_hospital_reason'] = null;
+        }
+
         $case->save();
 
         $form = $case->form;
