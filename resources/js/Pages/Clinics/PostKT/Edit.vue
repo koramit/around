@@ -337,6 +337,12 @@ const { selectOtherInput, selectOther, selectOtherClosed } = useSelectOther();
                         v-model="form.co_recipient_hospital"
                         :endpoint="configs.routes.hospitals"
                     />
+                    <FormInput
+                        :disabled="form.donor_type === 'CD dual kidneys'"
+                        label="NO CO-RECIPIENT HOSPITAL REASON"
+                        name="no_co_recipient_hospital_reason"
+                        v-model="form.no_co_recipient_hospital_reason"
+                    />
                     <FormSelect
                         label="donor cause of death"
                         name="donor_cause_of_death"
