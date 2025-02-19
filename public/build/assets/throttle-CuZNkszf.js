@@ -1,0 +1,1 @@
+import{C as n,ag as l,a9 as g}from"./app-DPyxr6eT.js";var o=l,c=g,u="Expected a function";function d(a,i,t){var e=!0,r=!0;if(typeof a!="function")throw new TypeError(u);return c(t)&&(e="leading"in t?!!t.leading:e,r="trailing"in t?!!t.trailing:r),o(a,i,{leading:e,maxWait:i,trailing:r})}var f=d;const _=n(f);export{_ as t};
