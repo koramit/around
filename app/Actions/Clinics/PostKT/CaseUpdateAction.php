@@ -41,6 +41,7 @@ class CaseUpdateAction extends CaseBaseAction
             'donor_hospital' => ['nullable', 'exists:hospitals,name'],
             'donor_cause_of_dead' => ['nullable', 'string', 'max:255'],
             'co_recipient_hospital' => ['nullable', 'exists:hospitals,name'],
+            'no_co_recipient_hospital_reason' => ['nullable', 'string', 'max:255'],
             'donor_trauma' => ['bool'],
             'donor_is' => ['nullable', 'in:ฝาแฝด,น้อง,ลูกผู้น้อง,พี่,ลูกผู้พี่,บุตร,ภรรยา,สามี,มารดา,บิดา,หลาน,ป้า,ลุง,น้า,อา'],
             'donor_cause_of_death' => ['nullable', 'string', 'max:255'],

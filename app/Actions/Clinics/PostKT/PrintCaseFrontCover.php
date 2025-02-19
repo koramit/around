@@ -48,7 +48,7 @@ class PrintCaseFrontCover
 
         if ($data['donor_type'] === 'CD') {
             $data['donor_cause_of_death'] = $case->form['donor_cause_of_death'];
-            $data['co_recipient_hospital'] = $case->form['co_recipient_hospital'];
+            $data['co_recipient_hospital'] = $case->form['no_co_recipient_hospital_reason'] ?? $case->form['co_recipient_hospital'];
             $data['clamp_time'] = $case->form['time_clamp_at_donor'];
             $data['donor_is'] = $case->form['donor_gender'];
             if ($case->form['donor_age']) {
