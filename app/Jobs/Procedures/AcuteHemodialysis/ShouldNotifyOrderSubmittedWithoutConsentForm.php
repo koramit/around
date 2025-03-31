@@ -26,6 +26,8 @@ class ShouldNotifyOrderSubmittedWithoutConsentForm implements ShouldQueue
      */
     public function handle(): void
     {
+        return; // end of service 2025-04-01
+
         if (config('app.env') !== 'production') {
             return;
         }
