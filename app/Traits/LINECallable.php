@@ -33,14 +33,14 @@ trait LINECallable
             return null;
         }
 
-        $payload = [
+        return [ // bot notification service closed since 2025-04-01
             'to' => $to,
             'messages' => $messages,
         ];
 
-        return $this->makePost($bot, 'message/push', $payload)
+        /*return $this->makePost($bot, 'message/push', $payload)
             ? $payload
-            : null;
+            : null;*/
     }
 
     private function makePost(ChatBot $bot, string $url, array $payload): bool
