@@ -400,6 +400,8 @@ class OrderSubmitAction extends AcuteHemodialysisAction
 
     protected function notifyResubmit(AcuteHemodialysisOrderNote $note, string $action): void
     {
+        return; // end of service 2025-04-01
+
         if ($action !== 'resubmit') {
             return;
         }

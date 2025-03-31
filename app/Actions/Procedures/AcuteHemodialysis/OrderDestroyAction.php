@@ -69,6 +69,7 @@ class OrderDestroyAction extends AcuteHemodialysisAction
 
     protected function notifyCancel(AcuteHemodialysisOrderNote $order): void
     {
+        return; // end of service 2025-04-01
         $order->load('author');
         $message = "\nOrder ถูกยกเลิก\n";
         $message .= "คนไข้ {$order->meta['name']} {$order->meta['dialysis_type']} \nวันที่ {$order->date_note->format('M j y')}\n";
