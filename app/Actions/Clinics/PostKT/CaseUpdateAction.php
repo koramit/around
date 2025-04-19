@@ -104,7 +104,7 @@ class CaseUpdateAction extends CaseBaseAction
             'graft_loss_codes.*.code' => ['required', 'integer'],
             'graft_loss_codes.*.specification' => ['nullable', 'string', 'max:255'],
             'graft_loss_status_note' => ['nullable', 'string', 'max:512'],
-            'date_latest_cr' => ['required', 'date', 'after_or_equal:date_transplant'],
+            'date_latest_cr' => ['required', 'date'], // , 'after_or_equal:date_transplant'
             'latest_cr' => ['required', 'numeric'],
             'patient_status' => ['required', 'in:alive,dead,loss follow up'],
             'date_update_patient_status' => ['required', 'date', 'before:tomorrow', 'after_or_equal:date_transplant'],
