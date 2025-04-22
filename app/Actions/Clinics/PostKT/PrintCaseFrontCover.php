@@ -94,7 +94,7 @@ class PrintCaseFrontCover
         }
 
         $data['donor_is'] = trim($data['donor_is']);
-        $data['graft_function'] = $case->form['graft_function'];
+        $data['graft_function'] = $this->getGraftFunctionShort($case->form['graft_function']);
         $data['kt_times'] = $case->form['kt_times'] ? Number::ordinal($case->form['kt_times']) : null;
         $data['date_transplant'] = $case->meta['date_transplant'];
         $data['hn'] = $patient->hn;
@@ -171,5 +171,16 @@ class PrintCaseFrontCover
             'flash' => $flash,
             'data' => $data,
         ];
+    }
+
+    protected function getGraftFunctionShort(?string $graftFunction): ?string
+    {
+        return match ($graftFunction) {
+            'immediate graft function' => 'IGF',
+            'slow graft function' => 'SGF',
+            'delayed graft function' => 'DGF',
+            'primary non-function' => 'PNF',
+            default => null
+        };
     }
 }
