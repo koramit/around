@@ -57,7 +57,16 @@ class OrderShowAction extends AcuteHemodialysisAction
             'predialysis_evaluation' => $this->getPredialysisEvaluation($order->form),
         ];
 
-        foreach (['hd', 'hf', 'tpe', 'sledd'] as $type) {
+        if (isset($order->form['tpe'])) {
+            $order->form['pe'] = $order->form['tpe'];
+            unset($order->form['tpe']);
+            $order->form['pe']['technique'] = 'TPE';
+            $order->form['pe']['dialyzer_second'] = null;
+            $order->form['pe']['percent_discard'] = null;
+            $order->save();
+        }
+
+        foreach (['hd', 'hf', 'pe', 'sledd'] as $type) {
             if (isset($order->form[$type])) {
                 $prescription = $order->form[$type];
                 if (! isset($prescription['duration'])) {
@@ -138,7 +147,7 @@ class OrderShowAction extends AcuteHemodialysisAction
 
     protected function getPredialysisEvaluation(ArrayObject $form): array
     {
-        $content = collect([]);
+        $content = collect();
 
         if ($form['hemodynamic']['stable']) {
             $content[] = ['label' => 'Hemodynamic', 'data' => "<p class='text-green-400'>Stable</p>"];
@@ -246,13 +255,19 @@ class OrderShowAction extends AcuteHemodialysisAction
             ['label' => 'access site', 'name' => 'access_site_coagulant'],
             ['label' => 'dialyzer', 'name' => 'dialyzer'],
 
-            // TPE
+            // PE
+            ['label' => 'dialyzer 2', 'name' => 'dialyzer_second'],
+            ['label' => 'technique', 'name' => 'technique'],
             ['label' => 'albumin concentrated (%)', 'name' => 'replacement_fluid_albumin_concentrated'],
             ['label' => 'albumin volume (ml)', 'name' => 'replacement_fluid_albumin_volume'],
             ['label' => 'ffp volume (ml)', 'name' => 'replacement_fluid_ffp_volume'],
             ['label' => 'blood pump (ml/min)', 'name' => 'blood_pump'],
             ['label' => 'filtration pump (%)', 'name' => 'filtration_pump'],
             ['label' => 'replacement pump (%)', 'name' => 'replacement_pump'],
+            ['label' => '% discard', 'name' => 'percent_discard'],
+            ['label' => 'dialyzer priming', 'name' => 'dialyzer_priming'],
+            ['label' => 'dialyzer priming volume (ml)', 'name' => 'dialyzer_priming_volume'],
+            ['label' => 'replacement fluid type', 'name' => 'replacement_fluid_type'],
             ['label' => 'drain pump (%)', 'name' => 'drain_pump'],
             ['label' => '10% calcium gluconate volume (ml)', 'name' => 'calcium_gluconate_10_percent_volume'],
             ['label' => '10%  calcium gluconate timing (at hour)', 'name' => 'calcium_gluconate_10_percent_timing'],
@@ -340,6 +355,27 @@ class OrderShowAction extends AcuteHemodialysisAction
                     ->transform(fn ($m) => "<p>$m</p>")
                     ->join(''),
             ];
+        }
+
+        if ($form['technique'] ?? false) {
+            // move array key technique before duration
+            $content = collect($content)->sortBy(function ($item) {
+                return $item['label'] === 'technique' ? 0 : 1;
+            })->values()->all();
+
+            // rename key dialyzer to dialyzer 1 if technique is DFPP
+            if ($form['technique'] === 'DFPP') {
+                foreach ($content as &$item) {
+                    if ($item['label'] === 'dialyzer') {
+                        $item['label'] = 'dialyzer 1';
+                    }
+                }
+            } else {
+                // remove key `dialyzer_second` and `percent_discard` if technique is not DFPP
+                $content = collect($content)->filter(function ($item) {
+                    return ! in_array($item['label'], ['dialyzer 2', '% discard']);
+                })->values()->all();
+            }
         }
 
         return $content;

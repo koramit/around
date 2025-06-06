@@ -54,6 +54,14 @@ class OrderEditAction extends AcuteHemodialysisAction
             ];
         }
 
+        if (isset($note->form['tpe'])) {
+            $note->form['pe'] = $note->form['tpe'];
+            $note->form['pe']['dialyzer_second'] = null;
+            $note->form['pe']['technique'] = 'TPE';
+            unset($note->form['tpe']);
+            $note->save();
+        }
+
         return [
             'orderForm' => $note->form,
             'flash' => $flash,

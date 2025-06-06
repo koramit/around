@@ -131,10 +131,12 @@ class OrderStoreAction extends AcuteHemodialysisAction
         'transfusion_other' => null,
     ];
 
-    protected array $TPE_FORM_TEMPLATE = [
+    protected array $PE_FORM_TEMPLATE = [
+        'technique' => null,
         'access_type' => null,
         'access_site_coagulant' => null,
         'dialyzer' => 'Plasmaflo',
+        'dialyzer_second' => null,
         'replacement_fluid_albumin' => false,
         'replacement_fluid_albumin_concentrated' => null,
         'replacement_fluid_albumin_volume' => null,
@@ -143,6 +145,7 @@ class OrderStoreAction extends AcuteHemodialysisAction
         'blood_pump' => 150,
         'filtration_pump' => 30,
         'replacement_pump' => 100,
+        'percent_discard' => null,
         'drain_pump' => null,
         'calcium_gluconate_10_percent_volume' => null,
         'calcium_gluconate_10_percent_timing' => null,
@@ -335,15 +338,15 @@ class OrderStoreAction extends AcuteHemodialysisAction
             $form['hd']['hf_perform_at'] = null;
             $form['hd']['hf_ultrafiltration_min'] = null;
             $form['hd']['hf_ultrafiltration_max'] = null;
-        } elseif ($dialysisType->contains('HD+TPE')) {
+        } elseif ($dialysisType->contains('HD+PE')) {
             $form['hd'] = $this->HD_FORM_TEMPLATE;
-            $form['tpe'] = $this->TPE_FORM_TEMPLATE;
+            $form['pe'] = $this->PE_FORM_TEMPLATE;
         } elseif ($dialysisType->contains('HD ')) {
             $form['hd'] = $this->HD_FORM_TEMPLATE;
         } elseif ($dialysisType->contains('HF ')) {
             $form['hf'] = $this->HF_FORM_TEMPLATE;
-        } elseif ($dialysisType->contains('TPE ')) {
-            $form['tpe'] = $this->TPE_FORM_TEMPLATE;
+        } elseif ($dialysisType->contains('PE ')) {
+            $form['pe'] = $this->PE_FORM_TEMPLATE;
         } elseif ($dialysisType->contains('SLEDD')) {
             $form['sledd'] = $this->SLEDD_FORM_TEMPLATE;
         }

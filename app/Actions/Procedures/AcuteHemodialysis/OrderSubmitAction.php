@@ -187,51 +187,54 @@ class OrderSubmitAction extends AcuteHemodialysisAction
             ]);
         }
 
-        if (isset($data['tpe'])) {
+        if (isset($data['pe'])) {
             $rules = array_merge($rules, [
-                'tpe.access_type' => ['required', Rule::in($this->FORM_CONFIGS['access_types'])],
-                'tpe.access_site_coagulant' => [
-                    'prohibited_if:tpe.access_type,pending',
-                    Rule::requiredIf(fn () => $data['tpe']['access_type'] !== 'pending'),
+                'pe.technique' => ['required', Rule::in($this->FORM_CONFIGS['pe_technique_options'])],
+                'pe.access_type' => ['required', Rule::in($this->FORM_CONFIGS['access_types'])],
+                'pe.access_site_coagulant' => [
+                    'prohibited_if:pe.access_type,pending',
+                    Rule::requiredIf(fn () => $data['pe']['access_type'] !== 'pending'),
                     'nullable',
-                    Rule::in(str_starts_with($data['tpe']['access_type'] ?? '', 'AV') ? $this->FORM_CONFIGS['av_access_sites'] : $this->FORM_CONFIGS['non_av_access_sites']),
+                    Rule::in(str_starts_with($data['pe']['access_type'] ?? '', 'AV') ? $this->FORM_CONFIGS['av_access_sites'] : $this->FORM_CONFIGS['non_av_access_sites']),
                 ],
-                'tpe.dialyzer' => ['required', Rule::in($this->FORM_CONFIGS['tpe_dialyzers'])],
-                'tpe.replacement_fluid_albumin' => 'boolean',
-                'tpe.replacement_fluid_albumin_concentrated' => ['required_if:tpe.replacement_fluid_albumin,true', 'nullable', Rule::in($this->FORM_CONFIGS['replacement_fluid_albumin_concentrated'])],
-                'tpe.replacement_fluid_albumin_volume' => 'required_if:tpe.replacement_fluid_albumin,true|nullable|integer',
-                'tpe.replacement_fluid_ffp' => 'boolean',
-                'tpe.replacement_fluid_ffp_volume' => 'required_if:replacement_fluid_ffp_volume,true|nullable|integer',
-                'tpe.blood_pump' => ['required', Rule::in($this->FORM_CONFIGS['blood_pump'])],
-                'tpe.filtration_pump' => ['required', Rule::in($this->FORM_CONFIGS['tpe_filtration_pump_options'])],
-                'tpe.replacement_pump' => ['required', Rule::in($this->FORM_CONFIGS['tpe_replacement_pump_options'])],
-                'tpe.drain_pump' => 'nullable|integer',
-                'tpe.calcium_gluconate_10_percent_volume' => ['nullable', Rule::in($this->FORM_CONFIGS['calcium_gluconate_10_percent_volumes'])],
-                'tpe.calcium_gluconate_10_percent_timing' => ['nullable', Rule::in($this->FORM_CONFIGS['calcium_gluconate_10_percent_timings'])],
-                'tpe.anticoagulant' => 'required|string|max:255',
-                'tpe.anticoagulant_none_drip_via_peripheral_iv' => 'required|boolean',
-                'tpe.anticoagulant_none_nss_200ml_flush_q_hour' => 'required|boolean',
-                'tpe.heparin_loading_dose' => [
-                    'required_if:tpe.anticoagulant,heparin',
+                'pe.dialyzer' => ['required', Rule::in($this->FORM_CONFIGS['pe_dialyzers'])],
+                'pe.dialyzer_second' => ['nullable', 'required_if:pe.technique,DFPP', Rule::in($this->FORM_CONFIGS['pe_dialyzer_second_options'])],
+                'pe.replacement_fluid_albumin' => 'boolean',
+                'pe.replacement_fluid_albumin_concentrated' => ['required_if:pe.replacement_fluid_albumin,true', 'nullable', Rule::in($this->FORM_CONFIGS['replacement_fluid_albumin_concentrated'])],
+                'pe.replacement_fluid_albumin_volume' => 'required_if:pe.replacement_fluid_albumin,true|nullable|integer',
+                'pe.replacement_fluid_ffp' => 'boolean',
+                'pe.replacement_fluid_ffp_volume' => 'required_if:replacement_fluid_ffp_volume,true|nullable|integer',
+                'pe.blood_pump' => ['required', Rule::in($this->FORM_CONFIGS['blood_pump'])],
+                'pe.filtration_pump' => ['required', Rule::in($this->FORM_CONFIGS['pe_filtration_pump_options'])],
+                'pe.replacement_pump' => ['required', Rule::in($this->FORM_CONFIGS['pe_replacement_pump_options'])],
+                'pe.percent_discard' => ['nullable', 'required_if:pe.technique,DFPP', Rule::in($this->FORM_CONFIGS['pe_percent_discard_options'])],
+                'pe.drain_pump' => 'nullable|integer',
+                'pe.calcium_gluconate_10_percent_volume' => ['nullable', Rule::in($this->FORM_CONFIGS['calcium_gluconate_10_percent_volumes'])],
+                'pe.calcium_gluconate_10_percent_timing' => ['nullable', Rule::in($this->FORM_CONFIGS['calcium_gluconate_10_percent_timings'])],
+                'pe.anticoagulant' => 'required|string|max:255',
+                'pe.anticoagulant_none_drip_via_peripheral_iv' => 'required|boolean',
+                'pe.anticoagulant_none_nss_200ml_flush_q_hour' => 'required|boolean',
+                'pe.heparin_loading_dose' => [
+                    'required_if:pe.anticoagulant,heparin',
                     'nullable',
                     'integer',
                     'between:'.$this->FORM_CONFIGS['validators']['heparin_loading_dose']['min'].','.$this->FORM_CONFIGS['validators']['heparin_loading_dose']['max'],
                 ],
-                'tpe.heparin_maintenance_dose' => [
-                    'required_if:tpe.anticoagulant,heparin',
+                'pe.heparin_maintenance_dose' => [
+                    'required_if:pe.anticoagulant,heparin',
                     'nullable',
                     'integer',
                     'between:'.$this->FORM_CONFIGS['validators']['heparin_maintenance_dose']['min'].','.$this->FORM_CONFIGS['validators']['heparin_maintenance_dose']['max'],
                 ],
-                'tpe.enoxaparin_dose' => [
-                    'required_if:tpe.anticoagulant,enoxaparin',
+                'pe.enoxaparin_dose' => [
+                    'required_if:pe.anticoagulant,enoxaparin',
                     'nullable',
                     'numeric',
                     'between:'.$this->FORM_CONFIGS['validators']['enoxaparin_dose']['min'].','.$this->FORM_CONFIGS['validators']['enoxaparin_dose']['max'],
                 ],
-                'tpe.fondaparinux_bolus_dose' => ['required_if:tpe.anticoagulant,fondaparinux', 'nullable', Rule::in($this->FORM_CONFIGS['fondaparinux_bolus_doses'])],
-                'tpe.tinzaparin_dose' => [
-                    'required_if:tpe.anticoagulant,tinzaparin',
+                'pe.fondaparinux_bolus_dose' => ['required_if:pe.anticoagulant,fondaparinux', 'nullable', Rule::in($this->FORM_CONFIGS['fondaparinux_bolus_doses'])],
+                'pe.tinzaparin_dose' => [
+                    'required_if:pe.anticoagulant,tinzaparin',
                     'nullable',
                     'integer',
                     'between:'.$this->FORM_CONFIGS['validators']['tinzaparin_dose']['min'].','.$this->FORM_CONFIGS['validators']['tinzaparin_dose']['max'],
