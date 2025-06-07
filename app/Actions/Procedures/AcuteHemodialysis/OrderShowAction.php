@@ -54,7 +54,7 @@ class OrderShowAction extends AcuteHemodialysisAction
                 'attending' => $order->attending_name,
             ],
             'special_requests' => $this->getSpecialRequest($order->form),
-            'predialysis_evaluation' => $this->getPredialysisEvaluation($order->form),
+            'predialysis_evaluation' => $this->getPredialysisEvaluation($order->form, $order->caseRecord->form),
         ];
 
         if (isset($order->form['tpe'])) {
@@ -67,21 +67,23 @@ class OrderShowAction extends AcuteHemodialysisAction
         }
 
         foreach (['hd', 'hf', 'pe', 'sledd'] as $type) {
-            if (isset($order->form[$type])) {
-                $prescription = $order->form[$type];
-                if (! isset($prescription['duration'])) {
-                    if (str_contains($order->meta['dialysis_type'], 6)) {
-                        $prescription['duration'] = 6;
-                    } elseif (str_contains($order->meta['dialysis_type'], 4)) {
-                        $prescription['duration'] = 4;
-                    } elseif (str_contains($order->meta['dialysis_type'], 3)) {
-                        $prescription['duration'] = 3;
-                    } elseif (str_contains($order->meta['dialysis_type'], 2)) {
-                        $prescription['duration'] = 2;
-                    }
-                }
-                $content[$type] = $this->getPrescription($prescription);
+            if (! isset($order->form[$type])) {
+                continue;
             }
+            $prescription = $order->form[$type];
+            if (! isset($prescription['duration'])) {
+                if (str_contains($order->meta['dialysis_type'], 6)) {
+                    $prescription['duration'] = 6;
+                } elseif (str_contains($order->meta['dialysis_type'], 4)) {
+                    $prescription['duration'] = 4;
+                } elseif (str_contains($order->meta['dialysis_type'], 3)) {
+                    $prescription['duration'] = 3;
+                } elseif (str_contains($order->meta['dialysis_type'], 2)) {
+                    $prescription['duration'] = 2;
+                }
+            }
+            $content[$type] = $this->getPrescription($prescription);
+            $content[$type]['prescription'] = $prescription;
         }
 
         if (! cache()->pull('no-view-log-uid-'.$user->id)) {
@@ -145,7 +147,7 @@ class OrderShowAction extends AcuteHemodialysisAction
         ];
     }
 
-    protected function getPredialysisEvaluation(ArrayObject $form): array
+    protected function getPredialysisEvaluation(ArrayObject $form, ArrayObject $caseRecord): array
     {
         $content = collect();
 
@@ -238,6 +240,11 @@ class OrderShowAction extends AcuteHemodialysisAction
             }
             $content[] = ['label' => 'monitor', 'data' => $data];
         }
+
+        $content[] = [
+            'label' => 'first use syndrome',
+            'data' => ($caseRecord['first_use_dialyzer_syndrome'] ?? false) ? 'YES' : 'NO',
+        ];
 
         return $content->all();
     }

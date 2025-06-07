@@ -189,6 +189,15 @@
     />
     <hr class="border border-dashed my-2 md:my-4 xl:my-8">
 
+    <div class="md:grid grid-cols-2 gap-2 lg:gap-x-8">
+        <FormCheckbox
+            label="First use syndrome"
+            name="first_use_dialyzer_syndrome"
+            v-model="form.first_use_dialyzer_syndrome"
+        />
+    </div>
+    <hr class="border border-dashed my-2 md:my-4 xl:my-8">
+
     <!--comorbidities & indications-->
     <div class="md:grid grid-cols-2 gap-2 lg:gap-x-8">
         <div>
