@@ -13,7 +13,7 @@ trait SlotCountable
 
     protected int $LIMIT_IN_UNIT_SLOTS = 32;
 
-    protected int $LIMIT_TPE_SLOTS = 3;
+    protected int $LIMIT_PE_SLOTS = 3;
 
     protected int $LIMIT_OUT_UNIT_CASES = 6;
 
@@ -61,7 +61,7 @@ trait SlotCountable
     {
         if ($dialysisType === 'SLEDD') {
             return 4;
-        } elseif (str_starts_with($dialysisType, 'HD+TPE')) {
+        } elseif (str_starts_with($dialysisType, '6')) {
             return 3;
         } elseif (str_contains($dialysisType, '4') || str_contains($dialysisType, '3')) {
             return 2;
@@ -111,11 +111,11 @@ trait SlotCountable
         return $ordered;
     }
 
-    protected function tpeCaseCount(string $dateNote): int
+    protected function peCaseCount(string $dateNote): int
     {
         return AcuteHemodialysisOrderNote::query()
             ->dialysisDate($dateNote)
-            ->dialysisTypeLike('TPE')
+            ->dialysisTypeLike('PE')
             ->slotOccupiedStatuses()
             ->count();
     }

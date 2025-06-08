@@ -33,8 +33,8 @@ class SlotAvailableAction extends AcuteHemodialysisAction
         $this->user = $user;
         /*
          * - ไตเทียม ตาม slot 8*4 ไม่ทำ sledd
-         * - tpe ทำที่ไตเทียมเท่านั้น ** เปลี่ยนเป็นทำที่วอร์ดด้วย 2022/06/29 **
-         * - tpe ทำวันละ 3 เท่านั้น
+         * - pe ทำที่ไตเทียมเท่านั้น ** เปลี่ยนเป็นทำที่วอร์ดด้วย 2022/06/29 ** ** tpe เปลี่ยนเป็น pe 2025/03/27 **
+         * - pe ทำวันละ 3 เท่านั้น
          * - sledd ทำนอกไตเทียมเท่านั้น
          * - นอกไตเทียมทำ hd4 hd+hf ได้วันละ 2 เคส
          * - นอกไตเทียมทำ sledd ได้วันละ = (6 - (hd4 + (hf+hf))) เคส
@@ -67,9 +67,9 @@ class SlotAvailableAction extends AcuteHemodialysisAction
         } elseif ($dialysisType !== 'SLEDD' && $hemoCount === 2) {
             $available = false;
             $reply = 'HD/HF cases limit reached for the date';
-        } elseif (str_contains($dialysisType, 'TPE') && $this->tpeCaseCount($dateNote) === $this->LIMIT_TPE_SLOTS) {
+        } elseif (str_contains($dialysisType, 'PE') && $this->peCaseCount($dateNote) === $this->LIMIT_PE_SLOTS) {
             $available = false;
-            $reply = 'TPE limit has been reached';
+            $reply = 'PE limit has been reached';
         }
 
         if ($available) {
@@ -113,9 +113,9 @@ class SlotAvailableAction extends AcuteHemodialysisAction
             if (($this->LIMIT_IN_UNIT_SLOTS - $orders->sum('slot_count')) < $requestSlot) {
                 $available = false;
                 $reply = 'not enough slots';
-            } elseif (str_contains(strtolower($dialysisType), 'tpe') && $this->tpeCaseCount($dateNote) === $this->LIMIT_TPE_SLOTS) {
+            } elseif (str_contains(strtolower($dialysisType), 'pe') && $this->peCaseCount($dateNote) === $this->LIMIT_PE_SLOTS) {
                 $available = false;
-                $reply = 'TPE limit has been reached';
+                $reply = 'PE limit has been reached';
             }
         }
 

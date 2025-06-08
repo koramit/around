@@ -67,8 +67,8 @@ class OrderSwapAction extends AcuteHemodialysisAction
         $tpeOrderDate = AcuteHemodialysisOrderNote::query()->dialysisDate($order->date_note)->dialysisTypeLike('TPE')->count();
         $tpeSwapDate = AcuteHemodialysisOrderNote::query()->dialysisDate($swap->date_note)->dialysisTypeLike('TPE')->count();
         if (
-            ($orderIsTpe && ! $swapIsTpe && $tpeSwapDate === $this->LIMIT_TPE_SLOTS)
-            || (! $orderIsTpe && $swapIsTpe && $tpeOrderDate === $this->LIMIT_TPE_SLOTS)
+            ($orderIsTpe && ! $swapIsTpe && $tpeSwapDate === $this->LIMIT_PE_SLOTS)
+            || (! $orderIsTpe && $swapIsTpe && $tpeOrderDate === $this->LIMIT_PE_SLOTS)
         ) {
             $order->update(['meta->swap_code' => $this->genSwapCode()]);
             $swap->update(['meta->swap_code' => $this->genSwapCode()]);
