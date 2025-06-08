@@ -121,6 +121,7 @@ class OrderSubmitAction extends AcuteHemodialysisAction
                 'hd.ffp_volume' => 'nullable|integer',
                 'hd.platelet_volume' => 'nullable|numeric',
                 'hd.transfusion_other' => 'nullable|string|max:255',
+                'hd.catheter_lock' => ['nullable', 'required_if:hd.access_type,DLC,Perm cath', 'string', 'max:255'],
             ]);
         }
 
@@ -184,6 +185,7 @@ class OrderSubmitAction extends AcuteHemodialysisAction
                 'hf.ffp_volume' => 'nullable|integer',
                 'hf.platelet_volume' => 'nullable|numeric',
                 'hf.transfusion_other' => 'nullable|string|max:255',
+                'hf.catheter_lock' => ['nullable', 'required_if:hf.access_type,DLC,Perm cath', 'string', 'max:255'],
             ]);
         }
 
@@ -239,6 +241,7 @@ class OrderSubmitAction extends AcuteHemodialysisAction
                     'integer',
                     'between:'.$this->FORM_CONFIGS['validators']['tinzaparin_dose']['min'].','.$this->FORM_CONFIGS['validators']['tinzaparin_dose']['max'],
                 ],
+                'pe.catheter_lock' => ['nullable', 'required_if:pe.access_type,DLC,Perm cath', 'string', 'max:255'],
             ]);
         }
 
@@ -317,6 +320,7 @@ class OrderSubmitAction extends AcuteHemodialysisAction
                 'sledd.ffp_volume' => 'nullable|integer',
                 'sledd.platelet_volume' => 'nullable|numeric',
                 'sledd.transfusion_other' => 'nullable|string|max:255',
+                'sledd.catheter_lock' => ['nullable', 'required_if:sledd.access_type,DLC,Perm cath', 'string', 'max:255'],
                 'sledd.remark' => 'nullable|string|max:255',
             ]);
         }

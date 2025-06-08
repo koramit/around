@@ -103,6 +103,7 @@ class OrderStoreAction extends AcuteHemodialysisAction
         'ffp_volume' => null,
         'platelet_volume' => null,
         'transfusion_other' => null,
+        'catheter_lock' => null,
     ];
 
     protected array $HF_FORM_TEMPLATE = [
@@ -129,6 +130,7 @@ class OrderStoreAction extends AcuteHemodialysisAction
         'ffp_volume' => null,
         'platelet_volume' => null,
         'transfusion_other' => null,
+        'catheter_lock' => null,
     ];
 
     protected array $PE_FORM_TEMPLATE = [
@@ -157,6 +159,7 @@ class OrderStoreAction extends AcuteHemodialysisAction
         'enoxaparin_dose' => null,
         'fondaparinux_bolus_dose' => null,
         'tinzaparin_dose' => null,
+        'catheter_lock' => null,
     ];
 
     protected array $SLEDD_FORM_TEMPLATE = [
@@ -195,6 +198,7 @@ class OrderStoreAction extends AcuteHemodialysisAction
         'ffp_volume' => null,
         'platelet_volume' => null,
         'transfusion_other' => null,
+        'catheter_lock' => null,
         'remark' => null,
     ];
 

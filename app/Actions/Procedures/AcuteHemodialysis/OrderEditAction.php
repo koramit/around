@@ -62,6 +62,17 @@ class OrderEditAction extends AcuteHemodialysisAction
             $note->save();
         }
 
+        foreach (['hd', 'hf', 'pe', 'sledd'] as $type) {
+            if (! isset($note->form[$type])) {
+                continue;
+            }
+            // init catheter_lock to null if not set
+            if (! isset($note->form[$type]['catheter_lock'])) {
+                $note->form[$type]['catheter_lock'] = null;
+                $note->save();
+            }
+        }
+
         return [
             'orderForm' => $note->form,
             'flash' => $flash,

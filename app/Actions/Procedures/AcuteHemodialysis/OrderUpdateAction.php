@@ -67,6 +67,7 @@ class OrderUpdateAction extends AcuteHemodialysisAction
                 'hd.ffp_volume' => 'nullable|integer',
                 'hd.platelet_volume' => 'nullable|numeric',
                 'hd.transfusion_other' => 'nullable|string|max:255',
+                'hd.catheter_lock' => 'nullable|string|max:255',
             ]);
         }
 
@@ -95,6 +96,7 @@ class OrderUpdateAction extends AcuteHemodialysisAction
                 'hf.ffp_volume' => 'nullable|integer',
                 'hf.platelet_volume' => 'nullable|numeric',
                 'hf.transfusion_other' => 'nullable|string|max:255',
+                'hf.catheter_lock' => 'nullable|string|max:255',
             ]);
         }
 
@@ -125,6 +127,7 @@ class OrderUpdateAction extends AcuteHemodialysisAction
                 'pe.enoxaparin_dose' => 'nullable|numeric',
                 'pe.fondaparinux_bolus_dose' => 'nullable|integer',
                 'pe.tinzaparin_dose' => 'nullable|integer',
+                'pe.catheter_lock' => 'nullable|string|max:255',
             ]);
         }
 
@@ -164,6 +167,7 @@ class OrderUpdateAction extends AcuteHemodialysisAction
                 'sledd.ffp_volume' => 'nullable|integer',
                 'sledd.platelet_volume' => 'nullable|numeric',
                 'sledd.transfusion_other' => 'nullable|string|max:255',
+                'sledd.catheter_lock' => 'nullable|string|max:255',
                 'sledd.remark' => 'nullable|string|max:255',
             ]);
         }

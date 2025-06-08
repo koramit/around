@@ -45,6 +45,17 @@ trait OrderFormConfigsShareable
             ['value' => 'tinzaparin', 'label' => 'Tinzaparin (Innohep)'],
             ['value' => 'other', 'label' => 'Other'],
         ],
+        'catheter_lock_options' => [
+            ['label' => 'Heparin 1:4', 'value' => 'Heparin 1:4'],
+            ['label' => 'Heparin 1:1', 'value' => 'Heparin 1:1'],
+            ['label' => 'Pure heparin', 'value' => 'Pure heparin'],
+            ['label' => '30% citrate', 'value' => '30% citrate'],
+            ['label' => 'Cefazolin 10 mg/ml + heparin 1000u/ml', 'value' => 'Cefazolin 10 mg/ml + heparin 1000u/ml'],
+            ['label' => 'Ceftazidime 10 mg/ml + heparin 1000u/ml', 'value' => 'Ceftazidime 10 mg/ml + heparin 1000u/ml'],
+            ['label' => 'Meropenem 10 mg/ml + heparin 1000u/ml', 'value' => 'Meropenem 10 mg/ml + heparin 1000u/ml'],
+            ['label' => 'Vancomycin 5mg/ml + heparin 1000u/ml', 'value' => 'Vancomycin 5mg/ml + heparin 1000u/ml'],
+            ['label' => 'Vancomycin 5 mg/ml + 4% citrate', 'value' => 'Vancomycin 5 mg/ml + 4% citrate'],
+        ],
         'hemodynamic_symptoms' => [
             ['name' => 'hypotension', 'label' => 'hypotension'],
             ['name' => 'inotropic_dependent', 'label' => 'Inotropic dependent'],

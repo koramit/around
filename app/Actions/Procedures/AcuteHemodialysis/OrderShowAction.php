@@ -83,7 +83,6 @@ class OrderShowAction extends AcuteHemodialysisAction
                 }
             }
             $content[$type] = $this->getPrescription($prescription);
-            $content[$type]['prescription'] = $prescription;
         }
 
         if (! cache()->pull('no-view-log-uid-'.$user->id)) {
@@ -342,6 +341,16 @@ class OrderShowAction extends AcuteHemodialysisAction
                     ->join(''),
             ];
         }
+
+        // check if access type is in ['DLC', 'Perm cath'] then add catheter lock
+        if (in_array($form['access_type'], ['DLC', 'Perm cath']) && isset($form['catheter_lock'])) {
+            $content[] = [
+                'label' => 'catheter lock',
+                'data' => $form['catheter_lock'],
+            ];
+        }
+
+
 
         $content = array_merge($content, collect([
             // HD+HF
