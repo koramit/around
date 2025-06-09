@@ -63,6 +63,7 @@ class OrderShowAction extends AcuteHemodialysisAction
             $order->form['pe']['technique'] = 'TPE';
             $order->form['pe']['dialyzer_second'] = null;
             $order->form['pe']['percent_discard'] = null;
+            $order->meta['dialysis_type'] = str_replace('TPE', 'PE', $order->meta['dialysis_type']);
             $order->save();
         }
 

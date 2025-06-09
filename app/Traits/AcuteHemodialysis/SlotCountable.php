@@ -61,7 +61,7 @@ trait SlotCountable
     {
         if ($dialysisType === 'SLEDD') {
             return 4;
-        } elseif (str_starts_with($dialysisType, '6')) {
+        } elseif (str_contains($dialysisType, '6')) {
             return 3;
         } elseif (str_contains($dialysisType, '4') || str_contains($dialysisType, '3')) {
             return 2;
