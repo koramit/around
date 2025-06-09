@@ -67,7 +67,7 @@ class SlotAvailableAction extends AcuteHemodialysisAction
         } elseif ($dialysisType !== 'SLEDD' && $hemoCount === 2) {
             $available = false;
             $reply = 'HD/HF cases limit reached for the date';
-        } elseif (str_contains($dialysisType, 'PE') && $this->peCaseCount($dateNote) === $this->LIMIT_PE_SLOTS) {
+        } elseif (str_contains(strtolower($dialysisType), 'pe') && $this->peCaseCount($dateNote) === $this->LIMIT_PE_SLOTS) {
             $available = false;
             $reply = 'PE limit has been reached';
         }
