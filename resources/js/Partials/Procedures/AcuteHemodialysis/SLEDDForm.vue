@@ -347,6 +347,20 @@
             :error="$page.props.errors['sledd.transfusion_other']"
         />
     </div>
+    <template v-if="form.access_type && ['DLC', 'Perm cath'].includes(form.access_type)">
+        <hr class="border border-dashed my-2 md:my-4 xl:my-8">
+        <div class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8 2xl:grid-cols-4">
+            <FormSelect
+                label="catheter lock"
+                name="sledd.catheter_lock"
+                :options="configs.catheter_lock_options"
+                v-model="form.catheter_lock"
+                :error="$page.props.errors['sledd.catheter_lock']"
+                allow-other
+                ref="catheterLockInput"
+            />
+        </div>
+    </template>
     <FormTextarea
         class="mt-2 md:mt-4 xl:mt-8"
         label="note"
@@ -439,6 +453,23 @@ watch (
         selectOther.placeholder = 'Other anticoagulant';
         selectOther.configs = configs.anticoagulants;
         selectOther.input = anticoagulantInput.value;
+        selectOtherInput.value.open();
+    }
+);
+if (form.catheter_lock && configs.catheter_lock_options.findIndex(item => item.value === form.catheter_lock) === -1) {
+    configs.catheter_lock_options.push({ value: form.catheter_lock, label: form.catheter_lock });
+}
+const catheterLockInput = ref(null);
+watch (
+    () => form.catheter_lock,
+    (val) => {
+        if (val.toLowerCase() !== 'other') {
+            return;
+        }
+
+        selectOther.placeholder = 'Other Catheter lock';
+        selectOther.configs = configs.catheter_lock_options;
+        selectOther.input = catheterLockInput.value;
         selectOtherInput.value.open();
     }
 );

@@ -31,6 +31,7 @@ class CaseRecordUpdateAction extends AcuteHemodialysisAction
             'date_end_crrt' => 'nullable|date',
             'renal_diagnosis' => ['nullable', Rule::in($this->RENAL_DIAGNOSIS)],
             'admission_diagnosis' => 'nullable|string|max:255',
+            'first_use_dialyzer_syndrome' => 'boolean',
             'comorbidities.dm' => 'boolean',
             'comorbidities.ht' => 'boolean',
             'comorbidities.dlp' => 'boolean',

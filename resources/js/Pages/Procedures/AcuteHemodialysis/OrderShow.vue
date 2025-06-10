@@ -64,7 +64,7 @@
     </div>
     <!--Prescription-->
     <template
-        v-for="type in ['hd', 'hf', 'tpe', 'sledd']"
+        v-for="type in ['hd', 'hf', 'pe', 'sledd']"
         :key="type"
     >
         <template v-if="content[type] !== undefined">

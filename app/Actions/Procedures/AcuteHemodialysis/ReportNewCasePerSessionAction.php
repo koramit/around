@@ -149,9 +149,9 @@ class ReportNewCasePerSessionAction extends AcuteHemodialysisAction
     protected function getFormKey(string $type): ?string
     {
         return match ($type) {
-            'HD', 'HD+HF', 'HD+TPE' => 'hd',
+            'HD', 'HD+HF', 'HD+PE' => 'hd',
             'HF' => 'hf',
-            'TPE' => 'tpe',
+            'PE' => 'pe',
             'SLEDD' => 'sledd',
             default => null,
         };
