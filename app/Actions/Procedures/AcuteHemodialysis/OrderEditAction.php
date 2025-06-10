@@ -54,6 +54,27 @@ class OrderEditAction extends AcuteHemodialysisAction
             ];
         }
 
+        if (isset($note->form['tpe'])) {
+            $note->form['pe'] = $note->form['tpe'];
+            $note->meta['dialysis_type'] = str_replace('TPE', 'PE', $note->meta['dialysis_type']);
+            $note->form['pe']['technique'] = 'TPE';
+            $note->form['pe']['percent_discard'] = null;
+            $note->form['pe']['dialyzer_second'] = null;
+            unset($note->form['tpe']);
+            $note->save();
+        }
+
+        foreach (['hd', 'hf', 'pe', 'sledd'] as $type) {
+            if (! isset($note->form[$type])) {
+                continue;
+            }
+            // init catheter_lock to null if not set
+            if (! isset($note->form[$type]['catheter_lock'])) {
+                $note->form[$type]['catheter_lock'] = null;
+                $note->save();
+            }
+        }
+
         return [
             'orderForm' => $note->form,
             'flash' => $flash,

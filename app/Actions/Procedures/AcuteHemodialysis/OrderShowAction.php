@@ -54,25 +54,36 @@ class OrderShowAction extends AcuteHemodialysisAction
                 'attending' => $order->attending_name,
             ],
             'special_requests' => $this->getSpecialRequest($order->form),
-            'predialysis_evaluation' => $this->getPredialysisEvaluation($order->form),
+            'predialysis_evaluation' => $this->getPredialysisEvaluation($order->form, $order->caseRecord->form),
         ];
 
-        foreach (['hd', 'hf', 'tpe', 'sledd'] as $type) {
-            if (isset($order->form[$type])) {
-                $prescription = $order->form[$type];
-                if (! isset($prescription['duration'])) {
-                    if (str_contains($order->meta['dialysis_type'], 6)) {
-                        $prescription['duration'] = 6;
-                    } elseif (str_contains($order->meta['dialysis_type'], 4)) {
-                        $prescription['duration'] = 4;
-                    } elseif (str_contains($order->meta['dialysis_type'], 3)) {
-                        $prescription['duration'] = 3;
-                    } elseif (str_contains($order->meta['dialysis_type'], 2)) {
-                        $prescription['duration'] = 2;
-                    }
-                }
-                $content[$type] = $this->getPrescription($prescription);
+        if (isset($order->form['tpe'])) {
+            $order->form['pe'] = $order->form['tpe'];
+            unset($order->form['tpe']);
+            $order->form['pe']['technique'] = 'TPE';
+            $order->form['pe']['dialyzer_second'] = null;
+            $order->form['pe']['percent_discard'] = null;
+            $order->meta['dialysis_type'] = str_replace('TPE', 'PE', $order->meta['dialysis_type']);
+            $order->save();
+        }
+
+        foreach (['hd', 'hf', 'pe', 'sledd'] as $type) {
+            if (! isset($order->form[$type])) {
+                continue;
             }
+            $prescription = $order->form[$type];
+            if (! isset($prescription['duration'])) {
+                if (str_contains($order->meta['dialysis_type'], 6)) {
+                    $prescription['duration'] = 6;
+                } elseif (str_contains($order->meta['dialysis_type'], 4)) {
+                    $prescription['duration'] = 4;
+                } elseif (str_contains($order->meta['dialysis_type'], 3)) {
+                    $prescription['duration'] = 3;
+                } elseif (str_contains($order->meta['dialysis_type'], 2)) {
+                    $prescription['duration'] = 2;
+                }
+            }
+            $content[$type] = $this->getPrescription($prescription);
         }
 
         if (! cache()->pull('no-view-log-uid-'.$user->id)) {
@@ -136,9 +147,9 @@ class OrderShowAction extends AcuteHemodialysisAction
         ];
     }
 
-    protected function getPredialysisEvaluation(ArrayObject $form): array
+    protected function getPredialysisEvaluation(ArrayObject $form, ArrayObject $caseRecord): array
     {
-        $content = collect([]);
+        $content = collect();
 
         if ($form['hemodynamic']['stable']) {
             $content[] = ['label' => 'Hemodynamic', 'data' => "<p class='text-green-400'>Stable</p>"];
@@ -230,6 +241,11 @@ class OrderShowAction extends AcuteHemodialysisAction
             $content[] = ['label' => 'monitor', 'data' => $data];
         }
 
+        $content[] = [
+            'label' => 'first use syndrome',
+            'data' => ($caseRecord['first_use_dialyzer_syndrome'] ?? false) ? 'YES' : 'NO',
+        ];
+
         return $content->all();
     }
 
@@ -246,13 +262,19 @@ class OrderShowAction extends AcuteHemodialysisAction
             ['label' => 'access site', 'name' => 'access_site_coagulant'],
             ['label' => 'dialyzer', 'name' => 'dialyzer'],
 
-            // TPE
+            // PE
+            ['label' => 'dialyzer 2', 'name' => 'dialyzer_second'],
+            ['label' => 'technique', 'name' => 'technique'],
             ['label' => 'albumin concentrated (%)', 'name' => 'replacement_fluid_albumin_concentrated'],
             ['label' => 'albumin volume (ml)', 'name' => 'replacement_fluid_albumin_volume'],
             ['label' => 'ffp volume (ml)', 'name' => 'replacement_fluid_ffp_volume'],
             ['label' => 'blood pump (ml/min)', 'name' => 'blood_pump'],
             ['label' => 'filtration pump (%)', 'name' => 'filtration_pump'],
             ['label' => 'replacement pump (%)', 'name' => 'replacement_pump'],
+            ['label' => '% discard', 'name' => 'percent_discard'],
+            ['label' => 'dialyzer priming', 'name' => 'dialyzer_priming'],
+            ['label' => 'dialyzer priming volume (ml)', 'name' => 'dialyzer_priming_volume'],
+            ['label' => 'replacement fluid type', 'name' => 'replacement_fluid_type'],
             ['label' => 'drain pump (%)', 'name' => 'drain_pump'],
             ['label' => '10% calcium gluconate volume (ml)', 'name' => 'calcium_gluconate_10_percent_volume'],
             ['label' => '10%  calcium gluconate timing (at hour)', 'name' => 'calcium_gluconate_10_percent_timing'],
@@ -321,6 +343,16 @@ class OrderShowAction extends AcuteHemodialysisAction
             ];
         }
 
+        // check if access type is in ['DLC', 'Perm cath'] then add catheter lock
+        if (in_array($form['access_type'], ['DLC', 'Perm cath']) && isset($form['catheter_lock'])) {
+            $content[] = [
+                'label' => 'catheter lock',
+                'data' => $form['catheter_lock'],
+            ];
+        }
+
+
+
         $content = array_merge($content, collect([
             // HD+HF
             ['label' => 'hf perform at', 'name' => 'hf_perform_at'],
@@ -340,6 +372,27 @@ class OrderShowAction extends AcuteHemodialysisAction
                     ->transform(fn ($m) => "<p>$m</p>")
                     ->join(''),
             ];
+        }
+
+        if ($form['technique'] ?? false) {
+            // move array key technique before duration
+            $content = collect($content)->sortBy(function ($item) {
+                return $item['label'] === 'technique' ? 0 : 1;
+            })->values()->all();
+
+            // rename key dialyzer to dialyzer 1 if technique is DFPP
+            if ($form['technique'] === 'DFPP') {
+                foreach ($content as &$item) {
+                    if ($item['label'] === 'dialyzer') {
+                        $item['label'] = 'dialyzer 1';
+                    }
+                }
+            } else {
+                // remove key `dialyzer_second` and `percent_discard` if technique is not DFPP
+                $content = collect($content)->filter(function ($item) {
+                    return ! in_array($item['label'], ['dialyzer 2', '% discard']);
+                })->values()->all();
+            }
         }
 
         return $content;

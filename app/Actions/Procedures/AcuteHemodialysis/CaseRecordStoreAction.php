@@ -61,6 +61,7 @@ class CaseRecordStoreAction extends AcuteHemodialysisAction
         'cr_before_discharge' => null,
         'patient_outcome' => null,
         'cause_of_dead' => null,
+        'first_use_dialyzer_syndrome' => false,
     ];
 
     public function __invoke(array $data, User|AvatarUser $user): array
@@ -98,6 +99,17 @@ class CaseRecordStoreAction extends AcuteHemodialysisAction
         ];
         $caseRecord->save();
         $caseRecord->update(['meta->title' => $caseRecord->genTitle()]);
+
+        // copy first use dialyzer syndrome from patient if exists
+        if ($previousCaseRecord = CaseRecord::query()
+            ->where('patient_id', $patient->id)
+            ->where('id', '!=', $caseRecord->id)
+            ->latest('updated_at')
+            ->first()) {
+            $caseRecord->form['first_use_dialyzer_syndrome'] = $previousCaseRecord->form['first_use_dialyzer_syndrome'] ?? false;
+            $caseRecord->save();
+        }
+
         $this->finishing($caseRecord, $patient, $user, $this->REGISTRY_ID);
 
         return ['key' => $caseRecord->hashed_key];

@@ -43,6 +43,8 @@ class CaseRecordCompleteAction
             'renal_diagnosis' => ['required', Rule::in($this->RENAL_DIAGNOSIS)],
             'admission_diagnosis' => ['required_unless:admission.an,null', 'nullable', 'string', 'max:255'],
 
+            'first_use_dialyzer_syndrome' => 'boolean',
+
             'comorbidities.dm' => 'boolean',
             'comorbidities.ht' => 'boolean',
             'comorbidities.dlp' => 'boolean',

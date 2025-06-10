@@ -49,6 +49,7 @@ const otherItemModel = ref('');
 const modalDialog = ref(null);
 const open = () => {
     modalDialog.value.open();
+    otherItemModel.value = '';
 };
 defineExpose({open});
 </script>

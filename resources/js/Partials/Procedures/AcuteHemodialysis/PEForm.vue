@@ -3,7 +3,7 @@
         class="mt-6 md:mt-12 xl:mt-24 flex justify-between items-center"
         id="prescription"
     >
-        <span class="form-label !mb-0 text-lg italic text-complement">TPE Prescription</span>
+        <span class="form-label !mb-0 text-lg italic text-complement">Plasmapheresis Prescription</span>
         <button
             class="flex items-center text-sm text-accent"
             @click="$emit('copyPreviousOrder')"
@@ -16,33 +16,48 @@
     <hr class="my-4 border-b border-accent">
     <div class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8 2xl:grid-cols-4">
         <FormSelect
+            label="technique"
+            v-model="form.technique"
+            name="pe.technique"
+            :error="$page.props.errors['pe.technique']"
+            :options="configs.pe_technique_options"
+        />
+        <FormSelect
             label="access type"
             v-model="form.access_type"
-            name="tpe.access_type"
-            :error="$page.props.errors['tpe.access_type']"
+            name="pe.access_type"
+            :error="$page.props.errors['pe.access_type']"
             :options="configs.access_types"
         />
         <FormSelect
             label="access site"
             v-model="form.access_site_coagulant"
-            name="tpe.access_site_coagulant"
-            :error="$page.props.errors['tpe.access_site_coagulant']"
+            name="pe.access_site_coagulant"
+            :error="$page.props.errors['pe.access_site_coagulant']"
             :options="(form.access_type && form.access_type.startsWith('AV')) ? configs.av_access_sites : configs.non_av_access_sites"
             :disabled="!form.access_type || form.access_type === 'pending'"
         />
         <FormSelect
             v-model="form.dialyzer"
-            name="tpe.dialyzer"
-            :error="$page.props.errors['tpe.dialyzer']"
-            label="dialyzer"
-            :options="configs.tpe_dialyzers"
+            name="pe.dialyzer"
+            :error="$page.props.errors['pe.dialyzer']"
+            label="dialyzer 1"
+            :options="configs.pe_dialyzers"
+        />
+        <FormSelect
+            v-if="form.technique === 'DFPP'"
+            v-model="form.dialyzer_second"
+            name="pe.dialyzer_second"
+            :error="$page.props.errors['pe.dialyzer_second']"
+            label="dialyzer 2"
+            :options="configs.pe_dialyzer_second_options"
         />
     </div>
     <hr class="border border-dashed my-2 md:my-4 xl:my-8">
     <label class="form-label">replacement</label>
     <FormCheckbox
         v-model="form.replacement_fluid_albumin"
-        name="tpe.replacement_fluid_albumin"
+        name="pe.replacement_fluid_albumin"
         label="Albumin"
         class="mt-2 md:mt-4"
         :toggler="true"
@@ -56,8 +71,8 @@
                 <label class="form-label">concentrated (%)</label>
                 <FormRadio
                     v-model="form.replacement_fluid_albumin_concentrated"
-                    name="tpe.replacement_fluid_albumin_concentrated"
-                    :error="$page.props.errors['tpe.replacement_fluid_albumin_concentrated']"
+                    name="pe.replacement_fluid_albumin_concentrated"
+                    :error="$page.props.errors['pe.replacement_fluid_albumin_concentrated']"
                     class="grid grid-cols-2 gap-2 md:gap-4"
                     :options="configs.replacement_fluid_albumin_concentrated"
                 />
@@ -65,15 +80,15 @@
             <FormInput
                 v-model="form.replacement_fluid_albumin_volume"
                 type="tel"
-                name="tpe.replacement_fluid_albumin_volume"
-                :error="$page.props.errors['tpe.replacement_fluid_albumin_volume']"
+                name="pe.replacement_fluid_albumin_volume"
+                :error="$page.props.errors['pe.replacement_fluid_albumin_volume']"
                 label="volume (ml)"
             />
         </div>
     </Transition>
     <FormCheckbox
         v-model="form.replacement_fluid_ffp"
-        name="tpe.replacement_fluid_ffp"
+        name="pe.replacement_fluid_ffp"
         label="FFP"
         class="mt-2 md:mt-4"
         :toggler="true"
@@ -83,8 +98,8 @@
             v-if="form.replacement_fluid_ffp"
             v-model="form.replacement_fluid_ffp_volume"
             type="tel"
-            name="tpe.replacement_fluid_ffp_volume"
-            :error="$page.props.errors['tpe.replacement_fluid_ffp_volume']"
+            name="pe.replacement_fluid_ffp_volume"
+            :error="$page.props.errors['pe.replacement_fluid_ffp_volume']"
             label="volume (ml)"
         />
     </Transition>
@@ -98,30 +113,38 @@
     <div class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8 2xl:grid-cols-4">
         <FormSelect
             v-model="form.blood_pump"
-            name="tpe.blood_pump"
-            :error="$page.props.errors['tpe.blood_pump']"
+            name="pe.blood_pump"
+            :error="$page.props.errors['pe.blood_pump']"
             label="blood pump (ml/min)"
             :options="configs.blood_pump"
         />
         <FormSelect
             v-model="form.filtration_pump"
-            name="tpe.filtration_pump"
-            :error="$page.props.errors['tpe.filtration_pump']"
+            name="pe.filtration_pump"
+            :error="$page.props.errors['pe.filtration_pump']"
             label="filtration pump (%)"
-            :options="configs.tpe_filtration_pump_options"
+            :options="configs.pe_filtration_pump_options"
         />
         <FormSelect
             v-model="form.replacement_pump"
-            name="tpe.replacement_pump"
-            :error="$page.props.errors['tpe.replacement_pump']"
+            name="pe.replacement_pump"
+            :error="$page.props.errors['pe.replacement_pump']"
             label="replacement pump (%)"
-            :options="configs.tpe_replacement_pump_options"
+            :options="configs.pe_replacement_pump_options"
+        />
+        <FormSelect
+            v-if="form.technique === 'DFPP'"
+            v-model="form.percent_discard"
+            name="pe.percent_discard"
+            :error="$page.props.errors['pe.percent_discard']"
+            label="% discard"
+            :options="configs.pe_percent_discard_options"
         />
         <FormInput
             v-model="form.drain_pump"
             type="tel"
-            name="tpe.drain_pump"
-            :error="$page.props.errors['tpe.drain_pump']"
+            name="pe.drain_pump"
+            :error="$page.props.errors['pe.drain_pump']"
             label="drain pump (%)"
         />
     </div>
@@ -136,8 +159,8 @@
                     'grid-cols-3': !form.calcium_gluconate_10_percent_volume,
                     'grid-cols-2 sm:grid-cols-4': form.calcium_gluconate_10_percent_volume
                 }"
-                name="tpe.calcium_gluconate_10_percent_volume"
-                :error="$page.props.errors['tpe.calcium_gluconate_10_percent_volume']"
+                name="pe.calcium_gluconate_10_percent_volume"
+                :error="$page.props.errors['pe.calcium_gluconate_10_percent_volume']"
                 :options="configs.calcium_gluconate_10_percent_volumes"
                 :allow-reset="true"
             />
@@ -146,8 +169,8 @@
             <label class="form-label">10% calcium gluconate timing (at hour)</label>
             <FormRadio
                 v-model="form.calcium_gluconate_10_percent_timing"
-                name="tpe.calcium_gluconate_10_percent_timing"
-                :error="$page.props.errors['tpe.calcium_gluconate_10_percent_timing']"
+                name="pe.calcium_gluconate_10_percent_timing"
+                :error="$page.props.errors['pe.calcium_gluconate_10_percent_timing']"
                 :options="configs.calcium_gluconate_10_percent_timings"
                 :allow-reset="true"
                 class="grid gap-2 md:gap-4 grid-cols-2"
@@ -159,11 +182,11 @@
     <div class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8 2xl:grid-cols-4 my-2 md:my-4 xl:my-8">
         <FormSelect
             v-model="form.anticoagulant"
-            name="tpe.anticoagulant"
+            name="pe.anticoagulant"
             label="anticoagulant"
             :options="configs.anticoagulants"
             ref="anticoagulantInput"
-            :error="$page.props.errors['tpe.anticoagulant']"
+            :error="$page.props.errors['pe.anticoagulant']"
         />
     </div>
     <Transition name="slide-fade">
@@ -186,22 +209,22 @@
             <div class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8 2xl:grid-cols-4 my-2 md:my-4 xl:my-8">
                 <FormInput
                     label="loading dose (iu)"
-                    name="tpe.heparin_loading_dose"
+                    name="pe.heparin_loading_dose"
                     v-model="form.heparin_loading_dose"
                     type="number"
                     pattern="\d*"
                     @autosave="validate('heparin_loading_dose')"
-                    :error="errors.heparin_loading_dose ?? $page.props.errors['tpe.heparin_loading_dose']"
+                    :error="errors.heparin_loading_dose ?? $page.props.errors['pe.heparin_loading_dose']"
                     :placeholder="`[${configs.validators.heparin_loading_dose.min}, ${configs.validators.heparin_loading_dose.max}] IU`"
                 />
                 <FormInput
                     label="maintenance dose (iu/hour)"
-                    name="tpe.heparin_maintenance_dose"
+                    name="pe.heparin_maintenance_dose"
                     v-model="form.heparin_maintenance_dose"
                     type="number"
                     pattern="\d*"
                     @autosave="validate('heparin_maintenance_dose')"
-                    :error="errors.heparin_maintenance_dose ?? $page.props.errors['tpe.heparin_maintenance_dose']"
+                    :error="errors.heparin_maintenance_dose ?? $page.props.errors['pe.heparin_maintenance_dose']"
                     :placeholder="`[${configs.validators.heparin_maintenance_dose.min}, ${configs.validators.heparin_maintenance_dose.max}] IU/Hour`"
                 />
             </div>
@@ -216,11 +239,11 @@
         >
             <FormInput
                 label="dose (ml)"
-                name="tpe.enoxaparin_dose"
+                name="pe.enoxaparin_dose"
                 v-model="form.enoxaparin_dose"
                 type="number"
                 @autosave="validate('enoxaparin_dose')"
-                :error="errors.enoxaparin_dose ?? $page.props.errors['tpe.enoxaparin_dose']"
+                :error="errors.enoxaparin_dose ?? $page.props.errors['pe.enoxaparin_dose']"
                 :placeholder="`[${configs.validators.enoxaparin_dose.min}, ${configs.validators.enoxaparin_dose.max}] ml`"
             />
         </div>
@@ -230,10 +253,10 @@
         >
             <FormSelect
                 label="bolus dose (iu)"
-                name="tpe.fondaparinux_bolus_dose"
+                name="pe.fondaparinux_bolus_dose"
                 v-model="form.fondaparinux_bolus_dose"
                 :options="configs.fondaparinux_bolus_doses"
-                :error="$page.props.errors['tpe.fondaparinux_bolus_dose']"
+                :error="$page.props.errors['pe.fondaparinux_bolus_dose']"
             />
         </div>
         <div
@@ -242,16 +265,31 @@
         >
             <FormInput
                 label="dose (iu)"
-                name="tpe.tinzaparin_dose"
+                name="pe.tinzaparin_dose"
                 v-model="form.tinzaparin_dose"
                 type="number"
                 pattern="\d*"
                 @autosave="validate('tinzaparin_dose')"
-                :error="errors.tinzaparin_dose ?? $page.props.errors['tpe.tinzaparin_dose']"
+                :error="errors.tinzaparin_dose ?? $page.props.errors['pe.tinzaparin_dose']"
                 :placeholder="`[${configs.validators.tinzaparin_dose.min}, ${configs.validators.tinzaparin_dose.max}] IU`"
             />
         </div>
     </Transition>
+
+    <template v-if="form.access_type && ['DLC', 'Perm cath'].includes(form.access_type)">
+        <hr class="border border-dashed my-2 md:my-4 xl:my-8">
+        <div class="grid gap-2 md:gap-4 md:grid-cols-2 xl:gap-8 2xl:grid-cols-4">
+            <FormSelect
+                label="catheter lock"
+                name="pe.catheter_lock"
+                :options="configs.catheter_lock_options"
+                v-model="form.catheter_lock"
+                :error="$page.props.errors['pe.catheter_lock']"
+                allow-other
+                ref="catheterLockInput"
+            />
+        </div>
+    </template>
 
     <FormSelectOther
         :placeholder="selectOther.placeholder"
@@ -339,6 +377,24 @@ watch (
         selectOther.placeholder = 'Other anticoagulant';
         selectOther.configs = configs.anticoagulants;
         selectOther.input = anticoagulantInput.value;
+        selectOtherInput.value.open();
+    }
+);
+
+if (form.catheter_lock && configs.catheter_lock_options.findIndex(item => item.value === form.catheter_lock) === -1) {
+    configs.catheter_lock_options.push({ value: form.catheter_lock, label: form.catheter_lock });
+}
+const catheterLockInput = ref(null);
+watch (
+    () => form.catheter_lock,
+    (val) => {
+        if (val.toLowerCase() !== 'other') {
+            return;
+        }
+
+        selectOther.placeholder = 'Other Catheter lock';
+        selectOther.configs = configs.catheter_lock_options;
+        selectOther.input = catheterLockInput.value;
         selectOtherInput.value.open();
     }
 );
