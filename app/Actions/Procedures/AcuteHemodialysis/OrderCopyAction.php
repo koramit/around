@@ -33,8 +33,19 @@ class OrderCopyAction
             ->latest()
             ->get();
 
+        foreach ($copies as $source) {
+            if (isset($source->form['tpe'])) {
+                $source->form['pe'] = $source->form['tpe'];
+                $source->form['pe']['technique'] = 'TPE';
+                $source->form['pe']['dialyzer_second'] = null;
+                $source->form['pe']['percent_discard'] = null;
+                unset($source->form['tpe']);
+                $source->save();
+            }
+        }
+
         $records = [];
-        foreach (['hd', 'hf', 'tpe', 'sledd'] as $type) {
+        foreach (['hd', 'hf', 'pe', 'sledd'] as $type) {
             if (! isset($form[$type])) {
                 continue;
             }

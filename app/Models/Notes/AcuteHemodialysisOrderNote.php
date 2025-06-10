@@ -81,7 +81,7 @@ class AcuteHemodialysisOrderNote extends Note
 
     public function scopeDialysisTypeLike($query, $type)
     {
-        $query->where('meta->dialysis_type', config('database.ilike'), "%$type%");
+        $query->where('meta->dialysis_type', config('database.iLike'), "%$type%");
     }
 
     public function scopeActiveStatuses($query)
