@@ -75,6 +75,7 @@ class DialysisSessionExportAction extends AcuteHemodialysisAction
                     'request postdialysis iron IV' => $order->form['postdialysis_iron_iv'] ? 'YES' : 'NO',
                     'Duration' => $dialysisType[1] ?? null,
                     'Access type' => $form[$formKey]['access_type'] ?? null,
+                    'Catheter lock' => $form[$formKey]['catheter_lock'] ?? null,
                     'Dialyzer' => $form[$formKey]['dialyzer'] ?? null,
                     'Dialysate K' => $dialysate['K'] ?? null,
                     'Dialysate Ca' => $dialysate['Ca'] ?? null,
@@ -160,9 +161,9 @@ class DialysisSessionExportAction extends AcuteHemodialysisAction
     protected function getFormKey(string $type): ?string
     {
         return match ($type) {
-            'HD', 'HD+HF', 'HD+TPE' => 'hd',
+            'HD', 'HD+HF', 'HD+PE' => 'hd',
             'HF' => 'hf',
-            'TPE' => 'tpe',
+            'PE' => 'pe',
             'SLEDD' => 'sledd',
             default => null,
         };

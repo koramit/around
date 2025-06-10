@@ -58,12 +58,12 @@ class OrderExportAction extends AcuteHemodialysisAction
             ->with('patient')
             ->get();
 
-        $hdALike = $orders->filter(fn ($o) => ! str_contains($o->meta['dialysis_type'], 'TPE'))->values();
+        $hdALike = $orders->filter(fn ($o) => ! str_contains($o->meta['dialysis_type'], 'PE'))->values();
         $hdALike = $hdALike->transform(fn (AcuteHemodialysisOrderNote $order) => $this->getHdRow($order, $admissions));
-        $tpe = $orders->filter(fn ($o) => str_starts_with($o->meta['dialysis_type'], 'TPE'))->values();
-        $tpe = $tpe->transform(fn (AcuteHemodialysisOrderNote $order) => $this->getTpeRow($order, $admissions));
-        $hdTpe = $orders->filter(fn ($o) => str_starts_with($o->meta['dialysis_type'], 'HD+TPE'))->values();
-        $hdTpe = $hdTpe->transform(fn (AcuteHemodialysisOrderNote $order) => $this->getHdTpeRow($order, $admissions));
+        $pe = $orders->filter(fn ($o) => str_starts_with($o->meta['dialysis_type'], 'PE'))->values();
+        $pe = $pe->transform(fn (AcuteHemodialysisOrderNote $order) => $this->getPeRow($order, $admissions));
+        $hdPe = $orders->filter(fn ($o) => str_starts_with($o->meta['dialysis_type'], 'HD+PE'))->values();
+        $hdPe = $hdPe->transform(fn (AcuteHemodialysisOrderNote $order) => $this->getHdPeRow($order, $admissions));
 
         $registry = Registry::query()->find($this->REGISTRY_ID);
         $registry->actionLogs()->create([
@@ -75,7 +75,18 @@ class OrderExportAction extends AcuteHemodialysisAction
             ],
         ]);
 
-        $sheets = new SheetCollection(['hd_hf_sledd' => $hdALike, 'tpe' => $tpe, 'hd+tpe' => $hdTpe]);
+        $sheets = collect();
+        if ($hdALike->isNotEmpty()) {
+            $sheets->put('hd_hf_sledd', $hdALike);
+        }
+        if ($pe->isNotEmpty()) {
+            $sheets->put('pe', $pe);
+        }
+        if ($hdPe->isNotEmpty()) {
+            $sheets->put('hd+pe', $hdPe);
+        }
+
+        $sheets = new SheetCollection($sheets);
         $registry = Registry::query()->find($this->REGISTRY_ID);
         $registry->actionLogs()->create([
             'actor_id' => $user->id,
@@ -129,6 +140,7 @@ class OrderExportAction extends AcuteHemodialysisAction
             'FFP' => $row['ffp'],
             'platelet' => $row['platelet'],
             'transfusion_other' => $row['transfusion_other'] ?? null,
+            'catheter_lock' => $row['catheter_lock'],
             'post_dialysis_weight' => $row['post_dialysis_weight'],
             'oxygen_support' => $row['oxygen_support'],
             'monitor' => $row['monitor'],
@@ -139,9 +151,9 @@ class OrderExportAction extends AcuteHemodialysisAction
         ];
     }
 
-    private function getTpeRow(AcuteHemodialysisOrderNote $order, Collection|array $admissions): array
+    private function getPeRow(AcuteHemodialysisOrderNote $order, Collection|array $admissions): array
     {
-        $prescription = $this->getTpeColumns($order);
+        $prescription = $this->getPeColumns($order);
         $row = array_merge($this->getCommonColumns($order, $admissions), $prescription);
 
         return [
@@ -152,15 +164,20 @@ class OrderExportAction extends AcuteHemodialysisAction
             'ward' => $row['ward'],
             'dialysis_at' => $row['dialysis_at'],
             'dialysis_type' => $row['dialysis_type'],
+            'technique' => $row['technique'],
             'access' => $row['access'],
             'access_site' => $row['access_site'],
+            'dialyzer' => $row['dialyzer'],
+            'dialyzer_second' => $row['dialyzer_second'],
             'replacement' => $row['replacement'],
             'albumin' => $row['albumin'],
             'FFP' => $row['ffp'],
             'blood_pump' => $row['blood_pump'],
             'filtration_pump' => $row['filtration_pump'],
             'replacement_pump' => $row['replacement_pump'],
+            'percent_discard' => $row['percent_discard'],
             'drain_pump' => $row['drain_pump'],
+            'catheter_lock' => $row['catheter_lock'],
             'anticoagulant' => $row['anticoagulant'],
             'heparin_loading' => $row['heparin_loading'],
             'heparin_maintenance' => $row['heparin_maintenance'],
@@ -175,9 +192,9 @@ class OrderExportAction extends AcuteHemodialysisAction
         ];
     }
 
-    private function getHdTpeRow(AcuteHemodialysisOrderNote $order, Collection|array $admissions): array
+    private function getHdPeRow(AcuteHemodialysisOrderNote $order, Collection|array $admissions): array
     {
-        $tpe = $this->getTpeColumns($order);
+        $pe = $this->getPeColumns($order);
         $hd = $this->getHdHfSleddColumns($order);
         $base = $this->getCommonColumns($order, $admissions);
 
@@ -214,22 +231,28 @@ class OrderExportAction extends AcuteHemodialysisAction
             'LPB' => $hd['prc'],
             'FFP' => $hd['ffp'],
             'platelet' => $hd['platelet'],
+            'catheter_lock' => $hd['catheter_lock'],
 
-            'tpe_access' => $tpe['access'],
-            'tpe_access_site' => $tpe['access_site'],
-            'tpe_replacement' => $tpe['replacement'],
-            'tpe_albumin' => $tpe['albumin'],
-            'tpe_FFP' => $tpe['ffp'],
-            'blood_pump' => $tpe['blood_pump'],
-            'filtration_pump' => $tpe['filtration_pump'],
-            'replacement_pump' => $tpe['replacement_pump'],
-            'drain_pump' => $tpe['drain_pump'],
-            'tpe_anticoagulant' => $tpe['anticoagulant'],
-            'tpe_heparin_loading' => $tpe['heparin_loading'],
-            'tpe_heparin_maintenance' => $tpe['heparin_maintenance'],
-            'tpe_detail' => $tpe['detail'],
-            'calcium_volume' => $tpe['calcium_volume'],
-            'calcium_time' => $tpe['calcium_time'],
+            'pe_technique' => $pe['technique'],
+            'pe_access' => $pe['access'],
+            'pe_access_site' => $pe['access_site'],
+            'pe_dialyzer' => $pe['dialyzer'],
+            'pe_dialyzer_second' => $pe['dialyzer_second'],
+            'pe_replacement' => $pe['replacement'],
+            'pe_albumin' => $pe['albumin'],
+            'pe_FFP' => $pe['ffp'],
+            'blood_pump' => $pe['blood_pump'],
+            'filtration_pump' => $pe['filtration_pump'],
+            'replacement_pump' => $pe['replacement_pump'],
+            'percent_discard' => $pe['percent_discard'],
+            'drain_pump' => $pe['drain_pump'],
+            'pe_anticoagulant' => $pe['anticoagulant'],
+            'pe_heparin_loading' => $pe['heparin_loading'],
+            'pe_heparin_maintenance' => $pe['heparin_maintenance'],
+            'pe_catheter_lock' => $hd['catheter_lock'],
+            'pe_detail' => $pe['detail'],
+            'calcium_volume' => $pe['calcium_volume'],
+            'calcium_time' => $pe['calcium_time'],
             'oxygen_support' => $base['oxygen_support'],
             'monitor' => $base['monitor'],
             'special_order' => $base['special_order'],
@@ -329,6 +352,7 @@ class OrderExportAction extends AcuteHemodialysisAction
         $data['temp'] = $prescription['dialysate_temperature'] ?? null;
         $data['sodium'] = $prescription['sodium'] ?? null;
         $data['bicarbonate'] = $prescription['bicarbonate'] ?? null;
+        $data['catheter_lock'] = $prescription['catheter_lock'] ?? null;
 
         $this->getAnticoagulant($data, $prescription);
 
@@ -353,15 +377,18 @@ class OrderExportAction extends AcuteHemodialysisAction
         return $data;
     }
 
-    private function getTpeColumns(AcuteHemodialysisOrderNote $order): array
+    private function getPeColumns(AcuteHemodialysisOrderNote $order): array
     {
-        $prescription = $order->form['tpe'];
+        $prescription = $order->form['pe'];
 
         $data = [];
 
+        $data['technique'] = $prescription['technique'] ?? null;
         $data['access'] = $prescription['access_type'] ?? null;
         $data['access_site'] = $prescription['access_site_coagulant'] ?? null;
         $data['dialyzer'] = $prescription['dialyzer'] ?? null;
+        $data['dialyzer_second'] = $prescription['dialyzer_second'] ?? null;
+        $data['catheter_lock'] = $prescription['catheter_lock'] ?? null;
 
         $data['replacement'] = collect([
             ['label' => 'albumin', 'name' => 'replacement_fluid_albumin'],
@@ -385,6 +412,7 @@ class OrderExportAction extends AcuteHemodialysisAction
         $data['blood_pump'] = $prescription['blood_pump'];
         $data['filtration_pump'] = $prescription['filtration_pump'];
         $data['replacement_pump'] = $prescription['replacement_pump'];
+        $data['percent_discard'] = $prescription['percent_discard'] ?? null;
         $data['drain_pump'] = $prescription['drain_pump'];
 
         $this->getAnticoagulant($data, $prescription);

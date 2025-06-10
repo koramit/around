@@ -120,6 +120,12 @@ class CaseRecordEditAction extends AcuteHemodialysisAction
         }
 
         $form = $caseRecord->form;
+        // check if first_use_dialyzer_syndrome field is set
+        if (! ($form['first_use_dialyzer_syndrome'] ?? false)) {
+            $form['first_use_dialyzer_syndrome'] = false;
+            $caseRecord->form['first_use_dialyzer_syndrome'] = false;
+            $caseRecord->save();
+        }
         $form['record']['hashed_key'] = $caseRecord->hashed_key;
         $form['record']['hn'] = $caseRecord->patient->hn;
 

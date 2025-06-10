@@ -159,9 +159,9 @@
     </Transition>
 
     <Transition name="slide-fade">
-        <div v-if="orderForm.tpe !== undefined && !copying">
-            <TPEForm
-                v-model="form.tpe"
+        <div v-if="orderForm.pe !== undefined && !copying">
+            <PEForm
+                v-model="form.pe"
                 :form-configs="formConfigs"
                 @copy-previous-order="copyPreviousOrder"
             />
@@ -402,7 +402,7 @@ import SerologyInfo from '../../../Components/Helpers/SerologyInfo.vue';
 const HDForm = defineAsyncComponent(() => import('../../../Partials/Procedures/AcuteHemodialysis/HDForm.vue'));
 const HFForm = defineAsyncComponent(() => import('../../../Partials/Procedures/AcuteHemodialysis/HFForm.vue'));
 const SLEDDForm = defineAsyncComponent(() => import('../../../Partials/Procedures/AcuteHemodialysis/SLEDDForm.vue'));
-const TPEForm = defineAsyncComponent(() => import('../../../Partials/Procedures/AcuteHemodialysis/TPEForm.vue'));
+const PEForm = defineAsyncComponent(() => import('../../../Partials/Procedures/AcuteHemodialysis/PEForm.vue'));
 const DialysisSlot = defineAsyncComponent(() => import('../../../Partials/Procedures/AcuteHemodialysis/DialysisSlot.vue'));
 const WardSlot = defineAsyncComponent(() => import('../../../Partials/Procedures/AcuteHemodialysis/WardSlot.vue'));
 
