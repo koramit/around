@@ -62,13 +62,13 @@ class OrderSwapAction extends AcuteHemodialysisAction
             ];
         }
 
-        $orderIsTpe = str_contains($order->meta['dialysis_type'], 'TPE');
-        $swapIsTpe = str_contains($swap->meta['dialysis_type'], 'TPE');
-        $tpeOrderDate = AcuteHemodialysisOrderNote::query()->dialysisDate($order->date_note)->dialysisTypeLike('TPE')->count();
-        $tpeSwapDate = AcuteHemodialysisOrderNote::query()->dialysisDate($swap->date_note)->dialysisTypeLike('TPE')->count();
+        $orderIsPe = str_contains($order->meta['dialysis_type'], 'PE');
+        $swapIsPe = str_contains($swap->meta['dialysis_type'], 'PE');
+        $peOrderDate = AcuteHemodialysisOrderNote::query()->dialysisDate($order->date_note)->dialysisTypeLike('PE')->count();
+        $peSwapDate = AcuteHemodialysisOrderNote::query()->dialysisDate($swap->date_note)->dialysisTypeLike('PE')->count();
         if (
-            ($orderIsTpe && ! $swapIsTpe && $tpeSwapDate === $this->LIMIT_PE_SLOTS)
-            || (! $orderIsTpe && $swapIsTpe && $tpeOrderDate === $this->LIMIT_PE_SLOTS)
+            ($orderIsPe && ! $swapIsPe && $peSwapDate === $this->LIMIT_PE_SLOTS)
+            || (! $orderIsPe && $swapIsPe && $peOrderDate === $this->LIMIT_PE_SLOTS)
         ) {
             $order->update(['meta->swap_code' => $this->genSwapCode()]);
             $swap->update(['meta->swap_code' => $this->genSwapCode()]);
@@ -76,7 +76,7 @@ class OrderSwapAction extends AcuteHemodialysisAction
             return [
                 'type' => 'danger',
                 'title' => 'Cannot swap slot.',
-                'message' => 'TPE limit conflict, swap code regenerated.',
+                'message' => 'PE limit conflict, swap code regenerated.',
             ];
         }
 
