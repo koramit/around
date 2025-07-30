@@ -8,6 +8,7 @@ use App\Http\Controllers\Procedures\AcuteHemodialysis\DialysisSessionController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\DialysisSessionExportController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\IdleCaseController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\LastIndexSectionController;
+use App\Http\Controllers\Procedures\AcuteHemodialysis\NewCaseExportController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\OrderController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\OrderCopyController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\OrderExportController;
@@ -96,6 +97,9 @@ Route::get('/orders-export', OrderExportController::class)
 Route::get('/dialysis-session-export', DialysisSessionExportController::class)
     ->can('export_acute_hemodialysis_clinical_reports')
     ->name('dialysis-session.export');
+Route::get('/new-case-export', NewCaseExportController::class)
+    ->can('export_acute_hemodialysis_clinical_reports')
+    ->name('new-case.export');
 
 Route::get('/deploy-dialysis-session-report', function () {
     $acuteStaff = App\Models\Role::query()->where('name', 'acute_hemodialysis_staff')->first();
