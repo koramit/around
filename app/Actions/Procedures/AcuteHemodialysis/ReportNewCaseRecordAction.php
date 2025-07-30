@@ -8,53 +8,28 @@ use App\Models\Notes\AcuteHemodialysisOrderNote;
 use App\Models\Registries\AcuteHemodialysisCaseRecord;
 use App\Models\Resources\Ward;
 use App\Models\User;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Validator;
-use OpenSpout\Common\Exception\InvalidArgumentException;
-use OpenSpout\Common\Exception\IOException;
-use OpenSpout\Common\Exception\UnsupportedTypeException;
-use OpenSpout\Writer\Exception\WriterNotOpenedException;
-use Rap2hpoutre\FastExcel\FastExcel;
 
 class ReportNewCaseRecordAction extends AcuteHemodialysisAction
 {
-    /**
-     * @throws IOException
-     * @throws WriterNotOpenedException
-     * @throws UnsupportedTypeException
-     * @throws InvalidArgumentException
-     */
     public function __invoke(array $data, User|AvatarUser $user)
     {
         if (($link = $this->shouldLinkAvatar()) !== false) {
             return $link;
         }
 
-        $validated = Validator::validate($data, [
-            'date_start' => 'required|date',
-            'date_end' => 'required|date',
-        ]);
-
-        /*$cases = AcuteHemodialysisCaseRecord::query()
-            ->whereHas('firstPerformedOrder', fn ($query) => $query->whereBetween('date_note', [
-                now()->create($validated['date_start']),
-                now()->create($validated['date_end']),
-            ]))
-            ->with([
-                'patient:id,profile,hn',
-                'orders' => fn ($query) => $query->select(['id', 'case_record_id', 'author_id', 'status', 'meta', 'date_note', 'form'])
-                    ->withAuthorName()
-                    ->withPlaceName(Ward::class)
-                    ->performedStatuses()
-                    ->orderBy('date_note'),
-            ])
-            ->get();*/
+        $validated = Validator::validate($data, ['ref_date' => 'required|date']);
+        $refDate = Carbon::create($validated['ref_date']);
+        $dateStart = $refDate->copy()->startOfMonth();
+        $dateEnd = $refDate->copy()->endOfMonth();
 
         $caseIds = AcuteHemodialysisOrderNote::query()
             ->selectRaw('case_record_id, MIN(date_note) as first_order')
             ->performedStatuses()
             ->groupBy('case_record_id')
-            ->having('date_note', '>=', now()->create($validated['date_start']))
-            ->having('date_note', '<=', now()->create($validated['date_end']))
+            ->having('date_note', '>=', $dateStart)
+            ->having('date_note', '<=', $dateEnd)
             ->pluck('case_record_id');
 
         $cases = AcuteHemodialysisCaseRecord::query()
@@ -167,6 +142,9 @@ class ReportNewCaseRecordAction extends AcuteHemodialysisAction
             ];
         });
 
-        return (new FastExcel($report))->export(storage_path("acute_HD-new_case-{$validated['date_start']}_to_{$validated['date_end']}.xlsx"));
+        return [
+            'sheet' => $report,
+            'filename' => "acute_HD-new_case-{$dateStart->format('Y-m-d')}_to_{$dateEnd->format('Y-m-d')}.xlsx",
+        ];
     }
 }

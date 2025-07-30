@@ -30,6 +30,7 @@ class RewriteMetaForPlasmaExchange extends Command
         AcuteHemodialysisOrderNote::query()
             ->with('subscription')
             ->each(function (AcuteHemodialysisOrderNote $note) {
+                $this->line($note->meta['dialysis_type'] . ' => id#' . $note->id);
                 foreach (['hd', 'hf', 'sledd'] as $type) {
                     if (isset($note->form[$type])) {
                         $note->form[$type]['catheter_lock'] = null;
