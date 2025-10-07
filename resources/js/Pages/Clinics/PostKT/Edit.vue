@@ -548,12 +548,12 @@ const { selectOtherInput, selectOther, selectOtherClosed } = useSelectOther();
                 />
             </div>
             <FormInput
-                label="baseline cr (mg/dL)"
+                label="donor baseline cr (mg/dL)"
                 name="baseline_cr"
                 v-model="form.baseline_cr"
             />
             <FormInput
-                label="pre kt cr (mg/dL)"
+                label="donor pre kt cr (mg/dL)"
                 name="pre_kt_cr"
                 v-model="form.pre_kt_cr"
             />
