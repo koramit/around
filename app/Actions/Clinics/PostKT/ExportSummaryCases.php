@@ -42,6 +42,7 @@ class ExportSummaryCases
                     'medical_scheme' => $c->form['medical_scheme'],
                     'status' => $c->status->label(),
                     'date_last_update' => $c->form['date_last_update'],
+                    'AN' => $c->meta['an'],
                 ];
             });
 
