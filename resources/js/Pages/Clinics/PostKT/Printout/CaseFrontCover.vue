@@ -45,9 +45,9 @@ onMounted(() => {
                     <span class="w-full text-center whitespace-nowrap truncate">{{ data.gestation_a }}</span>
                 </p>
                 <p class="flex space-x-1 text-xs">
-                    <label class="whitespace-nowrap">Baseline Cr</label>
+                    <label class="whitespace-nowrap">Donor baseline Cr</label>
                     <span class="w-full text-center whitespace-nowrap truncate">{{ data.baseline_cr }}</span>
-                    <label class="whitespace-nowrap">Pre-KT Cr</label>
+                    <label class="whitespace-nowrap">Donor pre-KT Cr</label>
                     <span class="w-full text-center whitespace-nowrap truncate">{{ data.pre_kt_cr }}</span>
                 </p>
                 <template v-if="data.donor_type === 'CD'">
