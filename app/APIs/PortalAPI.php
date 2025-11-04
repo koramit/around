@@ -52,6 +52,15 @@ class PortalAPI implements AuthenticationAPI, CovidInfoAPI, PatientAPI
         return $data;
     }
 
+    public function getPatientDSL(string $keyValue, string $keyName = 'hn', bool $raw = false): array
+    {
+        return $this->makePost('dsl/patient-with-sensitive-data', [
+            'key_name' => $keyName,
+            'key_value' => $keyValue,
+            'raw' => $raw,
+        ]);
+    }
+
     public function getAdmission(string|int $an): array
     {
         $data = $this->makePost('admission-with-sensitive-data', ['an' => $an]);
