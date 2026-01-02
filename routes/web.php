@@ -210,3 +210,7 @@ Route::get('clear-club-cache', function () {
 Route::get('/tap', function () {
     return request()->all();
 });
+
+Route::get('/design', function () {
+    return Inertia\Inertia::render('Design');
+});

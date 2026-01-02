@@ -166,7 +166,7 @@ class OrderStoreAction extends AcuteHemodialysisAction
         'duration' => null,
         'access_type' => null,
         'access_site_coagulant' => null,
-        'dialyzer' => 'SF150E',
+        'dialyzer' => null,
         'dialysate' => null,
         'blood_flow_rate' => 200,
         'dialysate_flow_rate' => 300,

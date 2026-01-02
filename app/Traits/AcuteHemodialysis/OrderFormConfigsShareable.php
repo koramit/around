@@ -114,7 +114,7 @@ trait OrderFormConfigsShareable
         'calcium_gluconate_10_percent_volumes' => [10, 20, 30],
         'calcium_gluconate_10_percent_timings' => [1, 2],
         'sledd_durations' => [6, 8],
-        'sledd_dialyzers' => ['SF150E'],
+        'sledd_dialyzers' => ['SF150E', 'Rexeed 15L'],
         'sledd_blood_flow_rates' => [200],
         'sledd_dialysate_flow_rates' => [300],
     ];
