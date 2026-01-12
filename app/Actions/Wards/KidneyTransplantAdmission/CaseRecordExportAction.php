@@ -40,7 +40,7 @@ class CaseRecordExportAction extends KidneyTransplantAdmissionAction
             ->each(function ($case) use (&$ldSheet, &$cdSheet) {
                 if (($case->form['donor_type'] ?? null) === 'LD') {
                     $ldSheet[] = $this->getLD($case);
-                } elseif (($case->form['donor_type'] ?? null) === 'CD') {
+                } elseif (str_starts_with(($case->form['donor_type'] ?? ''), 'CD')) {
                     $cdSheet[] = $this->getCD($case);
                 }
             });
