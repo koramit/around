@@ -585,7 +585,7 @@ const { selectOtherInput, selectOther, selectOtherClosed } = useSelectOther();
                 v-for="antigen in configs.hla_mismatch_antigens"
                 :key="antigen"
             >
-                <label class="form-label">{{ antigen }} :</label>
+                <label class="form-label">{{ ['dr', 'drb'].includes(antigen) ? (antigen === 'dr' ? 'drb1' : 'drb3/4/5') : antigen }} :</label>
                 <FormRadio
                     class="grid grid-cols-2 gap-2 lg:grid-cols-4 lg:gap-4"
                     :name="`mismatch_${antigen.toLowerCase()}`"
