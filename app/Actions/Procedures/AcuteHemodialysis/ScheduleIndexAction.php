@@ -116,6 +116,14 @@ class ScheduleIndexAction extends AcuteHemodialysisAction
             'route' => route('procedures.acute-hemodialysis.new-case.export', ['ref_date' => $validated['ref_date'] ?? null]),
             'can' => $user->can('export_acute_hemodialysis_clinical_reports'),
         ];
+        $flash['action-menu'][] = [
+            'label' => 'Case Summary Report',
+            'as' => 'a',
+            'icon' => 'file-excel',
+            'theme' => 'accent',
+            'route' => route('procedures.acute-hemodialysis.case-summary.export', ['ref_date' => $validated['ref_date'] ?? null]),
+            'can' => $user->can('export_acute_hemodialysis_clinical_reports'),
+        ];
 
         return [
             'flash' => $flash,
