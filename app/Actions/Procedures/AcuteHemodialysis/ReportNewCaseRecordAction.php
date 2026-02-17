@@ -6,6 +6,7 @@ use App\APIs\PortalAPI;
 use App\Extensions\Auth\AvatarUser;
 use App\Models\Notes\AcuteHemodialysisOrderNote;
 use App\Models\Registries\AcuteHemodialysisCaseRecord;
+use App\Models\Resources\Registry;
 use App\Models\Resources\Ward;
 use App\Models\User;
 use Illuminate\Support\Carbon;
@@ -141,6 +142,16 @@ class ReportNewCaseRecordAction extends AcuteHemodialysisAction
                 'monitoring other' => $orders->filter(fn ($order) => $order->form['monitor']['other'])->count(),
             ];
         });
+
+        $registry = Registry::query()->find($this->REGISTRY_ID);
+        $registry->actionLogs()->create([
+            'actor_id' => $user->id,
+            'action' => 'export',
+            'payload' => [
+                'report' => 'new_case',
+                'config' => ['date_ref' => $refDate->format('Y-m-d')],
+            ],
+        ]);
 
         return [
             'sheet' => $report,
