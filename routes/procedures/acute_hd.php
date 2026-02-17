@@ -19,6 +19,7 @@ use App\Http\Controllers\Procedures\AcuteHemodialysis\ScheduleController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\SlotAvailableController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\SlotAvailableDatesController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\SlotRequestController;
+use App\Http\Controllers\Procedures\AcuteHemodialysis\CaseSummaryExportController;
 use App\Http\Controllers\Procedures\AcuteHemodialysis\TodaySlotRequestController;
 use Illuminate\Support\Facades\Route;
 
@@ -100,6 +101,9 @@ Route::get('/dialysis-session-export', DialysisSessionExportController::class)
 Route::get('/new-case-export', NewCaseExportController::class)
     ->can('export_acute_hemodialysis_clinical_reports')
     ->name('new-case.export');
+Route::get('/case-summary-export', CaseSummaryExportController::class)
+    ->can('export_acute_hemodialysis_clinical_reports')
+    ->name('case-summary.export');
 
 Route::get('/deploy-dialysis-session-report', function () {
     $acuteStaff = App\Models\Role::query()->where('name', 'acute_hemodialysis_staff')->first();
