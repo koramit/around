@@ -36,19 +36,15 @@ class DischargeDismissedAcuteHDCase extends Command
             ->whereNotNull('meta->an')
             ->get()
             ->each(function (AcuteHemodialysisCaseRecord $case) {
-                $this->line($case->meta['an']);
                 $admission = Admission::findByHashKey($case->meta['an'])->first();
                 if (! $admission->dismissed_at) {
                     return;
                 }
-                $log = $case->actionLogs()->create([
+                $case->actionLogs()->create([
                     'action' => 'discharge',
                     'actor_id' => 1,
                 ]);
-                $log->performed_at = $admission->dismissed_at;
-                $log->save();
                 $case->update(['status' => 'discharged']);
-                $this->line('discharged ' . $admission->dismissed_at->format('Y-m-d'));
             });
     }
 }
