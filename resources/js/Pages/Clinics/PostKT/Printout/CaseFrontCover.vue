@@ -20,64 +20,80 @@ onMounted(() => {
             <div class="space-y-0.5">
                 <p class="flex space-x-1.5 text-xs">
                     <label>Name</label>
-                    <span class="w-full text-center">{{ data.patient_name }}</span>
+                    <span class="">{{ data.patient_name }}</span>
                 </p>
-                <p class="flex space-x-1 text-xs justify-between">
+                <p class="flex space-x-1 text-xs">
                     <label class="whitespace-nowrap">Cause of ESRD</label>
-                    <span class="text-center whitespace-nowrap truncate w-full">{{ data.cause_of_esrd }}</span>
+                    <span class="whitespace-nowrap truncate">{{ data.cause_of_esrd ?? 'placeholder' }}</span>
+                </p>
+                <p class="flex space-x-1 text-xs">
                     <label class="whitespace-nowrap">Native Bx</label>
-                    <span class="text-center whitespace-nowrap truncate w-[1cm]">{{ data.native_biopsy_report }}</span>
+                    <span class="whitespace-nowrap truncate">{{ data.native_biopsy_report ?? 'placeholder' }}</span>
                 </p>
                 <p class="flex space-x-1 text-xs">
                     <label>Nephro</label>
-                    <span class="w-full text-center whitespace-nowrap truncate">{{ data.nephrologist }}</span>
+                    <span class="whitespace-nowrap truncate">{{ data.nephrologist ?? 'placeholder' }}</span>
+                </p>
+                <p class="flex space-x-1 text-xs">
                     <label>Sx</label>
-                    <span class="w-full text-center whitespace-nowrap truncate">{{ data.surgeon }}</span>
+                    <span class="whitespace-nowrap truncate">{{ data.surgeon ?? 'placeholder' }}</span>
                 </p>
                 <p class="flex space-x-1 text-xs">
                     <label class="whitespace-nowrap">Pre KT PRC</label>
-                    <span class="w-full text-center whitespace-nowrap truncate">{{ data.pre_kt_prc_unit }} unit</span>
+                    <span class="whitespace-nowrap truncate">{{ data.pre_kt_prc_unit ?? 'placeholder' }} unit</span>
+                </p>
+                <p class="flex space-x-1 text-xs">
                     <label>G</label>
-                    <span class="w-full text-center whitespace-nowrap truncate">{{ data.gestation_g }}</span>
+                    <span class="whitespace-nowrap truncate">{{ data.gestation_g ?? 'placeholder' }}</span>
                     <label>P</label>
-                    <span class="w-full text-center whitespace-nowrap truncate">{{ data.gestation_p }}</span>
+                    <span class="whitespace-nowrap truncate">{{ data.gestation_p ?? 'placeholder' }}</span>
                     <label>A</label>
-                    <span class="w-full text-center whitespace-nowrap truncate">{{ data.gestation_a }}</span>
+                    <span class="whitespace-nowrap truncate">{{ data.gestation_a ?? 'placeholder' }}</span>
                 </p>
                 <p class="flex space-x-1 text-xs">
                     <label class="whitespace-nowrap">Donor baseline Cr</label>
-                    <span class="w-full text-center whitespace-nowrap truncate">{{ data.baseline_cr }}</span>
+                    <span class="whitespace-nowrap truncate">{{ data.baseline_cr ?? 'placeholder' }}</span>
+                </p>
+                <p class="flex space-x-1 text-xs">
                     <label class="whitespace-nowrap">Donor pre-KT Cr</label>
-                    <span class="w-full text-center whitespace-nowrap truncate">{{ data.pre_kt_cr }}</span>
+                    <span class="whitespace-nowrap truncate">{{ data.pre_kt_cr ?? 'placeholder' }}</span>
                 </p>
                 <template v-if="data.donor_type === 'CD'">
-                    <p class="flex justify-between space-x-1 text-xs">
+                    <p class="flex space-x-1 text-xs">
                         <label class="whitespace-nowrap">CD is</label>
-                        <span class="whitespace-nowrap truncate w-[16.5cm]">{{ data.donor_is }}</span>
-                        <label class="whitespace-nowrap">Cause of death</label>
-                        <span class="whitespace-nowrap truncate w-full">{{ data.donor_cause_of_death }}</span>
+                        <span class="whitespace-nowrap truncate w-[16.5cm]">{{ data.donor_is ?? 'placeholder' }}</span>
                     </p>
-                    <p class="flex justify-between space-x-1 text-xs">
+                    <p class="flex space-x-1 text-xs">
+                        <label class="whitespace-nowrap">Cause of death</label>
+                        <span class="whitespace-nowrap truncate">{{ data.donor_cause_of_death ?? 'placeholder' }}</span>
+                    </p>
+                    <p class="flex space-x-1 text-xs">
                         <label class="whitespace-nowrap">Clamp time</label>
-                        <span class="whitespace-nowrap w-[11cm]">{{ data.clamp_time }}</span>
+                        <span class="whitespace-nowrap w-[11cm]">{{ data.clamp_time ?? 'placeholder' }}</span>
+                    </p>
+                    <p class="flex space-x-1 text-xs">
                         <label class="whitespace-nowrap">Graft function</label>
-                        <span class="text-center whitespace-nowrap truncate w-full">{{ data.graft_function }}</span>
+                        <span class="whitespace-nowrap truncate">{{ data.graft_function ?? 'placeholder' }}</span>
                     </p>
                     <p class="flex space-x-1 text-xs">
                         <label class="whitespace-nowrap">Co-hospital</label>
-                        <span class="w-full text-center whitespace-nowrap truncate">{{ data.co_recipient_hospital }}</span>
+                        <span class="whitespace-nowrap truncate">{{ data.co_recipient_hospital ?? 'placeholder' }}</span>
                     </p>
                 </template>
                 <template v-if="data.donor_type === 'LD'">
                     <p class="flex space-x-1 text-xs">
                         <label class="whitespace-nowrap">LD is</label>
-                        <span class="w-full text-center whitespace-nowrap truncate">{{ data.donor_is }}</span>
+                        <span class="whitespace-nowrap truncate">{{ data.donor_is }}</span>
                     </p>
-                    <p class="flex justify-between text-xs">
+                    <p class="flex space-x-1 text-xs">
                         <label class="whitespace-nowrap">Anastomosis time</label>
-                        <span class="text-center whitespace-nowrap truncate">{{ data.anastomosis_time_minutes }} min</span>
+                        <span class="whitespace-nowrap truncate">{{ data.anastomosis_time_minutes }} min</span>
+                    </p>
+                    <p class="flex space-x-1 text-xs">
                         <label>WIT</label>
                         <span class="text-center whitespace-nowrap truncate">{{ data.warm_ischemic_time_minutes }} min</span>
+                    </p>
+                    <p class="flex space-x-1 text-xs">
                         <label>CIT</label>
                         <span class="text-center whitespace-nowrap truncate">
                             <span
@@ -94,20 +110,22 @@ onMounted(() => {
                     </p>
                     <p class="flex space-x-1 text-xs">
                         <label class="whitespace-nowrap">Graft function</label>
-                        <span class="w-full text-center whitespace-nowrap truncate">{{ data.graft_function }}</span>
+                        <span class="whitespace-nowrap truncate">{{ data.graft_function }}</span>
                     </p>
                     <p class="flex space-x-1.5 text-xs">
                         <label>CXM</label>
-                        <span class="text-center whitespace-nowrap truncate">{{ data.cxm }}</span>
+                        <span class="whitespace-nowrap truncate">{{ data.cxm }}</span>
                     </p>
                 </template>
-                <p
+                <template
                     v-else
-                    class="flex space-x-1.5 text-xs"
                 >
-                    <label>CXM</label>
-                    <span class="text-center whitespace-nowrap truncate w-[4.75cm]">{{ data.cxm }}</span>
-                    <template
+                    <p class="flex space-x-1 text-xs">
+                        <label>CXM</label>
+                        <span class="whitespace-nowrap truncate">{{ data.cxm ?? 'placeholder' }}</span>
+                    </p>
+                    <p
+                        class="flex space-x-1 text-xs"
                         v-if="data.donor_type === 'CD'"
                     >
                         <label>CIT</label>
@@ -116,88 +134,96 @@ onMounted(() => {
                                 v-if="!data.cold_ischemic_time_hours"
                                 class="ml-[0.25cm]"
                             />
-                            {{ data.cold_ischemic_time_hours }} hr
+                            {{ data.cold_ischemic_time_hours ?? 'placeholder' }} hr
                             <span
                                 v-if="!data.cold_ischemic_time_minutes"
                                 class="ml-[0.25cm]"
                             />
-                            {{ data.cold_ischemic_time_minutes }} min
+                            {{ data.cold_ischemic_time_minutes ?? 'placeholder' }} min
                         </span>
-                    </template>
-                </p>
+                    </p>
+                </template>
                 <p class="flex space-x-1 text-xs">
                     <label class="whitespace-nowrap">KT Date</label>
-                    <span class="w-full text-center whitespace-nowrap truncate">{{ data.date_transplant }}</span>
+                    <span class="whitespace-nowrap truncate">{{ data.date_transplant }}</span>
+                </p>
+                <p class="flex space-x-1 text-xs">
                     <label class="whitespace-nowrap">this time is</label>
-                    <span class="w-full text-center whitespace-nowrap truncate">{{ data.kt_times }} KT</span>
+                    <span class="whitespace-nowrap truncate">{{ data.kt_times }} KT</span>
                 </p>
             </div>
             <div class="space-y-0.5">
                 <p class="flex space-x-1.5 text-xs">
                     <label>HN</label>
-                    <span class="w-full text-center">{{ data.hn }}</span>
+                    <span class="">{{ data.hn }}</span>
+                </p>
+                <p class="flex space-x-1.5 text-xs">
                     <label>DOB</label>
-                    <span class="w-full text-center">{{ data.dob }}</span>
+                    <span class="">{{ data.dob }}</span>
                 </p>
                 <p class="flex space-x-1.5 text-xs">
                     <label class="whitespace-nowrap">First RRT date</label>
-                    <span class="w-full text-center whitespace-nowrap truncate">{{ data.date_first_rrt }}</span>
+                    <span class=" whitespace-nowrap truncate">{{ data.date_first_rrt ?? 'placeholder' }}</span>
+                </p>
+                <p class="flex space-x-1.5 text-xs">
                     <label>Mode</label>
-                    <span class="w-full text-center">{{ data.rrt_mode }}</span>
+                    <span class="">{{ data.rrt_mode ?? 'placeholder' }}</span>
                 </p>
                 <p class="flex justify-between space-x-1 text-xs">
                     <label class="whitespace-nowrap">Last PRA I</label>
-                    <span class="whitespace-nowrap w-[2cm]">{{ data.last_pra_class_i_percent }}</span>
+                    <span class="whitespace-nowrap w-[2cm]">{{ data.last_pra_class_i_percent ?? 'placeholder' }}</span>
                     <label>II</label>
-                    <span class="whitespace-nowrap w-[2cm]">{{ data.last_pra_class_ii_percent }}</span>
+                    <span class="whitespace-nowrap w-[2cm]">{{ data.last_pra_class_ii_percent ?? 'placeholder' }}</span>
                     <label>Date</label>
-                    <span class="whitespace-nowrap truncate w-full">{{ data.date_last_pra }}</span>
+                    <span class="whitespace-nowrap truncate w-full">{{ data.date_last_pra ?? 'placeholder' }}</span>
                 </p>
                 <p class="flex justify-between space-x-1 text-xs">
                     <label class="whitespace-nowrap">Peak PRA I</label>
-                    <span class="whitespace-nowrap w-[2cm]">{{ data.peak_pra_class_i_percent }}</span>
+                    <span class="whitespace-nowrap w-[2cm]">{{ data.peak_pra_class_i_percent ?? 'placeholder' }}</span>
                     <label>II</label>
-                    <span class="whitespace-nowrap w-[2cm]">{{ data.peak_pra_class_ii_percent }}</span>
+                    <span class="whitespace-nowrap w-[2cm]">{{ data.peak_pra_class_ii_percent ?? 'placeholder' }}</span>
                     <label>Date</label>
-                    <span class="whitespace-nowrap truncate w-full">{{ data.date_peak_pra }}</span>
+                    <span class="whitespace-nowrap truncate w-full">{{ data.date_peak_pra ?? 'placeholder' }}</span>
                 </p>
                 <p class="flex space-x-1 text-xs">
                     <label class="whitespace-nowrap">MM : A</label>
-                    <span class="w-full text-center whitespace-nowrap truncate">{{ data.mismatch_a }}</span>
+                    <span class="whitespace-nowrap truncate">{{ data.mismatch_a ?? '-' }}</span>
                     <label>B</label>
-                    <span class="w-full text-center whitespace-nowrap truncate">{{ data.mismatch_b }}</span>
+                    <span class="whitespace-nowrap truncate">{{ data.mismatch_b ?? '-' }}</span>
                     <label>DR</label>
-                    <span class="w-full text-center whitespace-nowrap truncate">{{ data.mismatch_dr }}</span>
+                    <span class="whitespace-nowrap truncate">{{ data.mismatch_dr ?? '-' }}</span>
                 </p>
                 <p class="flex space-x-1 text-xs">
                     <label class="whitespace-nowrap">MM : Cw</label>
-                    <span class="w-full text-center whitespace-nowrap truncate">{{ data.mismatch_cw }}</span>
+                    <span class="whitespace-nowrap truncate">{{ data.mismatch_cw ?? '-' }}</span>
                     <label class="whitespace-nowrap">DRB 3-4-5 (52-53-51)</label>
-                    <span class="w-full text-center whitespace-nowrap truncate">{{ data.mismatch_drb }}</span>
+                    <span class="whitespace-nowrap truncate">{{ data.mismatch_drb ?? '-' }}</span>
                 </p>
                 <p class="flex space-x-1 text-xs">
                     <label class="whitespace-nowrap">MM : DQB1</label>
-                    <span class="w-full text-center whitespace-nowrap truncate">{{ data.mismatch_dqb1 }}</span>
+                    <span class="whitespace-nowrap truncate">{{ data.mismatch_dqb1 ?? '-' }}</span>
                     <label>DPB1</label>
-                    <span class="w-full text-center whitespace-nowrap truncate">{{ data.mismatch_dpb1 }}</span>
+                    <span class="whitespace-nowrap truncate">{{ data.mismatch_dpb1 ?? '-' }}</span>
                     <label>MICA</label>
-                    <span class="w-full text-center whitespace-nowrap truncate">{{ data.mismatch_mica }}</span>
+                    <span class="whitespace-nowrap truncate">{{ data.mismatch_mica ?? '-' }}</span>
                 </p>
                 <p class="flex space-x-1 text-xs">
                     <label class="whitespace-nowrap">MM : DQA1</label>
-                    <span class="w-full text-center whitespace-nowrap truncate">{{ data.mismatch_dqa1 }}</span>
+                    <span class="whitespace-nowrap truncate">{{ data.mismatch_dqa1 ?? '-' }}</span>
                     <label>DPA1</label>
-                    <span class="w-full text-center whitespace-nowrap truncate">{{ data.mismatch_dpa1 }}</span>
+                    <span class="whitespace-nowrap truncate">{{ data.mismatch_dpa1 ?? '-' }}</span>
                 </p>
                 <p class="flex space-x-1 text-xs">
                     <label class="whitespace-nowrap">CMV IgG : Donor</label>
-                    <span class="w-full text-center whitespace-nowrap truncate">{{ data.donor_cmv_igg }}</span>
-                    <label>Recipient</label>
-                    <span class="w-full text-center whitespace-nowrap truncate">{{ data.recipient_cmv_igg }}</span>
+                    <span class="whitespace-nowrap truncate">{{ data.donor_cmv_igg }}</span>
+                </p>
+                <p class="flex space-x-1 text-xs">
+                    <label>CMV IgG : Recipient</label>
+                    <span class="whitespace-nowrap truncate">{{ data.recipient_cmv_igg }}</span>
                 </p>
                 <p class="flex space-x-1 text-xs">
                     <label class="whitespace-nowrap">Transplant specification</label>
-                    <span class="w-full text-center whitespace-nowrap truncate">{{ data.transplant_specification }}</span>
+                    <span class="whitespace-nowrap truncate">{{ data.transplant_specification ?? 'placeholder' }}</span>
                 </p>
             </div>
         </div>
@@ -211,7 +237,7 @@ onMounted(() => {
                     <label>Diagnosis & Management</label>
                 </div>
             </div>
-            <div class="h-[21cm]">
+            <div class="h-[17.5cm]">
                 <div
                     class="flex"
                     v-for="event in data.managements"

@@ -4,7 +4,6 @@ namespace App\Console\Commands;
 
 use App\Managers\Resources\PatientManager;
 use App\Models\Resources\Patient;
-use DateTimeImmutable;
 use Illuminate\Console\Command;
 use Rap2hpoutre\FastExcel\FastExcel;
 use Throwable;
@@ -52,11 +51,7 @@ class OSDExcelService extends Command
                 } elseif ($key === $keys[4]) {
                     $newRow[$newKeys[$index]] = $patient->dob; //->format('Y-m-d');
                 } elseif ($key === $keys[5]) {
-                    if ($row[$key] instanceof DateTimeImmutable) {
-                        $newRow[$newKeys[$index]] = $row[$key]; //->format('Y-m-d');
-                    } else {
-                        $newRow[$newKeys[$index]] = $row[$key];
-                    }
+                    $newRow[$newKeys[$index]] = $row[$key];
                 } else {
                     $newRow[$newKeys[$index]] = $row[$key];
                 }
