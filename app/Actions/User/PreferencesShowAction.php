@@ -120,7 +120,7 @@ class PreferencesShowAction
             ->transform(function ($s) {
                 return [
                     'id' => $s->hashed_key,
-                    'label' => $s->subscribable->title,
+                    'label' => $s->subscribable?->title,
                     'type' => match ($s->subscribable_type) {
                         'App\Models\Registries\AcuteHemodialysisCaseRecord' => 'Acute Hemodialysis Case',
                         'App\Models\Notes\AcuteHemodialysisOrderNote' => 'Acute Hemodialysis Order',
