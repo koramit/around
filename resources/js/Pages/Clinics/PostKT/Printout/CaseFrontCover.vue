@@ -163,27 +163,27 @@ onMounted(() => {
                 </p>
                 <p class="flex space-x-1.5 text-xs">
                     <label class="whitespace-nowrap">First RRT date</label>
-                    <span class=" whitespace-nowrap truncate">{{ data.date_first_rrt ?? 'placeholder' }}</span>
+                    <span class=" whitespace-nowrap truncate">{{ data.date_first_rrt ?? '-' }}</span>
                 </p>
                 <p class="flex space-x-1.5 text-xs">
                     <label>Mode</label>
-                    <span class="">{{ data.rrt_mode ?? 'placeholder' }}</span>
+                    <span class="">{{ data.rrt_mode ?? '-' }}</span>
                 </p>
                 <p class="flex justify-between space-x-1 text-xs">
                     <label class="whitespace-nowrap">Last PRA I</label>
-                    <span class="whitespace-nowrap w-[2cm]">{{ data.last_pra_class_i_percent ?? 'placeholder' }}</span>
+                    <span class="whitespace-nowrap w-[2cm]">{{ data.last_pra_class_i_percent ?? '-' }}</span>
                     <label>II</label>
-                    <span class="whitespace-nowrap w-[2cm]">{{ data.last_pra_class_ii_percent ?? 'placeholder' }}</span>
+                    <span class="whitespace-nowrap w-[2cm]">{{ data.last_pra_class_ii_percent ?? '-' }}</span>
                     <label>Date</label>
-                    <span class="whitespace-nowrap truncate w-full">{{ data.date_last_pra ?? 'placeholder' }}</span>
+                    <span class="whitespace-nowrap truncate w-full">{{ data.date_last_pra ?? '-' }}</span>
                 </p>
                 <p class="flex justify-between space-x-1 text-xs">
                     <label class="whitespace-nowrap">Peak PRA I</label>
-                    <span class="whitespace-nowrap w-[2cm]">{{ data.peak_pra_class_i_percent ?? 'placeholder' }}</span>
+                    <span class="whitespace-nowrap w-[2cm]">{{ data.peak_pra_class_i_percent ?? '-' }}</span>
                     <label>II</label>
-                    <span class="whitespace-nowrap w-[2cm]">{{ data.peak_pra_class_ii_percent ?? 'placeholder' }}</span>
+                    <span class="whitespace-nowrap w-[2cm]">{{ data.peak_pra_class_ii_percent ?? '-' }}</span>
                     <label>Date</label>
-                    <span class="whitespace-nowrap truncate w-full">{{ data.date_peak_pra ?? 'placeholder' }}</span>
+                    <span class="whitespace-nowrap truncate w-full">{{ data.date_peak_pra ?? '-' }}</span>
                 </p>
                 <p class="flex space-x-1 text-xs">
                     <label class="whitespace-nowrap">MM : A</label>
@@ -223,7 +223,7 @@ onMounted(() => {
                 </p>
                 <p class="flex space-x-1 text-xs">
                     <label class="whitespace-nowrap">Transplant specification</label>
-                    <span class="whitespace-nowrap truncate">{{ data.transplant_specification ?? 'placeholder' }}</span>
+                    <span class="whitespace-nowrap truncate">{{ data.transplant_specification ?? '-' }}</span>
                 </p>
             </div>
         </div>
