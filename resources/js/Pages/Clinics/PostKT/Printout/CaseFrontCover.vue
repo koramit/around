@@ -65,7 +65,7 @@ onMounted(() => {
                     </p>
                     <p class="flex space-x-1 text-xs">
                         <label class="whitespace-nowrap">Cause of death</label>
-                        <span class="whitespace-nowrap truncate">{{ data.donor_cause_of_death ?? 'placeholder' }}</span>
+                        <span class="whitespace-nowrap truncate">{{ data.donor_cause_of_death }}</span>
                     </p>
                     <p class="flex space-x-1 text-xs">
                         <label class="whitespace-nowrap">Clamp time</label>
@@ -122,7 +122,7 @@ onMounted(() => {
                 >
                     <p class="flex space-x-1 text-xs">
                         <label>CXM</label>
-                        <span class="whitespace-nowrap truncate">{{ data.cxm ?? 'placeholder' }}</span>
+                        <span class="whitespace-nowrap truncate">{{ data.cxm }}</span>
                     </p>
                     <p
                         class="flex space-x-1 text-xs"
@@ -134,12 +134,12 @@ onMounted(() => {
                                 v-if="!data.cold_ischemic_time_hours"
                                 class="ml-[0.25cm]"
                             />
-                            {{ data.cold_ischemic_time_hours ?? 'placeholder' }} hr
+                            {{ data.cold_ischemic_time_hours }} hr
                             <span
                                 v-if="!data.cold_ischemic_time_minutes"
                                 class="ml-[0.25cm]"
                             />
-                            {{ data.cold_ischemic_time_minutes ?? 'placeholder' }} min
+                            {{ data.cold_ischemic_time_minutes }} min
                         </span>
                     </p>
                 </template>
