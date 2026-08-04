@@ -43,6 +43,11 @@ class CaseEditAction extends CaseBaseAction
         if (! array_key_exists('no_co_recipient_hospital_reason', [...$case->form])) {
             $case->form['no_co_recipient_hospital_reason'] = null;
         }
+        if (! array_key_exists('induction', [...$case->form])) {
+            $case->form['induction'] = null;
+            $case->form['atg_dose_mg'] = null;
+            $case->form['atg_duration_days'] = null;
+        }
 
         $case->save();
 

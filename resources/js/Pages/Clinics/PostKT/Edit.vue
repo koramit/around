@@ -577,6 +577,33 @@ const { selectOtherInput, selectOther, selectOtherClosed } = useSelectOther();
             </div>
         </div>
         <h3 class="form-label mt-4 md:mt-8 xl:mt-16">
+            induction :
+        </h3>
+        <hr class="border border-dashed my-2 md:my-4 xl:my-8">
+        <FormRadio
+            class="grid grid-cols-1 lg:grid-cols-4 gap-2 lg:gap-4"
+            name="induction"
+            v-model="form.induction"
+            :options="['ATG', 'L2 RA - Basiliximab', 'NO']"
+            allow-reset
+        />
+        <div class="mt-4 grid gap-2 md:grid-cols-2 xl:gap-8">
+            <FormInput
+                label="ATG DOSE (mg)"
+                name="atg_dose_mg"
+                v-model="form.atg_dose_mg"
+                type="number"
+                :disabled="form.induction !== 'ATG'"
+            />
+            <FormInput
+                label="ATG DURATION (days)"
+                name="atg_duration_days"
+                v-model="form.atg_duration_days"
+                type="tel"
+                :disabled="form.induction !== 'ATG'"
+            />
+        </div>
+        <h3 class="form-label mt-4 md:mt-8 xl:mt-16">
             hla mismatch :
         </h3>
         <hr class="border border-dashed my-2 md:my-4 xl:my-8">
