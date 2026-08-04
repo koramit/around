@@ -86,6 +86,9 @@ class CaseStoreAction extends CaseBaseAction
         'mismatch_dpa1' => null,
         'recipient_cmv_igg' => null,
         'donor_cmv_igg' => null,
+        'induction' => null,
+        'atg_dose_mg' => null,
+        'atg_duration_days' => null,
 
         'refer' => null,
         'graft_status' => 'graft function',

@@ -225,6 +225,10 @@ onMounted(() => {
                     <label class="whitespace-nowrap">Transplant specification</label>
                     <span class="whitespace-nowrap truncate">{{ data.transplant_specification ?? '-' }}</span>
                 </p>
+                <p class="flex space-x-1 text-xs">
+                    <label class="whitespace-nowrap">Induction</label>
+                    <span class="whitespace-nowrap truncate">{{ data.induction ?? '-' }}</span>
+                </p>
             </div>
         </div>
         <hr class="border-t-2 border-gray-950 mt-2">

@@ -130,6 +130,12 @@ class PrintCaseFrontCover
         $data['mismatch_dpa1'] = $case->form['mismatch_dpa1'];
         $data['donor_cmv_igg'] = $case->form['donor_cmv_igg'];
         $data['recipient_cmv_igg'] = $case->form['recipient_cmv_igg'];
+        $data['induction'] = is_null($case->form['induction'])
+            ? null
+            : ($case->form['induction'] === 'ATG'
+                ? $case->form['induction'] . ' ' . $case->form['atg_dose_mg'] . ' mg / ' . $case->form['atg_duration_days'] . ' days'
+                : $case->form['induction']
+            );
 
         $cxm = [];
         $countNegative = 0;
